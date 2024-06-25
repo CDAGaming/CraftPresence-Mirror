@@ -32,7 +32,10 @@ import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.options.GuiOptionsPageControls;
+import net.minecraft.client.gui.options.GuiOptions;
+import net.minecraft.client.gui.options.components.KeyBindingComponent;
+import net.minecraft.client.gui.options.components.OptionsCategory;
+import net.minecraft.client.gui.options.data.OptionsPages;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
@@ -54,6 +57,10 @@ public class KeyUtils {
      * List of Keys that are in queue for later syncing operations
      */
     public final Map<String, Integer> keySyncQueue = StringUtils.newHashMap();
+    /**
+     * List of Categories that are in queue for later syncing operations
+     */
+    public final Map<String, OptionsCategory> categorySyncQueue = StringUtils.newHashMap();
     /**
      * Key Mappings for Vanilla MC KeyBind Schema
      * <p>
@@ -123,8 +130,12 @@ public class KeyUtils {
      * @return the created KeyBind instance
      */
     KeyBinding createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
-        final KeyBinding result = new KeyBinding(name, defaultKey);
+        final KeyBinding result = new KeyBinding(name).bindKeyboard(defaultKey);
         keySyncQueue.put(id, currentKey);
+        if (!categorySyncQueue.containsKey(category)) {
+            categorySyncQueue.put(category, new OptionsCategory(category));
+        }
+        categorySyncQueue.get(category).withComponent(new KeyBindingComponent(result));
         return result;
     }
 
@@ -174,7 +185,7 @@ public class KeyUtils {
      * @param newKey   the new key for the specified KeyBinding
      */
     void setKey(final KeyBinding instance, final int newKey) {
-        instance.key = newKey;
+        instance.bindKeyboard(newKey);
     }
 
     /**
@@ -240,9 +251,12 @@ public class KeyUtils {
      */
     void onTick() {
         if (!areKeysRegistered()) {
-            if (CraftPresence.instance.gameSettings != null) {
+            if (CraftPresence.instance.gameSettings != null && CraftPresence.instance.fontRenderer != null) {
                 for (KeyBindData entry : KEY_MAPPINGS.values()) {
                     CraftPresence.instance.gameSettings.keys = StringUtils.addToArray(CraftPresence.instance.gameSettings.keys, entry.binding());
+                }
+                for (Map.Entry<String, OptionsCategory> category : categorySyncQueue.entrySet()) {
+                    OptionsPages.CONTROLS.withComponent(category.getValue());
                 }
                 keysRegistered = true;
             } else {
@@ -263,7 +277,7 @@ public class KeyUtils {
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiOptionsPageControls)) {
+                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiOptions)) {
                             try {
                                 keyData.runEvent().run();
                             } catch (Throwable ex) {
@@ -405,7 +419,7 @@ public class KeyUtils {
          * @return the KeyBind description
          */
         public String description() {
-            return binding().name;
+            return binding().getId();
         }
 
         /**
@@ -414,7 +428,7 @@ public class KeyUtils {
          * @return the currently assigned key code
          */
         public int keyCode() {
-            return binding().key;
+            return binding().getKeyCode();
         }
 
         /**

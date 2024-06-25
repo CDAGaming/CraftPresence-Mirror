@@ -234,7 +234,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    public void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
             final int hoverState = getButtonState(isHoveringOrFocusingOver());
             final int hoverValue = 46 + hoverState * 20;
@@ -256,7 +256,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * Equivalent of MouseListener.mousePressed(MouseEvent e).
      */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft arg, int mouseX, int mouseY) {
+    public boolean mouseClicked(@Nonnull Minecraft arg, int mouseX, int mouseY) {
         return isOverScreen() && isControlEnabled() && isControlVisible() && isHoveringOver();
     }
 

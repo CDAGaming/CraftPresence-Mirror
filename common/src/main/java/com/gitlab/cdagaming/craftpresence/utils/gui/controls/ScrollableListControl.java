@@ -38,7 +38,7 @@ import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.gui.ScrolledSelectionList;
 import net.minecraft.client.render.FontRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.core.item.ItemStack;
@@ -55,7 +55,7 @@ import java.util.Map;
  * @author CDAGaming
  */
 @SuppressWarnings("DuplicatedCode")
-public class ScrollableListControl extends GuiSlot {
+public class ScrollableListControl extends ScrolledSelectionList {
     /**
      * Mapping representing a link between the entries original name, and it's display name
      */
@@ -176,14 +176,10 @@ public class ScrollableListControl extends GuiSlot {
     public boolean isWithinBounds(final int mouseX, final int mouseY) {
         return RenderUtils.isMouseWithin(
                 mouseX, mouseY,
-                top,
-                bottom,
-                StringUtils.getValidInteger(
-                        StringUtils.getField(GuiSlot.class, this, "left", "field_22258_g", "e")
-                ).getSecond(),
-                StringUtils.getValidInteger(
-                        StringUtils.getField(GuiSlot.class, this, "right", "field_22259_f", "d")
-                ).getSecond()
+                y0,
+                y1,
+                x0,
+                x1
         );
     }
 
@@ -193,7 +189,7 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Amount of Items in the List
      */
     @Override
-    protected int getSize() {
+    protected int getItemCount() {
         return itemList.size();
     }
 
@@ -204,7 +200,7 @@ public class ScrollableListControl extends GuiSlot {
      * @param isDoubleClick Whether the Click was a Double or Single Click
      */
     @Override
-    public void elementClicked(int slotIndex, boolean isDoubleClick) {
+    public void selectItem(int slotIndex, boolean isDoubleClick) {
         currentValue = getSelectedItem(slotIndex);
     }
 
@@ -215,7 +211,7 @@ public class ScrollableListControl extends GuiSlot {
      * @return {@link Boolean#TRUE} if the Slot Number is the Currently Selected Slot
      */
     @Override
-    public boolean isSelected(int slotIndex) {
+    public boolean isSelectedItem(int slotIndex) {
         return getSelectedItem(slotIndex).equals(currentValue);
     }
 
@@ -223,7 +219,7 @@ public class ScrollableListControl extends GuiSlot {
      * Renders the Background for this Control
      */
     @Override
-    protected void drawBackground() {
+    protected void renderHoleBackground() {
         // N/A
     }
 
@@ -237,7 +233,7 @@ public class ScrollableListControl extends GuiSlot {
      * @param tessellatorIn The tesselator for the Object to render with
      */
     @Override
-    protected void drawSlot(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn) {
+    protected void renderItem(int slotIndex, int xPos, int yPos, int heightIn, Tessellator tessellatorIn) {
         renderSlotItem(getSelectedItem(slotIndex), xPos, yPos, 220, heightIn, currentScreen.getMouseX(), currentScreen.getMouseY());
     }
 
@@ -287,7 +283,7 @@ public class ScrollableListControl extends GuiSlot {
             // Reset the scrollbar to prevent OOB issues
             //method_1063(Integer.MIN_VALUE);
             try {
-                Field field = GuiSlot.class.getDeclaredFields()[14];
+                Field field = ScrolledSelectionList.class.getDeclaredFields()[14];
                 field.setAccessible(true);
                 field.set(this, 0.0f);
             } catch (Throwable ignored) {
