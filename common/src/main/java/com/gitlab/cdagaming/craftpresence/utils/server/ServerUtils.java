@@ -244,7 +244,7 @@ public class ServerUtils implements ExtendedModule {
      */
     private RealmsServer findRealmData(final ClientPacketListener connection) {
         try {
-            if (connection.callbackScreen instanceof RealmsScreen realmsProxy &&
+            if (connection.postDisconnectScreen instanceof RealmsScreen realmsProxy &&
                     realmsProxy instanceof RealmsMainScreen realmsMainScreen) {
                 return realmsMainScreen.getSelectedServer();
             }
@@ -265,7 +265,7 @@ public class ServerUtils implements ExtendedModule {
             // Note: A Realm is only checked for *once* under set conditions
             if (!hasCheckedRealm) {
                 final boolean canCheckRealm = newServerData != null && newConnection != null;
-                if (canCheckRealm && CraftPresence.instance.isConnectedToRealms()) {
+                if (canCheckRealm && newServerData.isRealm()) {
                     currentRealmData = findRealmData(newConnection);
                     isOnRealm = currentRealmData != null;
                 }
@@ -518,7 +518,7 @@ public class ServerUtils implements ExtendedModule {
         final boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
-            CraftPresence.instance.execute(() -> joinServer(new ServerData(serverName, serverIP, false)));
+            CraftPresence.instance.execute(() -> joinServer(new ServerData(serverName, serverIP, ServerData.Type.OTHER)));
         } else {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
         }
@@ -667,7 +667,7 @@ public class ServerUtils implements ExtendedModule {
                 // Attempt to find alternative icons, if no overrides are present
                 if (StringUtils.isNullOrEmpty(currentServerIcon)) {
                     // Logic cloned from ScrollableListControl#renderSlotItem
-                    final String originalName = currentRealmData.ownerUUID;
+                    final String originalName = currentRealmData.ownerUUID.toString();
                     final boolean isValidUuid = StringUtils.isValidUuid(originalName);
                     if (!CraftPresence.CONFIG.hasChanged() && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                             !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {

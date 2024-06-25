@@ -51,14 +51,6 @@ public class ScreenConstants {
             new ColorSection(40, 0, 127, 80)
     );
     /**
-     * The Default Widget Background Resources
-     */
-    private static final Function<Integer, String> DEFAULT_BUTTON_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? "/gui/gui.png" : "textures/gui/widgets.png");
-    /**
-     * The Default Widget Background Resources
-     */
-    private static final String DEFAULT_BUTTON_BACKGROUND = getDefaultButtonBackground(Constants.MCBuildProtocol);
-    /**
      * The Default Screen Background Resources
      */
     private static final Function<Integer, String> DEFAULT_GUI_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? (Constants.isLegacyAlpha(protocol) ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
@@ -78,25 +70,6 @@ public class ScreenConstants {
     private static final Tuple<Boolean, ColorData, ColorData> EMPTY_TOOLTIP = new Tuple<>(
             true, null, null
     );
-
-    /**
-     * Retrieve The Default Widget Background Resources
-     *
-     * @param protocol The Protocol to Target for this operation
-     * @return The Default Widget Background Resources
-     */
-    public static String getDefaultButtonBackground(final int protocol) {
-        return DEFAULT_BUTTON_BACKGROUND_SUPPLIER.apply(protocol);
-    }
-
-    /**
-     * Retrieve The Default Widget Background Resources
-     *
-     * @return The Default Widget Background Resources
-     */
-    public static String getDefaultButtonBackground() {
-        return DEFAULT_BUTTON_BACKGROUND;
-    }
 
     /**
      * Retrieve The Default Screen Background Resources

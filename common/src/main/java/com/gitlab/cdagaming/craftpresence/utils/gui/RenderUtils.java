@@ -44,6 +44,7 @@ import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Style;
@@ -56,6 +57,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Rendering Utilities used to Parse Screen Data and handle rendering tasks
@@ -64,6 +66,12 @@ import java.util.Map;
  */
 @SuppressWarnings("DuplicatedCode")
 public class RenderUtils {
+    /**
+     * The Default Widget Background Resources
+     */
+    public static final WidgetSprites DEFAULT_BUTTON_SPRITES = new WidgetSprites(
+            ResourceUtils.getResource("widget/button"), ResourceUtils.getResource("widget/button_disabled"), ResourceUtils.getResource("widget/button_highlighted")
+    );
     /**
      * The Block List for any ItemStacks that have failed to render in {@link RenderUtils#drawItemStack(GuiGraphics, Font, int, int, ItemStack, float)}
      */
@@ -95,20 +103,12 @@ public class RenderUtils {
     /**
      * Retrieve the default Widget Textures as Texture Data
      *
-     * @param protocol The Protocol to Target for this operation
+     * @param enabled    If the button is enabled
+     * @param hoverState The hover state of the button
      * @return the default Widget Textures
      */
-    public static ResourceLocation getButtonTextures(final int protocol) {
-        return getTextureData(ScreenConstants.getDefaultButtonBackground(protocol)).getThird();
-    }
-
-    /**
-     * Retrieve the default Widget Textures as Texture Data
-     *
-     * @return the default Widget Textures
-     */
-    public static ResourceLocation getButtonTextures() {
-        return getButtonTextures(ModUtils.MCProtocolID);
+    public static ResourceLocation getButtonTexture(final boolean enabled, final boolean hoverState) {
+        return DEFAULT_BUTTON_SPRITES.get(enabled, hoverState);
     }
 
     /**
@@ -336,48 +336,19 @@ public class RenderUtils {
     /**
      * Renders a Button Object from the defined arguments
      *
-     * @param mc          The current game instance
-     * @param x           The Starting X Position to render the button
-     * @param y           The Starting Y Position to render the button
-     * @param startU      The Starting U Mapping Value
-     * @param startV      The Starting V Mapping Value
-     * @param endU        The Ending U Mapping Value
-     * @param endV        The Ending V Mapping Value
-     * @param width       The full width for the button to render to
-     * @param height      The full height for the button to render to
-     * @param zLevel      The Z level position for the button to render at
-     * @param texLocation The game texture to render the button as
+     * @param graphics The current game instance
+     * @param callback The rendering callback event
      */
-    public static void renderButton(@Nonnull final Minecraft mc,
-                                    final double x, final double y,
-                                    final double startU, final double startV,
-                                    final double endU, final double endV,
-                                    final double width, final double height,
-                                    final double zLevel,
-                                    final ResourceLocation texLocation) {
-        try {
-            if (texLocation != null) {
-                final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
-                if (data.getFirst()) {
-                    RenderSystem.bindTexture(data.getSecond());
-                } else {
-                    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                    RenderSystem.setShaderTexture(0, texLocation);
-                }
-            }
-        } catch (Exception ignored) {
-            return;
-        }
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    public static void renderSprite(@Nonnull final GuiGraphics graphics,
+                                    final Consumer<GuiGraphics> callback) {
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         RenderSystem.enableDepthTest();
 
-        blit(x, y, zLevel, startU, startV, width, height);
-        blit(x + width, y, zLevel, endU, endV, width, height);
+        callback.accept(graphics);
 
-        RenderSystem.disableDepthTest();
-        RenderSystem.disableBlend();
+        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     /**
