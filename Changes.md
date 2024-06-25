@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.4.3 (07/02/2024)
+## v2.4.3 (06/27/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.4.2...release%2Fv2.4.3)_
@@ -12,7 +12,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Unimined (`1.2.12` -> `1.2.14`)
     * SpotBugs Annotations (`4.8.5` -> `4.8.6`)
-    * UniCore (`1.1.10` -> `1.1.11-SNAPSHOT`)
+    * ClassGraph (`4.8.173` -> `4.8.174`)
+    * UniCore (`1.1.10` -> `1.1.11`)
 * Improved `Controls` UI functionality for MC 1.6.4 and below
     * The UI now appears the same as modern versions of MC
 * Misc. Improvements to consolidate API calls and overall file size
@@ -22,7 +23,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed a visual error where the `Reset to Default` button can appear incorrectly in certain areas of `Status Messages`
 * Fixed an issue where `PresenceData` would not be marked as changed if `enabled` or `useAsMain` was modified
 * Fixed an issue where a `not implemented` message would appear when using Icon Selectors
-    * This issue was originally introduced in v2.3.8 due to a regression in `addIconSelector` logic
+* Fixed an issue where false-positive save indicators could occur if metadata differs between `Config` instances
+* Fixed an issue where the default language was incorrectly setup on certain MC versions
 
 ___
 
