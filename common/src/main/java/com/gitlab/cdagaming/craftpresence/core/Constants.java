@@ -135,18 +135,45 @@ public class Constants {
      * If this Application is in the Hard Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
      */
-    private static final Function<Integer, Boolean> IS_LEGACY_HARD = (protocol) -> IS_LEGACY_SOFT && protocol <= 61;
+    private static final Function<Integer, Boolean> IS_LEGACY_HARD_SUPPLIER = (protocol) -> IS_LEGACY_SOFT && protocol <= 61;
+
+    /**
+     * If this Application is in the Hard Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
+     */
+    private static final boolean IS_LEGACY_HARD = isLegacyHard(MCBuildProtocol);
 
     /**
      * If this Application is in the Alpha Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
      */
-    private static final Function<Integer, Boolean> IS_LEGACY_ALPHA = (protocol) -> IS_LEGACY_SOFT && protocol <= 2;
+    private static final Function<Integer, Boolean> IS_LEGACY_ALPHA_SUPPLIER = (protocol) -> IS_LEGACY_SOFT && protocol <= 2;
+
+    /**
+     * If this Application is in the Alpha Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
+     */
+    private static final boolean IS_LEGACY_ALPHA = isLegacyAlpha(MCBuildProtocol);
 
     /**
      * Flag used for determining if Text Formatting Codes are blocked
      */
-    private static final Function<Integer, Boolean> IS_TEXT_FORMATTING_BLOCKED = (protocol) -> IS_LEGACY_SOFT && protocol <= 23;
+    private static final Function<Integer, Boolean> IS_TEXT_FORMATTING_BLOCKED_SUPPLIER = (protocol) -> IS_LEGACY_SOFT && protocol <= 23;
+
+    /**
+     * Flag used for determining if Text Formatting Codes are blocked
+     */
+    private static final boolean IS_TEXT_FORMATTING_BLOCKED = isTextFormattingBlocked(MCBuildProtocol);
+
+    /**
+     * The default language ID to be using
+     */
+    private static final Function<Integer, String> DEFAULT_LANGUAGE_SUPPLIER = (protocol) -> protocol >= 315 ? "en_us" : "en_US";
+
+    /**
+     * The default language ID to be using
+     */
+    private static final String DEFAULT_LANGUAGE = getDefaultLanguage(MCBuildProtocol);
 
     /**
      * If Loading of game data has been completed<p>
@@ -205,7 +232,7 @@ public class Constants {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isLegacyHard(final int protocol) {
-        return IS_LEGACY_HARD.apply(protocol);
+        return IS_LEGACY_HARD_SUPPLIER.apply(protocol);
     }
 
     /**
@@ -215,7 +242,7 @@ public class Constants {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isLegacyHard() {
-        return isLegacyHard(MCBuildProtocol);
+        return IS_LEGACY_HARD;
     }
 
     /**
@@ -226,7 +253,7 @@ public class Constants {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isLegacyAlpha(final int protocol) {
-        return IS_LEGACY_ALPHA.apply(protocol);
+        return IS_LEGACY_ALPHA_SUPPLIER.apply(protocol);
     }
 
     /**
@@ -236,7 +263,7 @@ public class Constants {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isLegacyAlpha() {
-        return isLegacyAlpha(MCBuildProtocol);
+        return IS_LEGACY_ALPHA;
     }
 
     /**
@@ -246,7 +273,7 @@ public class Constants {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isTextFormattingBlocked(final int protocol) {
-        return IS_TEXT_FORMATTING_BLOCKED.apply(protocol);
+        return IS_TEXT_FORMATTING_BLOCKED_SUPPLIER.apply(protocol);
     }
 
     /**
@@ -255,7 +282,7 @@ public class Constants {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isTextFormattingBlocked() {
-        return isTextFormattingBlocked(MCBuildProtocol);
+        return IS_TEXT_FORMATTING_BLOCKED;
     }
 
     /**
@@ -265,7 +292,7 @@ public class Constants {
      * @return the default language id to be used
      */
     public static String getDefaultLanguage(final int protocol) {
-        return protocol >= 315 ? "en_us" : "en_US";
+        return DEFAULT_LANGUAGE_SUPPLIER.apply(protocol);
     }
 
     /**
@@ -274,7 +301,7 @@ public class Constants {
      * @return the default language id to be used
      */
     public static String getDefaultLanguage() {
-        return getDefaultLanguage(MCBuildProtocol);
+        return DEFAULT_LANGUAGE;
     }
 
     /**

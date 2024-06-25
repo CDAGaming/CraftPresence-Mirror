@@ -53,11 +53,19 @@ public class ScreenConstants {
     /**
      * The Default Widget Background Resources
      */
-    private static final Function<Integer, String> DEFAULT_BUTTON_BACKGROUND = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? "/gui/gui.png" : "textures/gui/widgets.png");
+    private static final Function<Integer, String> DEFAULT_BUTTON_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? "/gui/gui.png" : "textures/gui/widgets.png");
+    /**
+     * The Default Widget Background Resources
+     */
+    private static final String DEFAULT_BUTTON_BACKGROUND = getDefaultButtonBackground(Constants.MCBuildProtocol);
     /**
      * The Default Screen Background Resources
      */
-    private static final Function<Integer, String> DEFAULT_GUI_BACKGROUND = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? (Constants.isLegacyAlpha(protocol) ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+    private static final Function<Integer, String> DEFAULT_GUI_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? (Constants.isLegacyAlpha(protocol) ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+    /**
+     * The Default Screen Background Resources
+     */
+    private static final String DEFAULT_GUI_BACKGROUND = getDefaultGUIBackground(Constants.MCBuildProtocol);
     /**
      * The default Tooltip Rendering Info
      */
@@ -78,7 +86,7 @@ public class ScreenConstants {
      * @return The Default Widget Background Resources
      */
     public static String getDefaultButtonBackground(final int protocol) {
-        return DEFAULT_BUTTON_BACKGROUND.apply(protocol);
+        return DEFAULT_BUTTON_BACKGROUND_SUPPLIER.apply(protocol);
     }
 
     /**
@@ -87,7 +95,7 @@ public class ScreenConstants {
      * @return The Default Widget Background Resources
      */
     public static String getDefaultButtonBackground() {
-        return getDefaultButtonBackground(Constants.MCBuildProtocol);
+        return DEFAULT_BUTTON_BACKGROUND;
     }
 
     /**
@@ -97,7 +105,7 @@ public class ScreenConstants {
      * @return The Default Screen Background Resources
      */
     public static String getDefaultGUIBackground(final int protocol) {
-        return DEFAULT_GUI_BACKGROUND.apply(protocol);
+        return DEFAULT_GUI_BACKGROUND_SUPPLIER.apply(protocol);
     }
 
     /**
@@ -106,7 +114,7 @@ public class ScreenConstants {
      * @return The Default Screen Background Resources
      */
     public static String getDefaultGUIBackground() {
-        return getDefaultGUIBackground(Constants.MCBuildProtocol);
+        return DEFAULT_GUI_BACKGROUND;
     }
 
     /**
