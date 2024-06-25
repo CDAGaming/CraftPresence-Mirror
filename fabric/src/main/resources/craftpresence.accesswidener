@@ -6,3 +6,4 @@ mutable    field    net/minecraft/client/Options    keyMappings    [Lnet/minecra
 accessible    field    net/minecraft/client/KeyMapping    CATEGORY_SORT_ORDER    Ljava/util/Map;
 mutable    field    net/minecraft/client/KeyMapping    CATEGORY_SORT_ORDER    Ljava/util/Map;
 accessible field net/minecraft/client/multiplayer/ClientPacketListener callbackScreen Lnet/minecraft/client/gui/screens/Screen;
+accessible method com/mojang/realmsclient/RealmsMainScreen getSelectedServer ()Lcom/mojang/realmsclient/dto/RealmsServer;
