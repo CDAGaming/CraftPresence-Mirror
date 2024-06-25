@@ -229,6 +229,15 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
+     * Retrieve The Detected Minecraft Protocol Version
+     *
+     * @return The Detected Minecraft Protocol Version
+     */
+    public static int getProtocol() {
+        return ModUtils.MCProtocolID;
+    }
+
+    /**
      * Return a KeyCode, dependent on the LWJGL version
      *
      * @param lwjgl2Key The KeyCode to return if on LWJGL2
@@ -236,7 +245,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return the processed KeyCode
      */
     public static int getKeyByVersion(final int lwjgl2Key, final int lwjgl3Key) {
-        return ModUtils.MCProtocolID > 340 ? lwjgl3Key : lwjgl2Key;
+        return getProtocol() > 340 ? lwjgl3Key : lwjgl2Key;
     }
 
     /**

@@ -545,7 +545,7 @@ public final class Config extends Module implements Serializable {
         }
 
         // Sync Flag Data
-        if (Constants.IS_TEXT_FORMATTING_BLOCKED) {
+        if (Constants.isTextFormattingBlocked()) {
             accessibilitySettings.stripTranslationFormatting = true;
         }
 

@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
+import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScissorStack;
@@ -81,10 +82,30 @@ public class RenderUtils {
     /**
      * Retrieve the default Screen Textures as Texture Data
      *
+     * @param protocol The Protocol to Target for this operation
+     * @return the default Screen Textures
+     */
+    public static ResourceLocation getScreenTextures(final int protocol) {
+        return getTextureData(ScreenConstants.getDefaultGUIBackground(protocol)).getThird();
+    }
+
+    /**
+     * Retrieve the default Screen Textures as Texture Data
+     *
      * @return the default Screen Textures
      */
     public static ResourceLocation getScreenTextures() {
-        return getTextureData(ScreenConstants.DEFAULT_GUI_BACKGROUND).getThird();
+        return getScreenTextures(ModUtils.MCProtocolID);
+    }
+
+    /**
+     * Retrieve the default Widget Textures as Texture Data
+     *
+     * @param protocol The Protocol to Target for this operation
+     * @return the default Widget Textures
+     */
+    public static ResourceLocation getButtonTextures(final int protocol) {
+        return getTextureData(ScreenConstants.getDefaultButtonBackground(protocol)).getThird();
     }
 
     /**
@@ -93,7 +114,7 @@ public class RenderUtils {
      * @return the default Widget Textures
      */
     public static ResourceLocation getButtonTextures() {
-        return getTextureData(ScreenConstants.DEFAULT_BUTTON_BACKGROUND).getThird();
+        return getButtonTextures(ModUtils.MCProtocolID);
     }
 
     /**

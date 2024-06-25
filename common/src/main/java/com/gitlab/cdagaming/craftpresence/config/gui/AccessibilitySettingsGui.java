@@ -44,6 +44,7 @@ import java.util.Map;
 public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
 
     private final Accessibility INSTANCE, DEFAULTS;
+    private final boolean isTextFormattingBlocked;
     // configName, [moduleData,defaultData]
     private final Map<String, Pair<ColorData, ColorData>> colorSettings = StringUtils.newHashMap();
     private ExtendedTextControl languageIdText;
@@ -55,6 +56,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         super("gui.config.title", "gui.config.title.accessibility");
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
+        isTextFormattingBlocked = Constants.isTextFormattingBlocked(getProtocol());
     }
 
     @Override
@@ -125,7 +127,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                                 Constants.TRANSLATOR.translate("gui.config.comment.accessibility.strip_translation_formatting")
                                         )
                                 );
-                            } else if (Constants.IS_TEXT_FORMATTING_BLOCKED) {
+                            } else if (isTextFormattingBlocked) {
                                 drawMultiLineString(
                                         StringUtils.splitTextByNewLine(
                                                 Constants.TRANSLATOR.translate("craftpresence.message.unsupported")
@@ -135,6 +137,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         }
                 )
         );
+        stripTranslationFormattingButton.setControlEnabled(!isTextFormattingBlocked);
         stripExtraGuiElementsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(3, -20),
@@ -219,7 +222,6 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     protected void syncRenderStates() {
         super.syncRenderStates();
 
-        stripTranslationFormattingButton.setControlEnabled(!Constants.IS_TEXT_FORMATTING_BLOCKED);
         controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
     }

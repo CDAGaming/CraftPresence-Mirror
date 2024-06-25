@@ -42,7 +42,7 @@ public class Accessibility extends Module implements Serializable {
     public ColorData tooltipBorder = ScreenConstants.DEFAULT_TOOLTIP_BORDER;
     public ColorData guiBackground = new ColorData(
             new ColorSection(64, 64, 64, 255),
-            ScreenConstants.DEFAULT_GUI_BACKGROUND
+            ScreenConstants.getDefaultGUIBackground()
     );
     public ColorData altGuiBackground = new ColorData(
             new ColorSection(16, 16, 16, 192),
@@ -50,7 +50,7 @@ public class Accessibility extends Module implements Serializable {
     );
     public String languageId = Constants.getDefaultLanguage();
     public boolean stripTranslationColors = false;
-    public boolean stripTranslationFormatting = Constants.IS_TEXT_FORMATTING_BLOCKED;
+    public boolean stripTranslationFormatting = Constants.isTextFormattingBlocked();
     public boolean stripExtraGuiElements = false;
     public boolean renderTooltips = true;
     public int configKeyCode = Constants.MCBuildProtocol > 340 ? 96 : 41;

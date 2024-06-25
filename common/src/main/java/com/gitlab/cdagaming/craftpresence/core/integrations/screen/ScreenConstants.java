@@ -29,6 +29,8 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import io.github.cdagaming.unicore.impl.Tuple;
 
+import java.util.function.Function;
+
 /**
  * Constant Variables and Methods used for Rendering Operations
  *
@@ -51,11 +53,11 @@ public class ScreenConstants {
     /**
      * The Default Widget Background Resources
      */
-    public static final String DEFAULT_BUTTON_BACKGROUND = "minecraft:" + (Constants.IS_LEGACY_HARD ? "/gui/gui.png" : "textures/gui/widgets.png");
+    private static final Function<Integer, String> DEFAULT_BUTTON_BACKGROUND = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? "/gui/gui.png" : "textures/gui/widgets.png");
     /**
      * The Default Screen Background Resources
      */
-    public static final String DEFAULT_GUI_BACKGROUND = "minecraft:" + (Constants.IS_LEGACY_HARD ? (Constants.IS_LEGACY_ALPHA ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+    private static final Function<Integer, String> DEFAULT_GUI_BACKGROUND = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? (Constants.isLegacyAlpha(protocol) ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
     /**
      * The default Tooltip Rendering Info
      */
@@ -68,6 +70,44 @@ public class ScreenConstants {
     private static final Tuple<Boolean, ColorData, ColorData> EMPTY_TOOLTIP = new Tuple<>(
             true, null, null
     );
+
+    /**
+     * Retrieve The Default Widget Background Resources
+     *
+     * @param protocol The Protocol to Target for this operation
+     * @return The Default Widget Background Resources
+     */
+    public static String getDefaultButtonBackground(final int protocol) {
+        return DEFAULT_BUTTON_BACKGROUND.apply(protocol);
+    }
+
+    /**
+     * Retrieve The Default Widget Background Resources
+     *
+     * @return The Default Widget Background Resources
+     */
+    public static String getDefaultButtonBackground() {
+        return getDefaultButtonBackground(Constants.MCBuildProtocol);
+    }
+
+    /**
+     * Retrieve The Default Screen Background Resources
+     *
+     * @param protocol The Protocol to Target for this operation
+     * @return The Default Screen Background Resources
+     */
+    public static String getDefaultGUIBackground(final int protocol) {
+        return DEFAULT_GUI_BACKGROUND.apply(protocol);
+    }
+
+    /**
+     * Retrieve The Default Screen Background Resources
+     *
+     * @return The Default Screen Background Resources
+     */
+    public static String getDefaultGUIBackground() {
+        return getDefaultGUIBackground(Constants.MCBuildProtocol);
+    }
 
     /**
      * Retrieve the tooltip Rendering Info for an Empty Background and Border

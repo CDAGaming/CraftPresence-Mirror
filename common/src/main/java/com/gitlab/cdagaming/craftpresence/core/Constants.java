@@ -36,6 +36,7 @@ import io.github.cdagaming.unicore.utils.TranslationUtils;
 import java.io.File;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -107,18 +108,6 @@ public class Constants {
     public static final boolean IS_LEGACY_SOFT = StringUtils.getValidBoolean("@IS_LEGACY@").getSecond();
 
     /**
-     * If this Application is in the Hard Floor of Legacy Mode
-     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
-     */
-    public static final boolean IS_LEGACY_HARD = IS_LEGACY_SOFT && MCBuildProtocol <= 61;
-
-    /**
-     * If this Application is in the Alpha Floor of Legacy Mode
-     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
-     */
-    public static final boolean IS_LEGACY_ALPHA = IS_LEGACY_HARD && MCBuildProtocol <= 2;
-
-    /**
      * If this Application is flagged to be run in a Developer or Debug State
      */
     public static final boolean IS_DEV_FLAG = StringUtils.getValidBoolean("@IS_DEV@").getSecond();
@@ -127,11 +116,6 @@ public class Constants {
      * If this Application is flagged to be running in a de-obfuscated or Developer environment
      */
     public static final boolean IS_VERBOSE_FLAG = StringUtils.getValidBoolean("@IS_VERBOSE@").getSecond();
-
-    /**
-     * Flag used for determining if Text Formatting Codes are blocked
-     */
-    public static final boolean IS_TEXT_FORMATTING_BLOCKED = IS_LEGACY_SOFT && MCBuildProtocol <= 23;
 
     /**
      * The Application's Instance of {@link LoggingImpl} for Logging Information
@@ -146,6 +130,23 @@ public class Constants {
     )
             .setDefaultLanguage(getDefaultLanguage())
             .build();
+
+    /**
+     * If this Application is in the Hard Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
+     */
+    private static final Function<Integer, Boolean> IS_LEGACY_HARD = (protocol) -> IS_LEGACY_SOFT && protocol <= 61;
+
+    /**
+     * If this Application is in the Alpha Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
+     */
+    private static final Function<Integer, Boolean> IS_LEGACY_ALPHA = (protocol) -> IS_LEGACY_SOFT && protocol <= 2;
+
+    /**
+     * Flag used for determining if Text Formatting Codes are blocked
+     */
+    private static final Function<Integer, Boolean> IS_TEXT_FORMATTING_BLOCKED = (protocol) -> IS_LEGACY_SOFT && protocol <= 23;
 
     /**
      * If Loading of game data has been completed<p>
@@ -194,6 +195,67 @@ public class Constants {
      */
     public static ThreadFactory getThreadFactory() {
         return FileUtils.getThreadFactory(NAME);
+    }
+
+    /**
+     * Retrieve If this Application is in the Hard Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
+     *
+     * @param protocol The Protocol to Target for this operation
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isLegacyHard(final int protocol) {
+        return IS_LEGACY_HARD.apply(protocol);
+    }
+
+    /**
+     * Retrieve If this Application is in the Hard Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isLegacyHard() {
+        return isLegacyHard(MCBuildProtocol);
+    }
+
+    /**
+     * Retrieve If this Application is in the Alpha Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
+     *
+     * @param protocol The Protocol to Target for this operation
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isLegacyAlpha(final int protocol) {
+        return IS_LEGACY_ALPHA.apply(protocol);
+    }
+
+    /**
+     * Retrieve If this Application is in the Alpha Floor of Legacy Mode
+     * <p>This variable becomes true only on versions at or before a1.1.2_01 (Where resource paths are different)
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isLegacyAlpha() {
+        return isLegacyAlpha(MCBuildProtocol);
+    }
+
+    /**
+     * Retrieve if Text Formatting Codes are blocked
+     *
+     * @param protocol The Protocol to Target for this operation
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isTextFormattingBlocked(final int protocol) {
+        return IS_TEXT_FORMATTING_BLOCKED.apply(protocol);
+    }
+
+    /**
+     * Retrieve if Text Formatting Codes are blocked
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public static boolean isTextFormattingBlocked() {
+        return isTextFormattingBlocked(MCBuildProtocol);
     }
 
     /**
