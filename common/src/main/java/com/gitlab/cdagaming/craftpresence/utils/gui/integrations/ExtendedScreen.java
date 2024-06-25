@@ -634,7 +634,7 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
     }
 
     @Override
-    public void renderBackground(@Nonnull PoseStack matrixStack, int tint) {
+    public void renderBackground(@Nonnull PoseStack matrixStack) {
         renderCriticalData();
     }
 

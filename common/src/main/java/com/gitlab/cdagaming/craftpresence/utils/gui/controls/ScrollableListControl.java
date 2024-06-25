@@ -48,6 +48,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -315,8 +316,8 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
         if (renderType == RenderType.ServerData) {
             final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
 
-            if (data != null && !StringUtils.isNullOrEmpty(data.getIconB64())) {
-                assetUrl = "data:image/png;base64," + data.getIconB64();
+            if (data != null && data.getIconBytes() != null) {
+                assetUrl = "data:image/png;base64," + Base64.getEncoder().encodeToString(data.getIconBytes());
                 texture = ImageUtils.getTextureFromUrl(originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
             } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
@@ -367,7 +368,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
                 final ItemStack stack = data.get(originalName);
                 if (!TileEntityUtils.isEmpty(stack)) {
                     RenderUtils.drawItemStack(
-                            minecraft, getFontRenderer(), xOffset, yPos + 4, stack,
+                            minecraft, matrices, getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f
                     );
                     xOffset += 35;

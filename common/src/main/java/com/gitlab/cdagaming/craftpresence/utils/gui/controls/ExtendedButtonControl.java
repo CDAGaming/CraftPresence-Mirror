@@ -231,11 +231,35 @@ public class ExtendedButtonControl extends Button implements DynamicWidget {
         }
     }
 
+    float getBlitOffset() {
+        return 0.0F;
+    }
+
+    void setBlitOffset(int blitOffset) {
+        // N/A
+    }
+
+    /**
+     * Returns the current Hover state of this control
+     * <p>
+     * 0 if the button is disabled<p>
+     * 1 if the mouse is NOT hovering over this button<p>
+     * 2 if it IS hovering over this button.
+     */
+    protected int getYImage(boolean hoveredOrFocused) {
+        if (!active) {
+            return 0;
+        } else if (isHoveredOrFocused()) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
     /**
      * Fired when the mouse button is dragged.<p>
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
-    @Override
     protected void renderBg(@Nonnull PoseStack matrixStack, @Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
             final int hoverState = getYImage(isHoveringOrFocusingOver());

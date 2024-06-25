@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui.integrations;
 
+import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
 import io.github.cdagaming.unicore.utils.MathUtils;
@@ -121,17 +122,30 @@ public class ScrollPane extends ExtendedScreen {
     }
 
     @Override
+    public void drawBackground(final double left, final double right,
+                               final double top, final double bottom,
+                               final double offset, float tintFactor,
+                               final ColorData data) {
+        drawBackground(
+                left, right, top, bottom,
+                offset, tintFactor,
+                right, bottom,
+                data
+        );
+    }
+
+    @Override
     public void postRender() {
         // Render Depth Decorations
         RenderUtils.drawGradient(
                 getLeft(), getRight(), getTop(), getTop() + getPadding(),
-                -100.0D,
+                0.0D,
                 Color.black,
                 NONE
         );
         RenderUtils.drawGradient(
                 getLeft(), getRight(), getBottom() - getPadding(), getBottom(),
-                -100.0D,
+                0.0D,
                 NONE,
                 Color.black
         );
