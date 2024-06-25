@@ -269,7 +269,7 @@ public class KeyUtils {
             }
         }
 
-        if (CraftPresence.instance.window != null && CraftPresence.CONFIG != null) {
+        if (CraftPresence.instance.getWindow() != null && CraftPresence.CONFIG != null) {
             final boolean isLwjgl2 = ModUtils.MCProtocolID <= 340;
             final int unknownKeyCode = isLwjgl2 ? -1 : 0;
             final String unknownKeyName = (isLwjgl2 ? KeyConverter.fromGlfw : KeyConverter.toGlfw).get(unknownKeyCode).name();
@@ -282,7 +282,7 @@ public class KeyUtils {
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (GLFW.glfwGetKey(CraftPresence.instance.window.getWindow(), currentBind) == GLFW.GLFW_PRESS && !(CraftPresence.instance.screen instanceof ControlsScreen)) {
+                        if (GLFW.glfwGetKey(CraftPresence.instance.getWindow().getWindow(), currentBind) == GLFW.GLFW_PRESS && !(CraftPresence.instance.screen instanceof ControlsScreen)) {
                             try {
                                 keyData.runEvent().run();
                             } catch (Throwable ex) {
