@@ -27,7 +27,7 @@ package com.gitlab.cdagaming.craftpresence.impl;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.util.StringTranslate;
+import net.minecraft.src.StringTranslate;
 
 import java.util.Properties;
 

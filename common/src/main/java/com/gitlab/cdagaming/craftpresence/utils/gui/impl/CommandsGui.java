@@ -38,6 +38,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.src.GuiTextField;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -158,7 +159,10 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         proceedButton.setControlEnabled(!blockInteractions);
         copyButton.setControlEnabled(!blockInteractions);
-        commandInput.method_4243(!blockInteractions);
+        StringUtils.updateField(GuiTextField.class, commandInput,
+                !blockInteractions,
+                "isEnabled", "field_73819_m", "field_1127", "m"
+        );
 
         if (!blockInteractions) {
             checkCommands();

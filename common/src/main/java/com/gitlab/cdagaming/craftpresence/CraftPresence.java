@@ -41,8 +41,8 @@ import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Session;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.Session;
 
 /**
  * The Primary Application Class and Utilities

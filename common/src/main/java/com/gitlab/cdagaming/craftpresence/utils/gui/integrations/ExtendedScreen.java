@@ -39,10 +39,10 @@ import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.Gui;
+import net.minecraft.src.GuiButton;
+import net.minecraft.src.GuiScreen;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -138,7 +138,6 @@ public class ExtendedScreen extends GuiScreen {
 
     private int prevEventButton = 0;
     private long prevMouseEvent = 0L;
-    private int touchValue = 0;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -686,18 +685,10 @@ public class ExtendedScreen extends GuiScreen {
             final int mouseY = height - Mouse.getEventY() * height / mc.displayHeight - 1;
             final int eventButton = Mouse.getEventButton();
             if (Mouse.getEventButtonState()) {
-                if (mc.gameSettings.touchscreen && touchValue++ > 0) {
-                    return;
-                }
-
                 prevEventButton = eventButton;
                 prevMouseEvent = getSystemTime();
                 mouseClicked(mouseX, mouseY, prevEventButton);
             } else if (eventButton != -1) {
-                if (mc.gameSettings.touchscreen && --touchValue > 0) {
-                    return;
-                }
-
                 prevEventButton = -1;
                 mouseMovedOrUp(mouseX, mouseY, eventButton);
             } else if (prevEventButton != -1 && prevMouseEvent > 0L) {
@@ -786,7 +777,6 @@ public class ExtendedScreen extends GuiScreen {
         }
     }
 
-    @Override
     protected void method_4259(int mouseX, int mouseY, int mouseButton, long timeSinceLastClick) {
         if (isLoaded()) {
             for (Gui extendedControl : getControls()) {
@@ -794,7 +784,6 @@ public class ExtendedScreen extends GuiScreen {
                     extendedScreen.method_4259(mouseX, mouseY, mouseButton, timeSinceLastClick);
                 }
             }
-            super.method_4259(mouseX, mouseY, mouseButton, timeSinceLastClick);
         }
     }
 

@@ -32,7 +32,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.world.WorldProvider;
+import net.minecraft.src.WorldProvider;
 
 import java.util.List;
 import java.util.Map;
