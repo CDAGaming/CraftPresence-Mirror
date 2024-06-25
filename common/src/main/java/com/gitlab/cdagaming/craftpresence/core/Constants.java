@@ -123,15 +123,6 @@ public class Constants {
     public static final LoggingImpl LOG = IS_LEGACY_SOFT ? new JavaLogger(MOD_ID) : new ApacheLogger(MOD_ID);
 
     /**
-     * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
-     */
-    public static final TranslationUtils TRANSLATOR = new TranslationUtils(
-            MOD_ID, true
-    )
-            .setDefaultLanguage(getDefaultLanguage())
-            .build();
-
-    /**
      * If this Application is in the Hard Floor of Legacy Mode
      * <p>This variable becomes true only on versions at or before 1.5.2 (Or when critical APIs are missing)
      */
@@ -174,6 +165,15 @@ public class Constants {
      * The default language ID to be using
      */
     private static final String DEFAULT_LANGUAGE = getDefaultLanguage(MCBuildProtocol);
+
+    /**
+     * The Application's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
+     */
+    public static final TranslationUtils TRANSLATOR = new TranslationUtils(
+            MOD_ID, true
+    )
+            .setDefaultLanguage(getDefaultLanguage())
+            .build();
 
     /**
      * If Loading of game data has been completed<p>
