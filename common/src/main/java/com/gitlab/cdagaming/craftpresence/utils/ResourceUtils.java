@@ -45,7 +45,7 @@ public class ResourceUtils {
      * @return The found texture resource
      */
     public static ResourceLocation getResource(final String namespace, final String path) {
-        return new ResourceLocation(namespace, path);
+        return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }
 
     /**
@@ -65,7 +65,7 @@ public class ResourceUtils {
      * @return The found texture resource
      */
     public static ResourceLocation parseResource(final String path) {
-        return new ResourceLocation(path);
+        return ResourceLocation.parse(path);
     }
 
     /**

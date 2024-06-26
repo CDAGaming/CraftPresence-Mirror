@@ -416,14 +416,13 @@ public class RenderUtils {
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        final Tesselator tessellator = Tesselator.getInstance();
-        final BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        buffer.vertex(left, bottom, zLevel).uv((float) minU, (float) maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.vertex(right, bottom, zLevel).uv((float) maxU, (float) maxV).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.vertex(right, top, zLevel).uv((float) maxU, (float) minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        buffer.vertex(left, top, zLevel).uv((float) minU, (float) minV).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        tessellator.end();
+        final Tesselator tessellator = RenderSystem.renderThreadTesselator();
+        final BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        buffer.addVertex((float) left, (float) bottom, (float) zLevel).setUv((float) minU, (float) maxV).setColor(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha());
+        buffer.addVertex((float) right, (float) bottom, (float) zLevel).setUv((float) maxU, (float) maxV).setColor(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha());
+        buffer.addVertex((float) right, (float) top, (float) zLevel).setUv((float) maxU, (float) minV).setColor(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha());
+        buffer.addVertex((float) left, (float) top, (float) zLevel).setUv((float) minU, (float) minV).setColor(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha());
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         RenderSystem.disableBlend();
     }
@@ -524,14 +523,13 @@ public class RenderUtils {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        final Tesselator tessellator = Tesselator.getInstance();
-        final BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        buffer.vertex(left, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.vertex(right, bottom, zLevel).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-        buffer.vertex(right, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        buffer.vertex(left, top, zLevel).color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-        tessellator.end();
+        final Tesselator tessellator = RenderSystem.renderThreadTesselator();
+        final BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        buffer.addVertex((float) left, (float) bottom, (float) zLevel).setColor(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha());
+        buffer.addVertex((float) right, (float) bottom, (float) zLevel).setColor(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha());
+        buffer.addVertex((float) right, (float) top, (float) zLevel).setColor(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha());
+        buffer.addVertex((float) left, (float) top, (float) zLevel).setColor(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha());
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
@@ -626,14 +624,13 @@ public class RenderUtils {
     public static void innerBlit(final double left, final double right, final double top, final double bottom,
                                  final double zLevel,
                                  final double minU, final double maxU, final double minV, final double maxV) {
-        final Tesselator tessellator = Tesselator.getInstance();
-        final BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(left, bottom, zLevel).uv((float) minU, (float) maxV).endVertex();
-        buffer.vertex(right, bottom, zLevel).uv((float) maxU, (float) maxV).endVertex();
-        buffer.vertex(right, top, zLevel).uv((float) maxU, (float) minV).endVertex();
-        buffer.vertex(left, top, zLevel).uv((float) minU, (float) minV).endVertex();
-        tessellator.end();
+        final Tesselator tessellator = RenderSystem.renderThreadTesselator();
+        final BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex((float) left, (float) bottom, (float) zLevel).setUv((float) minU, (float) maxV);
+        buffer.addVertex((float) right, (float) bottom, (float) zLevel).setUv((float) maxU, (float) maxV);
+        buffer.addVertex((float) right, (float) top, (float) zLevel).setUv((float) maxU, (float) minV);
+        buffer.addVertex((float) left, (float) top, (float) zLevel).setUv((float) minU, (float) minV);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
     }
 
     /**
