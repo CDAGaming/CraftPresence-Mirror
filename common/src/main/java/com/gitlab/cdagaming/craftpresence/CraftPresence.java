@@ -206,7 +206,7 @@ public class CraftPresence {
             instance = Minecraft.getMinecraft();
             if (initialized) {
                 session = instance.getSession();
-                player = instance.player;
+                player = instance.thePlayer;
 
                 username = session.getUsername();
                 uuid = session.getPlayerID();
