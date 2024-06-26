@@ -24,12 +24,9 @@
 
 package com.gitlab.cdagaming.craftpresence.core.integrations.screen;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import io.github.cdagaming.unicore.impl.Tuple;
-
-import java.util.function.Function;
 
 /**
  * Constant Variables and Methods used for Rendering Operations
@@ -53,11 +50,19 @@ public class ScreenConstants {
     /**
      * The Default Screen Background Resources
      */
-    private static final Function<Integer, String> DEFAULT_GUI_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? (Constants.isLegacyAlpha(protocol) ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+    private static final String DEFAULT_GUI_BACKGROUND = "minecraft:textures/gui/menu_background.png";
     /**
-     * The Default Screen Background Resources
+     * The alternative Screen Background Resources
      */
-    private static final String DEFAULT_GUI_BACKGROUND = getDefaultGUIBackground(Constants.MCBuildProtocol);
+    private static final String DEFAULT_GUI_BACKGROUND_ALT = "minecraft:textures/gui/menu_list_background.png";
+    /**
+     * The Default Screen Background Resources, while in a world
+     */
+    private static final String DEFAULT_WORLD_GUI_BACKGROUND = "minecraft:textures/gui/inworld_menu_background.png";
+    /**
+     * The alternative Screen Background Resources, while in a world
+     */
+    private static final String DEFAULT_WORLD_GUI_BACKGROUND_ALT = "minecraft:textures/gui/inworld_menu_list_background.png";
     /**
      * The default Tooltip Rendering Info
      */
@@ -74,20 +79,37 @@ public class ScreenConstants {
     /**
      * Retrieve The Default Screen Background Resources
      *
-     * @param protocol The Protocol to Target for this operation
-     * @return The Default Screen Background Resources
-     */
-    public static String getDefaultGUIBackground(final int protocol) {
-        return DEFAULT_GUI_BACKGROUND_SUPPLIER.apply(protocol);
-    }
-
-    /**
-     * Retrieve The Default Screen Background Resources
-     *
      * @return The Default Screen Background Resources
      */
     public static String getDefaultGUIBackground() {
         return DEFAULT_GUI_BACKGROUND;
+    }
+
+    /**
+     * Retrieve The alternative Screen Background Resources
+     *
+     * @return The alternative Screen Background Resources
+     */
+    public static String getDefaultGUIBackgroundAlt() {
+        return DEFAULT_GUI_BACKGROUND_ALT;
+    }
+
+    /**
+     * Retrieve The Default Screen Background Resources, while in a world
+     *
+     * @return The Default Screen Background Resources, while in a world
+     */
+    public static String getDefaultWorldGUIBackground() {
+        return DEFAULT_WORLD_GUI_BACKGROUND;
+    }
+
+    /**
+     * Retrieve The alternative Screen Background Resources, while in a world
+     *
+     * @return The alternative Screen Background Resources, while in a world
+     */
+    public static String getDefaultWorldGUIBackgroundAlt() {
+        return DEFAULT_WORLD_GUI_BACKGROUND_ALT;
     }
 
     /**

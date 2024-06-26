@@ -542,6 +542,8 @@ public final class Config extends Module implements Serializable {
             final Accessibility accessibilityDefaults = accessibilitySettings.getDefaults();
             accessibilitySettings.guiBackground = accessibilityDefaults.guiBackground;
             accessibilitySettings.altGuiBackground = accessibilityDefaults.altGuiBackground;
+            accessibilitySettings.worldGuiBackground = accessibilityDefaults.worldGuiBackground;
+            accessibilitySettings.altWorldGuiBackground = accessibilityDefaults.altWorldGuiBackground;
         }
 
         // Sync Flag Data

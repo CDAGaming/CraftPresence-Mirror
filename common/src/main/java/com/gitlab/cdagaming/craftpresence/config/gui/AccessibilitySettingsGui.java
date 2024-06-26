@@ -81,6 +81,14 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                 "altGuiBackground",
                 new Pair<>(getInstanceData().altGuiBackground, getDefaultData().altGuiBackground)
         );
+        colorSettings.put(
+                "worldGuiBackground",
+                new Pair<>(getInstanceData().worldGuiBackground, getDefaultData().worldGuiBackground)
+        );
+        colorSettings.put(
+                "altWorldGuiBackground",
+                new Pair<>(getInstanceData().altWorldGuiBackground, getDefaultData().altWorldGuiBackground)
+        );
 
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;

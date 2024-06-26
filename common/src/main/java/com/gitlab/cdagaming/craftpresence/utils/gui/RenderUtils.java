@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils.gui;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
@@ -84,20 +83,37 @@ public class RenderUtils {
     /**
      * Retrieve the default Screen Textures as Texture Data
      *
-     * @param protocol The Protocol to Target for this operation
      * @return the default Screen Textures
      */
-    public static ResourceLocation getScreenTextures(final int protocol) {
-        return getTextureData(ScreenConstants.getDefaultGUIBackground(protocol)).getThird();
+    public static ResourceLocation getScreenTextures() {
+        return getTextureData(ScreenConstants.getDefaultGUIBackground()).getThird();
+    }
+
+    /**
+     * Retrieve the alternative Screen Textures as Texture Data
+     *
+     * @return the alternative Screen Textures
+     */
+    public static ResourceLocation getAltScreenTextures() {
+        return getTextureData(ScreenConstants.getDefaultGUIBackgroundAlt()).getThird();
     }
 
     /**
      * Retrieve the default Screen Textures as Texture Data
      *
-     * @return the default Screen Textures
+     * @return the default Screen Textures, while in a world
      */
-    public static ResourceLocation getScreenTextures() {
-        return getScreenTextures(ModUtils.MCProtocolID);
+    public static ResourceLocation getWorldScreenTextures() {
+        return getTextureData(ScreenConstants.getDefaultWorldGUIBackground()).getThird();
+    }
+
+    /**
+     * Retrieve the alternative Screen Textures as Texture Data
+     *
+     * @return the alternative Screen Textures, while in a world
+     */
+    public static ResourceLocation getAltWorldScreenTextures() {
+        return getTextureData(ScreenConstants.getDefaultWorldGUIBackgroundAlt()).getThird();
     }
 
     /**

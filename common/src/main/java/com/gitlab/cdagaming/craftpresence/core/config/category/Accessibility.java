@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.craftpresence.core.config.category;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
 
 import java.io.Serial;
@@ -41,12 +40,16 @@ public class Accessibility extends Module implements Serializable {
     public ColorData tooltipBackground = ScreenConstants.DEFAULT_TOOLTIP_BACKGROUND;
     public ColorData tooltipBorder = ScreenConstants.DEFAULT_TOOLTIP_BORDER;
     public ColorData guiBackground = new ColorData(
-            new ColorSection(64, 64, 64, 255),
             ScreenConstants.getDefaultGUIBackground()
     );
     public ColorData altGuiBackground = new ColorData(
-            new ColorSection(16, 16, 16, 192),
-            new ColorSection(16, 16, 16, 208)
+            ScreenConstants.getDefaultGUIBackgroundAlt()
+    );
+    public ColorData worldGuiBackground = new ColorData(
+            ScreenConstants.getDefaultWorldGUIBackground()
+    );
+    public ColorData altWorldGuiBackground = new ColorData(
+            ScreenConstants.getDefaultWorldGUIBackgroundAlt()
     );
     public String languageId = Constants.getDefaultLanguage();
     public boolean stripTranslationColors = false;
@@ -81,6 +84,8 @@ public class Accessibility extends Module implements Serializable {
             tooltipBorder = new ColorData(data.tooltipBorder);
             guiBackground = new ColorData(data.guiBackground);
             altGuiBackground = new ColorData(data.altGuiBackground);
+            worldGuiBackground = new ColorData(data.worldGuiBackground);
+            altWorldGuiBackground = new ColorData(data.altWorldGuiBackground);
             languageId = data.languageId;
             stripTranslationColors = data.stripTranslationColors;
             stripTranslationFormatting = data.stripTranslationFormatting;
@@ -97,6 +102,8 @@ public class Accessibility extends Module implements Serializable {
             case "tooltipBorder" -> tooltipBorder;
             case "guiBackground" -> guiBackground;
             case "altGuiBackground" -> altGuiBackground;
+            case "worldGuiBackground" -> worldGuiBackground;
+            case "altWorldGuiBackground" -> altWorldGuiBackground;
             case "languageId" -> languageId;
             case "stripTranslationColors" -> stripTranslationColors;
             case "stripTranslationFormatting" -> stripTranslationFormatting;
@@ -122,6 +129,12 @@ public class Accessibility extends Module implements Serializable {
                     break;
                 case "altGuiBackground":
                     altGuiBackground = (ColorData) value;
+                    break;
+                case "worldGuiBackground":
+                    worldGuiBackground = (ColorData) value;
+                    break;
+                case "altWorldGuiBackground":
+                    altWorldGuiBackground = (ColorData) value;
                     break;
                 case "languageId":
                     languageId = (String) value;
@@ -163,6 +176,8 @@ public class Accessibility extends Module implements Serializable {
                 Objects.equals(other.tooltipBorder, tooltipBorder) &&
                 Objects.equals(other.guiBackground, guiBackground) &&
                 Objects.equals(other.altGuiBackground, altGuiBackground) &&
+                Objects.equals(other.worldGuiBackground, worldGuiBackground) &&
+                Objects.equals(other.altWorldGuiBackground, altWorldGuiBackground) &&
                 Objects.equals(other.languageId, languageId) &&
                 Objects.equals(other.stripTranslationColors, stripTranslationColors) &&
                 Objects.equals(other.stripTranslationFormatting, stripTranslationFormatting) &&
@@ -176,6 +191,7 @@ public class Accessibility extends Module implements Serializable {
         return Objects.hash(
                 tooltipBackground, tooltipBorder,
                 guiBackground, altGuiBackground,
+                worldGuiBackground, altWorldGuiBackground,
                 languageId,
                 stripTranslationColors, stripTranslationFormatting,
                 stripExtraGuiElements, renderTooltips,

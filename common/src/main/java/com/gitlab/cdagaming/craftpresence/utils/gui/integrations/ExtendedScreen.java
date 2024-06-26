@@ -561,9 +561,9 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
      * @return the raw background data
      */
     public ColorData getRawBackground() {
-        return hasWorld() ?
-                CraftPresence.CONFIG.accessibilitySettings.altGuiBackground :
-                CraftPresence.CONFIG.accessibilitySettings.guiBackground;
+        return this instanceof ScrollPane ?
+                (hasWorld() ? CraftPresence.CONFIG.accessibilitySettings.altWorldGuiBackground : CraftPresence.CONFIG.accessibilitySettings.altGuiBackground) :
+                (hasWorld() ? CraftPresence.CONFIG.accessibilitySettings.worldGuiBackground : CraftPresence.CONFIG.accessibilitySettings.guiBackground);
     }
 
     /**
@@ -633,7 +633,7 @@ public class ExtendedScreen extends Screen implements NarratableEntry {
     }
 
     @Override
-    public void renderBackground(@Nonnull GuiGraphics matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderMenuBackground(@Nonnull GuiGraphics matrixStack, int posX, int posY, int mouseX, int mouseY) {
         renderCriticalData();
     }
 

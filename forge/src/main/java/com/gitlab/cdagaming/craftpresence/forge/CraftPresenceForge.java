@@ -29,12 +29,11 @@ import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.neoforged.fml.IExtensionPoint;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 /**
  * The Primary Application Class and Utilities
@@ -52,16 +51,8 @@ public class CraftPresenceForge {
         }
 
         try {
-            // Workaround: Client-side only fix for Forge Clients
-            // - Reference => https://gitlab.com/CDAGaming/CraftPresence/-/issues/99
-            ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> IExtensionPoint.DisplayTest.IGNORESERVERONLY, (a, b) -> true));
-        } catch (Throwable ignored) {
-            // before forge-1.13.2-25.0.103
-        }
-
-        try {
             // Register The Config GUI Factory, used in Forge for Mod Menu integration
-            ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parentScreen) -> new MainGui(parentScreen)));
+            ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (mc, parentScreen) -> new MainGui(parentScreen));
         } catch (Throwable ex) {
             Constants.LOG.error("Failed to register Config GUI Factory for @MOD_NAME@.", ex);
         }
