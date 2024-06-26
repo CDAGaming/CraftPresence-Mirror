@@ -27,9 +27,9 @@ package com.gitlab.cdagaming.craftpresence.integrations.discord;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
 import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -300,7 +300,9 @@ public class FunctionsLib {
     public static Value getAssetUrl(Starscript ss, int argCount) {
         if (argCount != 1)
             ss.error("getAssetUrl() can only be used with one argument, got %d.", argCount);
-        return Value.string(DiscordAssetUtils.getUrl(ss.pop().toString()));
+        return Value.string(DiscordAssetUtils.getUrl(
+                ss.pop().toString(), CraftPresence.CLIENT::getResult
+        ));
     }
 
     public static Value getFirst(Starscript ss, int argCount) {

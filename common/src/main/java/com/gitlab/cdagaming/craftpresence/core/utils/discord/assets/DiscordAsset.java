@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils.discord.assets;
+package com.gitlab.cdagaming.craftpresence.core.utils.discord.assets;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

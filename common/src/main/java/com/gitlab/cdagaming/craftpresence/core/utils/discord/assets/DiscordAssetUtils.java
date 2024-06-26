@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils.discord.assets;
+package com.gitlab.cdagaming.craftpresence.core.utils.discord.assets;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Utilities related to locating and Parsing available Discord Assets
@@ -203,20 +203,43 @@ public class DiscordAssetUtils {
     /**
      * Retrieves the Parsed Image Url from the specified key, if present
      *
-     * @param list The list to iterate through
-     * @param key  The Specified Key to gain info for
+     * @param list       The list to iterate through
+     * @param key        The Specified Key to gain info for
+     * @param urlFactory The URL Factory for dynamic url formatting
      * @return The Parsed Image Url from the {@link DiscordAsset} data
      */
-    public static String getUrl(final Map<String, DiscordAsset> list, final String key) {
+    public static String getUrl(final Map<String, DiscordAsset> list, final String key, final Function<String, String> urlFactory) {
         final DiscordAsset asset = get(list, key);
         if (asset != null) {
             if (!StringUtils.isNullOrEmpty(asset.getId())) {
                 return asset.getUrl();
             } else {
-                return CraftPresence.CLIENT.getResult(asset.getUrl());
+                return urlFactory.apply(asset.getUrl());
             }
         }
         return "";
+    }
+
+    /**
+     * Retrieves the Parsed Image Url from the specified key, if present
+     *
+     * @param list The list to iterate through
+     * @param key  The Specified Key to gain info for
+     * @return The Parsed Image Url from the {@link DiscordAsset} data
+     */
+    public static String getUrl(final Map<String, DiscordAsset> list, final String key) {
+        return getUrl(list, key, (url) -> url);
+    }
+
+    /**
+     * Retrieves the Parsed Image Url from the specified key, if present
+     *
+     * @param key        The Specified Key to gain info for
+     * @param urlFactory The URL Factory for dynamic url formatting
+     * @return The Parsed Image Url from the {@link DiscordAsset} data
+     */
+    public static String getUrl(final String key, final Function<String, String> urlFactory) {
+        return getUrl(ASSET_LIST, key, urlFactory);
     }
 
     /**
@@ -226,7 +249,7 @@ public class DiscordAssetUtils {
      * @return The Parsed Image Url from the {@link DiscordAsset} data
      */
     public static String getUrl(final String key) {
-        return getUrl(ASSET_LIST, key);
+        return getUrl(key, (url) -> url);
     }
 
     /**
@@ -284,9 +307,10 @@ public class DiscordAssetUtils {
      *
      * @param clientId     The client id to load asset data from
      * @param filterToMain Whether this client id is submitting its assets as the assets to use in runtime
+     * @param dynamicIcons The Dynamic Icons to sync, if supplied and `filterToMain` is {@link Boolean#TRUE}
      * @return The list of discord asset data attached to this client id
      */
-    public static DiscordAsset[] loadAssets(final String clientId, final boolean filterToMain) {
+    public static DiscordAsset[] loadAssets(final String clientId, final boolean filterToMain, final Map<String, String> dynamicIcons) {
         Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load", clientId));
         Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.discord.assets.load.credits"));
 
@@ -308,7 +332,9 @@ public class DiscordAssetUtils {
                         }
                     }
                 }
-                syncCustomAssets();
+                if (dynamicIcons != null && !dynamicIcons.isEmpty()) {
+                    syncCustomAssets(dynamicIcons);
+                }
             }
             return assets;
         } catch (Throwable ex) {
@@ -321,11 +347,26 @@ public class DiscordAssetUtils {
     }
 
     /**
-     * Synchronize and detect any dynamic assets available for this instance
+     * Retrieves and Synchronizes the List of Available Discord Assets from the Client ID
+     * <p>
+     * Default Url Format: [applicationEndpoint]/[clientId]/assets
+     *
+     * @param clientId     The client id to load asset data from
+     * @param filterToMain Whether this client id is submitting its assets as the assets to use in runtime
+     * @return The list of discord asset data attached to this client id
      */
-    public static void syncCustomAssets() {
+    public static DiscordAsset[] loadAssets(final String clientId, final boolean filterToMain) {
+        return loadAssets(clientId, filterToMain, null);
+    }
+
+    /**
+     * Synchronize and detect any dynamic assets available for this instance
+     *
+     * @param dynamicIcons The Dynamic Icons to sync
+     */
+    public static void syncCustomAssets(final Map<String, String> dynamicIcons) {
         CUSTOM_ASSET_LIST.clear();
-        for (Map.Entry<String, String> iconData : CraftPresence.CONFIG.displaySettings.dynamicIcons.entrySet()) {
+        for (Map.Entry<String, String> iconData : dynamicIcons.entrySet()) {
             if (!StringUtils.isNullOrEmpty(iconData.getKey()) && !StringUtils.isNullOrEmpty(iconData.getValue())) {
                 final DiscordAsset asset = new DiscordAsset()
                         .setName(iconData.getKey())

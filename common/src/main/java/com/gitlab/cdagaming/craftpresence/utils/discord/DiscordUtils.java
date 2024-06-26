@@ -32,10 +32,10 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
+import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset;
+import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.FunctionsLib;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAsset;
-import com.gitlab.cdagaming.craftpresence.utils.discord.assets.DiscordAssetUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
@@ -267,7 +267,7 @@ public class DiscordUtils {
         ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
         ipcInstance.setListener(new ModIPCListener());
         // Initialize Discord Assets
-        DiscordAssetUtils.loadAssets(CLIENT_ID, true);
+        DiscordAssetUtils.loadAssets(CLIENT_ID, true, CraftPresence.CONFIG.displaySettings.dynamicIcons);
         // Mark as Disconnected to trigger auto-sync
         STATUS = DiscordStatus.Disconnected;
     }
@@ -1349,7 +1349,7 @@ public class DiscordUtils {
                         )).get().toString()
                 );
                 if (config == CraftPresence.CONFIG) {
-                    DiscordAssetUtils.syncCustomAssets();
+                    DiscordAssetUtils.syncCustomAssets(config.displaySettings.dynamicIcons);
                     config.save();
                 }
             }
