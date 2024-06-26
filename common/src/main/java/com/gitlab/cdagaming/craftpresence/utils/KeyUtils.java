@@ -240,9 +240,9 @@ public class KeyUtils {
      */
     void onTick() {
         if (!areKeysRegistered()) {
-            if (CraftPresence.instance.gameSettings != null) {
+            if (CraftPresence.instance.options != null) {
                 for (KeyBindData entry : KEY_MAPPINGS.values()) {
-                    CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, entry.binding());
+                    CraftPresence.instance.options.keyBindings = StringUtils.addToArray(CraftPresence.instance.options.keyBindings, entry.binding());
                 }
                 keysRegistered = true;
             } else {

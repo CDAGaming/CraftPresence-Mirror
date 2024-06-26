@@ -262,22 +262,22 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
 
     @Override
     public int getControlWidth() {
-        return xCoord;
+        return width;
     }
 
     @Override
     public void setControlWidth(final int width) {
-        this.xCoord = width;
+        this.width = width;
     }
 
     @Override
     public int getControlHeight() {
-        return yCoord;
+        return height;
     }
 
     @Override
     public void setControlHeight(final int height) {
-        this.yCoord = height;
+        this.height = height;
     }
 
     @Override
@@ -434,7 +434,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return Whether the control is currently visible
      */
     public boolean isControlVisible() {
-        return this.enabled2;
+        return this.visible;
     }
 
     /**
@@ -443,7 +443,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param isVisible The new visibility state for this control
      */
     public void setControlVisible(final boolean isVisible) {
-        this.enabled2 = isVisible;
+        this.visible = isVisible;
     }
 
     /**

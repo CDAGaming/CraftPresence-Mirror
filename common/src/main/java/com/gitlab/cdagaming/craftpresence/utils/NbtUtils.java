@@ -149,7 +149,7 @@ public class NbtUtils {
             return null;
         }
 
-        switch (tag.setScheduledTime()) {
+        switch (tag.getType()) {
             case 1:
                 return ((NBTTagByte) tag).byteValue;
             case 2:

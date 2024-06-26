@@ -166,7 +166,7 @@ public abstract class GuiSlot {
         GL11.glDisable(2896);
         GL11.glDisable(2912);
         Tessellator var15 = Tessellator.instance;
-        GL11.glBindTexture(3553, this.mc.renderEngine.getTexture("/gui/background.png"));
+        GL11.glBindTexture(3553, this.mc.renderEngine.getTexture("/dirt.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float var16 = 32.0F;
         var15.startDrawingQuads();
@@ -214,18 +214,18 @@ public abstract class GuiSlot {
         GL11.glShadeModel(7425);
         GL11.glDisable(3553);
         var15.startDrawingQuads();
-        var15.setColorRGBA_I(0, 0);
+        setColorRGBA_I(var15, 0, 0);
         var15.addVertexWithUV((double)this.left, (double)(this.top + var17), 0.0, 0.0, 1.0);
         var15.addVertexWithUV((double)this.right, (double)(this.top + var17), 0.0, 1.0, 1.0);
-        var15.setColorRGBA_I(0, 255);
+        setColorRGBA_I(var15, 0, 255);
         var15.addVertexWithUV((double)this.right, (double)this.top, 0.0, 1.0, 0.0);
         var15.addVertexWithUV((double)this.left, (double)this.top, 0.0, 0.0, 0.0);
         var15.draw();
         var15.startDrawingQuads();
-        var15.setColorRGBA_I(0, 255);
+        setColorRGBA_I(var15, 0, 255);
         var15.addVertexWithUV((double)this.left, (double)this.bottom, 0.0, 0.0, 1.0);
         var15.addVertexWithUV((double)this.right, (double)this.bottom, 0.0, 1.0, 1.0);
-        var15.setColorRGBA_I(0, 0);
+        setColorRGBA_I(var15, 0, 0);
         var15.addVertexWithUV((double)this.right, (double)(this.bottom - var17), 0.0, 1.0, 0.0);
         var15.addVertexWithUV((double)this.left, (double)(this.bottom - var17), 0.0, 0.0, 0.0);
         var15.draw();
@@ -246,21 +246,21 @@ public abstract class GuiSlot {
             }
 
             var15.startDrawingQuads();
-            var15.setColorRGBA_I(0, 255);
+            setColorRGBA_I(var15, 0, 255);
             var15.addVertexWithUV((double)var5, (double)this.bottom, 0.0, 0.0, 1.0);
             var15.addVertexWithUV((double)var6, (double)this.bottom, 0.0, 1.0, 1.0);
             var15.addVertexWithUV((double)var6, (double)this.top, 0.0, 1.0, 0.0);
             var15.addVertexWithUV((double)var5, (double)this.top, 0.0, 0.0, 0.0);
             var15.draw();
             var15.startDrawingQuads();
-            var15.setColorRGBA_I(8421504, 255);
+            setColorRGBA_I(var15, 8421504, 255);
             var15.addVertexWithUV((double)var5, (double)(var12 + var11), 0.0, 0.0, 1.0);
             var15.addVertexWithUV((double)var6, (double)(var12 + var11), 0.0, 1.0, 1.0);
             var15.addVertexWithUV((double)var6, (double)var12, 0.0, 1.0, 0.0);
             var15.addVertexWithUV((double)var5, (double)var12, 0.0, 0.0, 0.0);
             var15.draw();
             var15.startDrawingQuads();
-            var15.setColorRGBA_I(12632256, 255);
+            setColorRGBA_I(var15, 12632256, 255);
             var15.addVertexWithUV((double)var5, (double)(var12 + var11 - 1), 0.0, 0.0, 1.0);
             var15.addVertexWithUV((double)(var6 - 1), (double)(var12 + var11 - 1), 0.0, 1.0, 1.0);
             var15.addVertexWithUV((double)(var6 - 1), (double)var12, 0.0, 1.0, 0.0);
@@ -276,16 +276,23 @@ public abstract class GuiSlot {
 
     private void overlayBackground(int i, int j, int k, int l) {
         Tessellator var5 = Tessellator.instance;
-        GL11.glBindTexture(3553, this.mc.renderEngine.getTexture("/gui/background.png"));
+        GL11.glBindTexture(3553, this.mc.renderEngine.getTexture("/dirt.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float var6 = 32.0F;
         var5.startDrawingQuads();
-        var5.setColorRGBA_I(4210752, l);
+        setColorRGBA_I(var5, 4210752, l);
         var5.addVertexWithUV(0.0, (double)j, 0.0, 0.0, (double)((float)j / var6));
         var5.addVertexWithUV((double)this.width, (double)j, 0.0, (double)((float)this.width / var6), (double)((float)j / var6));
-        var5.setColorRGBA_I(4210752, k);
+        setColorRGBA_I(var5, 4210752, k);
         var5.addVertexWithUV((double)this.width, (double)i, 0.0, (double)((float)this.width / var6), (double)((float)i / var6));
         var5.addVertexWithUV(0.0, (double)i, 0.0, 0.0, (double)((float)i / var6));
         var5.draw();
+    }
+
+    private void setColorRGBA_I(Tessellator instance, int i, int j) {
+        int var3 = i >> 16 & 255;
+        int var4 = i >> 8 & 255;
+        int var5 = i & 255;
+        instance.setColorRGBA(var3, var4, var5, j);
     }
 }

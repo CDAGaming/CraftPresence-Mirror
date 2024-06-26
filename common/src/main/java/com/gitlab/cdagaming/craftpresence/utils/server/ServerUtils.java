@@ -220,15 +220,15 @@ public class ServerUtils implements ExtendedModule {
         ServerData newServerData;
         try {
             if (CraftPresence.instance.theWorld instanceof WorldClient) {
-                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, ((WorldClient)CraftPresence.instance.theWorld), "sendQueue", "field_1052_A", "B");
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, ((WorldClient)CraftPresence.instance.theWorld), "sendQueue", "field_1052_A", "A");
             }
         } catch (Exception ex) {
             newConnection = null;
         }
 
         try {
-            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "V");
-            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "W");
+            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "S");
+            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "T");
             newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerData(retrievedIP, retrievedPort) : null;
         } catch (Exception ex) {
             newServerData = null;
@@ -468,8 +468,8 @@ public class ServerUtils implements ExtendedModule {
     private void joinServer(final ServerData serverData) {
         try {
             if (CraftPresence.player != null) {
-                CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.func_6261_a(null);
+                CraftPresence.instance.theWorld.sendQuittingDisconnectingPacket();
+                CraftPresence.instance.changeWorld1(null);
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.serverIP, serverData.serverPort));
         } catch (Throwable ex) {
@@ -492,7 +492,7 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("world.difficulty", () -> {
             final String newDifficulty = false ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    Integer.toString(CraftPresence.player.worldObj.difficultySetting);
+                    Integer.toString(CraftPresence.instance.theWorld.difficultySetting);
             return StringUtils.getOrDefault(newDifficulty);
         });
         syncArgument("world.weather.name", () -> {
@@ -507,22 +507,22 @@ public class ServerUtils implements ExtendedModule {
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.worldObj.worldTime).getFirst()
+                TimeUtils.fromWorldTime(CraftPresence.instance.theWorld.worldTime).getFirst()
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.worldObj.worldTime).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.instance.theWorld.worldTime).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.worldObj.worldTime).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.instance.theWorld.worldTime).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.worldObj.worldTime)
+                TimeUtils.fromWorldTime(CraftPresence.instance.theWorld.worldTime)
         );
 
         // Default Arguments

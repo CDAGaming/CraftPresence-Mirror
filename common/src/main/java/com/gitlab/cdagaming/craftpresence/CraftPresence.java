@@ -204,14 +204,14 @@ public class CraftPresence {
         if (!Constants.IS_GAME_CLOSING) {
             instance = getMinecraftInstance();
             if (initialized) {
-                session = instance.field_6320_i;
+                session = instance.session;
                 player = instance.thePlayer;
 
-                username = session.inventory;
+                username = session.username;
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {
-                session = instance.field_6320_i;
+                session = instance.session;
                 if (session != null) {
                     init();
                 }
@@ -226,7 +226,7 @@ public class CraftPresence {
     public static void ThrowException(String message, Throwable e) {
         Minecraft game = getMinecraftInstance();
         if (game != null) {
-            game.handleEntityTeleport(new UnexpectedThrowable(message, e));
+            game.displayUnexpectedThrowable(new UnexpectedThrowable(message, e));
         } else {
             throw new RuntimeException(e);
         }
