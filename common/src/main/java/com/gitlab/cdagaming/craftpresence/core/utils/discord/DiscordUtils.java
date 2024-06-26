@@ -1705,7 +1705,12 @@ public class DiscordUtils {
      * Perform any needed Tick events, tied to {@link ScheduleUtils#MINIMUM_REFRESH_RATE} ticks
      */
     public void onTick() {
-        // N/A
+        if (isAvailable()) {
+            // Processing for Join Request Systems
+            if (REQUESTER_USER != null && SCHEDULER.TIMER <= 0) {
+                denyJoinRequest();
+            }
+        }
     }
 
     /**

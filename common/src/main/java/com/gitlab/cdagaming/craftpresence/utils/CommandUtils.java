@@ -284,8 +284,7 @@ public class CommandUtils {
     public static void postReload() {
         // Menu Tick Event
         final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
-        final boolean isFullyLoaded = Constants.HAS_GAME_LOADED && CraftPresence.CLIENT.isAvailable();
-        if (!isFullyLoaded) {
+        if (!Constants.HAS_GAME_LOADED) {
             // Ensure Loading Presence has already passed, before any other type of presence displays
             CommandUtils.setMenuState(CommandUtils.MenuStatus.Loading);
         } else if (CraftPresence.player == null) {
@@ -293,13 +292,7 @@ public class CommandUtils {
         } else if (isMenuActive) {
             CommandUtils.clearMenuState();
         }
-        // Join Request Tick Event
-        if (!CraftPresence.CONFIG.hasChanged() && isFullyLoaded) {
-            // Processing for Join Request Systems
-            if (CraftPresence.CLIENT.REQUESTER_USER != null && CraftPresence.SCHEDULER.TIMER <= 0) {
-                CraftPresence.CLIENT.denyJoinRequest();
-            }
-        }
+
         // Perform any remaining tasks
         CraftPresence.CLIENT.onTick();
     }
