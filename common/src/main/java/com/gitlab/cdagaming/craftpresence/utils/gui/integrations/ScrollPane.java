@@ -190,13 +190,13 @@ public class ScrollPane extends ExtendedScreen {
 
     // remove in 1.13+
     @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int mouseButton, long timeSinceLastClick) {
+    protected void method_4259(int mouseX, int mouseY, int mouseButton, long timeSinceLastClick) {
         if (isLoaded()) {
             mouseDragged(mouseX, mouseY, mouseButton, mouseX - mousePrevX, mouseY - mousePrevY);
             mousePrevX = mouseX;
             mousePrevY = mouseY;
 
-            super.mouseClickMove(mouseX, mouseY, mouseButton, timeSinceLastClick);
+            super.method_4259(mouseX, mouseY, mouseButton, timeSinceLastClick);
         }
     }
 

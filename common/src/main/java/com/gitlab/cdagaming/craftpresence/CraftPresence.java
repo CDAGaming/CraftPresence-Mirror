@@ -205,14 +205,14 @@ public class CraftPresence {
         if (!Constants.IS_GAME_CLOSING) {
             instance = Minecraft.getMinecraft();
             if (initialized) {
-                session = instance.getSession();
+                session = instance.session;
                 player = instance.thePlayer;
 
-                username = session.getUsername();
+                username = session.username;
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {
-                session = instance.getSession();
+                session = instance.session;
                 if (session != null) {
                     init();
                 }

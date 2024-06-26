@@ -41,7 +41,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.renderer.Tessellator;
 
 import javax.annotation.Nonnull;
@@ -333,7 +332,7 @@ public class ScrollableListControl extends GuiSlot {
         final boolean isInBounds = isWithinBounds(mouseXIn, mouseYIn);
         final boolean isHovering = isInBounds && isOverEntry;
 
-        ResourceLocation texture = ResourceUtils.getEmptyResource();
+        String texture = ResourceUtils.getEmptyResource();
         String assetUrl;
 
         if (renderType == RenderType.ServerData) {

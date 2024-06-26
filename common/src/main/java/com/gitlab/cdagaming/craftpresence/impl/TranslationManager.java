@@ -25,16 +25,11 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.utils.ResourceUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.client.resources.Resource;
-import net.minecraft.client.resources.ResourceManager;
-import net.minecraft.client.resources.ResourceManagerReloadListener;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.util.StringTranslate;
 
-import java.io.InputStream;
-import java.util.List;
+import java.util.Properties;
 
 /**
  * Utilities for Hooking a {@link TranslationUtils} instance to the Game Resource Manager
@@ -42,7 +37,7 @@ import java.util.List;
  * @param instance The currently linked {@link TranslationUtils} instance
  * @author CDAGaming
  */
-public record TranslationManager(TranslationUtils instance) implements ResourceManagerReloadListener {
+public record TranslationManager(TranslationUtils instance) {
     /**
      * Initializes a new manager for the {@link TranslationUtils} instance
      *
@@ -50,7 +45,6 @@ public record TranslationManager(TranslationUtils instance) implements ResourceM
      */
     public TranslationManager(final TranslationUtils instance) {
         this.instance = instance;
-        ((SimpleReloadableResourceManager) CraftPresence.instance.getResourceManager()).registerReloadListener(this);
 
         instance().setLanguageSupplier((fallback) -> {
             final String result;
@@ -64,16 +58,18 @@ public record TranslationManager(TranslationUtils instance) implements ResourceM
             return result;
         });
 
-        instance().setResourceSupplier((modId, assetsPath, langPath) -> {
-            final List<InputStream> results = StringUtils.newArrayList();
-            try {
-                final List<Resource> resources = CraftPresence.instance.getResourceManager().getAllResources(ResourceUtils.getResource(modId, langPath));
-                for (Resource resource : resources) {
-                    results.add(resource.getInputStream());
-                }
-            } catch (Exception ignored) {
-            }
-            return results;
+        instance().setOnLanguageSync((entries) -> {
+            StringTranslate stInstance = StringTranslate.getInstance();
+            Properties data = (Properties) StringUtils.getField(
+                    StringTranslate.class, stInstance,
+                    "translateTable", "field_74815_b", "field_618", "b"
+            );
+            data.putAll(entries);
+            StringUtils.updateField(
+                    StringTranslate.class, stInstance,
+                    data,
+                    "translateTable", "field_74815_b", "field_618", "b"
+            );
         });
     }
 
@@ -84,10 +80,5 @@ public record TranslationManager(TranslationUtils instance) implements ResourceM
      */
     public void onTick() {
         instance().onTick();
-    }
-
-    @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
-        instance().syncTranslations();
     }
 }

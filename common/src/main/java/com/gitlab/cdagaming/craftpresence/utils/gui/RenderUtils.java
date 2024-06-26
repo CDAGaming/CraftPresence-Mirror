@@ -48,7 +48,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -76,7 +75,7 @@ public class RenderUtils {
     /**
      * An active cache for all currently allocated internal Texture Object Results
      */
-    private static final Map<String, Tuple<Boolean, String, ResourceLocation>> TEXTURE_CACHE = StringUtils.newHashMap();
+    private static final Map<String, Tuple<Boolean, String, String>> TEXTURE_CACHE = StringUtils.newHashMap();
 
     public static RenderItem itemRender = new RenderItem();
 
@@ -86,7 +85,7 @@ public class RenderUtils {
      * @param protocol The Protocol to Target for this operation
      * @return the default Screen Textures
      */
-    public static ResourceLocation getScreenTextures(final int protocol) {
+    public static String getScreenTextures(final int protocol) {
         return getTextureData(ScreenConstants.getDefaultGUIBackground(protocol)).getThird();
     }
 
@@ -95,7 +94,7 @@ public class RenderUtils {
      *
      * @return the default Screen Textures
      */
-    public static ResourceLocation getScreenTextures() {
+    public static String getScreenTextures() {
         return getScreenTextures(ModUtils.MCProtocolID);
     }
 
@@ -105,7 +104,7 @@ public class RenderUtils {
      * @param protocol The Protocol to Target for this operation
      * @return the default Widget Textures
      */
-    public static ResourceLocation getButtonTextures(final int protocol) {
+    public static String getButtonTextures(final int protocol) {
         return getTextureData(ScreenConstants.getDefaultButtonBackground(protocol)).getThird();
     }
 
@@ -114,7 +113,7 @@ public class RenderUtils {
      *
      * @return the default Widget Textures
      */
-    public static ResourceLocation getButtonTextures() {
+    public static String getButtonTextures() {
         return getButtonTextures(ModUtils.MCProtocolID);
     }
 
@@ -264,8 +263,8 @@ public class RenderUtils {
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            itemRender.renderItemAndEffectIntoGUI(fontRenderer, client.getTextureManager(), stack, xPos, yPos);
-            itemRender.renderItemOverlayIntoGUI(fontRenderer, client.getTextureManager(), stack, xPos, yPos);
+            itemRender.renderItemAndEffectIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos);
+            itemRender.renderItemOverlayIntoGUI(fontRenderer, client.renderEngine, stack, xPos, yPos);
 
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -376,14 +375,15 @@ public class RenderUtils {
                                     final double endU, final double endV,
                                     final double width, final double height,
                                     final double zLevel,
-                                    final ResourceLocation texLocation) {
+                                    final String texLocation) {
         try {
             if (texLocation != null) {
                 final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
                 if (data.getFirst()) {
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
+                    mc.renderEngine.resetBoundTexture();
                 } else {
-                    mc.getTextureManager().bindTexture(texLocation);
+                    mc.renderEngine.bindTexture(texLocation);
                 }
             }
         } catch (Exception ignored) {
@@ -423,14 +423,15 @@ public class RenderUtils {
                                    final double zLevel,
                                    final double minU, final double maxU, final double minV, final double maxV,
                                    final Object startColorObj, final Object endColorObj,
-                                   final ResourceLocation texLocation) {
+                                   final String texLocation) {
         try {
             if (texLocation != null) {
                 final Pair<Boolean, Integer> data = StringUtils.getValidInteger(texLocation);
                 if (data.getFirst()) {
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D, data.getSecond());
+                    mc.renderEngine.resetBoundTexture();
                 } else {
-                    mc.getTextureManager().bindTexture(texLocation);
+                    mc.renderEngine.bindTexture(texLocation);
                 }
             }
         } catch (Exception ignored) {
@@ -495,7 +496,7 @@ public class RenderUtils {
                                    final double u, final double v,
                                    final double textureWidth, final double textureHeight,
                                    final Object startColorObj, final Object endColorObj,
-                                   final ResourceLocation texLocation) {
+                                   final String texLocation) {
         drawTexture(mc,
                 left, right, top, bottom,
                 zLevel,
@@ -526,7 +527,7 @@ public class RenderUtils {
                                    final double left, final double right, final double top, final double bottom,
                                    final double zLevel, final boolean usingExternalTexture,
                                    final Object startColorObj, final Object endColorObj,
-                                   final ResourceLocation texLocation) {
+                                   final String texLocation) {
         drawTexture(mc,
                 left, right, top, bottom,
                 zLevel, usingExternalTexture,
@@ -754,9 +755,9 @@ public class RenderUtils {
      * @param texture The data to interpret
      * @return a {@link Tuple} with the mapping "usingExternalData:location:resource"
      */
-    public static Tuple<Boolean, String, ResourceLocation> getTextureData(String texture) {
-        ResourceLocation texLocation = ResourceUtils.getEmptyResource();
-        final Tuple<Boolean, String, ResourceLocation> result = new Tuple<>(false, "", texLocation);
+    public static Tuple<Boolean, String, String> getTextureData(String texture) {
+        String texLocation = ResourceUtils.getEmptyResource();
+        final Tuple<Boolean, String, String> result = new Tuple<>(false, "", texLocation);
         if (!StringUtils.isNullOrEmpty(texture)) {
             texture = texture.trim();
             if (TEXTURE_CACHE.containsKey(texture)) {
@@ -941,9 +942,9 @@ public class RenderUtils {
                             backgroundStart, backgroundEnd
                     );
                 } else {
-                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(backgroundColorInfo.getTexLocation());
+                    final Tuple<Boolean, String, String> textureData = getTextureData(backgroundColorInfo.getTexLocation());
                     final boolean usingExternalTexture = textureData.getFirst();
-                    final ResourceLocation backGroundTexture = textureData.getThird();
+                    final String backGroundTexture = textureData.getThird();
 
                     final double width = tooltipTextWidth + 4;
                     final double height = tooltipHeight + 4;
@@ -977,9 +978,9 @@ public class RenderUtils {
                             null, null
                     );
                 } else {
-                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(borderColorInfo.getTexLocation());
+                    final Tuple<Boolean, String, String> textureData = getTextureData(borderColorInfo.getTexLocation());
                     final boolean usingExternalTexture = textureData.getFirst();
-                    final ResourceLocation borderTexture = textureData.getThird();
+                    final String borderTexture = textureData.getThird();
 
                     final double border = 1;
                     final double renderX = tooltipX - 3;

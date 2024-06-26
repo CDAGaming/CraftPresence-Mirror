@@ -24,8 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
-import net.minecraft.util.ResourceLocation;
-
 /**
  * Image Utilities used to Parse texture resource data
  *
@@ -35,7 +33,7 @@ public class ResourceUtils {
     /**
      * Object representing an empty texture resource
      */
-    private static final ResourceLocation EMPTY_RESOURCE = parseResource("");
+    private static final String EMPTY_RESOURCE = parseResource("");
 
     /**
      * Retrieve a texture resource within the specified namespace and path
@@ -44,8 +42,8 @@ public class ResourceUtils {
      * @param path      the path to interpret
      * @return The found texture resource
      */
-    public static ResourceLocation getResource(final String namespace, final String path) {
-        return new ResourceLocation(namespace, path);
+    public static String getResource(final String namespace, final String path) {
+        return path;
     }
 
     /**
@@ -54,7 +52,7 @@ public class ResourceUtils {
      * @param path the path to interpret
      * @return The found texture resource
      */
-    public static ResourceLocation getResource(final String path) {
+    public static String getResource(final String path) {
         return getResource("minecraft", path);
     }
 
@@ -64,8 +62,8 @@ public class ResourceUtils {
      * @param path the path to interpret
      * @return The found texture resource
      */
-    public static ResourceLocation parseResource(final String path) {
-        return new ResourceLocation(path);
+    public static String parseResource(final String path) {
+        return path;
     }
 
     /**
@@ -73,7 +71,7 @@ public class ResourceUtils {
      *
      * @return an object representing an empty texture resource
      */
-    public static ResourceLocation getEmptyResource() {
+    public static String getEmptyResource() {
         return EMPTY_RESOURCE;
     }
 }
