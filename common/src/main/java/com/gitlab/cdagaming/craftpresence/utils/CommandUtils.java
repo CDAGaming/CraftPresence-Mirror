@@ -47,7 +47,7 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreenLoading;
+import net.minecraft.client.gui.screens.LoadingOverlay;
 
 import java.util.Map;
 
@@ -250,7 +250,7 @@ public class CommandUtils {
             manager.onTick();
         }
         CraftPresence.SCHEDULER.onTick();
-        CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
+        CraftPresence.instance.execute(CraftPresence.KEYBINDINGS::onTick);
 
         CraftPresence.SCHEDULER.TICK_LOCK.lock();
         try {
@@ -389,7 +389,7 @@ public class CommandUtils {
 
         CraftPresence.CLIENT.syncArgument("_general.instance", () -> CraftPresence.instance);
         CraftPresence.CLIENT.syncArgument("_general.player", () -> CraftPresence.player);
-        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.world : null);
+        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.level : null);
         CraftPresence.CLIENT.syncArgument("_config.instance", () -> CraftPresence.CONFIG);
 
         // Sync Custom Variables
@@ -468,7 +468,7 @@ public class CommandUtils {
      */
     public static void onTick() {
         if (!Constants.HAS_GAME_LOADED) {
-            Constants.HAS_GAME_LOADED = (CraftPresence.instance.currentScreen != null && !(CraftPresence.instance.currentScreen instanceof GuiScreenLoading)) || CraftPresence.player != null;
+            Constants.HAS_GAME_LOADED = (CraftPresence.instance.screen != null && !(CraftPresence.instance.getOverlay() instanceof LoadingOverlay)) || CraftPresence.player != null;
             if (Constants.HAS_GAME_LOADED) {
                 addModule(Constants.MOD_ID, new TranslationManager(
                         Constants.TRANSLATOR

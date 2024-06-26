@@ -39,13 +39,13 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.client.gui.GuiConnecting;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreenRealmsProxy;
+import net.minecraft.client.gui.screens.ConnectScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.realms.RealmsScreenProxy;
 
 import java.util.List;
 import java.util.Map;
@@ -76,7 +76,7 @@ public class ServerUtils implements ExtendedModule {
     /**
      * The Current Player Map, if available
      */
-    public List<NetworkPlayerInfo> currentPlayerList = StringUtils.newArrayList();
+    public List<PlayerInfo> currentPlayerList = StringUtils.newArrayList();
     /**
      * A List of the detected Server Addresses
      */
@@ -168,7 +168,7 @@ public class ServerUtils implements ExtendedModule {
     /**
      * The Player's Current Connection Data
      */
-    private NetHandlerPlayClient currentConnection;
+    private ClientPacketListener currentConnection;
     /**
      * If the RPC needs to be Updated or Re-Synchronized<p>
      * Needed here for Multiple-Condition RPC Triggers
@@ -241,10 +241,10 @@ public class ServerUtils implements ExtendedModule {
      * @return the found realm data, or null
      */
     @SuppressWarnings("RedundantCast")
-    private RealmsServer findRealmData(final NetHandlerPlayClient connection) {
+    private RealmsServer findRealmData(final ClientPacketListener connection) {
         try {
-            if (connection.guiScreenServer instanceof GuiScreenRealmsProxy realmsProxy &&
-                    realmsProxy.getProxy() instanceof RealmsMainScreen realmsMainScreen) {
+            if (connection.callbackScreen instanceof RealmsScreenProxy realmsProxy &&
+                    realmsProxy.getScreen() instanceof RealmsMainScreen realmsMainScreen) {
                 return (RealmsServer) StringUtils.executeMethod(
                         RealmsMainScreen.class, realmsMainScreen,
                         new Class[]{long.class},
@@ -262,8 +262,8 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
-        final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
+        final ServerData newServerData = CraftPresence.instance.getCurrentServer();
+        final ClientPacketListener newConnection = CraftPresence.instance.getConnection();
 
         if (!joinInProgress) {
             // If connected to a Realm, locate the RealmServer instance
@@ -311,9 +311,9 @@ public class ServerUtils implements ExtendedModule {
      * @param newPlayerList         The Current Player Map, if available
      */
     private void processData(final boolean newLANStatus, final boolean newSinglePlayerStatus,
-                             final ServerData newServerData, final NetHandlerPlayClient newConnection,
+                             final ServerData newServerData, final ClientPacketListener newConnection,
                              final String newServer_IP, final String newServer_MOTD, final String newServer_Name,
-                             final int newCurrentPlayers, final int newMaxPlayers, final List<NetworkPlayerInfo> newPlayerList) {
+                             final int newCurrentPlayers, final int newMaxPlayers, final List<PlayerInfo> newPlayerList) {
         if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer || ((newServerData != null && !newServerData.equals(currentServerData)) ||
                 (newServerData == null && currentServerData != null)) ||
                 (newConnection != null && !newConnection.equals(currentConnection)) || !newServer_IP.equals(currentServer_IP) ||
@@ -346,8 +346,8 @@ public class ServerUtils implements ExtendedModule {
             }
 
             if (serverList != null) {
-                serverList.loadServerList();
-                if (serverList.countServers() != serverIndex) {
+                serverList.load();
+                if (serverList.size() != serverIndex) {
                     queueInternalScan();
                 }
             }
@@ -378,7 +378,7 @@ public class ServerUtils implements ExtendedModule {
      * @return the found server address
      */
     private String getServerAddress(final ServerData newServerData) {
-        return newServerData != null && !StringUtils.isNullOrEmpty(newServerData.serverIP) ? newServerData.serverIP : "127.0.0.1";
+        return newServerData != null && !StringUtils.isNullOrEmpty(newServerData.ip) ? newServerData.ip : "127.0.0.1";
     }
 
     /**
@@ -387,9 +387,9 @@ public class ServerUtils implements ExtendedModule {
      * @param newServerData The Current Server Connection Data and Info
      * @param newConnection The Player's Current Connection Data
      */
-    private void processRealmData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
-        final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
-        final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
+    private void processRealmData(final ServerData newServerData, final ClientPacketListener newConnection) {
+        final List<PlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getOnlinePlayers()) : StringUtils.newArrayList();
+        final int newCurrentPlayers = newConnection != null ? newConnection.getOnlinePlayers().size() : 1;
 
         final String newServer_IP = getServerAddress(newServerData);
         final String newServer_Name = currentRealmData.getName();
@@ -410,15 +410,15 @@ public class ServerUtils implements ExtendedModule {
      * @param newServerData The Current Server Connection Data and Info
      * @param newConnection The Player's Current Connection Data
      */
-    private void processServerData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
-        final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
-        final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
+    private void processServerData(final ServerData newServerData, final ClientPacketListener newConnection) {
+        final List<PlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getOnlinePlayers()) : StringUtils.newArrayList();
+        final int newCurrentPlayers = newConnection != null ? newConnection.getOnlinePlayers().size() : 1;
 
         // 1.13+ Check for New Maximum Players
         int newMaxPlayers;
         if (newServerData != null) {
             try {
-                newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.populationInfo).split("/")[1]).getSecond();
+                newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status).split("/")[1]).getSecond();
 
                 if (newMaxPlayers < newCurrentPlayers) {
                     newMaxPlayers = newCurrentPlayers + 1;
@@ -430,13 +430,14 @@ public class ServerUtils implements ExtendedModule {
             newMaxPlayers = newCurrentPlayers + 1;
         }
 
-        final boolean newSinglePlayerStatus = CraftPresence.instance.isSingleplayer();
-        final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (newServerData != null && newServerData.isOnLAN());
+        final boolean newSinglePlayerStatus = CraftPresence.instance.isLocalServer();
+        final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (newServerData != null && newServerData.isLan());
+        final boolean isMotdValid = newServerData != null && newServerData.motd != null;
 
         final String newServer_IP = getServerAddress(newServerData);
-        final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
-        final String newServer_MOTD = !newLANStatus && !newSinglePlayerStatus &&
-                newServerData != null && !isInvalidMotd(newServerData.serverMOTD) ? StringUtils.stripAllFormatting(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+        final String newServer_Name = newServerData != null && !isInvalidName(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
+        final String newServer_MOTD = !isOnLAN && !newSinglePlayerStatus &&
+                isMotdValid && !isInvalidMotd(newServerData.motd) ? StringUtils.stripAllFormatting(newServerData.motd) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
         processData(newLANStatus, newSinglePlayerStatus,
                 newServerData, newConnection,
@@ -524,7 +525,7 @@ public class ServerUtils implements ExtendedModule {
         final boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
-            CraftPresence.instance.addScheduledTask(() -> joinServer(new ServerData(serverName, serverIP, false)));
+            CraftPresence.instance.execute(() -> joinServer(new ServerData(serverName, serverIP, false)));
         } else {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
         }
@@ -541,16 +542,16 @@ public class ServerUtils implements ExtendedModule {
             if (!serverData.pinged) {
                 // Stub Server Data if not pinged
                 serverData.pinged = true;
-                serverData.pingToServer = -2L;
-                serverData.serverMOTD = "";
-                serverData.populationInfo = "";
+                serverData.ping = -2L;
+                serverData.motd = "";
+                serverData.status = "";
             }
 
             if (CraftPresence.player != null) {
-                CraftPresence.player.world.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.loadWorld(null);
+                CraftPresence.player.level.disconnect();
+                CraftPresence.instance.clearLevel(null);
             }
-            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
+            CraftPresence.instance.setScreen(new ConnectScreen(CraftPresence.instance.screen != null ? CraftPresence.instance.screen : new TitleScreen(), CraftPresence.instance, serverData));
         } catch (Throwable ex) {
             printException(ex);
         }
@@ -559,9 +560,9 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void initPresence() {
         // Player Position Arguments
-        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3));
-        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3));
-        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
+        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.x, 3));
+        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.y, 3));
+        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.z, 3));
 
         // Player Health Arguments
         syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
@@ -569,9 +570,9 @@ public class ServerUtils implements ExtendedModule {
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
+            final String newDifficulty = CraftPresence.player.level.getLevelData().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.player.world.getDifficulty().name().toLowerCase());
+                    StringUtils.formatWord(CraftPresence.player.level.getDifficulty().name().toLowerCase());
             return StringUtils.getOrDefault(newDifficulty);
         });
         syncArgument("world.weather.name", () -> {
@@ -580,30 +581,30 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getLevelName() : "";
+            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.level.getLevelData().getLevelName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         });
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.world.getDayTime()).getFirst()
+                TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime()).getFirst()
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.world.getDayTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime()).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.world.getDayTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime()).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.world.getDayTime())
+                TimeUtils.fromWorldTime(CraftPresence.player.level.getDayTime())
         );
 
         // Default Arguments
@@ -775,22 +776,22 @@ public class ServerUtils implements ExtendedModule {
         try {
             if (serverList == null) {
                 serverList = new ServerList(CraftPresence.instance);
-                serverList.loadServerList();
+                serverList.load();
             }
-            serverIndex = serverList.countServers();
+            serverIndex = serverList.size();
 
             for (int currentIndex = 0; currentIndex < serverIndex; currentIndex++) {
-                final ServerData data = serverList.getServerData(currentIndex);
-                if (!StringUtils.isNullOrEmpty(data.serverIP)) {
-                    final String formattedIP = data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP;
+                final ServerData data = serverList.get(currentIndex);
+                if (!StringUtils.isNullOrEmpty(data.ip)) {
+                    final String formattedIP = data.ip.contains(":") ? StringUtils.formatAddress(data.ip, false) : data.ip;
                     if (!defaultAddresses.contains(formattedIP)) {
                         defaultAddresses.add(formattedIP);
                     }
                     if (!knownAddresses.contains(formattedIP)) {
                         knownAddresses.add(formattedIP);
                     }
-                    if (!knownServerData.containsKey(data.serverIP)) {
-                        knownServerData.put(data.serverIP, data);
+                    if (!knownServerData.containsKey(data.ip)) {
+                        knownServerData.put(data.ip, data);
                     }
                 }
             }

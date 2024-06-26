@@ -41,8 +41,8 @@ import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Session;
+import net.minecraft.client.User;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * The Primary Application Class and Utilities
@@ -90,11 +90,11 @@ public class CraftPresence {
     /**
      * The Minecraft Instance Session attached to this Mod
      */
-    public static Session session;
+    public static User session;
     /**
      * The Current Player detected from the Minecraft Instance
      */
-    public static EntityPlayer player;
+    public static Player player;
     /**
      * The current player username
      */
@@ -205,15 +205,15 @@ public class CraftPresence {
         if (!Constants.IS_GAME_CLOSING) {
             instance = Minecraft.getInstance();
             if (initialized) {
-                session = instance.getSession();
+                session = instance.getUser();
                 player = instance.player;
 
-                username = session.getUsername();
-                uuid = session.getPlayerID();
+                username = session.getName();
+                uuid = session.getUuid();
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {
-                session = instance.getSession();
+                session = instance.getUser();
                 if (session != null) {
                     init();
                 }

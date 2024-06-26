@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.utils;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Image Utilities used to Parse texture resource data

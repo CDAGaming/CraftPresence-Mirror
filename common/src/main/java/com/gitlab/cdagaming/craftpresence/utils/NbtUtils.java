@@ -27,9 +27,9 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -45,9 +45,9 @@ public class NbtUtils {
      * @param entity The Entity data to interpret
      * @return the resulting NBT Tag, or null if not found
      */
-    public static NBTTagCompound getNbt(final Entity entity) {
-        NBTTagCompound result = new NBTTagCompound();
-        return entity != null ? entity.writeWithoutTypeId(result) : result;
+    public static CompoundTag getNbt(final Entity entity) {
+        CompoundTag result = new CompoundTag();
+        return entity != null ? entity.saveWithoutId(result) : result;
     }
 
     /**
@@ -56,9 +56,9 @@ public class NbtUtils {
      * @param stack The ItemStack data to interpret
      * @return the resulting NBT Tag, or null if not found
      */
-    public static NBTTagCompound getNbt(final ItemStack stack) {
-        NBTTagCompound result = new NBTTagCompound();
-        return stack != null ? stack.write(result) : result;
+    public static CompoundTag getNbt(final ItemStack stack) {
+        CompoundTag result = new CompoundTag();
+        return stack != null ? stack.save(result) : result;
     }
 
     /**
@@ -68,7 +68,7 @@ public class NbtUtils {
      * @param path The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static INBTBase getNbt(final Object data, final String... path) {
+    public static Tag getNbt(final Object data, final String... path) {
         if (data instanceof Entity entity) {
             return getNbt(entity, path);
         } else if (data instanceof ItemStack stack) {
@@ -84,7 +84,7 @@ public class NbtUtils {
      * @param path   The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static INBTBase getNbt(final Entity entity, final String... path) {
+    public static Tag getNbt(final Entity entity, final String... path) {
         return getNbt(
                 getNbt(entity), path
         );
@@ -97,7 +97,7 @@ public class NbtUtils {
      * @param path  The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static INBTBase getNbt(final ItemStack stack, final String... path) {
+    public static Tag getNbt(final ItemStack stack, final String... path) {
         return getNbt(
                 getNbt(stack), path
         );
@@ -110,15 +110,15 @@ public class NbtUtils {
      * @param path The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static INBTBase getNbt(final NBTTagCompound root, final String... path) {
+    public static Tag getNbt(final CompoundTag root, final String... path) {
         if (path == null || path.length == 0) {
             return root;
         } else {
-            INBTBase currentTag = root;
+            Tag currentTag = root;
             for (int i = 0; i < path.length; i++) {
-                if (currentTag instanceof NBTTagCompound compound) {
+                if (currentTag instanceof CompoundTag compound) {
                     currentTag = compound.get(path[i]);
-                } else if (currentTag instanceof NBTTagList list) {
+                } else if (currentTag instanceof ListTag list) {
                     int index = Integer.parseInt(path[i]);
                     currentTag = list.get(index);
                 } else {
@@ -138,30 +138,30 @@ public class NbtUtils {
      * @param tag The nbt tag to interpret
      * @return the primitive equivalent of the NBT Tag data
      */
-    public static Object parseTag(final INBTBase tag) {
+    public static Object parseTag(final Tag tag) {
         if (tag == null) {
             return null;
         }
 
         switch (tag.getId()) {
             case 1:
-                return ((NBTTagByte) tag).getByte();
+                return ((ByteTag) tag).getAsByte();
             case 2:
-                return ((NBTTagShort) tag).getShort();
+                return ((ShortTag) tag).getAsShort();
             case 3:
-                return ((NBTTagInt) tag).getInt();
+                return ((IntTag) tag).getAsInt();
             case 4:
-                return ((NBTTagLong) tag).getLong();
+                return ((LongTag) tag).getAsLong();
             case 5:
-                return ((NBTTagFloat) tag).getFloat();
+                return ((FloatTag) tag).getAsFloat();
             case 6:
-                return ((NBTTagDouble) tag).getDouble();
+                return ((DoubleTag) tag).getAsDouble();
             case 7:
-                return ((NBTTagByteArray) tag).getByteArray();
+                return ((ByteArrayTag) tag).getAsByteArray();
             case 8:
-                return ((NBTTagString) tag).getString();
+                return ((StringTag) tag).getAsString();
             case 9: {
-                final NBTTagList list = ((NBTTagList) tag);
+                final ListTag list = ((ListTag) tag);
                 final List<Object> converted = StringUtils.newArrayList();
                 if (!list.isEmpty()) {
                     for (int i = 0; i < list.size(); i++) {
@@ -178,9 +178,9 @@ public class NbtUtils {
                     return tag.toString();
                 }
             case 11:
-                return ((NBTTagIntArray) tag).getIntArray();
+                return ((IntArrayTag) tag).getAsIntArray();
             case 12:
-                return ((NBTTagLongArray) tag).getAsLongArray();
+                return ((LongArrayTag) tag).getAsLongArray();
             case 0:
             case 99:
             default:

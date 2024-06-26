@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.mojang.blaze3d.platform.NativeImage;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.client.renderer.texture.NativeImage;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

@@ -1,10 +1,8 @@
 accessWidener   v2  named
 
-accessible    field    net/minecraft/client/settings/KeyBinding    keyCode    Lnet/minecraft/client/util/InputMappings$Input;
-accessible    field    net/minecraft/client/settings/KeyBinding    CATEGORY_ORDER    Ljava/util/Map;
-mutable    field    net/minecraft/client/settings/KeyBinding    CATEGORY_ORDER    Ljava/util/Map;
-accessible    field    net/minecraft/client/gui/GuiTextField    width    I
-mutable    field    net/minecraft/client/gui/GuiTextField    width    I
-accessible    field    net/minecraft/client/gui/GuiTextField    height    I
-mutable    field    net/minecraft/client/gui/GuiTextField    height    I
-accessible field net/minecraft/client/network/NetHandlerPlayClient guiScreenServer Lnet/minecraft/client/gui/GuiScreen;
+accessible    method    net/minecraft/client/gui/components/EditBox    getMaxLength    ()I
+accessible    field    net/minecraft/client/KeyMapping    key    Lcom/mojang/blaze3d/platform/InputConstants$Key;
+mutable    field    net/minecraft/client/Options    keyMappings    [Lnet/minecraft/client/KeyMapping;
+accessible    field    net/minecraft/client/KeyMapping    CATEGORY_SORT_ORDER    Ljava/util/Map;
+mutable    field    net/minecraft/client/KeyMapping    CATEGORY_SORT_ORDER    Ljava/util/Map;
+accessible field net/minecraft/client/multiplayer/ClientPacketListener callbackScreen Lnet/minecraft/client/gui/screens/Screen;

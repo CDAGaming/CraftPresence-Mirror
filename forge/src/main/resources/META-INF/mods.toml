@@ -1,5 +1,6 @@
 modLoader="javafml"
 loaderVersion="${fml_version_range}"
+license="MIT"
 issueTrackerURL="https://gitlab.com/CDAGaming/CraftPresence/issues"
 [[mods]]
 modId="${mod_id}"

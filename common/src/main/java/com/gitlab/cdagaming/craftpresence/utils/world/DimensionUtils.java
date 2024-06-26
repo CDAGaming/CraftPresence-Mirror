@@ -32,9 +32,9 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.util.registry.IRegistry;
-import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.world.level.dimension.DimensionType;
 
 import java.util.List;
 import java.util.Map;
@@ -117,11 +117,11 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Dimension newProvider = CraftPresence.player.world.dimension;
+        final Dimension newProvider = CraftPresence.player.level.dimension;
         final DimensionType newDimensionType = newProvider.getType();
         final String newDimensionName = newDimensionType.toString();
 
-        final String newDimensionIdentifier = StringUtils.getOrDefault(newDimensionName, MappingUtils.getClassName(newProvider));
+        final String newDimensionIdentifier = StringUtils.getOrDefault(newDimensionName, MappingUtils.getClassName(newDimensionType));
 
         if (!newDimensionName.equals(RAW_DIMENSION_NAME) || !newDimensionIdentifier.equals(RAW_DIMENSION_IDENTIFIER)) {
             CURRENT_DIMENSION = newProvider;
@@ -189,7 +189,7 @@ public class DimensionUtils implements ExtendedModule {
      */
     private List<DimensionType> getDimensionTypes() {
         List<DimensionType> dimensionTypes = StringUtils.newArrayList();
-        List<DimensionType> defaultDimensionTypes = StringUtils.newArrayList(IRegistry.DIMENSION_TYPE.iterator());
+        List<DimensionType> defaultDimensionTypes = StringUtils.newArrayList(Registry.DIMENSION_TYPE.iterator());
 
         if (!defaultDimensionTypes.isEmpty()) {
             for (DimensionType type : defaultDimensionTypes) {
