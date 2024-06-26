@@ -22,14 +22,11 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.integrations.discord;
+package com.gitlab.cdagaming.craftpresence.core.integrations.discord;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.craftpresence.core.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
-import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -49,97 +46,94 @@ import java.util.List;
  */
 @SuppressWarnings("DuplicatedCode")
 public class FunctionsLib {
-    public static void init(DiscordUtils instance, Starscript ss) {
-        StandardLib.init(ss);
+    public static void init(DiscordUtils client) {
+        StandardLib.init(client.scriptEngine);
 
         // General Functions
-        instance.syncFunction("format", FunctionsLib::format);
-        instance.syncFunction("translate", FunctionsLib::translate);
-        instance.syncFunction("mcTranslate", FunctionsLib::mcTranslate);
-        instance.syncFunction("getFields", FunctionsLib::getFields);
-        instance.syncFunction("getMethods", FunctionsLib::getMethods);
-        instance.syncFunction("getJsonElement", FunctionsLib::getJsonElement);
-        instance.syncFunction("randomString", FunctionsLib::randomString);
-        instance.syncFunction("getFirst", FunctionsLib::getFirst);
-        instance.syncFunction("getNbt", FunctionsLib::getNbt);
-        instance.syncFunction("getComponent", FunctionsLib::getComponent); // MC 1.20.5+
-        instance.syncFunction("getNamespace", FunctionsLib::getNamespace);
-        instance.syncFunction("getPath", FunctionsLib::getPath);
+        client.syncFunction("format", (ss, argCount) -> FunctionsLib.format(client, ss, argCount));
+        client.syncFunction("translate", (ss, argCount) -> FunctionsLib.translate(client, ss, argCount));
+        client.syncFunction("getFields", FunctionsLib::getFields);
+        client.syncFunction("getMethods", FunctionsLib::getMethods);
+        client.syncFunction("getJsonElement", FunctionsLib::getJsonElement);
+        client.syncFunction("randomString", FunctionsLib::randomString);
+        client.syncFunction("getFirst", FunctionsLib::getFirst);
+        client.syncFunction("getNamespace", FunctionsLib::getNamespace);
+        client.syncFunction("getPath", FunctionsLib::getPath);
 
         // MathUtils
-        instance.syncFunction("isWithinValue", FunctionsLib::isWithinValue);
-        instance.syncFunction("roundDouble", FunctionsLib::roundDouble);
-        instance.syncFunction("clampInt", FunctionsLib::clampInt);
-        instance.syncFunction("clampLong", FunctionsLib::clampLong);
-        instance.syncFunction("clampFloat", FunctionsLib::clampFloat);
-        instance.syncFunction("clampDouble", FunctionsLib::clampDouble);
-        instance.syncFunction("lerpFloat", FunctionsLib::lerpFloat);
-        instance.syncFunction("lerpDouble", FunctionsLib::lerpDouble);
-        instance.syncFunction("snapToStep", FunctionsLib::snapToStep);
+        client.syncFunction("isWithinValue", FunctionsLib::isWithinValue);
+        client.syncFunction("roundDouble", FunctionsLib::roundDouble);
+        client.syncFunction("clampInt", FunctionsLib::clampInt);
+        client.syncFunction("clampLong", FunctionsLib::clampLong);
+        client.syncFunction("clampFloat", FunctionsLib::clampFloat);
+        client.syncFunction("clampDouble", FunctionsLib::clampDouble);
+        client.syncFunction("lerpFloat", FunctionsLib::lerpFloat);
+        client.syncFunction("lerpDouble", FunctionsLib::lerpDouble);
+        client.syncFunction("snapToStep", FunctionsLib::snapToStep);
 
         // DiscordUtils
-        instance.syncFunction("getResult", FunctionsLib::getResult);
-        instance.syncFunction("randomAsset", FunctionsLib::randomAsset);
-        instance.syncFunction("isValidId", FunctionsLib::isValidId);
-        instance.syncFunction("isValidAsset", FunctionsLib::isValidAsset);
-        instance.syncFunction("isCustomAsset", FunctionsLib::isCustomAsset);
-        instance.syncFunction("getAsset", FunctionsLib::getAsset);
-        instance.syncFunction("getAssetKey", FunctionsLib::getAssetKey);
-        instance.syncFunction("getAssetId", FunctionsLib::getAssetId);
-        instance.syncFunction("getAssetType", FunctionsLib::getAssetType);
-        instance.syncFunction("getAssetUrl", FunctionsLib::getAssetUrl);
+        client.syncFunction("getResult", (ss, argCount) -> FunctionsLib.getResult(client, ss, argCount));
+        client.syncFunction("randomAsset", FunctionsLib::randomAsset);
+        client.syncFunction("isValidId", FunctionsLib::isValidId);
+        client.syncFunction("isValidAsset", FunctionsLib::isValidAsset);
+        client.syncFunction("isCustomAsset", FunctionsLib::isCustomAsset);
+        client.syncFunction("getAsset", FunctionsLib::getAsset);
+        client.syncFunction("getAssetKey", FunctionsLib::getAssetKey);
+        client.syncFunction("getAssetId", FunctionsLib::getAssetId);
+        client.syncFunction("getAssetType", FunctionsLib::getAssetType);
+        client.syncFunction("getAssetUrl", (ss, argCount) -> FunctionsLib.getAssetUrl(client, ss, argCount));
 
         // StringUtils
-        instance.syncFunction("getOrDefault", FunctionsLib::getOrDefault);
-        instance.syncFunction("length", FunctionsLib::length);
-        instance.syncFunction("split", FunctionsLib::split);
-        instance.syncFunction("getArrayElement", FunctionsLib::getArrayElement);
-        instance.syncFunction("minify", FunctionsLib::minify);
-        instance.syncFunction("nullOrEmpty", FunctionsLib::nullOrEmpty);
-        instance.syncFunction("cast", FunctionsLib::cast);
-        instance.syncFunction("formatAddress", FunctionsLib::formatAddress);
-        instance.syncFunction("isUuid", FunctionsLib::isUuid);
-        instance.syncFunction("isColor", FunctionsLib::isColor);
-        instance.syncFunction("toCamelCase", FunctionsLib::toCamelCase);
-        instance.syncFunction("asIcon", FunctionsLib::asIcon);
-        instance.syncFunction("asProperWord", FunctionsLib::asProperWord);
-        instance.syncFunction("removeRepeatWords", FunctionsLib::removeRepeatWords);
-        instance.syncFunction("asIdentifier", FunctionsLib::asIdentifier);
-        instance.syncFunction("capitalizeWords", FunctionsLib::capitalizeWords);
-        instance.syncFunction("getField", FunctionsLib::getField);
-        instance.syncFunction("getClass", FunctionsLib::getClass);
-        instance.syncFunction("hasField", FunctionsLib::hasField);
-        instance.syncFunction("executeMethod", FunctionsLib::executeMethod);
-        instance.syncFunction("stripColors", FunctionsLib::stripColors);
-        instance.syncFunction("stripFormatting", FunctionsLib::stripFormatting);
-        instance.syncFunction("stripAllFormatting", FunctionsLib::stripAllFormatting);
+        client.syncFunction("getOrDefault", FunctionsLib::getOrDefault);
+        client.syncFunction("length", FunctionsLib::length);
+        client.syncFunction("split", FunctionsLib::split);
+        client.syncFunction("getArrayElement", (ss, argCount) -> FunctionsLib.getArrayElement(client, ss, argCount));
+        client.syncFunction("minify", FunctionsLib::minify);
+        client.syncFunction("nullOrEmpty", FunctionsLib::nullOrEmpty);
+        client.syncFunction("cast", (ss, argCount) -> FunctionsLib.cast(client, ss, argCount));
+        client.syncFunction("formatAddress", FunctionsLib::formatAddress);
+        client.syncFunction("isUuid", FunctionsLib::isUuid);
+        client.syncFunction("isColor", FunctionsLib::isColor);
+        client.syncFunction("toCamelCase", FunctionsLib::toCamelCase);
+        client.syncFunction("asIcon", FunctionsLib::asIcon);
+        client.syncFunction("asProperWord", FunctionsLib::asProperWord);
+        client.syncFunction("removeRepeatWords", FunctionsLib::removeRepeatWords);
+        client.syncFunction("asIdentifier", FunctionsLib::asIdentifier);
+        client.syncFunction("capitalizeWords", FunctionsLib::capitalizeWords);
+        client.syncFunction("getField", (ss, argCount) -> FunctionsLib.getField(client, ss, argCount));
+        client.syncFunction("getClass", FunctionsLib::getClass);
+        client.syncFunction("hasField", FunctionsLib::hasField);
+        client.syncFunction("executeMethod", (ss, argCount) -> FunctionsLib.executeMethod(client, ss, argCount));
+        client.syncFunction("stripColors", FunctionsLib::stripColors);
+        client.syncFunction("stripFormatting", FunctionsLib::stripFormatting);
+        client.syncFunction("stripAllFormatting", FunctionsLib::stripAllFormatting);
 
         // TimeUtils
-        instance.syncFunction("getCurrentTime", FunctionsLib::getCurrentTime);
-        instance.syncFunction("getElapsedNanos", FunctionsLib::getElapsedNanos);
-        instance.syncFunction("getElapsedMillis", FunctionsLib::getElapsedMillis);
-        instance.syncFunction("getElapsedSeconds", FunctionsLib::getElapsedSeconds);
-        instance.syncFunction("timeToEpochSecond", FunctionsLib::timeToEpochSecond); // toEpochSecond
-        instance.syncFunction("timeToEpochMilli", FunctionsLib::timeToEpochMilli); // toEpochMilli
-        instance.syncFunction("timeFromEpochSecond", FunctionsLib::timeFromEpochSecond); // fromEpochSecond
-        instance.syncFunction("timeFromEpochMilli", FunctionsLib::timeFromEpochMilli); // fromEpochMilli
-        instance.syncFunction("dateToEpochSecond", FunctionsLib::dateToEpochSecond); // stringToEpochSecond
-        instance.syncFunction("dateToEpochMilli", FunctionsLib::dateToEpochMilli); // stringToEpochMilli
-        instance.syncFunction("epochSecondToDate", FunctionsLib::epochSecondToDate); // epochSecondToString
-        instance.syncFunction("epochMilliToDate", FunctionsLib::epochMilliToDate); // epochMilliToString
-        instance.syncFunction("convertTimeZone", FunctionsLib::convertTimeZone); // convertZone
-        instance.syncFunction("convertTimeFormat", FunctionsLib::convertTimeFormat); // convertFormat
-        instance.syncFunction("convertTime", FunctionsLib::convertTime);
-        instance.syncFunction("timeFromString", FunctionsLib::timeFromString); // toInstance
-        instance.syncFunction("timeToString", FunctionsLib::timeToString); // toString
+        client.syncFunction("getCurrentTime", FunctionsLib::getCurrentTime);
+        client.syncFunction("getElapsedNanos", FunctionsLib::getElapsedNanos);
+        client.syncFunction("getElapsedMillis", FunctionsLib::getElapsedMillis);
+        client.syncFunction("getElapsedSeconds", FunctionsLib::getElapsedSeconds);
+        client.syncFunction("timeToEpochSecond", FunctionsLib::timeToEpochSecond); // toEpochSecond
+        client.syncFunction("timeToEpochMilli", FunctionsLib::timeToEpochMilli); // toEpochMilli
+        client.syncFunction("timeFromEpochSecond", FunctionsLib::timeFromEpochSecond); // fromEpochSecond
+        client.syncFunction("timeFromEpochMilli", FunctionsLib::timeFromEpochMilli); // fromEpochMilli
+        client.syncFunction("dateToEpochSecond", FunctionsLib::dateToEpochSecond); // stringToEpochSecond
+        client.syncFunction("dateToEpochMilli", FunctionsLib::dateToEpochMilli); // stringToEpochMilli
+        client.syncFunction("epochSecondToDate", FunctionsLib::epochSecondToDate); // epochSecondToString
+        client.syncFunction("epochMilliToDate", FunctionsLib::epochMilliToDate); // epochMilliToString
+        client.syncFunction("convertTimeZone", FunctionsLib::convertTimeZone); // convertZone
+        client.syncFunction("convertTimeFormat", FunctionsLib::convertTimeFormat); // convertFormat
+        client.syncFunction("convertTime", FunctionsLib::convertTime);
+        client.syncFunction("timeFromString", FunctionsLib::timeFromString); // toInstance
+        client.syncFunction("timeToString", FunctionsLib::timeToString); // toString
     }
 
-    private static Value throwUnimplemented(Starscript ss) {
+    public static Value throwUnimplemented(Starscript ss) {
         ss.error(Constants.TRANSLATOR.translate("craftpresence.message.unsupported"));
         return Value.null_();
     }
 
-    public static Value parseWith(TranslationUtils instance, Starscript ss, int argCount) {
+    public static Value parseWith(DiscordUtils client, TranslationUtils instance, Starscript ss, int argCount) {
         final List<Value> args = StringUtils.newArrayList();
         if (argCount < 1)
             ss.error("parseWith() requires one or more arguments, got %d.", argCount);
@@ -165,7 +159,7 @@ public class FunctionsLib {
         if (!args.isEmpty() && data != null) {
             final List<Object> value = StringUtils.newArrayList();
             for (Value info : args) {
-                value.add(CraftPresence.CLIENT.fromValue(info));
+                value.add(client.fromValue(info));
             }
             Object[] formatArgs = value.toArray(new Object[0]);
             result = instance != null ? instance.translate(data, formatArgs) : String.format(data, formatArgs);
@@ -175,18 +169,13 @@ public class FunctionsLib {
         return !StringUtils.isNullOrEmpty(result) ? Value.string(result) : Value.null_();
     }
 
-    public static Value format(Starscript ss, int argCount) {
-        return parseWith(null, ss, argCount);
+    public static Value format(DiscordUtils client, Starscript ss, int argCount) {
+        return parseWith(client, null, ss, argCount);
     }
 
-    public static Value translate(Starscript ss, int argCount) {
+    public static Value translate(DiscordUtils client, Starscript ss, int argCount) {
         if (Constants.TRANSLATOR == null) ss.error("No available translations from mod data, try again later.");
-        return parseWith(Constants.TRANSLATOR, ss, argCount);
-    }
-
-    public static Value mcTranslate(Starscript ss, int argCount) {
-        if (ModUtils.RAW_TRANSLATOR == null) ss.error("No available translations from game data, try again later.");
-        return parseWith(ModUtils.RAW_TRANSLATOR, ss, argCount);
+        return parseWith(client, Constants.TRANSLATOR, ss, argCount);
     }
 
     public static Value getJsonElement(Starscript ss, int argCount) {
@@ -249,10 +238,10 @@ public class FunctionsLib {
         return result != null ? Value.object(result) : Value.null_();
     }
 
-    public static Value getResult(Starscript ss, int argCount) {
+    public static Value getResult(DiscordUtils client, Starscript ss, int argCount) {
         if (argCount != 1)
             ss.error("getResult() can only be used with one argument, got %d.", argCount);
-        return Value.string(CraftPresence.CLIENT.getResult(ss.pop().toString()));
+        return Value.string(client.getResult(ss.pop().toString()));
     }
 
     public static Value isValidId(Starscript ss, int argCount) {
@@ -297,11 +286,11 @@ public class FunctionsLib {
         return Value.object(DiscordAssetUtils.getType(ss.pop().toString()));
     }
 
-    public static Value getAssetUrl(Starscript ss, int argCount) {
+    public static Value getAssetUrl(DiscordUtils client, Starscript ss, int argCount) {
         if (argCount != 1)
             ss.error("getAssetUrl() can only be used with one argument, got %d.", argCount);
         return Value.string(DiscordAssetUtils.getUrl(
-                ss.pop().toString(), CraftPresence.CLIENT::getResult
+                ss.pop().toString(), client::getResult
         ));
     }
 
@@ -320,41 +309,6 @@ public class FunctionsLib {
             }
         }
         return Value.null_();
-    }
-
-    public static Value getComponent(Starscript ss, int argCount) {
-        return throwUnimplemented(ss);
-    }
-
-    public static Value getNbt(Starscript ss, int argCount) {
-        final List<Value> args = StringUtils.newArrayList();
-        if (argCount < 1)
-            ss.error("getNbt() requires one or more arguments, got %d.", argCount);
-        for (int i = 0; i < argCount; i++) {
-            args.add(ss.pop());
-        }
-        StringUtils.revlist(args);
-
-        // Parse, then remove the source entity from arguments, if valid
-        Value source = args.getFirst();
-        Object data = null;
-        if (source.isObject()) {
-            data = source.getObject();
-        }
-
-        if (data == null) {
-            ss.error("First argument to getNbt() needs to be a valid Entity or ItemStack object.");
-        }
-        args.removeFirst();
-
-        final List<String> path = StringUtils.newArrayList();
-        for (Value info : args) {
-            path.add(info.toString());
-        }
-        final Object result = NbtUtils.parseTag(
-                NbtUtils.getNbt(data, path.toArray(new String[0]))
-        );
-        return result != null ? CraftPresence.CLIENT.toValue(result, true) : Value.null_();
     }
 
     public static Value getNamespace(Starscript ss, int argCount) {
@@ -558,13 +512,13 @@ public class FunctionsLib {
         return Value.object(source.split(regex, limit));
     }
 
-    public static Value getArrayElement(Starscript ss, int argCount) {
+    public static Value getArrayElement(DiscordUtils client, Starscript ss, int argCount) {
         if (argCount != 2) ss.error("getArrayElement() requires 2 arguments, %d.", argCount);
         int element = (int) ss.popNumber("Second argument to getArrayElement() needs to be a number.");
         Object data = ss.popObject("First argument to getArrayElement() needs to be an object.");
         Object[] array = StringUtils.getDynamicArray(data);
         if (array != null) {
-            return CraftPresence.CLIENT.toValue(array[element], true);
+            return client.toValue(array[element], true);
         } else {
             ss.error("Invalid array information supplied for getArrayElement(), please check input and documentation.");
         }
@@ -589,7 +543,7 @@ public class FunctionsLib {
         return Value.bool(StringUtils.isNullOrEmpty(target, allowWhitespace));
     }
 
-    public static Value cast(Starscript ss, int argCount) {
+    public static Value cast(DiscordUtils client, Starscript ss, int argCount) {
         final List<Value> args = StringUtils.newArrayList();
         if (argCount != 2)
             ss.error("cast() can only be used with two arguments, got %d.", argCount);
@@ -600,7 +554,7 @@ public class FunctionsLib {
         Value target = args.getFirst();
 
         // Argument 1: castObject
-        Object instance = CraftPresence.CLIENT.fromValue(target);
+        Object instance = client.fromValue(target);
         args.removeFirst();
         target = args.getFirst();
         Class<?> classToAccess = null;
@@ -630,7 +584,7 @@ public class FunctionsLib {
             result = FileUtils.castOrConvert(instance, classToAccess);
         }
 
-        return result != null ? CraftPresence.CLIENT.toValue(result, true) : Value.null_();
+        return result != null ? client.toValue(result, true) : Value.null_();
     }
 
     public static Value formatAddress(Starscript ss, int argCount) {
@@ -746,7 +700,7 @@ public class FunctionsLib {
         return Value.null_();
     }
 
-    public static Value getField(Starscript ss, int argCount) {
+    public static Value getField(DiscordUtils client, Starscript ss, int argCount) {
         final List<Value> args = StringUtils.newArrayList();
         if (argCount < 2)
             ss.error("getField() requires two or more arguments, got %d.", argCount);
@@ -779,7 +733,7 @@ public class FunctionsLib {
         // Argument 2 becomes instance, if not already supplied
         if (instance == null) {
             target = args.getFirst();
-            instance = CraftPresence.CLIENT.fromValue(target);
+            instance = client.fromValue(target);
             args.removeFirst(); // Remove the instance from parsing
         }
 
@@ -805,7 +759,7 @@ public class FunctionsLib {
             result = StringUtils.getField(classToAccess, instance, fields.toArray(new String[0]));
         }
 
-        return result != null ? CraftPresence.CLIENT.toValue(result, true) : Value.null_();
+        return result != null ? client.toValue(result, true) : Value.null_();
     }
 
     public static Value getClass(Starscript ss, int argCount) {
@@ -835,7 +789,7 @@ public class FunctionsLib {
         return Value.null_();
     }
 
-    public static Value executeMethod(Starscript ss, int argCount) {
+    public static Value executeMethod(DiscordUtils client, Starscript ss, int argCount) {
         final List<Value> args = StringUtils.newArrayList();
         if (argCount < 2)
             ss.error("executeMethod() requires two or more arguments, got %d.", argCount);
@@ -868,7 +822,7 @@ public class FunctionsLib {
         // Argument 2 becomes instance, if not already supplied
         if (instance == null) {
             target = args.getFirst();
-            instance = CraftPresence.CLIENT.fromValue(target);
+            instance = client.fromValue(target);
             args.removeFirst(); // Remove the instance from parsing
         }
 
@@ -921,7 +875,7 @@ public class FunctionsLib {
                         parameterTypes.add(classObj);
                     }
                 } else {
-                    parameters.add(CraftPresence.CLIENT.fromValue(data));
+                    parameters.add(client.fromValue(data));
                 }
                 classMode = !classMode;
             }
@@ -933,7 +887,7 @@ public class FunctionsLib {
                 methodNames.toArray(new String[0])
         );
 
-        return result != null ? CraftPresence.CLIENT.toValue(result, true) : Value.null_();
+        return result != null ? client.toValue(result, true) : Value.null_();
     }
 
     public static Value stripColors(Starscript ss, int argCount) {

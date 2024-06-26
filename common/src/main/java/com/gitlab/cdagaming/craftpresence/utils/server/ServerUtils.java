@@ -641,7 +641,8 @@ public class ServerUtils implements ExtendedModule {
                         if (CraftPresence.CLIENT.addEndpointIcon(
                                 CraftPresence.CONFIG,
                                 CraftPresence.CONFIG.advancedSettings.serverIconEndpoint,
-                                formattedServer_IP
+                                formattedServer_IP,
+                                true
                         )) {
                             currentServerIcon = formattedServer_IP;
                         } else {

@@ -22,23 +22,21 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.utils.discord;
+package com.gitlab.cdagaming.craftpresence.core.utils.discord;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.FunctionsLib;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
-import com.gitlab.cdagaming.craftpresence.integrations.discord.FunctionsLib;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
+import com.jagrosh.discordipc.IPCListener;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import com.jagrosh.discordipc.entities.RichPresence;
 import com.jagrosh.discordipc.entities.User;
@@ -65,6 +63,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -139,6 +138,26 @@ public class DiscordUtils {
      * The Current Message tied to the Large Image, if any
      */
     public String LARGE_IMAGE_TEXT;
+    /**
+     * Whether placeholder previews can be shows when generating argument messages
+     */
+    public Supplier<Boolean> canShowPreviews = () -> false;
+    /**
+     * Whether to format words while applying {@link PresenceData}
+     */
+    public Supplier<Boolean> canFormatWords = () -> false;
+    /**
+     * The Supplier for the default {@link PresenceData}, if any
+     */
+    public Supplier<PresenceData> defaultPresence;
+    /**
+     * The Supplier for the default icon, if any
+     */
+    public Supplier<String> defaultIconSupplier;
+    /**
+     * The assigned instance of {@link ScheduleUtils}, used for Join Requests
+     */
+    public ScheduleUtils SCHEDULER;
     /**
      * The unique-character Client ID Number, tied to the game profile data attached to the RPC
      */
@@ -259,15 +278,19 @@ public class DiscordUtils {
     /**
      * Initializes Critical Rich Presence Data
      *
-     * @param debugMode   Whether to enable debug mode for this instance
-     * @param verboseMode Whether to enable verbose mode for this instance
+     * @param debugMode    Whether to enable debug mode for this instance
+     * @param verboseMode  Whether to enable verbose mode for this instance
+     * @param listener     The listener to assign for this instance
+     * @param dynamicIcons The Dynamic Icons to sync, if supplied
      */
-    public void init(final boolean debugMode, final boolean verboseMode) {
+    public void init(final boolean debugMode, final boolean verboseMode, final IPCListener listener, final Map<String, String> dynamicIcons) {
         // Create IPC Instance
         ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
-        ipcInstance.setListener(new ModIPCListener());
+        if (listener != null) {
+            ipcInstance.setListener(listener);
+        }
         // Initialize Discord Assets
-        DiscordAssetUtils.loadAssets(CLIENT_ID, true, CraftPresence.CONFIG.displaySettings.dynamicIcons);
+        DiscordAssetUtils.loadAssets(CLIENT_ID, true, dynamicIcons);
         // Mark as Disconnected to trigger auto-sync
         STATUS = DiscordStatus.Disconnected;
     }
@@ -275,17 +298,22 @@ public class DiscordUtils {
     /**
      * Initializes Critical Rich Presence Data
      *
-     * @param debugMode Whether to enable debug mode for this instance
+     * @param debugMode   Whether to enable debug mode for this instance
+     * @param verboseMode Whether to enable verbose mode for this instance
+     * @param listener    The listener to assign for this instance
      */
-    public void init(final boolean debugMode) {
-        init(debugMode, CommandUtils.isVerboseMode());
+    public void init(final boolean debugMode, final boolean verboseMode, final IPCListener listener) {
+        init(debugMode, verboseMode, listener, null);
     }
 
     /**
      * Initializes Critical Rich Presence Data
+     *
+     * @param debugMode   Whether to enable debug mode for this instance
+     * @param verboseMode Whether to enable verbose mode for this instance
      */
-    public void init() {
-        init(CommandUtils.isDebugMode());
+    public void init(final boolean debugMode, final boolean verboseMode) {
+        init(debugMode, verboseMode, null);
     }
 
     /**
@@ -928,10 +956,11 @@ public class DiscordUtils {
     /**
      * Refresh Dynamic Variable Data, removing any data no longer in-play
      *
-     * @param oldData The old data to interpret
-     * @param newData The new data to interpret
+     * @param oldData      The old data to interpret
+     * @param newData      The new data to interpret
+     * @param newRetriever The data supplier to use alongside the newData
      */
-    public void syncDynamicVariables(final Map<String, String> oldData, final Map<String, String> newData) {
+    public void syncDynamicVariables(final Map<String, String> oldData, final Map<String, String> newData, final Function<String, Supplier<Object>> newRetriever) {
         final boolean hasOldData = oldData != null && !oldData.isEmpty();
         if (hasOldData) {
             for (String entry : oldData.keySet()) {
@@ -945,7 +974,7 @@ public class DiscordUtils {
             if (!entry.equals("default") && (!hasOldData || !oldData.containsKey(entry))) {
                 syncArgument(
                         "custom." + entry,
-                        () -> CraftPresence.CONFIG.displaySettings.dynamicVariables.get(entry)
+                        newRetriever.apply(entry)
                 );
             }
         }
@@ -1264,20 +1293,15 @@ public class DiscordUtils {
      * @return the parsable string
      */
     public String generateArgumentMessage(final String... formats) {
-        return generateArgumentMessage(CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews, formats);
+        return generateArgumentMessage(canShowPreviews.get(), formats);
     }
 
     /**
      * Synchronizes and Updates Dynamic Placeholder data in this module
      */
     public void syncPlaceholders() {
-        FunctionsLib.init(this, scriptEngine);
+        FunctionsLib.init(this);
         syncArgument("general.mods", Constants::getModCount);
-        syncArgument("general.title", () -> Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
-        syncArgument("general.version", () -> ModUtils.MCVersion, true);
-        syncArgument("general.protocol", () -> ModUtils.MCProtocolID);
-        syncArgument("general.brand", () -> ModUtils.BRAND, true);
-
         syncArgument("data.general.version", () -> Constants.MCBuildVersion, true);
         syncArgument("data.general.protocol", () -> Constants.MCBuildProtocol);
         syncTimestamp(() -> {
@@ -1286,56 +1310,19 @@ public class DiscordUtils {
             lastStartTime = currentStartTime;
             return currentStartTime;
         }, "data.general.time");
-
-        syncArgument("_general.instance", () -> CraftPresence.instance);
-        syncArgument("_general.player", () -> CraftPresence.player);
-        syncArgument("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.world : null);
-        syncArgument("_config.instance", () -> CraftPresence.CONFIG);
-
-        // Sync Custom Variables
-        syncDynamicVariables(null, CraftPresence.CONFIG.displaySettings.dynamicVariables);
-
-        // Add Any Generalized Argument Data needed
-        syncArgument("player.name", () -> CraftPresence.username, true);
-
-        // UUID Data
-        syncArgument("player.uuid.short", () -> {
-            final String uniqueId = CraftPresence.uuid;
-            return StringUtils.isValidUuid(uniqueId) ? StringUtils.getFromUuid(uniqueId, true) : null;
-        }, true);
-        syncArgument("player.uuid.full", () -> {
-            final String uniqueId = CraftPresence.uuid;
-            return StringUtils.isValidUuid(uniqueId) ? StringUtils.getFromUuid(uniqueId, false) : null;
-        }, true);
-
-        syncArgument("player.icon", () -> {
-            if (addEndpointIcon(
-                    CraftPresence.CONFIG,
-                    CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
-                    CraftPresence.username, CraftPresence.uuid
-            )) {
-                return CraftPresence.username;
-            }
-            return null;
-        }, true);
-
-        // Sync the Default Icon Argument
-        syncArgument("general.icon", () -> CraftPresence.CONFIG.generalSettings.defaultIcon, true);
-
-        CommandUtils.syncModuleArguments();
-        CommandUtils.syncPackArguments();
     }
 
     /**
      * Add an Endpoint Icon to the Selectable Dynamic Assets
      *
-     * @param config   The {@link Config} instance to interpret
-     * @param endpoint The endpoint url to be interpreted
-     * @param name     The name to be interpreted
-     * @param key      The key to be interpreted
+     * @param config       The {@link Config} instance to interpret
+     * @param endpoint     The endpoint url to be interpreted
+     * @param name         The name to be interpreted
+     * @param key          The key to be interpreted
+     * @param filterToMain Whether the added icon will be used in runtime
      * @return {@link Boolean#TRUE} if operation is allowed
      */
-    public boolean addEndpointIcon(final Config config, final String endpoint, final String name, final String key) {
+    public boolean addEndpointIcon(final Config config, final String endpoint, final String name, final String key, final boolean filterToMain) {
         final boolean canUseEndpointIcon = !config.hasChanged() &&
                 config.advancedSettings.allowEndpointIcons &&
                 !StringUtils.isNullOrEmpty(endpoint);
@@ -1348,7 +1335,7 @@ public class DiscordUtils {
                                 StringUtils.getOrDefault(key, name)
                         )).get().toString()
                 );
-                if (config == CraftPresence.CONFIG) {
+                if (filterToMain) {
                     DiscordAssetUtils.syncCustomAssets(config.displaySettings.dynamicIcons);
                     config.save();
                 }
@@ -1362,11 +1349,37 @@ public class DiscordUtils {
      *
      * @param config   The {@link Config} instance to interpret
      * @param endpoint The endpoint url to be interpreted
+     * @param name     The name to be interpreted
+     * @param key      The key to be interpreted
+     * @return {@link Boolean#TRUE} if operation is allowed
+     */
+    public boolean addEndpointIcon(final Config config, final String endpoint, final String name, final String key) {
+        return addEndpointIcon(config, endpoint, name, key, false);
+    }
+
+    /**
+     * Add an Endpoint Icon to the Selectable Dynamic Assets
+     *
+     * @param config       The {@link Config} instance to interpret
+     * @param endpoint     The endpoint url to be interpreted
+     * @param name         The name or key to be interpreted
+     * @param filterToMain Whether the added icon will be used in runtime
+     * @return {@link Boolean#TRUE} if operation is allowed
+     */
+    public boolean addEndpointIcon(final Config config, final String endpoint, final String name, final boolean filterToMain) {
+        return addEndpointIcon(config, endpoint, name, "", filterToMain);
+    }
+
+    /**
+     * Add an Endpoint Icon to the Selectable Dynamic Assets
+     *
+     * @param config   The {@link Config} instance to interpret
+     * @param endpoint The endpoint url to be interpreted
      * @param name     The name or key to be interpreted
      * @return {@link Boolean#TRUE} if operation is allowed
      */
     public boolean addEndpointIcon(final Config config, final String endpoint, final String name) {
-        return addEndpointIcon(config, endpoint, name, "");
+        return addEndpointIcon(config, endpoint, name, false);
     }
 
     /**
@@ -1420,7 +1433,13 @@ public class DiscordUtils {
         if (!DiscordAssetUtils.ASSET_LIST.isEmpty() && !StringUtils.isNullOrEmpty(evalStrings[0])) {
             final String primaryKey = evalStrings[0];
             if (!cachedImageData.containsKey(primaryKey)) {
-                final String defaultIcon = allowNull ? "" : StringUtils.getOrDefault(DiscordAssetUtils.getKey(CraftPresence.CONFIG.generalSettings.defaultIcon), DiscordAssetUtils.getRandomAssetName());
+                String defaultIcon = "";
+                if (!allowNull) {
+                    if (defaultIconSupplier != null) {
+                        defaultIcon = DiscordAssetUtils.getKey(defaultIconSupplier.get());
+                    }
+                    defaultIcon = StringUtils.getOrDefault(defaultIcon, DiscordAssetUtils.getRandomAssetName());
+                }
                 String finalKey = defaultIcon;
                 for (int i = 0; i < evalStrings.length; ) {
                     final String currentString = evalStrings[i];
@@ -1473,10 +1492,24 @@ public class DiscordUtils {
     }
 
     /**
+     * Rejects the active Join Request, if any
+     */
+    public void acceptJoinRequest() {
+        respondToJoinRequest(IPCClient.ApprovalMode.ACCEPT);
+    }
+
+    /**
+     * Rejects the active Join Request, if any
+     */
+    public void denyJoinRequest() {
+        respondToJoinRequest(IPCClient.ApprovalMode.DENY);
+    }
+
+    /**
      * Clears Related Party Session Information from the RPC, and updates if needed
      */
     public void clearPartyData() {
-        respondToJoinRequest(IPCClient.ApprovalMode.DENY);
+        denyJoinRequest();
 
         JOIN_SECRET = null;
         PARTY_ID = null;
@@ -1541,13 +1574,15 @@ public class DiscordUtils {
      */
     public RichPresence buildRichPresence(final PresenceData configData) {
         // Do not compile Presence while offline or in-progress of connecting
-        if (!isAvailable() || !isConnected() || connectThreadActive) {
+        if (!isAvailable() || !isConnected() || connectThreadActive || configData == null) {
             return null;
         }
 
+        final boolean formatWords = canFormatWords.get();
+
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(getResult(configData.details, "details"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(getResult(configData.gameState, "gameState"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        DETAILS = StringUtils.formatWord(getResult(configData.details, "details"), formatWords, true, 1);
+        GAME_STATE = StringUtils.formatWord(getResult(configData.gameState, "gameState"), formatWords, true, 1);
 
         LARGE_IMAGE_RAW = getResult(configData.largeImageKey, "largeImageKey");
         SMALL_IMAGE_RAW = getResult(configData.smallImageKey, "smallImageKey");
@@ -1560,8 +1595,8 @@ public class DiscordUtils {
         SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 getResult(SMALL_IMAGE_ASSET.getUrl()) : SMALL_IMAGE_ASSET.getName()) : SMALL_IMAGE_RAW;
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1);
+        LARGE_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), formatWords, true, 1);
+        SMALL_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), formatWords, true, 1);
 
         final Pair<Boolean, Long> startData = StringUtils.getValidLong(
                 getResult(configData.startTimestamp, "startTimestamp")
@@ -1590,7 +1625,7 @@ public class DiscordUtils {
                         !StringUtils.isNullOrEmpty(button.label)) {
                     String label = StringUtils.formatWord(
                             getResult(button.label, overrideId + ".label"),
-                            !CraftPresence.CONFIG.advancedSettings.formatWords, true, 1
+                            formatWords, true, 1
                     );
                     String url = !StringUtils.isNullOrEmpty(button.url) ? getResult(
                             button.url, overrideId + ".url"
@@ -1663,31 +1698,14 @@ public class DiscordUtils {
                 }
             }
         }
-        return CraftPresence.CONFIG.displaySettings.presenceData;
+        return defaultPresence != null ? defaultPresence.get() : null;
     }
 
     /**
      * Perform any needed Tick events, tied to {@link ScheduleUtils#MINIMUM_REFRESH_RATE} ticks
      */
     public void onTick() {
-        // Menu Tick Event
-        final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
-        final boolean isFullyLoaded = Constants.HAS_GAME_LOADED && isAvailable();
-        if (!isFullyLoaded) {
-            // Ensure Loading Presence has already passed, before any other type of presence displays
-            CommandUtils.setMenuState(CommandUtils.MenuStatus.Loading);
-        } else if (CraftPresence.player == null) {
-            CommandUtils.setMenuState(CommandUtils.MenuStatus.MainMenu);
-        } else if (isMenuActive) {
-            CommandUtils.clearMenuState();
-        }
-        // Join Request Tick Event
-        if (!CraftPresence.CONFIG.hasChanged() && isFullyLoaded) {
-            // Processing for Join Request Systems
-            if (REQUESTER_USER != null && CraftPresence.SCHEDULER.TIMER <= 0) {
-                respondToJoinRequest(IPCClient.ApprovalMode.DENY);
-            }
-        }
+        // N/A
     }
 
     /**
@@ -1718,7 +1736,7 @@ public class DiscordUtils {
     }
 
     /**
-     * Respond to a Join Request with the specified {@link com.jagrosh.discordipc.IPCClient.ApprovalMode}
+     * Respond to a Join Request with the specified {@link IPCClient.ApprovalMode}
      *
      * @param mode the approval state
      */
@@ -1730,7 +1748,9 @@ public class DiscordUtils {
                 }
                 STATUS = DiscordStatus.Ready;
             }
-            CraftPresence.SCHEDULER.TIMER = 0;
+            if (SCHEDULER != null) {
+                SCHEDULER.TIMER = 0;
+            }
             REQUESTER_USER = null;
         }
     }

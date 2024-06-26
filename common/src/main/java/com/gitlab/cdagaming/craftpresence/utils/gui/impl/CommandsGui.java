@@ -36,7 +36,6 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
-import com.jagrosh.discordipc.IPCClient;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
@@ -224,12 +223,12 @@ public class CommandsGui extends ExtendedScreen {
                                     executionString = Constants.TRANSLATOR.translate("craftpresence.command.request.accept",
                                             CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName()
                                     );
-                                    CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.ACCEPT);
+                                    CraftPresence.CLIENT.acceptJoinRequest();
                                 } else if (executionCommandArgs[1].equalsIgnoreCase("deny")) {
                                     executionString = Constants.TRANSLATOR.translate("craftpresence.command.request.denied",
                                             CraftPresence.CLIENT.REQUESTER_USER.getEffectiveName()
                                     );
-                                    CraftPresence.CLIENT.respondToJoinRequest(IPCClient.ApprovalMode.DENY);
+                                    CraftPresence.CLIENT.denyJoinRequest();
                                 } else {
                                     executionString = Constants.TRANSLATOR.translate("craftpresence.command.unrecognized");
                                 }

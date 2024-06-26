@@ -40,6 +40,8 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMC
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
 import com.gitlab.cdagaming.craftpresence.impl.TranslationManager;
+import com.gitlab.cdagaming.craftpresence.integrations.discord.ModFunctionsLib;
+import com.gitlab.cdagaming.craftpresence.integrations.discord.ModIPCListener;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
@@ -262,7 +264,7 @@ public class CommandUtils {
             if (forceUpdateRPC) {
                 updateMenuPresence();
             }
-            CraftPresence.CLIENT.onTick();
+            postReload();
         } catch (Throwable ex) {
             final String messagePrefix = Constants.TRANSLATOR.translate("gui.config.message.editor.message");
             final String verbosePrefix = Constants.TRANSLATOR.translate("craftpresence.logger.error.verbose");
@@ -274,6 +276,32 @@ public class CommandUtils {
             CraftPresence.SCHEDULER.TICK_LOCK.unlock();
             CraftPresence.SCHEDULER.postTick();
         }
+    }
+
+    /**
+     * Perform any needed post tick events, tied to the refresh rate
+     */
+    public static void postReload() {
+        // Menu Tick Event
+        final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
+        final boolean isFullyLoaded = Constants.HAS_GAME_LOADED && CraftPresence.CLIENT.isAvailable();
+        if (!isFullyLoaded) {
+            // Ensure Loading Presence has already passed, before any other type of presence displays
+            CommandUtils.setMenuState(CommandUtils.MenuStatus.Loading);
+        } else if (CraftPresence.player == null) {
+            CommandUtils.setMenuState(CommandUtils.MenuStatus.MainMenu);
+        } else if (isMenuActive) {
+            CommandUtils.clearMenuState();
+        }
+        // Join Request Tick Event
+        if (!CraftPresence.CONFIG.hasChanged() && isFullyLoaded) {
+            // Processing for Join Request Systems
+            if (CraftPresence.CLIENT.REQUESTER_USER != null && CraftPresence.SCHEDULER.TIMER <= 0) {
+                CraftPresence.CLIENT.denyJoinRequest();
+            }
+        }
+        // Perform any remaining tasks
+        CraftPresence.CLIENT.onTick();
     }
 
     /**
@@ -338,6 +366,12 @@ public class CommandUtils {
     public static void setupRPC() {
         CraftPresence.CLIENT.shutDown();
 
+        CraftPresence.CLIENT.SCHEDULER = CraftPresence.SCHEDULER;
+        CraftPresence.CLIENT.canShowPreviews = () -> CraftPresence.CONFIG.advancedSettings.allowPlaceholderPreviews;
+        CraftPresence.CLIENT.canFormatWords = () -> CraftPresence.CONFIG.advancedSettings.formatWords;
+        CraftPresence.CLIENT.defaultPresence = () -> CraftPresence.CONFIG.displaySettings.presenceData;
+        CraftPresence.CLIENT.defaultIconSupplier = () -> CraftPresence.CONFIG.generalSettings.defaultIcon;
+
         CraftPresence.CLIENT.CLIENT_ID = CraftPresence.CONFIG.generalSettings.clientId;
         CraftPresence.CLIENT.AUTO_REGISTER = CraftPresence.CONFIG.generalSettings.autoRegister;
         CraftPresence.CLIENT.PREFERRED_CLIENT = DiscordBuild.from(CraftPresence.CONFIG.generalSettings.preferredClientLevel);
@@ -345,7 +379,61 @@ public class CommandUtils {
         CraftPresence.CLIENT.ALLOW_DUPLICATE_PACKETS = CraftPresence.CONFIG.advancedSettings.allowDuplicatePackets;
         CraftPresence.CLIENT.MAX_CONNECTION_ATTEMPTS = CraftPresence.CONFIG.advancedSettings.maxConnectionAttempts;
 
-        CraftPresence.CLIENT.init();
+        CraftPresence.CLIENT.init(isDebugMode(), isVerboseMode(), new ModIPCListener(), CraftPresence.CONFIG.displaySettings.dynamicIcons);
+    }
+
+    /**
+     * Synchronizes and Updates Dynamic Placeholder data in this module
+     */
+    public static void syncPlaceholders() {
+        ModFunctionsLib.init(CraftPresence.CLIENT);
+
+        CraftPresence.CLIENT.syncArgument("general.title", () -> Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
+        CraftPresence.CLIENT.syncArgument("general.version", () -> ModUtils.MCVersion, true);
+        CraftPresence.CLIENT.syncArgument("general.protocol", () -> ModUtils.MCProtocolID);
+        CraftPresence.CLIENT.syncArgument("general.brand", () -> ModUtils.BRAND, true);
+
+        CraftPresence.CLIENT.syncArgument("_general.instance", () -> CraftPresence.instance);
+        CraftPresence.CLIENT.syncArgument("_general.player", () -> CraftPresence.player);
+        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.world : null);
+        CraftPresence.CLIENT.syncArgument("_config.instance", () -> CraftPresence.CONFIG);
+
+        // Sync Custom Variables
+        CraftPresence.CLIENT.syncDynamicVariables(null,
+                CraftPresence.CONFIG.displaySettings.dynamicVariables,
+                (entry) -> () -> CraftPresence.CONFIG.displaySettings.dynamicVariables.get(entry)
+        );
+
+        // Add Any Generalized Argument Data needed
+        CraftPresence.CLIENT.syncArgument("player.name", () -> CraftPresence.username, true);
+
+        // UUID Data
+        CraftPresence.CLIENT.syncArgument("player.uuid.short", () -> {
+            final String uniqueId = CraftPresence.uuid;
+            return StringUtils.isValidUuid(uniqueId) ? StringUtils.getFromUuid(uniqueId, true) : null;
+        }, true);
+        CraftPresence.CLIENT.syncArgument("player.uuid.full", () -> {
+            final String uniqueId = CraftPresence.uuid;
+            return StringUtils.isValidUuid(uniqueId) ? StringUtils.getFromUuid(uniqueId, false) : null;
+        }, true);
+
+        CraftPresence.CLIENT.syncArgument("player.icon", () -> {
+            if (CraftPresence.CLIENT.addEndpointIcon(
+                    CraftPresence.CONFIG,
+                    CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint,
+                    CraftPresence.username, CraftPresence.uuid,
+                    true
+            )) {
+                return CraftPresence.username;
+            }
+            return null;
+        }, true);
+
+        // Sync the Default Icon Argument
+        CraftPresence.CLIENT.syncArgument("general.icon", () -> CraftPresence.CONFIG.generalSettings.defaultIcon, true);
+
+        syncModuleArguments();
+        syncPackArguments();
     }
 
     /**
@@ -425,7 +513,10 @@ public class CommandUtils {
      * @param oldData The old data to interpret
      */
     public static void syncDynamicVariables(final Map<String, String> oldData) {
-        CraftPresence.CLIENT.syncDynamicVariables(oldData, CraftPresence.CONFIG.displaySettings.dynamicVariables);
+        CraftPresence.CLIENT.syncDynamicVariables(oldData,
+                CraftPresence.CONFIG.displaySettings.dynamicVariables,
+                (entry) -> () -> CraftPresence.CONFIG.displaySettings.dynamicVariables.get(entry)
+        );
     }
 
     /**

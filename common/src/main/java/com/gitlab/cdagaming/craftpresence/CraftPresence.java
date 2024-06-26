@@ -26,9 +26,9 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
+import com.gitlab.cdagaming.craftpresence.core.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
-import com.gitlab.cdagaming.craftpresence.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -172,6 +172,7 @@ public class CraftPresence {
         isDataLoaded = true;
 
         CLIENT.setup();
+        CommandUtils.syncPlaceholders();
         CommandUtils.setupRPC();
 
         initialized = true;
