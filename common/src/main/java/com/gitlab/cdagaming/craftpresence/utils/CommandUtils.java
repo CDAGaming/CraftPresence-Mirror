@@ -283,14 +283,14 @@ public class CommandUtils {
      */
     public static void postReload() {
         // Menu Tick Event
-        final boolean isMenuActive = CommandUtils.getMenuState() != CommandUtils.MenuStatus.None;
+        final boolean isMenuActive = getMenuState() != MenuStatus.None;
         if (!Constants.HAS_GAME_LOADED) {
             // Ensure Loading Presence has already passed, before any other type of presence displays
-            CommandUtils.setMenuState(CommandUtils.MenuStatus.Loading);
+            setMenuState(MenuStatus.Loading);
         } else if (CraftPresence.player == null) {
-            CommandUtils.setMenuState(CommandUtils.MenuStatus.MainMenu);
+            setMenuState(MenuStatus.MainMenu);
         } else if (isMenuActive) {
-            CommandUtils.clearMenuState();
+            clearMenuState();
         }
 
         // Perform any remaining tasks
