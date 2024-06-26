@@ -389,7 +389,7 @@ public class CommandUtils {
 
         CraftPresence.CLIENT.syncArgument("_general.instance", () -> CraftPresence.instance);
         CraftPresence.CLIENT.syncArgument("_general.player", () -> CraftPresence.player);
-        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.level : null);
+        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.level() : null);
         CraftPresence.CLIENT.syncArgument("_config.instance", () -> CraftPresence.CONFIG);
 
         // Sync Custom Variables

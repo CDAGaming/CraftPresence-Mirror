@@ -27,8 +27,8 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 
 import javax.annotation.Nonnull;
 
@@ -159,7 +159,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Draws this button to the screen.
      */
     @Override
-    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partial) {
+    public void renderWidget(@Nonnull GuiGraphics matrixStack, int mouseX, int mouseY, float partial) {
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
 
@@ -192,7 +192,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void renderBg(@Nonnull PoseStack matrixStack, @Nonnull Minecraft mc, int mouseX, int mouseY) {
+    protected void renderBg(@Nonnull GuiGraphics matrixStack, @Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
             final int hoverState = getYImage(isHoveringOrFocusingOver());
 

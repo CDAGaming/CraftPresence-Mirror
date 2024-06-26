@@ -33,13 +33,13 @@ import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.Component;
@@ -301,7 +301,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
      * @param mouseXIn     The Mouse's Current X Position
      * @param mouseYIn     The Mouse's Current Y Position
      */
-    public void renderSlotItem(@Nonnull final PoseStack matrices, final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn) {
+    public void renderSlotItem(@Nonnull final GuiGraphics matrices, final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn) {
         final List<String> hoverText = StringUtils.newArrayList();
         String displayName = entryAliases.getOrDefault(originalName, originalName);
         int xOffset = xPos;
@@ -368,7 +368,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
                 final ItemStack stack = data.get(originalName);
                 if (!TileEntityUtils.isEmpty(stack)) {
                     RenderUtils.drawItemStack(
-                            minecraft, matrices, getFontRenderer(), xOffset, yPos + 4, stack,
+                            matrices, getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f
                     );
                     xOffset += 35;
@@ -564,7 +564,7 @@ public class ScrollableListControl extends ObjectSelectionList<ScrollableListCon
          * @param tickDelta   The Rendering Tick Rate
          */
         @Override
-        public void render(@Nonnull PoseStack matrices, int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(@Nonnull GuiGraphics matrices, int index, int yPos, int xPos, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             ScrollableListControl.this.renderSlotItem(matrices, name, xPos, yPos, entryWidth, entryHeight, mouseX, mouseY);
         }
 
