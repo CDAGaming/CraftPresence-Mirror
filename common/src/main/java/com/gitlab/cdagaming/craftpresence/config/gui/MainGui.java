@@ -28,10 +28,10 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import io.github.cdagaming.unilib.utils.gui.impl.ConfigurationGui;
+import io.github.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
 public class MainGui extends ConfigurationGui<Config> {

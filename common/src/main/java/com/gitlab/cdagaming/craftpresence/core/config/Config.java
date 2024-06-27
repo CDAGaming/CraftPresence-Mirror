@@ -30,8 +30,6 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.*;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.TextReplacer;
-import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
-import com.gitlab.cdagaming.craftpresence.core.impl.TranslationConverter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
@@ -41,6 +39,8 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.core.impl.KeyConverter;
+import io.github.cdagaming.unilib.core.impl.TranslationConverter;
 
 import java.io.File;
 import java.io.FileNotFoundException;

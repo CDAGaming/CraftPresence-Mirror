@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
@@ -40,6 +39,7 @@ import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
+import io.github.cdagaming.unilib.utils.KeyUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
@@ -51,10 +51,6 @@ import net.minecraft.util.Session;
  */
 @SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CraftPresence {
-    /**
-     * The {@link KeyUtils} Instance for this Mod
-     */
-    public static final KeyUtils KEYBINDINGS = new KeyUtils();
     /**
      * The {@link DiscordUtils} Instance for this Mod
      */
@@ -87,6 +83,10 @@ public class CraftPresence {
      * The Minecraft Instance attached to this Mod
      */
     public static Minecraft instance;
+    /**
+     * The {@link KeyUtils} Instance for this Mod
+     */
+    public static final KeyUtils KEYBINDINGS = new KeyUtils(() -> instance, ModUtils.MCProtocolID);
     /**
      * The Minecraft Instance Session attached to this Mod
      */

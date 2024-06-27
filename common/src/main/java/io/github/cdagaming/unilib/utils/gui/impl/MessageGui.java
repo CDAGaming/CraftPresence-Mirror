@@ -22,58 +22,51 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.config.gui;
+package io.github.cdagaming.unilib.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unicore.utils.UrlUtils;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unilib.utils.gui.impl.UpdateInfoGui;
 import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 
 import java.util.List;
 
-public class AboutGui extends ExtendedScreen {
+/**
+ * The Message Gui Screen Implementation
+ */
+public class MessageGui extends ExtendedScreen {
+    private final List<String> messageData;
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param messageData The message to display for this Instance
+     */
+    public MessageGui(List<String> messageData) {
+        super();
+        this.messageData = StringUtils.newArrayList(messageData);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param messageData The message to display for this Instance
+     */
+    public MessageGui(String messageData) {
+        this(StringUtils.splitTextByNewLine(
+                Constants.TRANSLATOR.getLocalizedMessage(messageData)
+        ));
+    }
+
     @Override
     public void initializeUi() {
-        // Adding Version Check Button
+        // Adding Back Button
         addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.version_info",
-                        () -> openScreen(new UpdateInfoGui(ModUtils.UPDATER))
-                )
-        );
-
-        // Adding Back Button
-        addControl(
-                new ExtendedButtonControl(
-                        6, (getScreenHeight() - 26),
-                        95, 20,
                         "gui.config.message.button.back",
                         () -> openScreen(getParent())
-                )
-        );
-
-        // Adding View Source Button
-        addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 51),
-                        180, 20,
-                        "gui.config.message.button.view_source",
-                        () -> UrlUtils.openUrl(Constants.URL_SOURCE)
-                )
-        );
-
-        // Adding Wiki Button
-        addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() - 101), (getScreenHeight() - 26),
-                        95, 20,
-                        "gui.config.message.button.wiki",
-                        () -> UrlUtils.openUrl(Constants.URL_README)
                 )
         );
 
@@ -82,8 +75,7 @@ public class AboutGui extends ExtendedScreen {
 
     @Override
     public void renderExtra() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.about.config");
-        final List<String> notice = StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.credits"));
+        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.message");
 
         renderScrollingString(
                 mainTitle,
@@ -92,7 +84,7 @@ public class AboutGui extends ExtendedScreen {
                 0xFFFFFF
         );
         drawMultiLineString(
-                notice,
+                messageData,
                 0, getScreenHeight() / 3,
                 getScreenWidth(), -1, -1,
                 true, false

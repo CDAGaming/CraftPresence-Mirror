@@ -29,15 +29,15 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
+import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import io.github.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
+import io.github.cdagaming.unilib.utils.gui.impl.ConfigurationGui;
+import io.github.cdagaming.unilib.utils.gui.impl.DynamicEditorGui;
+import io.github.cdagaming.unilib.utils.gui.impl.SelectorGui;
+import io.github.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
+import io.github.cdagaming.unilib.utils.gui.widgets.TextWidget;
 
 import java.util.function.Consumer;
 

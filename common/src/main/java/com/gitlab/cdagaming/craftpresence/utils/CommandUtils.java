@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
@@ -39,7 +40,6 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.modrinth.Modrin
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
-import com.gitlab.cdagaming.craftpresence.impl.TranslationManager;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModFunctionsLib;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModIPCListener;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
@@ -47,6 +47,9 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.impl.TranslationManager;
+import io.github.cdagaming.unilib.utils.gui.RenderUtils;
+import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 
 import java.util.Map;
 
@@ -448,13 +451,40 @@ public class CommandUtils {
                 }
             }
         }
-        CraftPresence.KEYBINDINGS.register();
+        registerKeybinds();
 
         // Setup Mod Integrations that are not Platform-Dependent
         // Use the loader-specific `setupIntegrations` methods for platform-dependent modules
         if (Constants.hasReplayMod()) {
             addModule("integration.replaymod", new ReplayModUtils());
         }
+    }
+
+    /**
+     * Registers KeyBindings and critical KeyCode information to the game's KeyCode systems
+     * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
+     */
+    public static void registerKeybinds() {
+        CraftPresence.KEYBINDINGS.registerKey(
+                "configKeyCode",
+                "key.craftpresence.config_keycode.name",
+                "key.craftpresence.category",
+                CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
+                CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
+                () -> {
+                    if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
+                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(), CraftPresence.instance.currentScreen);
+                    }
+                },
+                (keyCode, shouldSave) -> {
+                    CraftPresence.CONFIG.accessibilitySettings.configKeyCode = keyCode;
+                    if (shouldSave) {
+                        CraftPresence.CONFIG.save();
+                    }
+                },
+                vanillaBind -> vanillaBind != CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
+                null
+        );
     }
 
     /**
@@ -467,6 +497,7 @@ public class CommandUtils {
             Constants.HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
             if (Constants.HAS_GAME_LOADED) {
                 addModule(Constants.MOD_ID, new TranslationManager(
+                        CraftPresence.instance,
                         Constants.TRANSLATOR
                                 .setStripColors(
                                         CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors
@@ -474,13 +505,36 @@ public class CommandUtils {
                                 .setStripFormatting(
                                         CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting
                                 )
+                                .setLanguageSupplier(CommandUtils::getLanguage)
                 ));
                 if (ModUtils.RAW_TRANSLATOR != null) {
-                    addModule("minecraft", new TranslationManager(ModUtils.RAW_TRANSLATOR));
+                    addModule("minecraft", new TranslationManager(
+                            CraftPresence.instance,
+                            ModUtils.RAW_TRANSLATOR
+                                    .setLanguageSupplier(CommandUtils::getLanguage)
+                    ));
                 }
             }
         }
         CraftPresence.CLIENT.updatePresence();
+    }
+
+    /**
+     * Retrieve the game's current language
+     *
+     * @param fallback The fallback language
+     * @return the current language
+     */
+    public static String getLanguage(final String fallback) {
+        final String result;
+        if (CraftPresence.instance.gameSettings != null) {
+            result = CraftPresence.instance.gameSettings.language;
+        } else if (CraftPresence.CONFIG != null) {
+            result = CraftPresence.CONFIG.accessibilitySettings.languageId;
+        } else {
+            result = fallback;
+        }
+        return result;
     }
 
     /**

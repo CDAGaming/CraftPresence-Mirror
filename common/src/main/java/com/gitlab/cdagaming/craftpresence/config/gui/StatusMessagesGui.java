@@ -30,12 +30,12 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Status;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import io.github.cdagaming.unilib.utils.gui.impl.ConfigurationGui;
+import io.github.cdagaming.unilib.utils.gui.impl.DynamicEditorGui;
 
 import java.util.Map;
 

@@ -387,6 +387,7 @@ fusioner {
     }
 
     relocateDuplicate("com.gitlab.cdagaming.craftpresence.core")
+    relocateDuplicate("io.github.cdagaming.unilib.core") // TODO: Remove when UniLib is moved into its own project
 }
 
 tasks {
