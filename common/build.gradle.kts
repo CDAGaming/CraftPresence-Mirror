@@ -15,6 +15,8 @@ operator fun String.invoke(): String? {
 val modName: String by extra
 val modId: String by extra
 
+val displayLabel: String by extra
+
 val isLegacy: Boolean by extra
 val protocol: Int by extra
 val isJarMod: Boolean by extra
@@ -281,7 +283,7 @@ publisher {
     changelog = file("$rootDir/Changes.md").readText()
     projectVersion = versionFormat.replace(Regex("\\s"), "").lowercase() // Modrinth Only
     displayName =
-        "$modName v${"versionId"()}${if (versionLabel.isEmpty()) "" else " $versionLabel"} ($mcVersionLabel)"
+        "$displayLabel v${"versionId"()}${if (versionLabel.isEmpty()) "" else " $versionLabel"} ($mcVersionLabel)"
     gameVersions = uploadVersions
     loaders = uploadLoaders
     curseEnvironment = "client"
