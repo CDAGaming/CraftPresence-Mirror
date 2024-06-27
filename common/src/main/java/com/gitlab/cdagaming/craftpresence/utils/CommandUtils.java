@@ -392,10 +392,7 @@ public class CommandUtils {
         CraftPresence.CLIENT.syncArgument("_config.instance", () -> CraftPresence.CONFIG);
 
         // Sync Custom Variables
-        CraftPresence.CLIENT.syncDynamicVariables(null,
-                CraftPresence.CONFIG.displaySettings.dynamicVariables,
-                (entry) -> () -> CraftPresence.CONFIG.displaySettings.dynamicVariables.get(entry)
-        );
+        syncDynamicVariables();
 
         // Add Any Generalized Argument Data needed
         CraftPresence.CLIENT.syncArgument("player.name", () -> CraftPresence.username, true);
@@ -510,6 +507,13 @@ public class CommandUtils {
                 CraftPresence.CONFIG.displaySettings.dynamicVariables,
                 (entry) -> () -> CraftPresence.CONFIG.displaySettings.dynamicVariables.get(entry)
         );
+    }
+
+    /**
+     * Refresh Dynamic Variable Data, removing any data no longer in-play
+     */
+    public static void syncDynamicVariables() {
+        syncDynamicVariables(null);
     }
 
     /**
