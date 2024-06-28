@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 
@@ -46,7 +47,7 @@ public class CraftPresenceForge {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-forge.srg");
-        Constants.MOD_COUNT_SUPPLIER = () -> Loader.instance().getModList().size();
+        CoreUtils.MOD_COUNT_SUPPLIER = () -> Loader.instance().getModList().size();
         new CraftPresence(this::setupIntegrations);
     }
 

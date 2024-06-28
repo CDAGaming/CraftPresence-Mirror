@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.fabric;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -43,7 +43,7 @@ public class CraftPresenceFabric implements ClientModInitializer {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-fabric.srg");
-        Constants.MOD_COUNT_SUPPLIER = () -> FabricLoader.getInstance().getAllMods().size();
+        CoreUtils.MOD_COUNT_SUPPLIER = () -> FabricLoader.getInstance().getAllMods().size();
         new CraftPresence(this::setupIntegrations);
     }
 
