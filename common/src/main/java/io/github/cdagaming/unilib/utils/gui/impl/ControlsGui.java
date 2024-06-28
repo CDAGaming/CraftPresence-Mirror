@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unilib.utils.KeyUtils;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
@@ -41,6 +42,8 @@ import java.util.Map;
 public class ControlsGui extends ExtendedScreen {
     // Format: See KeyUtils#KEY_MAPPINGS
     private final Map<String, KeyUtils.KeyBindData> keyMappings;
+    // The KeyUtils Instance
+    private final KeyUtils instance;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = StringUtils.newHashMap();
     // Pair Format: buttonToModify, Config Field to Edit
@@ -49,18 +52,19 @@ public class ControlsGui extends ExtendedScreen {
     private Tuple<ExtendedButtonControl, ExtendedButtonControl, KeyUtils.KeyBindData> entryData = null;
     private ScrollPane childFrame;
 
-    public ControlsGui(Map<String, KeyUtils.KeyBindData> keyMappings) {
+    public ControlsGui(final KeyUtils instance, Map<String, KeyUtils.KeyBindData> keyMappings) {
         super();
+        this.instance = instance;
         this.keyMappings = keyMappings;
         sortMappings();
     }
 
-    public ControlsGui(List<String> filterData) {
-        this(CraftPresence.KEYBINDINGS.getKeyMappings(filterData));
+    public ControlsGui(final KeyUtils instance, List<String> filterData) {
+        this(instance, instance.getKeyMappings(filterData));
     }
 
-    public ControlsGui(String... filterData) {
-        this(CraftPresence.KEYBINDINGS.getKeyMappings(filterData));
+    public ControlsGui(final KeyUtils instance, String... filterData) {
+        this(instance, instance.getKeyMappings(filterData));
     }
 
     @Override
@@ -158,11 +162,11 @@ public class ControlsGui extends ExtendedScreen {
                 final KeyUtils.KeyBindData keyData = keyMappings.get(keyName);
 
                 final String keyTitle = keyData.description();
-                final int keyCode = CraftPresence.KEYBINDINGS.keySyncQueue.getOrDefault(keyName, keyData.keyCode());
+                final int keyCode = instance.keySyncQueue.getOrDefault(keyName, keyData.keyCode());
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
                         95, 20,
-                        CraftPresence.KEYBINDINGS.getKeyName(keyCode),
+                        instance.getKeyName(keyCode),
                         keyTitle,
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -232,23 +236,23 @@ public class ControlsGui extends ExtendedScreen {
         int keyToSubmit = keyCode;
 
         // Ensure a Valid KeyCode is entered
-        if (!CraftPresence.KEYBINDINGS.isValidKeyCode(keyToSubmit) || CraftPresence.KEYBINDINGS.isValidClearCode(keyToSubmit)) {
+        if (!instance.isValidKeyCode(keyToSubmit) || instance.isValidClearCode(keyToSubmit)) {
             keyToSubmit = getKeyByVersion(0, -1); // KEY_NONE
         }
 
-        final String formattedKey = CraftPresence.KEYBINDINGS.getKeyName(keyToSubmit);
+        final String formattedKey = instance.getKeyName(keyToSubmit);
         final String internalName = entryData.getFirst().getOptionalArgs()[0];
 
         // If KeyCode Field to modify is not null or empty, attempt to queue change
         try {
             entryData.getThird().configEvent().accept(keyToSubmit, false);
-            CraftPresence.KEYBINDINGS.keySyncQueue.put(internalName, keyToSubmit);
+            instance.keySyncQueue.put(internalName, keyToSubmit);
             CraftPresence.CONFIG.setChanged(true);
 
             entryData.getFirst().setControlMessage(formattedKey);
         } catch (Throwable ex) {
             entryData.getFirst().setControlMessage(backupKeyString);
-            Constants.LOG.debugError(ex);
+            CoreUtils.LOG.debugError(ex);
         }
 
         entryData.getSecond().setControlEnabled(

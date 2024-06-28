@@ -25,12 +25,13 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.ModUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unilib.utils.gui.impl.ConfigurationGui;
 import io.github.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -65,8 +66,8 @@ public class MainGui extends ConfigurationGui<Config> {
         String releaseNotice = "";
         if (Constants.VERSION_TYPE.equalsIgnoreCase("alpha")) {
             releaseNotice = Constants.TRANSLATOR.translate("gui.config.message.tentative", Constants.VERSION_ID);
-        } else if (!ModUtils.MCVersion.equalsIgnoreCase(Constants.MCBuildVersion)) {
-            releaseNotice = Constants.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, Constants.MCBuildVersion);
+        } else if (!ModUtils.MCVersion.equalsIgnoreCase(CoreUtils.MCBuildVersion)) {
+            releaseNotice = Constants.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, CoreUtils.MCBuildVersion);
         }
         if (!StringUtils.isNullOrEmpty(releaseNotice)) {
             currentY++;

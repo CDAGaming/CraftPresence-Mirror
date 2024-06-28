@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
@@ -39,7 +38,6 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.mcupdater.MCUpd
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.modrinth.ModrinthUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModFunctionsLib;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModIPCListener;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
@@ -47,6 +45,8 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.ModUtils;
+import io.github.cdagaming.unilib.core.integrations.screen.ScreenConstants;
 import io.github.cdagaming.unilib.impl.TranslationManager;
 import io.github.cdagaming.unilib.utils.gui.RenderUtils;
 import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
@@ -162,8 +162,7 @@ public class CommandUtils {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isDebugMode() {
-        return Constants.IS_DEV_FLAG ||
-                isVerboseMode() || (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.debugMode);
+        return isVerboseMode() || (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.debugMode);
     }
 
     /**
@@ -172,8 +171,7 @@ public class CommandUtils {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isVerboseMode() {
-        return Constants.IS_VERBOSE_FLAG ||
-                (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.verboseMode);
+        return (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.verboseMode);
     }
 
     /**
@@ -483,7 +481,10 @@ public class CommandUtils {
                     }
                 },
                 vanillaBind -> vanillaBind != CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
-                null
+                (ex, keyName, keyData) -> {
+                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyData.description()));
+                    return false; // Let KeyUtils handle resetting the keycode
+                }
         );
     }
 

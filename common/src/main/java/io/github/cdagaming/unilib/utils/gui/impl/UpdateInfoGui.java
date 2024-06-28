@@ -25,10 +25,10 @@
 package io.github.cdagaming.unilib.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
+import io.github.cdagaming.unilib.ModUtils;
 import io.github.cdagaming.unilib.core.utils.ModUpdaterUtils;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;

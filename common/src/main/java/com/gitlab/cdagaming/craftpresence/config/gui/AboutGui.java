@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
@@ -43,7 +43,7 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         "gui.config.message.button.version_info",
-                        () -> openScreen(new UpdateInfoGui(ModUtils.UPDATER))
+                        () -> openScreen(new UpdateInfoGui(CraftPresence.UPDATER))
                 )
         );
 

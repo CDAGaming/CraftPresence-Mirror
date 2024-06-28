@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.server;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
@@ -39,6 +38,7 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
+import io.github.cdagaming.unilib.ModUtils;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreenRealmsProxy;
 import net.minecraft.client.multiplayer.GuiConnecting;

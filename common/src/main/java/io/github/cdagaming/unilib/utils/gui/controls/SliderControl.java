@@ -24,10 +24,10 @@
 
 package io.github.cdagaming.unilib.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
+import io.github.cdagaming.unilib.ModUtils;
 import io.github.cdagaming.unilib.utils.gui.RenderUtils;
 import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.Minecraft;

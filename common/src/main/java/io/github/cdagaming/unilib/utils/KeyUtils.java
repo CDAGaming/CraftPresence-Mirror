@@ -24,9 +24,9 @@
 
 package io.github.cdagaming.unilib.utils;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import io.github.cdagaming.unicore.impl.TriFunction;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unilib.core.impl.KeyConverter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -195,7 +194,7 @@ public class KeyUtils {
                                   final Runnable onPress,
                                   final BiConsumer<Integer, Boolean> onBind,
                                   final Predicate<Integer> onOutdated,
-                                  final Consumer<Throwable> callback) {
+                                  final TriFunction<Throwable, String, KeyBindData, Boolean> callback) {
         if (areKeysRegistered()) {
             throw new UnsupportedOperationException("KeyBindings already registered!");
         }
@@ -255,9 +254,7 @@ public class KeyUtils {
     }
 
     /**
-     * Tick Method for KeyUtils, that runs on each tick
-     * <p>
-     * Implemented @ {@link CommandUtils#reloadData}
+     * Tick Method for KeyUtils, that should run on each tick
      */
     public void onTick() {
         if (instance == null || getInstance() == null) {
@@ -299,10 +296,15 @@ public class KeyUtils {
                             try {
                                 keyData.runEvent().run();
                             } catch (Throwable ex) {
+                                boolean resetKey;
                                 if (keyData.errorCallback() != null) {
-                                    keyData.errorCallback().accept(ex);
+                                    resetKey = keyData.errorCallback().apply(ex, keyName, keyData);
                                 } else {
-                                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyData.description()));
+                                    CoreUtils.LOG.error(ex);
+                                    resetKey = true;
+                                }
+
+                                if (resetKey) {
                                     syncKeyData(keyName, ImportMode.Specific, keyData.defaultKeyCode());
                                 }
                             } finally {
@@ -322,7 +324,7 @@ public class KeyUtils {
                     }
                 }
             } catch (Throwable ex) {
-                Constants.LOG.debugError(ex);
+                CoreUtils.LOG.debugError(ex);
             }
         }
     }
@@ -343,8 +345,6 @@ public class KeyUtils {
         } else if (mode == ImportMode.Specific) {
             syncKeyData(keyData.description(), ImportMode.Config, keyCode);
             syncKeyData(keyName, ImportMode.Vanilla, keyCode);
-        } else {
-            Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", keyName, mode.name()));
         }
     }
 
@@ -415,13 +415,14 @@ public class KeyUtils {
      * @param runEvent           The event to execute when the KeyBind is being pressed
      * @param configEvent        The event to execute when the KeyBind is being rebound to another key
      * @param vanillaPredicate   The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
-     * @param errorCallback      The event to execute upon an exception occurring during KeyBind events
+     * @param errorCallback      The event to execute upon an exception occurring during KeyBind events (Format: [exception,keyName,keyData] returns resetKey)
      */
     public record KeyBindData(KeyBinding binding,
                               Supplier<String> categorySupplier,
                               Supplier<Integer> defaultKeySupplier,
                               Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
-                              Predicate<Integer> vanillaPredicate, Consumer<Throwable> errorCallback) {
+                              Predicate<Integer> vanillaPredicate,
+                              TriFunction<Throwable, String, KeyBindData, Boolean> errorCallback) {
         /**
          * Retrieve the category for this KeyBind
          *

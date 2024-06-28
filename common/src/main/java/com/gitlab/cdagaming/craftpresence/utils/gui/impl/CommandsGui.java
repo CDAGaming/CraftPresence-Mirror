@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.cdagaming.unilib.utils.gui.impl;
+package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
@@ -30,11 +30,11 @@ import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ScrollableListControl.RenderType;
 import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unilib.utils.gui.integrations.ScrollPane;
 import io.github.cdagaming.unilib.utils.gui.widgets.TextDisplayWidget;
@@ -567,7 +567,7 @@ public class CommandsGui extends ExtendedScreen {
      * @param urlMeta    The additional data to append to the URL
      */
     private void exportAssets(final String clientId, final boolean doFullCopy, final String urlMeta) {
-        Constants.getThreadFactory().newThread(() -> {
+        FileUtils.getThreadFactory(Constants.NAME).newThread(() -> {
             blockInteractions = true;
             final DiscordAsset[] assetList = DiscordAssetUtils.loadAssets(clientId, false);
             boolean hasError = false;

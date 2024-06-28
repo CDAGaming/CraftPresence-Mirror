@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core.integrations.screen;
+package io.github.cdagaming.unilib.core.integrations.screen;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import io.github.cdagaming.unicore.impl.Tuple;
+import io.github.cdagaming.unilib.core.CoreUtils;
 
 import java.util.function.Function;
 
@@ -53,19 +53,19 @@ public class ScreenConstants {
     /**
      * The Default Widget Background Resources
      */
-    private static final Function<Integer, String> DEFAULT_BUTTON_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? "/gui/gui.png" : "textures/gui/widgets.png");
+    private static final Function<Integer, String> DEFAULT_BUTTON_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (CoreUtils.isLegacyHard(protocol) ? "/gui/gui.png" : "textures/gui/widgets.png");
     /**
      * The Default Widget Background Resources
      */
-    private static final String DEFAULT_BUTTON_BACKGROUND = getDefaultButtonBackground(Constants.MCBuildProtocol);
+    private static final String DEFAULT_BUTTON_BACKGROUND = getDefaultButtonBackground(CoreUtils.MCBuildProtocol);
     /**
      * The Default Screen Background Resources
      */
-    private static final Function<Integer, String> DEFAULT_GUI_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (Constants.isLegacyHard(protocol) ? (Constants.isLegacyAlpha(protocol) ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
+    private static final Function<Integer, String> DEFAULT_GUI_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (CoreUtils.isLegacyHard(protocol) ? (CoreUtils.isLegacyAlpha(protocol) ? "/dirt.png" : "/gui/background.png") : "textures/gui/options_background.png");
     /**
      * The Default Screen Background Resources
      */
-    private static final String DEFAULT_GUI_BACKGROUND = getDefaultGUIBackground(Constants.MCBuildProtocol);
+    private static final String DEFAULT_GUI_BACKGROUND = getDefaultGUIBackground(CoreUtils.MCBuildProtocol);
     /**
      * The default Tooltip Rendering Info
      */

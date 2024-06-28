@@ -24,11 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.core.config.category;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
+import io.github.cdagaming.unilib.core.CoreUtils;
+import io.github.cdagaming.unilib.core.integrations.screen.ScreenConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -48,12 +48,12 @@ public class Accessibility extends Module implements Serializable {
             new ColorSection(16, 16, 16, 192),
             new ColorSection(16, 16, 16, 208)
     );
-    public String languageId = Constants.getDefaultLanguage();
+    public String languageId = CoreUtils.getDefaultLanguage();
     public boolean stripTranslationColors = false;
-    public boolean stripTranslationFormatting = Constants.isTextFormattingBlocked();
+    public boolean stripTranslationFormatting = CoreUtils.isTextFormattingBlocked();
     public boolean stripExtraGuiElements = false;
     public boolean renderTooltips = true;
-    public int configKeyCode = Constants.MCBuildProtocol > 340 ? 96 : 41;
+    public int configKeyCode = CoreUtils.MCBuildProtocol > 340 ? 96 : 41;
 
     public Accessibility(final Accessibility other) {
         transferFrom(other);

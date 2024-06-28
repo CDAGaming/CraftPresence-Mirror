@@ -29,6 +29,7 @@ import io.github.cdagaming.unicore.integrations.versioning.VersionComparator;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -158,7 +159,7 @@ public class ModUpdaterUtils {
      * @param callback The callback to run after Update Events
      */
     public void checkForUpdates(final Runnable callback) {
-        Constants.getThreadFactory().newThread(() -> process(callback)).start();
+        FileUtils.getThreadFactory(CoreUtils.NAME).newThread(() -> process(callback)).start();
     }
 
     private void process(final Runnable callback) {

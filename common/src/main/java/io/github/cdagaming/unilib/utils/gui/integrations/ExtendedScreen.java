@@ -25,18 +25,16 @@
 package io.github.cdagaming.unilib.utils.gui.integrations;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
-import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.ModUtils;
+import io.github.cdagaming.unilib.core.integrations.screen.ScreenConstants;
 import io.github.cdagaming.unilib.utils.gui.RenderUtils;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
 import io.github.cdagaming.unilib.utils.gui.widgets.DynamicWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -142,13 +140,14 @@ public class ExtendedScreen extends GuiScreen {
      * @param parentScreen The Parent Screen for this Instance
      */
     public ExtendedScreen(final GuiScreen parentScreen) {
-        setGameInstance(CraftPresence.instance);
+        setGameInstance(ModUtils.INSTANCE_GETTER.get());
         setParent(parentScreen);
         currentScreen = this;
         setCanClose(true);
         setContentHeight(0);
-        setDebugMode(CommandUtils.isDebugMode());
-        setVerboseMode(CommandUtils.isVerboseMode());
+        //setDebugMode(CommandUtils.isDebugMode());
+        //setVerboseMode(CommandUtils.isVerboseMode());
+        // TODO
     }
 
     /**
@@ -1429,7 +1428,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Current Font Renderer for this Screen
      */
     public FontRenderer getFontRenderer() {
-        return getGameInstance().fontRenderer != null ? getGameInstance().fontRenderer : GuiUtils.getDefaultFontRenderer();
+        return getGameInstance().fontRenderer != null ? getGameInstance().fontRenderer : RenderUtils.getDefaultFontRenderer();
     }
 
     /**

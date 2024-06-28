@@ -29,12 +29,12 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
-import io.github.cdagaming.unilib.utils.gui.impl.ConfigurationGui;
-import io.github.cdagaming.unilib.utils.gui.impl.DynamicEditorGui;
-import io.github.cdagaming.unilib.utils.gui.impl.SelectorGui;
 
 public class DisplaySettingsGui extends ConfigurationGui<Display> {
     private final Display INSTANCE, DEFAULTS;

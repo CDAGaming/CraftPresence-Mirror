@@ -24,9 +24,9 @@
 
 package io.github.cdagaming.unilib.utils;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
@@ -174,7 +174,7 @@ public class NbtUtils {
                 try {
                     return FileUtils.toJsonData(tag.toString());
                 } catch (Throwable ex) {
-                    Constants.LOG.debugError(ex);
+                    CoreUtils.LOG.debugError(ex);
                     return tag.toString();
                 }
             case 11:

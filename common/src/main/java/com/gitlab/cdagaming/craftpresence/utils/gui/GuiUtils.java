@@ -32,7 +32,6 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
@@ -92,15 +91,6 @@ public class GuiUtils implements ExtendedModule {
      * The name of the Current Gui the player is in
      */
     private String CURRENT_GUI_NAME;
-
-    /**
-     * Gets the Default/Global Font Renderer
-     *
-     * @return The Default/Global Font Renderer
-     */
-    public static FontRenderer getDefaultFontRenderer() {
-        return CraftPresence.instance.fontRenderer;
-    }
 
     @Override
     public void clearFieldData() {

@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence;
+package io.github.cdagaming.unilib;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import io.github.cdagaming.unilib.core.utils.ModUpdaterUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import net.minecraft.client.ClientBrandRetriever;
+import net.minecraft.client.Minecraft;
 import net.minecraft.realms.RealmsSharedConstants;
+
+import java.util.function.Supplier;
 
 /**
  * Constant Variables and Methods used throughout the Application
- * <p>
- * See {@link Constants} for more General Purpose Data
  *
  * @author CDAGaming
  */
@@ -51,20 +51,15 @@ public class ModUtils {
     /**
      * The Detected Brand Information within Minecraft
      */
-    public static final String BRAND = Constants.findGameBrand(ClientBrandRetriever.getClientModName());
-
-    /**
-     * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
-     */
-    public static final ModUpdaterUtils UPDATER = new ModUpdaterUtils(
-            Constants.MOD_ID,
-            Constants.UPDATE_JSON,
-            Constants.VERSION_ID,
-            MCVersion
-    );
+    public static final String BRAND = CoreUtils.findGameBrand(ClientBrandRetriever.getClientModName());
 
     /**
      * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
      */
-    public static final TranslationUtils RAW_TRANSLATOR = Constants.findGameTranslations(MCProtocolID);
+    public static final TranslationUtils RAW_TRANSLATOR = CoreUtils.findGameTranslations(MCProtocolID);
+
+    /**
+     * Getter for the Game Client Instance
+     */
+    public static final Supplier<Minecraft> INSTANCE_GETTER = Minecraft::getMinecraft;
 }

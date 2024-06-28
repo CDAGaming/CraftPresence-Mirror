@@ -39,6 +39,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unilib.core.impl.KeyConverter;
 import io.github.cdagaming.unilib.core.impl.TranslationConverter;
 
@@ -60,7 +61,7 @@ public final class Config extends Module implements Serializable {
     private static final long serialVersionUID = -4853238501768086595L;
 
     // Constants
-    private static final int MC_VERSION = Constants.MCBuildProtocol;
+    private static final int MC_VERSION = CoreUtils.MCBuildProtocol;
     private static final int VERSION = 6;
     private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
@@ -545,7 +546,7 @@ public final class Config extends Module implements Serializable {
         }
 
         // Sync Flag Data
-        if (Constants.isTextFormattingBlocked()) {
+        if (CoreUtils.isTextFormattingBlocked()) {
             accessibilitySettings.stripTranslationFormatting = true;
         }
 

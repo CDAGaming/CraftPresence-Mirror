@@ -24,16 +24,17 @@
 
 package io.github.cdagaming.unilib.utils.gui;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScissorStack;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenRectangle;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
+import io.github.cdagaming.unilib.ModUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
+import io.github.cdagaming.unilib.core.integrations.screen.ScissorStack;
+import io.github.cdagaming.unilib.core.integrations.screen.ScreenConstants;
+import io.github.cdagaming.unilib.core.integrations.screen.ScreenRectangle;
 import io.github.cdagaming.unilib.impl.ImageFrame;
 import io.github.cdagaming.unilib.utils.ImageUtils;
 import io.github.cdagaming.unilib.utils.ResourceUtils;
@@ -177,6 +178,15 @@ public class RenderUtils {
     }
 
     /**
+     * Gets the Default/Global Font Renderer
+     *
+     * @return The Default/Global Font Renderer
+     */
+    public static FontRenderer getDefaultFontRenderer() {
+        return ModUtils.INSTANCE_GETTER.get().fontRenderer;
+    }
+
+    /**
      * Adds a Scheduled/Queued Task to Display the Specified Gui Screen
      *
      * @param client       The current game instance
@@ -243,7 +253,7 @@ public class RenderUtils {
             GlStateManager.disableRescaleNormal();
             GlStateManager.popMatrix();
         } catch (Throwable ex) {
-            Constants.LOG.debugError(ex);
+            CoreUtils.LOG.debugError(ex);
             if (!BLOCKED_RENDER_ITEMS.contains(stack)) {
                 BLOCKED_RENDER_ITEMS.add(stack);
             }

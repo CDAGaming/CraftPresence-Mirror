@@ -29,17 +29,17 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Advanced;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.IdentifierType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import io.github.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ScrollableListControl.IdentifierType;
-import io.github.cdagaming.unilib.utils.gui.controls.ScrollableListControl.RenderType;
-import io.github.cdagaming.unilib.utils.gui.impl.ConfigurationGui;
-import io.github.cdagaming.unilib.utils.gui.impl.DynamicEditorGui;
-import io.github.cdagaming.unilib.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unilib.utils.gui.widgets.TextWidget;
 
@@ -512,7 +512,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> getInstanceData().debugMode = debugModeButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", Constants.IS_DEV_FLAG)
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", "") // TODO
                                 )
                         )
                 )
@@ -538,7 +538,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> getInstanceData().verboseMode = verboseModeButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", Constants.IS_VERBOSE_FLAG)
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", "") // TODO
                                 )
                         )
                 )

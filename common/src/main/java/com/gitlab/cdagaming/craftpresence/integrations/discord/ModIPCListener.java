@@ -28,13 +28,13 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.CommandsGui;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.IPCListener;
 import com.jagrosh.discordipc.entities.Packet;
 import com.jagrosh.discordipc.entities.User;
 import io.github.cdagaming.unilib.utils.gui.RenderUtils;
-import io.github.cdagaming.unilib.utils.gui.impl.CommandsGui;
 
 /**
  * Listener to Interpret Discord IPC Events, on received

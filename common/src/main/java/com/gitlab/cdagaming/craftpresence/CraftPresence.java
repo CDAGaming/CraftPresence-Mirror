@@ -35,10 +35,10 @@ import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.github.cdagaming.unicore.utils.MappingUtils;
-import io.github.cdagaming.unicore.utils.OSUtils;
-import io.github.cdagaming.unicore.utils.ScheduleUtils;
-import io.github.cdagaming.unicore.utils.TimeUtils;
+import io.github.cdagaming.unicore.utils.*;
+import io.github.cdagaming.unilib.ModUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
+import io.github.cdagaming.unilib.core.utils.ModUpdaterUtils;
 import io.github.cdagaming.unilib.utils.KeyUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -79,6 +79,15 @@ public class CraftPresence {
      * The {@link GuiUtils} Instance for this Mod
      */
     public static final GuiUtils GUIS = new GuiUtils();
+    /**
+     * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
+     */
+    public static final ModUpdaterUtils UPDATER = new ModUpdaterUtils(
+            Constants.MOD_ID,
+            Constants.UPDATE_JSON,
+            Constants.VERSION_ID,
+            ModUtils.MCVersion
+    );
     /**
      * The Minecraft Instance attached to this Mod
      */
@@ -156,7 +165,7 @@ public class CraftPresence {
         Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.os", OSUtils.OS_NAME, OSUtils.OS_ARCH, OSUtils.IS_64_BIT));
 
         // Check for Updates before continuing
-        ModUtils.UPDATER.checkForUpdates();
+        UPDATER.checkForUpdates();
 
         CONFIG = Config.loadOrCreate(
                 config -> config.applyEvents(
@@ -182,8 +191,8 @@ public class CraftPresence {
      * Schedules the Next Tick to Occur if not currently closing
      */
     private void scheduleTick() {
-        if (!Constants.IS_GAME_CLOSING) {
-            Constants.getThreadPool().scheduleAtFixedRate(
+        if (!CoreUtils.IS_CLOSING) {
+            FileUtils.getThreadPool(Constants.NAME).scheduleAtFixedRate(
                     () -> {
                         try {
                             this.clientTick();
@@ -202,8 +211,8 @@ public class CraftPresence {
      * Consists of Synchronizing Data, and Updating RPC Data as needed
      */
     private void clientTick() {
-        if (!Constants.IS_GAME_CLOSING) {
-            instance = Minecraft.getMinecraft();
+        if (!CoreUtils.IS_CLOSING) {
+            instance = ModUtils.INSTANCE_GETTER.get();
             if (initialized) {
                 session = instance.getSession();
                 player = instance.player;

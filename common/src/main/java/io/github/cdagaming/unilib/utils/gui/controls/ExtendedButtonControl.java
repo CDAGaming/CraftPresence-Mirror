@@ -24,9 +24,8 @@
 
 package io.github.cdagaming.unilib.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
+import io.github.cdagaming.unilib.ModUtils;
 import io.github.cdagaming.unilib.utils.gui.RenderUtils;
 import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unilib.utils.gui.widgets.DynamicWidget;
@@ -314,7 +313,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return The Current Font Renderer for this Control
      */
     public FontRenderer getFontRenderer() {
-        return currentFontRender != null ? currentFontRender : GuiUtils.getDefaultFontRenderer();
+        return currentFontRender != null ? currentFontRender : RenderUtils.getDefaultFontRenderer();
     }
 
     /**

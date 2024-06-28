@@ -22,13 +22,12 @@
  * SOFTWARE.
  */
 
-package io.github.cdagaming.unilib.utils.gui.controls;
+package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -256,7 +255,7 @@ public class ScrollableListControl extends GuiSlot {
      * @return The Current Font Renderer for this Control
      */
     public FontRenderer getFontRenderer() {
-        return mc.fontRenderer != null ? mc.fontRenderer : GuiUtils.getDefaultFontRenderer();
+        return mc.fontRenderer != null ? mc.fontRenderer : RenderUtils.getDefaultFontRenderer();
     }
 
     /**

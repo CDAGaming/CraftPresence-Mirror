@@ -47,6 +47,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;
@@ -264,11 +265,7 @@ public class DiscordUtils {
      */
     public void setup() {
         Runtime.getRuntime().addShutdownHook(
-                Constants.getThreadFactory().newThread(() -> {
-                    Constants.IS_GAME_CLOSING = true;
-                    FileUtils.shutdownSchedulers();
-                    shutDown();
-                })
+                FileUtils.getThreadFactory(Constants.NAME).newThread(this::shutDown)
         );
 
         // Setup Default / Static Placeholders
@@ -1301,9 +1298,9 @@ public class DiscordUtils {
      */
     public void syncPlaceholders() {
         FunctionsLib.init(this);
-        syncArgument("general.mods", Constants::getModCount);
-        syncArgument("data.general.version", () -> Constants.MCBuildVersion, true);
-        syncArgument("data.general.protocol", () -> Constants.MCBuildProtocol);
+        syncArgument("general.mods", CoreUtils::getModCount);
+        syncArgument("data.general.version", () -> CoreUtils.MCBuildVersion, true);
+        syncArgument("data.general.protocol", () -> CoreUtils.MCBuildProtocol);
         syncTimestamp(() -> {
             final long currentStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
                     lastStartTime : TimeUtils.toEpochMilli();
@@ -1389,7 +1386,7 @@ public class DiscordUtils {
      */
     public void updatePresence(final RichPresence presence) {
         if (!isConnected() && !isClosed() && !connectThreadActive) {
-            Constants.getThreadFactory().newThread(
+            FileUtils.getThreadFactory(Constants.NAME).newThread(
                     () -> {
                         attemptsRemaining = MAX_CONNECTION_ATTEMPTS;
                         while (!isConnected() && attemptsRemaining > 0) {

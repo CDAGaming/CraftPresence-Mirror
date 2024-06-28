@@ -24,11 +24,12 @@
 
 package io.github.cdagaming.unilib.utils;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
+import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
+import io.github.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unilib.impl.ImageFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -68,10 +69,10 @@ public class ImageUtils {
     private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = StringUtils.newConcurrentHashMap();
 
     static {
-        Constants.getThreadFactory().newThread(
+        FileUtils.getThreadFactory(CoreUtils.NAME).newThread(
                 () -> {
                     try {
-                        while (!Constants.IS_GAME_CLOSING) {
+                        while (!CoreUtils.IS_CLOSING) {
                             final Pair<String, Pair<InputType, Object>> request = urlRequests.take();
                             boolean isGif = request.getFirst().endsWith(".gif");
 
@@ -113,7 +114,7 @@ public class ImageUtils {
                                                 try {
                                                     bufferData.getSecond().add(frame);
                                                 } catch (Throwable ex) {
-                                                    Constants.LOG.debugError(ex);
+                                                    CoreUtils.LOG.debugError(ex);
                                                 }
                                             }
                                         } else {
@@ -123,12 +124,12 @@ public class ImageUtils {
                                         cachedImages.get(request.getFirst()).setThird(new ArrayList<>(bufferData.getSecond().size()));
                                     }
                                 } catch (Throwable ex) {
-                                    Constants.LOG.debugError(ex);
+                                    CoreUtils.LOG.debugError(ex);
                                 }
                             }
                         }
                     } catch (Throwable ex) {
-                        Constants.LOG.debugError(ex);
+                        CoreUtils.LOG.debugError(ex);
                     }
                 }
         ).start();
@@ -146,7 +147,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(instance, textureName, URI.create(url).toURL());
         } catch (Throwable ex) {
-            Constants.LOG.debugError(ex);
+            CoreUtils.LOG.debugError(ex);
             return ResourceUtils.getEmptyResource();
         }
     }
@@ -163,7 +164,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(instance, textureName, new Pair<>(InputType.Url, url));
         } catch (Throwable ex) {
-            Constants.LOG.debugError(ex);
+            CoreUtils.LOG.debugError(ex);
             return ResourceUtils.getEmptyResource();
         }
     }
@@ -180,7 +181,7 @@ public class ImageUtils {
         try {
             return getTextureFromUrl(instance, textureName, new Pair<>(InputType.FileData, url));
         } catch (Throwable ex) {
-            Constants.LOG.debugError(ex);
+            CoreUtils.LOG.debugError(ex);
             return ResourceUtils.getEmptyResource();
         }
     }
@@ -229,7 +230,7 @@ public class ImageUtils {
             try {
                 urlRequests.put(new Pair<>(textureName, stream));
             } catch (Throwable ex) {
-                Constants.LOG.debugError(ex);
+                CoreUtils.LOG.debugError(ex);
             }
         }
 
@@ -268,7 +269,7 @@ public class ImageUtils {
                 }
                 return cachedTexture;
             } catch (Throwable ex) {
-                Constants.LOG.debugError(ex);
+                CoreUtils.LOG.debugError(ex);
                 return ResourceUtils.getEmptyResource();
             }
         } else {

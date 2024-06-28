@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core.integrations.screen;
+package io.github.cdagaming.unilib.core.integrations.screen;
 
 import javax.annotation.Nullable;
 import java.util.ArrayDeque;
