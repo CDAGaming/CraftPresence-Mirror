@@ -51,6 +51,20 @@ public class ScreenConstants {
             new ColorSection(40, 0, 127, 80)
     );
     /**
+     * The Default Screen Background Info
+     */
+    public static final ColorData DEFAULT_SCREEN_BACKGROUND = new ColorData(
+            new ColorSection(64, 64, 64, 255),
+            getDefaultGUIBackground()
+    );
+    /**
+     * The Default Alternative Screen Background Info
+     */
+    public static final ColorData DEFAULT_ALT_SCREEN_BACKGROUND = new ColorData(
+            new ColorSection(16, 16, 16, 192),
+            new ColorSection(16, 16, 16, 208)
+    );
+    /**
      * The Default Widget Background Resources
      */
     private static final Function<Integer, String> DEFAULT_BUTTON_BACKGROUND_SUPPLIER = (protocol) -> "minecraft:" + (CoreUtils.isLegacyHard(protocol) ? "/gui/gui.png" : "textures/gui/widgets.png");

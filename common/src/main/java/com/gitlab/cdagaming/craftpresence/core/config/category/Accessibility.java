@@ -40,14 +40,8 @@ public class Accessibility extends Module implements Serializable {
     private static final Accessibility DEFAULT = new Accessibility();
     public ColorData tooltipBackground = ScreenConstants.DEFAULT_TOOLTIP_BACKGROUND;
     public ColorData tooltipBorder = ScreenConstants.DEFAULT_TOOLTIP_BORDER;
-    public ColorData guiBackground = new ColorData(
-            new ColorSection(64, 64, 64, 255),
-            ScreenConstants.getDefaultGUIBackground()
-    );
-    public ColorData altGuiBackground = new ColorData(
-            new ColorSection(16, 16, 16, 192),
-            new ColorSection(16, 16, 16, 208)
-    );
+    public ColorData guiBackground = ScreenConstants.DEFAULT_SCREEN_BACKGROUND;
+    public ColorData altGuiBackground = ScreenConstants.DEFAULT_ALT_SCREEN_BACKGROUND;
     public String languageId = CoreUtils.getDefaultLanguage();
     public boolean stripTranslationColors = false;
     public boolean stripTranslationFormatting = CoreUtils.isTextFormattingBlocked();

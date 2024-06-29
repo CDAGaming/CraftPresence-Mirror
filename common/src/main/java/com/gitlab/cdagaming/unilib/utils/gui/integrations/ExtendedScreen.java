@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.integrations;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
@@ -145,9 +144,7 @@ public class ExtendedScreen extends GuiScreen {
         currentScreen = this;
         setCanClose(true);
         setContentHeight(0);
-        //setDebugMode(CommandUtils.isDebugMode());
-        //setVerboseMode(CommandUtils.isVerboseMode());
-        // TODO
+        setScreenSettings();
     }
 
     /**
@@ -545,8 +542,8 @@ public class ExtendedScreen extends GuiScreen {
      */
     public ColorData getRawBackground() {
         return hasWorld() ?
-                CraftPresence.CONFIG.accessibilitySettings.altGuiBackground :
-                CraftPresence.CONFIG.accessibilitySettings.guiBackground;
+                ScreenConstants.DEFAULT_ALT_SCREEN_BACKGROUND :
+                ScreenConstants.DEFAULT_SCREEN_BACKGROUND;
     }
 
     /**
@@ -1353,6 +1350,10 @@ public class ExtendedScreen extends GuiScreen {
      */
     public int getMaxWidth() {
         return getScreenWidth();
+    }
+
+    public void setScreenSettings() {
+        // N/A
     }
 
     /**
