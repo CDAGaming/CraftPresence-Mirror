@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -189,8 +190,11 @@ public class KeyUtils {
      * @return the created and registered KeyBind instance
      */
     public KeyBinding registerKey(final String id, final String name,
+                                  final Function<String, String> nameFormatter,
                                   final String category,
+                                  final Function<String, String> categoryFormatter,
                                   final int defaultKey, final int currentKey,
+                                  final Supplier<String> detailsSupplier,
                                   final Runnable onPress,
                                   final BiConsumer<Integer, Boolean> onBind,
                                   final Predicate<Integer> onOutdated,
@@ -204,13 +208,79 @@ public class KeyUtils {
                 id,
                 new KeyBindData(
                         keyBind,
+                        nameFormatter,
                         keyBind::getKeyCategory,
+                        categoryFormatter,
                         keyBind::getKeyCodeDefault,
+                        detailsSupplier,
                         onPress, onBind, onOutdated,
                         callback
                 )
         );
         return keyBind;
+    }
+
+    /**
+     * Registers a new Keybinding with the specified info
+     *
+     * @param id         The keybinding internal identifier, used for the Key Sync Queue
+     * @param name       The name or description of the keybinding
+     * @param category   The category for the keybinding
+     * @param defaultKey The default key for this binding
+     * @param currentKey The current key for this binding
+     * @param onPress    The event to execute when the KeyBind is being pressed
+     * @param onBind     The event to execute when the KeyBind is being rebound to another key
+     * @param onOutdated The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
+     * @param callback   The event to execute upon an exception occurring during KeyBind events
+     * @return the created and registered KeyBind instance
+     */
+    public KeyBinding registerKey(final String id, final String name,
+                                  final String category,
+                                  final int defaultKey, final int currentKey,
+                                  final Supplier<String> detailsSupplier,
+                                  final Runnable onPress,
+                                  final BiConsumer<Integer, Boolean> onBind,
+                                  final Predicate<Integer> onOutdated,
+                                  final TriFunction<Throwable, String, KeyBindData, Boolean> callback) {
+        return registerKey(
+                id, name, (description) -> description,
+                category, (categoryName) -> categoryName,
+                defaultKey, currentKey,
+                detailsSupplier,
+                onPress, onBind, onOutdated,
+                callback
+        );
+    }
+
+    /**
+     * Registers a new Keybinding with the specified info
+     *
+     * @param id         The keybinding internal identifier, used for the Key Sync Queue
+     * @param name       The name or description of the keybinding
+     * @param category   The category for the keybinding
+     * @param defaultKey The default key for this binding
+     * @param currentKey The current key for this binding
+     * @param onPress    The event to execute when the KeyBind is being pressed
+     * @param onBind     The event to execute when the KeyBind is being rebound to another key
+     * @param onOutdated The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
+     * @param callback   The event to execute upon an exception occurring during KeyBind events
+     * @return the created and registered KeyBind instance
+     */
+    public KeyBinding registerKey(final String id, final String name,
+                                  final String category,
+                                  final int defaultKey, final int currentKey,
+                                  final Runnable onPress,
+                                  final BiConsumer<Integer, Boolean> onBind,
+                                  final Predicate<Integer> onOutdated,
+                                  final TriFunction<Throwable, String, KeyBindData, Boolean> callback) {
+        return registerKey(
+                id, name,
+                category,
+                defaultKey, currentKey,
+                () -> "",
+                onPress, onBind, onOutdated,
+                callback
+        );
     }
 
     /**
@@ -418,8 +488,11 @@ public class KeyUtils {
      * @param errorCallback      The event to execute upon an exception occurring during KeyBind events (Format: [exception,keyName,keyData] returns resetKey)
      */
     public record KeyBindData(KeyBinding binding,
+                              Function<String, String> nameFormatter,
                               Supplier<String> categorySupplier,
+                              Function<String, String> categoryFormatter,
                               Supplier<Integer> defaultKeySupplier,
+                              Supplier<String> detailsSupplier,
                               Runnable runEvent, BiConsumer<Integer, Boolean> configEvent,
                               Predicate<Integer> vanillaPredicate,
                               TriFunction<Throwable, String, KeyBindData, Boolean> errorCallback) {
@@ -432,6 +505,14 @@ public class KeyUtils {
             return categorySupplier().get();
         }
 
+        public String categoryName() {
+            return categoryFormatter().apply(category());
+        }
+
+        public String details() {
+            return detailsSupplier().get();
+        }
+
         /**
          * Retrieve the description for this KeyBind
          *
@@ -439,6 +520,10 @@ public class KeyUtils {
          */
         public String description() {
             return binding().getKeyDescription();
+        }
+
+        public String displayName() {
+            return nameFormatter().apply(description());
         }
 
         /**

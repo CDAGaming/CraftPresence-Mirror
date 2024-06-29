@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.unilib.core.impl;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 
 /**
  * Translation Conversion Layer used to translate between other Pack Format Types
@@ -54,7 +54,10 @@ public class TranslationConverter {
         }
 
         if (resultId.equals(originalId) && mode != ConversionMode.None) {
-            Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", resultId, mode.name()));
+            CoreUtils.LOG.warn(
+                    "Unexpected TranslationConverter result for object \"%1$s\". Please report this issue. (Mode Attempted: %2$s)",
+                    resultId, mode.name()
+            );
         }
 
         return resultId.trim();

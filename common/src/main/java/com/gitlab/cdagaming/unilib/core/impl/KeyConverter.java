@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.unilib.core.impl;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unicore.impl.TriFunction;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
@@ -360,7 +360,10 @@ public class KeyConverter {
         }
 
         if (resultKey == originalKey && mode != ConversionMode.None) {
-            Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.convert.invalid", Integer.toString(resultKey), mode.name()));
+            CoreUtils.LOG.warn(
+                    "Unexpected KeyConverter result for object \"%1$s\". Please report this issue. (Mode Attempted: %2$s)",
+                    Integer.toString(resultKey), mode.name()
+            );
         }
 
         return resultKey;

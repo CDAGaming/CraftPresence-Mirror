@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -42,7 +41,7 @@ public class MessageGui extends ExtendedScreen {
      *
      * @param messageData The message to display for this Instance
      */
-    public MessageGui(List<String> messageData) {
+    public MessageGui(final List<String> messageData) {
         super();
         this.messageData = StringUtils.newArrayList(messageData);
     }
@@ -52,9 +51,9 @@ public class MessageGui extends ExtendedScreen {
      *
      * @param messageData The message to display for this Instance
      */
-    public MessageGui(String messageData) {
+    public MessageGui(final String messageData) {
         this(StringUtils.splitTextByNewLine(
-                Constants.TRANSLATOR.getLocalizedMessage(messageData)
+                messageData
         ));
     }
 
@@ -65,7 +64,7 @@ public class MessageGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.back",
+                        "Back",
                         () -> openScreen(getParent())
                 )
         );
@@ -75,10 +74,8 @@ public class MessageGui extends ExtendedScreen {
 
     @Override
     public void renderExtra() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.message");
-
         renderScrollingString(
-                mainTitle,
+                "Message",
                 30, 0,
                 getScreenWidth() - 30, 32,
                 0xFFFFFF

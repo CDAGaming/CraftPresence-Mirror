@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.utils.KeyUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
@@ -47,6 +46,8 @@ public class ControlsGui extends ExtendedScreen {
     private final Runnable onKeyChanged;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = StringUtils.newHashMap();
+    // Format: categoryName:displayName
+    private final Map<String, String> categoryNames = StringUtils.newHashMap();
     // Pair Format: buttonToModify, Config Field to Edit
     // (Store a Backup of Prior Text just in case)
     private String backupKeyString;
@@ -77,7 +78,7 @@ public class ControlsGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90,
                         (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.back",
+                        "Back",
                         () -> {
                             if (entryData == null) {
                                 openScreen(getParent());
@@ -98,18 +99,10 @@ public class ControlsGui extends ExtendedScreen {
 
     @Override
     public void renderExtra() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = Constants.TRANSLATOR.translate("gui.config.message.button.controls");
         renderScrollingString(
-                mainTitle,
-                30, 2,
-                getScreenWidth() - 30, 16,
-                0xFFFFFF
-        );
-        renderScrollingString(
-                subTitle,
-                30, 16,
-                getScreenWidth() - 30, 30,
+                "Controls",
+                30, 0,
+                getScreenWidth() - 30, 32,
                 0xFFFFFF
         );
 
@@ -132,10 +125,15 @@ public class ControlsGui extends ExtendedScreen {
         for (Map.Entry<String, KeyUtils.KeyBindData> entry : keyMappings.entrySet()) {
             final String keyName = entry.getKey();
             final KeyUtils.KeyBindData keyData = entry.getValue();
-            if (!categorizedNames.containsKey(keyData.category())) {
-                categorizedNames.put(keyData.category(), StringUtils.newArrayList(keyName));
-            } else if (!categorizedNames.get(keyData.category()).contains(keyName)) {
-                categorizedNames.get(keyData.category()).add(keyName);
+            final String keyCategory = keyData.category();
+            if (!categorizedNames.containsKey(keyCategory)) {
+                categorizedNames.put(keyCategory, StringUtils.newArrayList(keyName));
+            } else if (!categorizedNames.get(keyCategory).contains(keyName)) {
+                categorizedNames.get(keyCategory).add(keyName);
+            }
+
+            if (!categoryNames.containsKey(keyCategory)) {
+                categoryNames.put(keyCategory, keyData.categoryName());
             }
         }
     }
@@ -154,7 +152,7 @@ public class ControlsGui extends ExtendedScreen {
                     true,
                     0, getButtonY(currentAllocatedRow),
                     childFrame.getScreenWidth(),
-                    Constants.TRANSLATOR.translate(entry.getKey())
+                    categoryNames.get(entry.getKey())
             ));
 
             currentAllocatedRow++;
@@ -170,11 +168,16 @@ public class ControlsGui extends ExtendedScreen {
                         95, 20,
                         instance.getKeyName(keyCode),
                         keyTitle,
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate(keyTitle.replace(".name", ".description"))
-                                )
-                        ),
+                        () -> {
+                            final String details = keyData.details();
+                            if (!StringUtils.isNullOrEmpty(details)) {
+                                drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                details
+                                        )
+                                );
+                            }
+                        },
                         keyName
                 );
 

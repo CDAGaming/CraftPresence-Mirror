@@ -466,9 +466,12 @@ public class CommandUtils {
         CraftPresence.KEYBINDINGS.registerKey(
                 "configKeyCode",
                 "key.craftpresence.config_keycode.name",
+                Constants.TRANSLATOR::translate,
                 "key.craftpresence.category",
+                Constants.TRANSLATOR::translate,
                 CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
                 CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
+                () -> Constants.TRANSLATOR.translate("key.craftpresence.config_keycode.description"),
                 () -> {
                     if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
                         RenderUtils.openScreen(CraftPresence.instance, new MainGui(), CraftPresence.instance.currentScreen);

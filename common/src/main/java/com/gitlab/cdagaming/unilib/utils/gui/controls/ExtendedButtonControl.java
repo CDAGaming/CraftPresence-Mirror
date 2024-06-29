@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.controls;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
@@ -385,9 +384,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @return The control's current display message
      */
     public String getDisplayMessage() {
-        return Constants.TRANSLATOR.getLocalizedMessage(
-                getControlMessage()
-        );
+        return getControlMessage();
     }
 
     /**

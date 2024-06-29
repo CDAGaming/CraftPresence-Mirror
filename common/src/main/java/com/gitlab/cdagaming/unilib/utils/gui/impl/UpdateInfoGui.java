@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
@@ -38,6 +37,8 @@ import java.util.Map;
  * The Update Info Gui Screen
  */
 public class UpdateInfoGui extends ExtendedScreen {
+    private final String mainTitle = "Update Checker";
+    private final String changelogPrefix = "Changelog:";
     private final ModUpdaterUtils modUpdater;
     private TextDisplayWidget infoPane;
     private ExtendedButtonControl downloadButton, checkButton;
@@ -112,8 +113,7 @@ public class UpdateInfoGui extends ExtendedScreen {
 
     @Override
     public void renderExtra() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title");
-        final String subTitle = Constants.TRANSLATOR.translate("gui.config.title.changes", modUpdater.getStatus().getDisplayName());
+        final String subTitle = String.format("Version Check Info (State: %1$s)", modUpdater.getStatus().getDisplayName());
 
         renderScrollingString(
                 mainTitle,
@@ -132,7 +132,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     }
 
     private void resetNotes() {
-        final String notice = Constants.TRANSLATOR.translate("gui.config.message.changelog") +
+        final String notice = changelogPrefix +
                 '\n' + "  " + "N/A";
         infoPane.setMessage(notice);
     }
@@ -140,7 +140,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     private void updateNotes() {
         if (modUpdater.hasChanges()) {
             final StringBuilder notice = new StringBuilder();
-            notice.append(Constants.TRANSLATOR.translate("gui.config.message.changelog"));
+            notice.append(changelogPrefix);
 
             for (Map.Entry<String, String> entry : modUpdater.getChanges()) {
                 notice
