@@ -34,14 +34,14 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import io.github.cdagaming.unicore.impl.Pair;
-import io.github.cdagaming.unicore.utils.ScheduleUtils;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
+import io.github.cdagaming.unicore.impl.Pair;
+import io.github.cdagaming.unicore.utils.ScheduleUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {

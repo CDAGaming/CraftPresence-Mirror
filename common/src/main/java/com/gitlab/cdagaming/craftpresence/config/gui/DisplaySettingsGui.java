@@ -33,8 +33,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 public class DisplaySettingsGui extends ConfigurationGui<Display> {
     private final Display INSTANCE, DEFAULTS;

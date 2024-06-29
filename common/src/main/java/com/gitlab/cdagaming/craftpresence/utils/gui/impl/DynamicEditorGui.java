@@ -26,13 +26,13 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
-import io.github.cdagaming.unicore.impl.TupleConsumer;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
+import io.github.cdagaming.unicore.impl.TupleConsumer;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.function.BiConsumer;
 

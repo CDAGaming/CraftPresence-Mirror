@@ -24,12 +24,12 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.controls;
 
+import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
-import com.gitlab.cdagaming.unilib.ModUtils;
-import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;

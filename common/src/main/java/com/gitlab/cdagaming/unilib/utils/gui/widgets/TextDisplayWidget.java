@@ -24,11 +24,11 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.widgets;
 
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
-import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
 
 import java.util.List;
 import java.util.Objects;

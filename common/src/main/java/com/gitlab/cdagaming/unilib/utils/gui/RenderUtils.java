@@ -25,14 +25,9 @@
 package com.gitlab.cdagaming.unilib.utils.gui;
 
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
+import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.integrations.screen.ScissorStack;
-import io.github.cdagaming.unicore.impl.Pair;
-import io.github.cdagaming.unicore.impl.Tuple;
-import io.github.cdagaming.unicore.utils.MathUtils;
-import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unicore.utils.TimeUtils;
-import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.integrations.screen.ScreenConstants;
 import com.gitlab.cdagaming.unilib.core.integrations.screen.ScreenRectangle;
 import com.gitlab.cdagaming.unilib.impl.ImageFrame;
@@ -41,6 +36,11 @@ import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import io.github.cdagaming.unicore.impl.Pair;
+import io.github.cdagaming.unicore.impl.Tuple;
+import io.github.cdagaming.unicore.utils.MathUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;

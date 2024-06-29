@@ -30,11 +30,11 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

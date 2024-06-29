@@ -25,13 +25,13 @@
 package com.gitlab.cdagaming.craftpresence.core;
 
 import com.gitlab.cdagaming.craftpresence.core.integrations.logging.ApacheLogger;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.integrations.logging.JavaLogger;
 import io.github.cdagaming.unicore.integrations.logging.LoggingImpl;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import com.gitlab.cdagaming.unilib.core.CoreUtils;
 
 import java.io.File;
 

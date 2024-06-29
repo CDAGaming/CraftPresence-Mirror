@@ -26,8 +26,8 @@ package com.gitlab.cdagaming.unilib.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.List;
 

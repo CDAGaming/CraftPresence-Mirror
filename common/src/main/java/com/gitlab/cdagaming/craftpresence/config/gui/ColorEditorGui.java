@@ -28,14 +28,14 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
-import io.github.cdagaming.unicore.impl.Pair;
-import io.github.cdagaming.unicore.impl.Tuple;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TexturedWidget;
+import io.github.cdagaming.unicore.impl.Pair;
+import io.github.cdagaming.unicore.impl.Tuple;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
 public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private final ColorData DEFAULTS, INSTANCE, CURRENT;

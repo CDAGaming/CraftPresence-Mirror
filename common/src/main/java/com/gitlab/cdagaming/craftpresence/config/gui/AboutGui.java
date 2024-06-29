@@ -26,11 +26,11 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unicore.utils.UrlUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.impl.UpdateInfoGui;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.UrlUtils;
 
 import java.util.List;
 

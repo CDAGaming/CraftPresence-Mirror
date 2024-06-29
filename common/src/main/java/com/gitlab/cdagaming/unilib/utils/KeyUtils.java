@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.unilib.utils;
 
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.impl.KeyConverter;
 import io.github.cdagaming.unicore.impl.TriFunction;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import com.gitlab.cdagaming.unilib.core.impl.KeyConverter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.settings.KeyBinding;
