@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.integrations;
 
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
 import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenConstants;
@@ -36,10 +35,7 @@ import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.*;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -81,7 +77,7 @@ public class ExtendedScreen extends GuiScreen {
     /**
      * Similar to buttonList, a list of compatible ScrollLists in this Screen
      */
-    private final List<ScrollableListControl> extendedLists = StringUtils.newArrayList();
+    private final List<GuiSlot> extendedLists = StringUtils.newArrayList();
     /**
      * The Parent or Past Screen
      */
@@ -388,7 +384,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The added scroll list with attached class type
      */
     @Nonnull
-    public <T extends ScrollableListControl> T addList(@Nonnull T buttonIn) {
+    public <T extends GuiSlot> T addList(@Nonnull T buttonIn) {
         if (!extendedLists.contains(buttonIn)) {
             extendedLists.add(buttonIn);
         }
@@ -640,7 +636,7 @@ public class ExtendedScreen extends GuiScreen {
 
             drawDefaultBackground();
 
-            for (ScrollableListControl listControl : getLists()) {
+            for (GuiSlot listControl : getLists()) {
                 if (listControl.getEnabled()) {
                     listControl.drawScreen(mouseX, mouseY, partialTicks);
                 }
@@ -679,7 +675,7 @@ public class ExtendedScreen extends GuiScreen {
     public void handleMouseInput() {
         if (isLoaded()) {
             setMouseScroll(Mouse.getEventDWheel());
-            for (ScrollableListControl listControl : getLists()) {
+            for (GuiSlot listControl : getLists()) {
                 listControl.handleMouseInput();
             }
 
@@ -1581,7 +1577,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @return the list of compatible ScrollLists in this Screen
      */
-    public List<ScrollableListControl> getLists() {
+    public List<GuiSlot> getLists() {
         return StringUtils.newArrayList(extendedLists);
     }
 

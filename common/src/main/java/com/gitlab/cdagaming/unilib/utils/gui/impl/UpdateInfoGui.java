@@ -24,15 +24,12 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextDisplayWidget;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
 
 import java.util.Map;
@@ -65,25 +62,6 @@ public class UpdateInfoGui extends ExtendedScreen {
                         () -> {
                             resetNotes();
                             modUpdater.checkForUpdates(this::updateNotes);
-                        }
-                )
-        );
-        // Adding About Button
-        addControl(
-                new ExtendedButtonControl(
-                        6, 6,
-                        20, 20,
-                        "?",
-                        null,
-                        () -> {
-                            final String mainLine = Constants.TRANSLATOR.translate("gui.config.comment.title", Constants.VERSION_ID, CraftPresence.CONFIG._schemaVersion);
-                            final String subLine = Constants.TRANSLATOR.translate("gui.config.comment.title.changes", ModUtils.MCVersion);
-
-                            drawMultiLineString(
-                                    StringUtils.splitTextByNewLine(
-                                            mainLine + '\n' + subLine
-                                    )
-                            );
                         }
                 )
         );

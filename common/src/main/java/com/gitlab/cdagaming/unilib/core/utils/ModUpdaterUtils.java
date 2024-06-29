@@ -167,11 +167,11 @@ public class ModUpdaterUtils {
             flushData();
 
             if (StringUtils.isNullOrEmpty(updateUrl)) return;
-            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.init", modID, currentGameVersion, updateUrl));
+            CoreUtils.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.init", modID, currentGameVersion, updateUrl));
 
             final String data = UrlUtils.getURLText(updateUrl, "UTF-8");
 
-            Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", data));
+            CoreUtils.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.data", data));
 
             @SuppressWarnings("unchecked") final Map<String, Object> json = FileUtils.getJsonData(data, Map.class);
             @SuppressWarnings("unchecked") final Map<String, String> promos = (Map<String, String>) json.get("promos");
@@ -208,7 +208,7 @@ public class ModUpdaterUtils {
             } else
                 currentState = UpdateState.BETA;
 
-            Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.status", modID, currentState.getDisplayName(), targetVersion));
+            CoreUtils.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.updater.receive.status", modID, currentState.getDisplayName(), targetVersion));
 
             changelogData.clear();
             @SuppressWarnings("unchecked") final Map<String, String> tmp = (Map<String, String>) json.get(currentGameVersion);
@@ -227,8 +227,8 @@ public class ModUpdaterUtils {
             }
         } catch (Throwable ex) {
             // Log Failure and Set Update State to FAILED
-            Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
-            Constants.LOG.debugError(ex);
+            CoreUtils.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.updater.failed"));
+            CoreUtils.LOG.debugError(ex);
             currentState = UpdateState.FAILED;
         } finally {
             if (callback != null) {

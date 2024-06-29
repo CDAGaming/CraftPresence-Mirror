@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core.integrations.logging;
+package com.gitlab.cdagaming.unilib.core.integrations.logging;
 
 import io.github.cdagaming.unicore.integrations.logging.LoggingImpl;
 import org.apache.logging.log4j.LogManager;
