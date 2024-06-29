@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.unilib.core.integrations.screen;
+package com.gitlab.cdagaming.unilib.core.impl.screen;
 
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.config.element.ColorData;

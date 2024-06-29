@@ -42,7 +42,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.discord.ModFunctionsLib;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModIPCListener;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.gitlab.cdagaming.unilib.ModUtils;
-import com.gitlab.cdagaming.unilib.core.integrations.screen.ScreenConstants;
+import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenConstants;
 import com.gitlab.cdagaming.unilib.impl.TranslationManager;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;

@@ -27,7 +27,7 @@ package com.gitlab.cdagaming.unilib.utils.gui.integrations;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
-import com.gitlab.cdagaming.unilib.core.integrations.screen.ScreenConstants;
+import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenConstants;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;

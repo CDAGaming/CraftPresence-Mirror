@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.unilib.core.integrations.screen;
+package com.gitlab.cdagaming.unilib.core.impl.screen;
 
 import javax.annotation.Nullable;
 
