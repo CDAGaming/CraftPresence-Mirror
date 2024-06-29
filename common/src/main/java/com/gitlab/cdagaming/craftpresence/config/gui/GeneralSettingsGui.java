@@ -28,7 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.category.General;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.utils.StringUtils;

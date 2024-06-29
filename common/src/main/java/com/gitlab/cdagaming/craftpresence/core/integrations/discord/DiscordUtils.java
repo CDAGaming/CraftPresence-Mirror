@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core.utils.discord;
+package com.gitlab.cdagaming.craftpresence.core.integrations.discord;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
@@ -30,9 +30,8 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.core.integrations.discord.FunctionsLib;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
