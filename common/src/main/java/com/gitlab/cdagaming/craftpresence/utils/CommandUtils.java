@@ -45,11 +45,11 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unilib.ModUtils;
-import io.github.cdagaming.unilib.core.integrations.screen.ScreenConstants;
-import io.github.cdagaming.unilib.impl.TranslationManager;
-import io.github.cdagaming.unilib.utils.gui.RenderUtils;
-import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.core.integrations.screen.ScreenConstants;
+import com.gitlab.cdagaming.unilib.impl.TranslationManager;
+import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 
 import java.util.Map;
 

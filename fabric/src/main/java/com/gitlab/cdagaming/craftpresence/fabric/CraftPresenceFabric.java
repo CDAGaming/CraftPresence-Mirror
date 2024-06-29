@@ -27,7 +27,7 @@ package com.gitlab.cdagaming.craftpresence.fabric;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import io.github.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 

@@ -32,9 +32,9 @@ import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unilib.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 
 public class GeneralSettingsGui extends ConfigurationGui<General> {
     private final General INSTANCE, DEFAULTS;

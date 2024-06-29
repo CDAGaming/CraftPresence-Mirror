@@ -34,7 +34,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 
 public class DisplaySettingsGui extends ConfigurationGui<Display> {
     private final Display INSTANCE, DEFAULTS;

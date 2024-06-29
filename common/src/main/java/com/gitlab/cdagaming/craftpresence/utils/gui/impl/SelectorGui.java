@@ -27,10 +27,10 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
-import io.github.cdagaming.unilib.utils.gui.impl.MessageGui;
-import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.unilib.utils.gui.impl.MessageGui;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.util.List;

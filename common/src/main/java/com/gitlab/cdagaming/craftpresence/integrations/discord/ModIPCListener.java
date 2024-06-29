@@ -34,7 +34,7 @@ import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.IPCListener;
 import com.jagrosh.discordipc.entities.Packet;
 import com.jagrosh.discordipc.entities.User;
-import io.github.cdagaming.unilib.utils.gui.RenderUtils;
+import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 
 /**
  * Listener to Interpret Discord IPC Events, on received

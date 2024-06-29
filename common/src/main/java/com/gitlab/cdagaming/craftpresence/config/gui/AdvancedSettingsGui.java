@@ -37,11 +37,11 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
-import io.github.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
-import io.github.cdagaming.unilib.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 
 @SuppressWarnings("DuplicatedCode")
 public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {

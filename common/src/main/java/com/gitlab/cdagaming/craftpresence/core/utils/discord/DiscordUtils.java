@@ -47,7 +47,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import io.github.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import org.meteordev.starscript.Script;
 import org.meteordev.starscript.Section;
 import org.meteordev.starscript.Starscript;

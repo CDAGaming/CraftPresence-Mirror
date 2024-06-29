@@ -31,7 +31,7 @@ import io.github.cdagaming.unicore.integrations.logging.LoggingImpl;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import io.github.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 
 import java.io.File;
 

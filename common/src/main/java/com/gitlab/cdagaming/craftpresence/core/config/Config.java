@@ -39,9 +39,9 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unilib.core.CoreUtils;
-import io.github.cdagaming.unilib.core.impl.KeyConverter;
-import io.github.cdagaming.unilib.core.impl.TranslationConverter;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.impl.KeyConverter;
+import com.gitlab.cdagaming.unilib.core.impl.TranslationConverter;
 
 import java.io.File;
 import java.io.FileNotFoundException;

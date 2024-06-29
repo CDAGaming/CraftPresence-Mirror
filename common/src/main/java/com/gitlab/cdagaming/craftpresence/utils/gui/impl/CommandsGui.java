@@ -33,11 +33,11 @@ import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
-import io.github.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
-import io.github.cdagaming.unilib.utils.gui.integrations.ScrollPane;
-import io.github.cdagaming.unilib.utils.gui.widgets.TextDisplayWidget;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextDisplayWidget;
 
 import java.io.BufferedWriter;
 import java.io.File;

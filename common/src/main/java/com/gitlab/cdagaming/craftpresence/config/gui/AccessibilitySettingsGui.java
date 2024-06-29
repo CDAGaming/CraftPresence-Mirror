@@ -33,12 +33,12 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unilib.core.CoreUtils;
-import io.github.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
-import io.github.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
-import io.github.cdagaming.unilib.utils.gui.impl.ControlsGui;
-import io.github.cdagaming.unilib.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.unilib.utils.gui.impl.ControlsGui;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 
 import java.util.Map;
 

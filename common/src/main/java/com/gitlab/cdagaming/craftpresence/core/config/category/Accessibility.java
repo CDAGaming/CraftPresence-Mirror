@@ -27,8 +27,8 @@ package com.gitlab.cdagaming.craftpresence.core.config.category;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
-import io.github.cdagaming.unilib.core.CoreUtils;
-import io.github.cdagaming.unilib.core.integrations.screen.ScreenConstants;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.integrations.screen.ScreenConstants;
 
 import java.io.Serial;
 import java.io.Serializable;

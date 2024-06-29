@@ -38,7 +38,7 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import io.github.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.ModUtils;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreenRealmsProxy;
 import net.minecraft.client.multiplayer.GuiConnecting;
