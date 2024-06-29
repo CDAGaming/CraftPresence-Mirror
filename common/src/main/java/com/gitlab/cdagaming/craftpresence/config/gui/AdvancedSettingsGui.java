@@ -512,7 +512,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> getInstanceData().debugMode = debugModeButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", "") // TODO
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode")
                                 )
                         )
                 )
@@ -538,7 +538,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> getInstanceData().verboseMode = verboseModeButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", "") // TODO
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode")
                                 )
                         )
                 )
