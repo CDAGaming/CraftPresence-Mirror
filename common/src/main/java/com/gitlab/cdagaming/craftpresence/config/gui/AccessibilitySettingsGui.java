@@ -171,7 +171,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(1),
                         180, 20,
-                        "gui.config.message.button.controls",
+                        "Controls",
                         () -> openScreen(
                                 new ControlsGui(
                                         CraftPresence.KEYBINDINGS,
