@@ -34,6 +34,8 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 
 import java.io.File;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -43,7 +45,7 @@ import java.util.function.Supplier;
  * @author CDAGaming
  */
 @SuppressFBWarnings("MS_CANNOT_BE_FINAL")
-// TODO: Replace values with gradle flags
+// TODO: Replace values with gradle flags, once UniLib is seperated
 public class CoreUtils {
     /**
      * The Application's Name
@@ -146,12 +148,31 @@ public class CoreUtils {
 
     static {
         Runtime.getRuntime().addShutdownHook(
-                FileUtils.getThreadFactory(CoreUtils.NAME).newThread(() -> {
-                    CoreUtils.IS_CLOSING = true;
+                getThreadFactory().newThread(() -> {
+                    IS_CLOSING = true;
                     FileUtils.shutdownSchedulers();
                 })
         );
     }
+
+    /**
+     * Retrieve the Timer Instance for this Class, used for Scheduling Events
+     *
+     * @return the Timer Instance for this Class
+     */
+    public static ScheduledExecutorService getThreadPool() {
+        return FileUtils.getThreadPool(NAME);
+    }
+
+    /**
+     * Retrieve the Thread Factory Instance for this Class, used for Scheduling Events
+     *
+     * @return the Thread Factory Instance for this class
+     */
+    public static ThreadFactory getThreadFactory() {
+        return FileUtils.getThreadFactory(NAME);
+    }
+
 
     /**
      * Retrieve If this Application is in the Hard Floor of Legacy Mode
@@ -287,7 +308,7 @@ public class CoreUtils {
         // Mod is within ClassLoader if in a Dev Environment
         // and is thus automatically counted if this is the case
         int modCount = 0;
-        final File[] mods = new File(CoreUtils.modsDir).listFiles();
+        final File[] mods = new File(modsDir).listFiles();
 
         if (mods != null) {
             for (File modFile : mods) {

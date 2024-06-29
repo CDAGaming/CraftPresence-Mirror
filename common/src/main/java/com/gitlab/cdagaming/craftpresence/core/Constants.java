@@ -34,6 +34,8 @@ import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 
 import java.io.File;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Constant Variables and Methods used throughout the Application
@@ -111,6 +113,24 @@ public class Constants {
      * If the Mod should enable "Replay Mod" Integration
      */
     private static boolean HAS_REPLAY_MOD = false;
+
+    /**
+     * Retrieve the Timer Instance for this Class, used for Scheduling Events
+     *
+     * @return the Timer Instance for this Class
+     */
+    public static ScheduledExecutorService getThreadPool() {
+        return FileUtils.getThreadPool(NAME);
+    }
+
+    /**
+     * Retrieve the Thread Factory Instance for this Class, used for Scheduling Events
+     *
+     * @return the Thread Factory Instance for this class
+     */
+    public static ThreadFactory getThreadFactory() {
+        return FileUtils.getThreadFactory(NAME);
+    }
 
     /**
      * Retrieve if the Mod should enable "Replay Mod" Integration

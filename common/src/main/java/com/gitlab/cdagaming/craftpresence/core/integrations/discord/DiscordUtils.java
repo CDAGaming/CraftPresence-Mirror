@@ -43,7 +43,6 @@ import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 import io.github.cdagaming.unicore.impl.Pair;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
@@ -264,7 +263,7 @@ public class DiscordUtils {
      */
     public void setup() {
         Runtime.getRuntime().addShutdownHook(
-                FileUtils.getThreadFactory(Constants.NAME).newThread(this::shutDown)
+                Constants.getThreadFactory().newThread(this::shutDown)
         );
 
         // Setup Default / Static Placeholders
@@ -1385,7 +1384,7 @@ public class DiscordUtils {
      */
     public void updatePresence(final RichPresence presence) {
         if (!isConnected() && !isClosed() && !connectThreadActive) {
-            FileUtils.getThreadFactory(Constants.NAME).newThread(
+            Constants.getThreadFactory().newThread(
                     () -> {
                         attemptsRemaining = MAX_CONNECTION_ATTEMPTS;
                         while (!isConnected() && attemptsRemaining > 0) {

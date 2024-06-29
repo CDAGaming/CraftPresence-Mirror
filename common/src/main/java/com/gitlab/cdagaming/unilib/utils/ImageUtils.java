@@ -28,7 +28,6 @@ import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.impl.ImageFrame;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
 import net.minecraft.client.Minecraft;
@@ -69,7 +68,7 @@ public class ImageUtils {
     private static final Map<String, Tuple<Pair<InputType, Object>, Pair<Integer, List<ImageFrame>>, List<ResourceLocation>>> cachedImages = StringUtils.newConcurrentHashMap();
 
     static {
-        FileUtils.getThreadFactory(CoreUtils.NAME).newThread(
+        CoreUtils.getThreadFactory().newThread(
                 () -> {
                     try {
                         while (!CoreUtils.IS_CLOSING) {

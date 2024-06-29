@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.core.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import io.github.cdagaming.unicore.utils.FileUtils;
 
 import java.util.function.Supplier;
 
@@ -224,7 +223,7 @@ public interface Module {
      * Scans for applicable data related to this Module, within a new Thread.
      */
     default void scanConfigData() {
-        FileUtils.getThreadFactory(Constants.NAME).newThread(() -> {
+        Constants.getThreadFactory().newThread(() -> {
             try {
                 this.getConfigData();
             } catch (Throwable ex) {
@@ -237,7 +236,7 @@ public interface Module {
      * Scans for applicable data related to this Module, within a new Thread.
      */
     default void scanInternalData() {
-        FileUtils.getThreadFactory(Constants.NAME).newThread(() -> {
+        Constants.getThreadFactory().newThread(() -> {
             try {
                 this.getInternalData();
             } catch (Throwable ex) {

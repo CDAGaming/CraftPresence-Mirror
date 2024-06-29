@@ -39,11 +39,13 @@ import net.fabricmc.loader.api.FabricLoader;
 public class CraftPresenceFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        // TODO: Move to UniLib once seperated
         if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-fabric.srg");
         CoreUtils.MOD_COUNT_SUPPLIER = () -> FabricLoader.getInstance().getAllMods().size();
+
         new CraftPresence(this::setupIntegrations);
     }
 

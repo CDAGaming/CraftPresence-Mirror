@@ -43,11 +43,13 @@ public class CraftPresenceForge {
      * Begins Scheduling Ticks on Class Initialization
      */
     public CraftPresenceForge() {
+        // TODO: Move to UniLib once seperated
         if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
         MappingUtils.setFilePath("/mappings-forge.srg");
         CoreUtils.MOD_COUNT_SUPPLIER = () -> Loader.instance().getModList().size();
+
         new CraftPresence(this::setupIntegrations);
     }
 

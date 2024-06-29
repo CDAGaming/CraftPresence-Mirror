@@ -39,7 +39,10 @@ import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
 import com.gitlab.cdagaming.unilib.utils.KeyUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.github.cdagaming.unicore.utils.*;
+import io.github.cdagaming.unicore.utils.MappingUtils;
+import io.github.cdagaming.unicore.utils.OSUtils;
+import io.github.cdagaming.unicore.utils.ScheduleUtils;
+import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
@@ -192,7 +195,7 @@ public class CraftPresence {
      */
     private void scheduleTick() {
         if (!CoreUtils.IS_CLOSING) {
-            FileUtils.getThreadPool(Constants.NAME).scheduleAtFixedRate(
+            Constants.getThreadPool().scheduleAtFixedRate(
                     () -> {
                         try {
                             this.clientTick();
