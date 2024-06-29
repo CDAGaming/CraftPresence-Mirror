@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
+import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
+import com.gitlab.cdagaming.unilib.core.config.element.ColorSection;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.SliderControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;

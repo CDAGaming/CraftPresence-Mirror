@@ -26,11 +26,16 @@ package com.gitlab.cdagaming.craftpresence.core.config;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.category.*;
-import com.gitlab.cdagaming.craftpresence.core.config.element.*;
+import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.TextReplacer;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.config.Module;
+import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
+import com.gitlab.cdagaming.unilib.core.config.element.ColorSection;
 import com.gitlab.cdagaming.unilib.core.impl.KeyConverter;
 import com.gitlab.cdagaming.unilib.core.impl.TranslationConverter;
 import com.google.gson.JsonElement;

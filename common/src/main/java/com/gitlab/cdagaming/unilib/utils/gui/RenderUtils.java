@@ -24,9 +24,9 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui;
 
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
 import com.gitlab.cdagaming.unilib.core.integrations.screen.ScissorStack;
 import com.gitlab.cdagaming.unilib.core.integrations.screen.ScreenConstants;
 import com.gitlab.cdagaming.unilib.core.integrations.screen.ScreenRectangle;

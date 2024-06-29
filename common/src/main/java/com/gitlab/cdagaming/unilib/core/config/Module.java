@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core.config;
+package com.gitlab.cdagaming.unilib.core.config;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 /**
@@ -62,7 +62,7 @@ public abstract class Module {
      * @param ex The {@link Throwable} exception to display
      */
     public void printException(Throwable ex) {
-        Constants.LOG.debugError(ex);
+        CoreUtils.LOG.debugError(ex);
     }
 
     /**

@@ -24,9 +24,9 @@
 
 package com.gitlab.cdagaming.unilib.core.integrations.screen;
 
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
+import com.gitlab.cdagaming.unilib.core.config.element.ColorSection;
 import io.github.cdagaming.unicore.impl.Tuple;
 
 import java.util.function.Function;

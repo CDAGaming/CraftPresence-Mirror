@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core.config.element;
+package com.gitlab.cdagaming.unilib.core.config.element;
 
-import com.gitlab.cdagaming.craftpresence.core.config.Module;
+import com.gitlab.cdagaming.unilib.core.config.Module;
 
 import java.awt.*;
 import java.io.Serializable;

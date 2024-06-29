@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.unilib.impl;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import org.w3c.dom.NamedNodeMap;
@@ -140,7 +140,7 @@ public class ImageFrame {
         try {
             return Base64.getDecoder().decode(useDecodingMethod ? URLDecoder.decode(input, encoding) : input);
         } catch (Throwable ex) {
-            Constants.LOG.debugError(ex);
+            CoreUtils.LOG.debugError(ex);
 
             if (!repeatCycle) {
                 return decodeBase64(input, encoding, !useDecodingMethod, true);

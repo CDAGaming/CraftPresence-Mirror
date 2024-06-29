@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.widgets;
 
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
+import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

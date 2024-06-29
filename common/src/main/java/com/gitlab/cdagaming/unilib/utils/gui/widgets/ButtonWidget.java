@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.widgets;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
@@ -165,6 +164,15 @@ public class ButtonWidget extends ExtendedButtonControl {
     }
 
     /**
+     * Whether a title exists for this control
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    public boolean hasTitle() {
+        return !StringUtils.isNullOrEmpty(getTitle());
+    }
+
+    /**
      * Retrieve the text to be displayed alongside this control
      *
      * @return the current attached message
@@ -182,6 +190,15 @@ public class ButtonWidget extends ExtendedButtonControl {
     public ButtonWidget setTitle(String title) {
         this.title = title;
         return this;
+    }
+
+    /**
+     * Retrieve the text to be displayed alongside this control
+     *
+     * @return the current attached message
+     */
+    public String getDisplayTitle() {
+        return getTitle();
     }
 
     /**
@@ -217,8 +234,8 @@ public class ButtonWidget extends ExtendedButtonControl {
 
     @Override
     public void draw(ExtendedScreen screen) {
-        if (!StringUtils.isNullOrEmpty(getTitle()) && setDimensions) {
-            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(getTitle());
+        if (hasTitle() && setDimensions) {
+            final String mainTitle = getDisplayTitle();
 
             screen.renderScrollingString(
                     mainTitle,
@@ -233,7 +250,7 @@ public class ButtonWidget extends ExtendedButtonControl {
 
     @Override
     public void postDraw(ExtendedScreen screen) {
-        if (!StringUtils.isNullOrEmpty(getTitle()) && setDimensions) {
+        if (hasTitle() && setDimensions) {
             if (screen.isOverScreen() && RenderUtils.isMouseOver(
                     screen.getMouseX(), screen.getMouseY(),
                     titleLeft, getTop(),
