@@ -175,6 +175,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         () -> openScreen(
                                 new ControlsGui(
                                         CraftPresence.KEYBINDINGS,
+                                        this::markAsChanged,
                                         "key.craftpresence.category"
                                 )
                         )

@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.impl;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.utils.KeyUtils;
@@ -44,6 +43,8 @@ public class ControlsGui extends ExtendedScreen {
     private final Map<String, KeyUtils.KeyBindData> keyMappings;
     // The KeyUtils Instance
     private final KeyUtils instance;
+    // On Key Changed Event
+    private final Runnable onKeyChanged;
     // Format: categoryName:keyNames
     private final Map<String, List<String>> categorizedNames = StringUtils.newHashMap();
     // Pair Format: buttonToModify, Config Field to Edit
@@ -52,19 +53,20 @@ public class ControlsGui extends ExtendedScreen {
     private Tuple<ExtendedButtonControl, ExtendedButtonControl, KeyUtils.KeyBindData> entryData = null;
     private ScrollPane childFrame;
 
-    public ControlsGui(final KeyUtils instance, Map<String, KeyUtils.KeyBindData> keyMappings) {
+    public ControlsGui(final KeyUtils instance, final Runnable onKeyChanged, final Map<String, KeyUtils.KeyBindData> keyMappings) {
         super();
         this.instance = instance;
+        this.onKeyChanged = onKeyChanged;
         this.keyMappings = keyMappings;
         sortMappings();
     }
 
-    public ControlsGui(final KeyUtils instance, List<String> filterData) {
-        this(instance, instance.getKeyMappings(filterData));
+    public ControlsGui(final KeyUtils instance, final Runnable onKeyChanged, final List<String> filterData) {
+        this(instance, onKeyChanged, instance.getKeyMappings(filterData));
     }
 
-    public ControlsGui(final KeyUtils instance, String... filterData) {
-        this(instance, instance.getKeyMappings(filterData));
+    public ControlsGui(final KeyUtils instance, final Runnable onKeyChanged, final String... filterData) {
+        this(instance, onKeyChanged, instance.getKeyMappings(filterData));
     }
 
     @Override
@@ -247,7 +249,9 @@ public class ControlsGui extends ExtendedScreen {
         try {
             entryData.getThird().configEvent().accept(keyToSubmit, false);
             instance.keySyncQueue.put(internalName, keyToSubmit);
-            CraftPresence.CONFIG.setChanged(true);
+            if (onKeyChanged != null) {
+                onKeyChanged.run();
+            }
 
             entryData.getFirst().setControlMessage(formattedKey);
         } catch (Throwable ex) {
