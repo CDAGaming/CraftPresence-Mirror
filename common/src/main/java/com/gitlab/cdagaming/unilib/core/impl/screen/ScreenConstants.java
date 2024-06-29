@@ -51,13 +51,6 @@ public class ScreenConstants {
             new ColorSection(40, 0, 127, 80)
     );
     /**
-     * The Default Screen Background Info
-     */
-    public static final ColorData DEFAULT_SCREEN_BACKGROUND = new ColorData(
-            new ColorSection(64, 64, 64, 255),
-            getDefaultGUIBackground()
-    );
-    /**
      * The Default Alternative Screen Background Info
      */
     public static final ColorData DEFAULT_ALT_SCREEN_BACKGROUND = new ColorData(
@@ -80,6 +73,13 @@ public class ScreenConstants {
      * The Default Screen Background Resources
      */
     private static final String DEFAULT_GUI_BACKGROUND = getDefaultGUIBackground(CoreUtils.MCBuildProtocol);
+    /**
+     * The Default Screen Background Info
+     */
+    public static final ColorData DEFAULT_SCREEN_BACKGROUND = new ColorData(
+            new ColorSection(64, 64, 64, 255),
+            getDefaultGUIBackground()
+    );
     /**
      * The default Tooltip Rendering Info
      */
