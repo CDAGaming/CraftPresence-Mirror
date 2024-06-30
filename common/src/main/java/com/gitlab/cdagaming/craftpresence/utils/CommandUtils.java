@@ -47,6 +47,7 @@ import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.client.gui.GuiScreenLoading;
 
 import java.util.Map;
 
@@ -467,7 +468,7 @@ public class CommandUtils {
      */
     public static void onTick() {
         if (!Constants.HAS_GAME_LOADED) {
-            Constants.HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
+            Constants.HAS_GAME_LOADED = (CraftPresence.instance.currentScreen != null && !(CraftPresence.instance.currentScreen instanceof GuiScreenLoading)) || CraftPresence.player != null;
             if (Constants.HAS_GAME_LOADED) {
                 addModule(Constants.MOD_ID, new TranslationManager(
                         Constants.TRANSLATOR

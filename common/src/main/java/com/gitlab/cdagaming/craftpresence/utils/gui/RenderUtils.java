@@ -245,19 +245,19 @@ public class RenderUtils {
         if (BLOCKED_RENDER_ITEMS.contains(stack)) return;
         try {
             GlStateManager.pushMatrix();
-            GlStateManager.scale(scale, scale, 1.0f);
+            GlStateManager.scalef(scale, scale, 1.0f);
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableColorMaterial();
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
             RenderHelper.enableGUIStandardItemLighting();
 
             final int xPos = Math.round(x / scale);
             final int yPos = Math.round(y / scale);
-            client.getRenderItem().renderItemAndEffectIntoGUI(stack, xPos, yPos);
-            client.getRenderItem().renderItemOverlays(fontRenderer, stack, xPos, yPos);
+            client.getItemRenderer().renderItemAndEffectIntoGUI(stack, xPos, yPos);
+            client.getItemRenderer().renderItemOverlays(fontRenderer, stack, xPos, yPos);
 
             RenderHelper.disableStandardItemLighting();
-            GlStateManager.disableDepth();
+            GlStateManager.disableDepthTest();
             GlStateManager.disableColorMaterial();
             GlStateManager.disableRescaleNormal();
             GlStateManager.popMatrix();
@@ -378,15 +378,15 @@ public class RenderUtils {
         } catch (Exception ignored) {
             return;
         }
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
 
         blit(x, y, zLevel, startU, startV, width, height);
         blit(x + width, y, zLevel, endU, endV, width, height);
 
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
         GlStateManager.disableBlend();
     }
 
@@ -434,13 +434,13 @@ public class RenderUtils {
         }
 
         GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.disableAlphaTest();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
         GlStateManager.disableLighting();
         GlStateManager.disableFog();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         final Tessellator tessellator = Tessellator.getInstance();
         final BufferBuilder buffer = tessellator.getBuffer();
@@ -453,7 +453,7 @@ public class RenderUtils {
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.disableAlphaTest();
     }
 
     /**
@@ -547,10 +547,10 @@ public class RenderUtils {
             return;
         }
 
-        GlStateManager.disableDepth();
+        GlStateManager.disableDepthTest();
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.disableAlphaTest();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
@@ -565,9 +565,9 @@ public class RenderUtils {
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
         GlStateManager.enableTexture2D();
-        GlStateManager.enableDepth();
+        GlStateManager.enableDepthTest();
     }
 
     /**
@@ -700,7 +700,7 @@ public class RenderUtils {
     private static void applyScissor(@Nonnull final Minecraft mc, final ScreenRectangle rectangle) {
         if (rectangle != null) {
             final int scale = computeGuiScale(mc);
-            final int displayHeight = mc.displayHeight;
+            final int displayHeight = mc.mainWindow.getHeight();
             final int renderWidth = Math.max(0, rectangle.width() * scale);
             final int renderHeight = Math.max(0, rectangle.height() * scale);
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -730,7 +730,7 @@ public class RenderUtils {
             k = 1000;
         }
 
-        while (scaleFactor < k && mc.displayWidth / (scaleFactor + 1) >= 320 && mc.displayHeight / (scaleFactor + 1) >= 240) {
+        while (scaleFactor < k && mc.mainWindow.getWidth() / (scaleFactor + 1) >= 320 && mc.mainWindow.getHeight() / (scaleFactor + 1) >= 240) {
             ++scaleFactor;
         }
         return scaleFactor;
@@ -1087,17 +1087,6 @@ public class RenderUtils {
     }
 
     /**
-     * Get the Width of a Character from the FontRenderer
-     *
-     * @param fontRenderer The Font Renderer Instance
-     * @param string       The character to interpret
-     * @return the character's width from the font renderer
-     */
-    private static int getCharWidth(final FontRenderer fontRenderer, final char string) {
-        return fontRenderer.getCharWidth(string);
-    }
-
-    /**
      * Get the Current Font Height for this Screen
      *
      * @param fontRenderer The Font Renderer Instance
@@ -1258,81 +1247,6 @@ public class RenderUtils {
      * @return The converted and wrapped version of the original input
      */
     public static List<String> listFormattedStringToWidth(final FontRenderer fontRenderer, final String stringInput, final int wrapWidth) {
-        return StringUtils.splitTextByNewLine(wrapFormattedStringToWidth(fontRenderer, stringInput, wrapWidth), true);
-    }
-
-    /**
-     * Wraps a String based on the specified target width per line<p>
-     * Separated by newline characters, as needed
-     *
-     * @param fontRenderer The Font Renderer Instance
-     * @param stringInput  The original String to wrap
-     * @param wrapWidth    The target width per line, to wrap the input around
-     * @return The converted and wrapped version of the original input
-     */
-    private static String wrapFormattedStringToWidth(final FontRenderer fontRenderer, final String stringInput, final int wrapWidth) {
-        final int stringSizeToWidth = sizeStringToWidth(fontRenderer, stringInput, wrapWidth);
-
-        if (stringInput.length() <= stringSizeToWidth) {
-            return stringInput;
-        } else {
-            final String subString = stringInput.substring(0, stringSizeToWidth);
-            final char currentCharacter = stringInput.charAt(stringSizeToWidth);
-            final boolean flag = Character.isSpaceChar(currentCharacter) || currentCharacter == '\n';
-            final String s1 = StringUtils.getFormatFromString(subString) + stringInput.substring(stringSizeToWidth + (flag ? 1 : 0));
-            return subString + '\n' + wrapFormattedStringToWidth(fontRenderer, s1, wrapWidth);
-        }
-    }
-
-    /**
-     * Returns the Wrapped Width of a String, defined by the target wrapWidth
-     *
-     * @param fontRenderer The Font Renderer Instance
-     * @param stringEntry  The original String to evaluate
-     * @param wrapWidth    The target width to wrap within
-     * @return The expected wrapped width the String should be
-     */
-    private static int sizeStringToWidth(final FontRenderer fontRenderer, final String stringEntry, final int wrapWidth) {
-        final int stringLength = stringEntry.length();
-        int charWidth = 0;
-        int currentLine = 0;
-        int currentIndex = -1;
-
-        for (boolean flag = false; currentLine < stringLength; ++currentLine) {
-            final char currentCharacter = stringEntry.charAt(currentLine);
-            switch (currentCharacter) {
-                case '\n':
-                    --currentLine;
-                    break;
-                case ' ':
-                    currentIndex = currentLine;
-                default:
-                    charWidth += getCharWidth(fontRenderer, currentCharacter);
-                    if (flag) {
-                        ++charWidth;
-                    }
-                    break;
-                case StringUtils.COLOR_CHAR:
-                    if (currentLine < stringLength - 1) {
-                        final char code = stringEntry.charAt(++currentLine);
-                        if (code == 'l' || code == 'L') {
-                            flag = true;
-                        } else if (code == 'r' || code == 'R' || StringUtils.isFormatColor(code)) {
-                            flag = false;
-                        }
-                    }
-            }
-
-            if (currentCharacter == '\n') {
-                currentIndex = ++currentLine;
-                break;
-            }
-
-            if (charWidth > wrapWidth) {
-                break;
-            }
-        }
-
-        return currentLine != stringLength && currentIndex != -1 && currentIndex < currentLine ? currentIndex : currentLine;
+        return fontRenderer.listFormattedStringToWidth(stringInput, wrapWidth);
     }
 }

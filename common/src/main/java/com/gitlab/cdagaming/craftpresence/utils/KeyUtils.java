@@ -34,7 +34,8 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.settings.KeyBinding;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.client.util.InputMappings;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.Map;
@@ -103,7 +104,7 @@ public class KeyUtils {
             final String altKeyName = Integer.toString(originalKeyCode);
             String keyName;
             if (!originalKeyCode.equals(unknownKeyCode)) {
-                keyName = Keyboard.getKeyName(originalKeyCode);
+                keyName = GLFW.glfwGetKeyName(originalKeyCode, GLFW.glfwGetKeyScancode(originalKeyCode));
             } else {
                 keyName = unknownKeyName;
             }
@@ -160,7 +161,7 @@ public class KeyUtils {
                 new KeyBindData(
                         keyBind,
                         keyBind::getKeyCategory,
-                        keyBind::getKeyCodeDefault,
+                        () -> keyBind.getDefault().getKeyCode(),
                         onPress, onBind, onOutdated,
                         callback
                 )
@@ -175,7 +176,16 @@ public class KeyUtils {
      * @param newKey   the new key for the specified KeyBinding
      */
     void setKey(final KeyBinding instance, final int newKey) {
-        instance.setKeyCode(newKey);
+        final int unknownKeyCode = (ModUtils.MCProtocolID <= 340 ? -1 : 0);
+        final String unknownKeyName = (ModUtils.MCProtocolID <= 340 ? KeyConverter.fromGlfw.get(unknownKeyCode) : KeyConverter.toGlfw.get(unknownKeyCode)).name();
+
+        final InputMappings.Input inputKey;
+        if (getKeyName(newKey).equals(unknownKeyName)) {
+            inputKey = InputMappings.INPUT_INVALID;
+        } else {
+            inputKey = InputMappings.getInputByCode(newKey, GLFW.glfwGetKeyScancode(newKey));
+        }
+        instance.bind(inputKey);
         KeyBinding.resetKeyBindingArrayAndHash();
     }
 
@@ -259,7 +269,7 @@ public class KeyUtils {
             }
         }
 
-        if (Keyboard.isCreated() && CraftPresence.CONFIG != null) {
+        if (CraftPresence.instance.mainWindow != null && CraftPresence.CONFIG != null) {
             final boolean isLwjgl2 = ModUtils.MCProtocolID <= 340;
             final int unknownKeyCode = isLwjgl2 ? -1 : 0;
             final String unknownKeyName = (isLwjgl2 ? KeyConverter.fromGlfw : KeyConverter.toGlfw).get(unknownKeyCode).name();
@@ -272,7 +282,7 @@ public class KeyUtils {
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                        if (GLFW.glfwGetKey(CraftPresence.instance.mainWindow.getHandle(), currentBind) == GLFW.GLFW_PRESS && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
                             try {
                                 keyData.runEvent().run();
                             } catch (Throwable ex) {
@@ -423,7 +433,7 @@ public class KeyUtils {
          * @return the currently assigned key code
          */
         public int keyCode() {
-            return binding().getKeyCode();
+            return binding().keyCode.getKeyCode();
         }
 
         /**
