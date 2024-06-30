@@ -22,34 +22,32 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.forge;
+package com.gitlab.cdagaming.craftpresence.modloader;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
+import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import cpw.mods.fml.common.Mod;
+import net.minecraft.src.ModLoader;
 
 /**
  * The Primary Application Class and Utilities
  *
  * @author CDAGaming
  */
-@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", acceptedMinecraftVersions = "*")
-public class CraftPresenceForge {
+public class CraftPresenceML {
     /**
      * Begins Scheduling Ticks on Class Initialization
      */
-    public CraftPresenceForge() {
+    public CraftPresenceML() {
         if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
 
-        if (FMLCommonHandler.instance().getSide().isClient()) {
-            MappingUtils.setFilePath("/mappings-forge.srg");
-            Constants.MOD_COUNT_SUPPLIER = () -> Loader.instance().getModList().size();
+        if (isClient()) {
+            MappingUtils.setFilePath("/mappings-modloader.srg");
+            Constants.MOD_COUNT_SUPPLIER = () -> ModLoader.getLoadedMods().size();
             new CraftPresence(this::setupIntegrations);
         } else {
             Constants.LOG.info("Disabling @MOD_NAME@, as it is client side only.");
@@ -61,5 +59,14 @@ public class CraftPresenceForge {
      */
     public void setupIntegrations() {
         // N/A
+    }
+
+    /**
+     * Determine whether we are running on the Client-Side
+     *
+     * @return whether we are running on the Client-Side
+     */
+    private boolean isClient() {
+        return FileUtils.findClass("net.minecraft.client.Minecraft") != null;
     }
 }

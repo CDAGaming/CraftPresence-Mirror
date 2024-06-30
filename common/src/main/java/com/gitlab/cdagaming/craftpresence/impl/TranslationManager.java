@@ -62,13 +62,13 @@ public record TranslationManager(TranslationUtils instance) {
             StringTranslate stInstance = StringTranslate.getInstance();
             Properties data = (Properties) StringUtils.getField(
                     StringTranslate.class, stInstance,
-                    "translateTable", "field_74815_b", "field_618", "b"
+                    "translateTable", "field_20164_b", "b"
             );
             data.putAll(entries);
             StringUtils.updateField(
                     StringTranslate.class, stInstance,
                     data,
-                    "translateTable", "field_74815_b", "field_618", "b"
+                    "translateTable", "field_20164_b", "b"
             );
         });
     }

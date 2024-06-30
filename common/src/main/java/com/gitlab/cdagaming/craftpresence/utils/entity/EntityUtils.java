@@ -29,11 +29,7 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiPlayerInfo;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityList;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldInfo;
+import net.minecraft.src.*;
 
 import java.util.List;
 import java.util.Map;
@@ -115,7 +111,7 @@ public class EntityUtils implements ExtendedModule {
         String result = "";
         if (entity != null) {
             result = StringUtils.getOrDefault(
-                    entity.getEntityName()
+                    EntityList.getEntityString(entity)
             );
         }
 
@@ -321,7 +317,7 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_75626_c", "field_3269", "c");
+        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_1610_b", "c");
         if (!mappings.values().isEmpty()) {
             for (Object entityLocationObj : mappings.values()) {
                 final String entityLocation = (String) entityLocationObj;

@@ -41,8 +41,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiPlayerInfo;
 import net.minecraft.src.GuiConnecting;
 import net.minecraft.src.NetClientHandler;
-import net.minecraft.src.ServerData;
-import net.minecraft.src.ServerList;
 
 import java.util.List;
 import java.util.Map;
@@ -101,7 +99,7 @@ public class ServerUtils implements ExtendedModule {
     /**
      * Whether this module has performed an initial retrieval of internal items
      */
-    private boolean hasScannedInternals = false;
+    private boolean hasScannedInternals = true;
     /**
      * Whether this module has performed an initial event sync
      */
@@ -147,14 +145,6 @@ public class ServerUtils implements ExtendedModule {
      */
     private int maxPlayers;
     /**
-     * The current server list, derived from internal data
-     */
-    private ServerList serverList;
-    /**
-     * The amount of Currently detected Server Addresses
-     */
-    private int serverIndex = 0;
-    /**
      * The Current Server Connection Data and Info
      */
     private ServerData currentServerData;
@@ -190,8 +180,6 @@ public class ServerUtils implements ExtendedModule {
         defaultAddresses.clear();
         knownAddresses.clear();
         knownServerData.clear();
-        serverList = null;
-        serverIndex = 0;
     }
 
     @Override
@@ -232,7 +220,9 @@ public class ServerUtils implements ExtendedModule {
         final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
-            newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "O");
+            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "af");
+            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "ag");
+            newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerData(retrievedIP, retrievedPort) : null;
         } catch (Exception ex) {
             newServerData = null;
         }
@@ -312,13 +302,6 @@ public class ServerUtils implements ExtendedModule {
                     }
                 }
             }
-
-            if (serverList != null) {
-                serverList.loadServerList();
-                if (serverList.countServers() != serverIndex) {
-                    queueInternalScan();
-                }
-            }
         }
 
         // 'server.players' Argument = Current and Maximum Allowed Players in Server/World
@@ -366,11 +349,11 @@ public class ServerUtils implements ExtendedModule {
      * @param newConnection The Player's Current Connection Data
      */
     private void processServerData(final ServerData newServerData, final NetClientHandler newConnection) {
-        final List<GuiPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerInfoList) : StringUtils.newArrayList();
-        final int newCurrentPlayers = newConnection != null ? newConnection.playerInfoList.size() : 1;
+        final List<GuiPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerNames) : StringUtils.newArrayList();
+        final int newCurrentPlayers = newConnection != null ? newConnection.playerNames.size() : 1;
         final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
-        final boolean newSinglePlayerStatus = CraftPresence.instance.isSingleplayer();
-        final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (CraftPresence.player != null && !CraftPresence.player.worldObj.isRemote);
+        final boolean newSinglePlayerStatus = !CraftPresence.instance.isMultiplayerWorld();
+        final boolean newLANStatus = false;
 
         final String newServer_IP = getServerAddress(newServerData);
         final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
@@ -477,19 +460,11 @@ public class ServerUtils implements ExtendedModule {
      */
     private void joinServer(final ServerData serverData) {
         try {
-            if (!serverData.field_1691) {
-                // Stub Server Data if not pinged
-                serverData.field_1691 = true;
-                serverData.pingToServer = -2L;
-                serverData.serverMOTD = "";
-                serverData.populationInfo = "";
-            }
-
             if (CraftPresence.player != null) {
                 CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.loadWorld(null);
+                CraftPresence.instance.changeWorld1(null);
             }
-            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData));
+            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.serverIP, serverData.serverPort));
         } catch (Throwable ex) {
             printException(ex);
         }
@@ -519,8 +494,8 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.worldObj.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String primaryWorldName = CraftPresence.player.worldObj.getWorldInfo().getWorldName();
+            final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         });
@@ -711,31 +686,7 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        try {
-            if (serverList == null) {
-                serverList = new ServerList(CraftPresence.instance);
-                serverList.loadServerList();
-            }
-            serverIndex = serverList.countServers();
-
-            for (int currentIndex = 0; currentIndex < serverIndex; currentIndex++) {
-                final ServerData data = serverList.getServerData(currentIndex);
-                if (!StringUtils.isNullOrEmpty(data.serverIP)) {
-                    final String formattedIP = data.serverIP.contains(":") ? StringUtils.formatAddress(data.serverIP, false) : data.serverIP;
-                    if (!defaultAddresses.contains(formattedIP)) {
-                        defaultAddresses.add(formattedIP);
-                    }
-                    if (!knownAddresses.contains(formattedIP)) {
-                        knownAddresses.add(formattedIP);
-                    }
-                    if (!knownServerData.containsKey(data.serverIP)) {
-                        knownServerData.put(data.serverIP, data);
-                    }
-                }
-            }
-        } catch (Throwable ex) {
-            printException(ex);
-        }
+        // N/A
     }
 
     @Override
@@ -765,11 +716,6 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public boolean hasScannedInternals() {
         return hasScannedInternals;
-    }
-
-    @Override
-    public void setScannedInternals(final boolean state) {
-        hasScannedInternals = state;
     }
 
     @Override

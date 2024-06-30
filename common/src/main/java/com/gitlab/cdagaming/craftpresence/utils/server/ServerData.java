@@ -22,47 +22,52 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence;
-
-import com.gitlab.cdagaming.craftpresence.core.Constants;
-import com.gitlab.cdagaming.craftpresence.core.utils.ModUpdaterUtils;
-import io.github.cdagaming.unicore.utils.TranslationUtils;
+package com.gitlab.cdagaming.craftpresence.utils.server;
 
 /**
- * Constant Variables and Methods used throughout the Application
- * <p>
- * See {@link Constants} for more General Purpose Data
+ * A Local Instance of Server Data, from future Minecraft Versions
  *
  * @author CDAGaming
  */
-public class ModUtils {
+public class ServerData {
     /**
-     * The Detected Minecraft Version
+     * The IP Address associated with this Server
      */
-    public static final String MCVersion = Constants.MCBuildVersion;
+    public final String serverIP;
 
     /**
-     * The Detected Minecraft Protocol Version
+     * The Port Number associated with this Server
      */
-    public static final int MCProtocolID = Constants.MCBuildProtocol;
+    public final int serverPort;
 
     /**
-     * The Detected Brand Information within Minecraft
+     * The Name associated with this Server
      */
-    public static final String BRAND = Constants.findGameBrand("vanilla");
+    public final String serverName = null;
 
     /**
-     * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
+     * The MOTD associated with this Server
      */
-    public static final ModUpdaterUtils UPDATER = new ModUpdaterUtils(
-            Constants.MOD_ID,
-            Constants.UPDATE_JSON,
-            Constants.VERSION_ID,
-            MCVersion
-    );
+    public final String serverMOTD = null;
 
     /**
-     * The Main Game's Instance of {@link TranslationUtils} for Localization and Translating Data Strings
+     * Initializes Server Data for this Server
+     *
+     * @param serverIP   The IP for this Server
+     * @param serverPort The Port Number for this Server
      */
-    public static final TranslationUtils RAW_TRANSLATOR = Constants.findGameTranslations(MCProtocolID);
+    public ServerData(final String serverIP, final int serverPort) {
+        this.serverIP = serverIP;
+        this.serverPort = serverPort;
+    }
+
+    /**
+     * Initializes Server Data for this Server
+     *
+     * @param serverIP   The IP for this Server
+     * @param serverPort The Port Number for this Server, as a String
+     */
+    public ServerData(final String serverIP, final String serverPort) {
+        this(serverIP, Integer.parseInt(serverPort));
+    }
 }

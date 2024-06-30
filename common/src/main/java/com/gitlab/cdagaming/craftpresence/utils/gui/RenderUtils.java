@@ -1105,7 +1105,7 @@ public class RenderUtils {
      * @return the character's width from the font renderer
      */
     private static int getCharWidth(final FontRenderer fontRenderer, final char string) {
-        return fontRenderer.getCharWidth(string);
+        return fontRenderer.func_50105_a(string);
     }
 
     /**
