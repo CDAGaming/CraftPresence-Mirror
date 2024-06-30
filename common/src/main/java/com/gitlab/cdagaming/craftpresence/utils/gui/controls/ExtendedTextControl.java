@@ -92,22 +92,36 @@ public class ExtendedTextControl extends GuiTextField implements DynamicWidget {
 
     @Override
     public int getControlWidth() {
-        return width;
+        return StringUtils.getValidInteger(StringUtils.getField(
+                GuiTextField.class, this,
+                "width", "field_146218_h", "i"
+        )).getSecond();
     }
 
     @Override
     public void setControlWidth(final int width) {
-        this.width = width;
+        StringUtils.updateField(
+                GuiTextField.class, this,
+                width,
+                "width", "field_146218_h", "i"
+        );
     }
 
     @Override
     public int getControlHeight() {
-        return height;
+        return StringUtils.getValidInteger(StringUtils.getField(
+                GuiTextField.class, this,
+                "height", "field_146219_i", "j"
+        )).getSecond();
     }
 
     @Override
     public void setControlHeight(final int height) {
-        this.height = height;
+        StringUtils.updateField(
+                GuiTextField.class, this,
+                height,
+                "height", "field_146219_i", "j"
+        );
     }
 
     @Override
