@@ -27,8 +27,6 @@ val extVersionLabel = "${if ("versionLabel"().equals("release", ignoreCase = tru
 val extModName = "mod_name"()!!
 val extModId = "mod_id"()!!
 
-val extName = if ("display_name"()!!.isNotEmpty()) "display_name"() else extModName
-
 val extVersionInfoLabel = if (extVersionLabel.isEmpty()) "" else "-$extVersionLabel"
 val extBaseVersionLabel = ("versionId"() + extVersionInfoLabel.replace(Regex("\\s"), ".")).lowercase()
 val extClassPath = "${rootProject.group}".replace(".", "/") + "/$extModId"
@@ -59,7 +57,6 @@ subprojects {
 
     val modName by extra(extModName)
     val modId by extra(extModId)
-    val displayLabel by extra(extName)
     val versionInfoLabel by extra(extVersionInfoLabel)
     val baseVersionLabel by extra(extBaseVersionLabel)
     val classPath by extra(extClassPath)

@@ -53,14 +53,9 @@ public class CoreUtils {
     public static final String NAME = "UniCore";
 
     /**
-     * The Application's Version
-     */
-    public static final String VERSION = "0.0.0";
-
-    /**
      * The Application's Version ID
      */
-    public static final String VERSION_ID = "v" + VERSION;
+    public static final String VERSION_ID = "v0.0.0";
 
     /**
      * The Application's Version Release Type
