@@ -42,12 +42,12 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.RenderHelper;
-import net.minecraft.src.Tessellator;
-import net.minecraft.src.RenderItem;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.client.gui.FontRenderer;
+import net.minecraft.src.client.gui.GuiScreen;
+import net.minecraft.src.client.renderer.RenderHelper;
+import net.minecraft.src.client.renderer.Tessellator;
+import net.minecraft.src.client.renderer.entity.RenderItem;
+import net.minecraft.src.game.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 

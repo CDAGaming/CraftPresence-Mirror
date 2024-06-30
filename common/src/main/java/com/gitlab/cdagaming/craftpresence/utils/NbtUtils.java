@@ -27,7 +27,10 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.*;
+import net.minecraft.src.game.entity.Entity;
+import net.minecraft.src.game.entity.EntityList;
+import net.minecraft.src.game.item.ItemStack;
+import net.minecraft.src.game.nbt.*;
 
 import java.util.List;
 
@@ -181,6 +184,7 @@ public class NbtUtils {
                     return tag.toString();
                 }
             case 11:
+                return ((NBTTagIntArray) tag).intArray;
             case 0:
             case 12:
             case 99:

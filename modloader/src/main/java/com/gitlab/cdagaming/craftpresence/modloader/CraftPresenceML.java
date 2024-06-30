@@ -24,12 +24,12 @@
 
 package com.gitlab.cdagaming.craftpresence.modloader;
 
+import com.fox2code.foxloader.loader.ModLoader;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.minecraft.src.ModLoader;
 
 /**
  * The Primary Application Class and Utilities
@@ -47,7 +47,7 @@ public class CraftPresenceML {
 
         if (isClient()) {
             MappingUtils.setFilePath("/mappings-modloader.srg");
-            Constants.MOD_COUNT_SUPPLIER = () -> ModLoader.getLoadedMods().size();
+            Constants.MOD_COUNT_SUPPLIER = () -> ModLoader.getModContainers().size();
             new CraftPresence(this::setupIntegrations);
         } else {
             Constants.LOG.info("Disabling @MOD_NAME@, as it is client side only.");

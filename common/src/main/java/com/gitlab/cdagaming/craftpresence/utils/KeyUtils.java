@@ -32,8 +32,9 @@ import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiControls;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.src.client.KeyBinding;
+import net.minecraft.src.client.gui.GuiControls;
+import net.minecraft.src.client.gui.GuiControls2;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -263,7 +264,7 @@ public class KeyUtils {
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls || CraftPresence.instance.currentScreen instanceof GuiControls2)) {
                             try {
                                 keyData.runEvent().run();
                             } catch (Throwable ex) {

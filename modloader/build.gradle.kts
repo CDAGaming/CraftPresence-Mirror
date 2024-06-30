@@ -1,7 +1,3 @@
-import xyz.wagyourtail.unimined.api.mapping.task.ExportMappingsTask
-import xyz.wagyourtail.unimined.api.minecraft.patch.forge.ForgeLikePatcher
-import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
-
 /**
  * Retrieve a Project Property
  */
@@ -31,22 +27,7 @@ val forgeId = if (isNeoForge) "neoforge" else fmlName
 val forgeVersion = "forge_version"()!!
 
 unimined.minecraft {
-    if (!isJarMod) {
-        val forgeData: ForgeLikePatcher<*>.() -> Unit = {
-            if (canUseATs) {
-                accessTransformer(aw2at(accessWidenerFile))
-            }
-            loader(forgeVersion)
-            customSearge = (mcMappingsType != "mojmap" && mcMappingsType != "parchment")
-        }
-        if (isNeoForge) {
-            neoForge(forgeData)
-        } else {
-            minecraftForge(forgeData)
-        }
-    } else {
-        jarMod {}
-    }
+    // N/A
 }
 
 val common: Configuration by configurations.creating
@@ -56,9 +37,8 @@ configurations.compileClasspath.get().extendsFrom(common)
 configurations.runtimeClasspath.get().extendsFrom(common)
 
 dependencies {
-    if (isJarMod) {
-        "jarMod"("risugami:modloader:$forgeVersion")
-    }
+    "jarMod"("local:nsss:$forgeVersion")
+    "jarMod"("local:foxloader:1.2.43")
 
     common(project(path = ":common")) { isTransitive = false }
     common(project(path = ":common", configuration = "shade"))
@@ -87,26 +67,6 @@ tasks.processResources {
     filesMatching(resourceTargets) {
         expand(replaceProperties)
     }
-
-    filesMatching("mappings-$fmlName.srg") {
-        filter { line ->
-            @Suppress("NULL_FOR_NONNULL_TYPE")
-            if (line.startsWith("CL:")) line.replace("/", ".") else null
-        }
-    }
-}
-
-if (!isNeoForge) {
-    tasks.named<ExportMappingsTask>("exportMappings") {
-        val target = if ("mc_mappings_type"() == "retroMCP") "mcp" else "searge"
-        export {
-            setTargetNamespaces(listOf(target))
-            setSourceNamespace("official")
-            location = file("$projectDir/src/main/resources/mappings-$fmlName.srg")
-            setType("SRG")
-        }
-    }
-    tasks.processResources.get().dependsOn(tasks.named("exportMappings"))
 }
 
 tasks.shadowJar {
@@ -165,22 +125,19 @@ tasks.shadowJar {
         relocate("me.hypherionmc", "external.me.hypherionmc")
     }
 }
-
-tasks.named<RemapJarTask>("remapJar") {
-    inputFile.set(tasks.shadowJar.get().archiveFile)
-    dependsOn(tasks.shadowJar.get())
-    archiveClassifier.set(fmlName)
-}
+tasks.build.get().dependsOn(tasks.shadowJar.get())
 
 tasks.jar {
-    if (canUseATs) {
-        manifest {
-            attributes(
-                mapOf(
-                    "FMLAT" to "accesstransformer.cfg"
-                )
+    manifest {
+        attributes(
+            mapOf(
+                "ModDesc" to "Completely Customize the way others see you play in Discord!",
+                "ClientMod" to "mod_CraftPresence",
+                "ModName" to modName,
+                "ModVersion" to archiveVersion.get(),
+                "ModId" to modId
             )
-        }
+        )
     }
     archiveClassifier.set("dev")
 }

@@ -32,7 +32,7 @@ import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.src.BiomeGenBase;
+import net.minecraft.src.game.level.biomes.BiomeGenBase;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -114,7 +114,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final BiomeGenBase newBiome = CraftPresence.player.worldObj.getWorldChunkManager().getBiomeGenAt((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
+        final BiomeGenBase newBiome = BiomeGenBase.biomeList[CraftPresence.player.worldObj.getBiomeAtBlock((int) CraftPresence.player.posX, (int) CraftPresence.player.posY, (int) CraftPresence.player.posZ)];
         final String newBiomeName = newBiome.biomeName;
 
         final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
@@ -186,7 +186,15 @@ public class BiomeUtils implements ExtendedModule {
     private List<BiomeGenBase> getBiomeTypes() {
         List<BiomeGenBase> biomeTypes = StringUtils.newArrayList();
 
-        if (biomeTypes.isEmpty()) {
+        if (BiomeGenBase.biomeList != null) {
+            for (BiomeGenBase biome : BiomeGenBase.biomeList) {
+                if (biome != null && !biomeTypes.contains(biome)) {
+                    biomeTypes.add(biome);
+                }
+            }
+        }
+
+        if (biomeTypes.isEmpty() && FileUtils.isClassGraphEnabled()) {
             // Fallback: Use Manual Class Lookup
             for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(BiomeGenBase.class).values()) {
                 if (classInfo != null) {
@@ -253,7 +261,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && FileUtils.isClassGraphEnabled() && FileUtils.canScanClasses();
+        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
     }
 
     @Override

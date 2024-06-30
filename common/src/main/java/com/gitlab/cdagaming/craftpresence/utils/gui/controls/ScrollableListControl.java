@@ -38,10 +38,10 @@ import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiSlot;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Tessellator;
+import net.minecraft.src.client.gui.FontRenderer;
+import net.minecraft.src.client.gui.GuiSlot;
+import net.minecraft.src.client.renderer.Tessellator;
+import net.minecraft.src.game.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

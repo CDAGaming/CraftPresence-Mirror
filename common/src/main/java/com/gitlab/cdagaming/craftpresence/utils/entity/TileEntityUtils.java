@@ -28,9 +28,9 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.Block;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.game.block.Block;
+import net.minecraft.src.game.item.Item;
+import net.minecraft.src.game.item.ItemStack;
 
 import java.util.List;
 import java.util.Map;
