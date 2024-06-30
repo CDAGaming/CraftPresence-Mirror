@@ -26,10 +26,10 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.mojang.minecraft.Minecraft;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
-import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
 
@@ -210,7 +210,7 @@ public class SliderControl extends ExtendedButtonControl {
      * 2 if it IS hovering over this button.
      */
     @Override
-    public int getHoverState(boolean mouseOver) {
+    public int func_558_a(boolean mouseOver) {
         return 0;
     }
 
@@ -219,15 +219,15 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    protected void func_560_b(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            super.mouseDragged(mc, mouseX, mouseY);
+            super.func_560_b(mc, mouseX, mouseY);
 
             if (dragging) {
                 setValueFromMouse(mouseX);
             }
 
-            final int hoverState = super.getHoverState(isHoveringOrFocusingOver());
+            final int hoverState = super.func_558_a(isHoveringOrFocusingOver());
             final int hoverValue = 46 + hoverState * 20;
             RenderUtils.renderButton(mc,
                     getControlPosX() + (int) (getSliderValue(true) * (float) (getControlWidth() - 8)), getControlPosY(),
@@ -245,8 +245,8 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mousePressed(MouseEvent e).
      */
     @Override
-    public boolean mousePressed(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        if (super.mousePressed(mc, mouseX, mouseY)) {
+    public boolean func_562_c(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        if (super.func_562_c(mc, mouseX, mouseY)) {
             setValueFromMouse(mouseX);
             dragging = true;
             return true;
@@ -338,7 +338,7 @@ public class SliderControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseReleased(MouseEvent e).
      */
     @Override
-    public void mouseReleased(int mouseX, int mouseY) {
+    public void func_559_a(int mouseX, int mouseY) {
         dragging = false;
     }
 

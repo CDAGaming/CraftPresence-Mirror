@@ -27,11 +27,12 @@ package com.gitlab.cdagaming.craftpresence.utils.entity;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
+import com.mojang.minecraft.entity.item.Item;
+import com.mojang.minecraft.entity.item.ItemStack;
+import com.mojang.minecraft.level.tile.Block;
+import com.mojang.minecraft.util.Session;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.Block;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
 
 import java.util.List;
 import java.util.Map;
@@ -197,7 +198,7 @@ public class TileEntityUtils implements Module {
             if (itemStack.stackSize <= 0) {
                 return true;
             } else {
-                return itemStack.itemDmg < -32768 || itemStack.itemDmg > 65535;
+                return itemStack.itemDamage < -32768 || itemStack.itemDamage > 65535;
             }
         } else {
             return true;
@@ -485,7 +486,7 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getInternalData() {
-        for (Block block : Block.blocksList) {
+        for (Block block : Session.creativeInventory) {
             if (!isEmpty(block)) {
                 final ItemStack stack = getStackFrom(block);
                 final String blockName = getName(stack);
@@ -501,7 +502,7 @@ public class TileEntityUtils implements Module {
             }
         }
 
-        for (Item item : Item.itemsList) {
+        for (Item item : Session.creativeInventoryItems) {
             if (!isEmpty(item)) {
                 final ItemStack stack = getStackFrom(item);
                 final String itemName = getName(stack);

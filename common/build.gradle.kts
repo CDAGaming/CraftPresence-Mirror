@@ -1,4 +1,3 @@
-import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 plugins {
@@ -29,21 +28,7 @@ val mcVersionLabel: String by extra
 val fileFormat: String by extra
 
 unimined.minecraft {
-    defaultRemapJar = false
-    if (!isJarMod) {
-        val fabricData: FabricLikePatcher.() -> Unit = {
-            if (accessWidenerFile.exists()) {
-                accessWidener(accessWidenerFile)
-            }
-            loader("fabric_loader_version"()!!)
-            customIntermediaries = true
-        }
-        if (isModern) {
-            fabric(fabricData)
-        } else {
-            legacyFabric(fabricData)
-        }
-    }
+    // N/A
 }
 
 val shadeOnly: Configuration by configurations.creating
@@ -54,6 +39,8 @@ configurations.implementation.get().extendsFrom(shade)
 configurations.runtimeOnly.get().extendsFrom()
 
 dependencies {
+    "jarMod"("local:nsss:${"forge_version"()}")
+
     // Legacy Dependencies, based on Protocol Version
     if (isLegacy) {
         if (protocol <= 61) { // MC 1.5.2 and below
@@ -239,7 +226,7 @@ tasks.register("generateMyResources") {
 }
 
 // Setup Data for Uploading
-var targetFile = file("$rootDir/build/libs/$fileFormat.jar")
+var targetFile = file("$rootDir/fabric/build/libs/$fileFormat-dev-shadow.jar")
 if (!targetFile.exists() && (isJarMod)) {
     // Fallback to an alternative Sub-Project Output when in a Jar Mod configuration and the target file isn't there
     targetFile = file("$rootDir/$fmlName/build/libs/$fileFormat-$fmlName.jar")

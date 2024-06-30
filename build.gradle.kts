@@ -1,8 +1,10 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.hypherionmc.modfusioner.plugin.FusionerExtension
 import xyz.wagyourtail.jvmdg.gradle.task.files.DowngradeFiles
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
+import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 
 plugins {
@@ -107,6 +109,9 @@ subprojects {
     }
 
     repositories {
+        flatDir {
+            dirs("$rootDir/libs")
+        }
         mavenLocal()
         mavenCentral()
         // ModLoader Mavens
@@ -155,121 +160,32 @@ subprojects {
 
     extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
         side(if (isJarMod) "client" else "combined")
-        version(mcVersion)
+        version("empty-$mcVersion")
+
+        defaultRemapJar = false
+        val fabricData: FabricLikePatcher.() -> Unit = {
+            if (accessWidenerFile.exists()) {
+                accessWidener(accessWidenerFile)
+            }
+            loader("fabric_loader_version"()!!)
+            if (isJarMod) {
+                prodNamespace("official")
+                devMappings = null
+            }
+            customIntermediaries = true
+        }
+        if (isModern) {
+            fabric(fabricData)
+        } else {
+            merged {
+                legacyFabric(fabricData)
+                jarMod {}
+            }
+        }
 
         mappings {
-            val mcMappings = "mc_mappings"()!!
-            when (mcMappingsType) {
-                "mcp" -> {
-                    if (!isJarMod) {
-                        searge()
-                    }
-                    mcp(if (isJarMod) "legacy" else "stable", mcMappings) {
-                        if (!isJarMod) {
-                            clearOutputs()
-                            outputs("mcp", true) { listOf("intermediary") }
-                        }
-                    }
-                }
-
-                "forgeMCP" -> {
-                    forgeBuiltinMCP("forge_version"()!!) {
-                        clearContains()
-                        clearOutputs()
-                        contains({ _, t ->
-                            !t.contains("MCP")
-                        }) {
-                            onlyExistingSrc()
-                            outputs("searge", false) { listOf("official") }
-                        }
-                        contains({ _, t ->
-                            t.contains("MCP")
-                        }) {
-                            outputs("mcp", true) { listOf("intermediary") }
-                            sourceNamespace("searge")
-                        }
-                    }
-                    officialMappingsFromJar {
-                        clearContains()
-                        clearOutputs()
-                        outputs("official", false) { listOf() }
-                    }
-                }
-
-                "retroMCP" -> {
-                    retroMCP(mcMappings)
-                }
-
-                "yarn" -> {
-                    yarn(mcMappings)
-                }
-
-                "mojmap" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                }
-
-                "parchment" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                    parchment(mcVersion, mcMappings)
-                }
-
-                else -> throw GradleException("Unknown or Unsupported Mappings version")
-            }
-
-            // Only use Intermediaries on Versions that support it
-            val usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
-            if (usingIntermediary) {
-                if (isModern) {
-                    intermediary()
-                } else {
-                    legacyIntermediary()
-                }
-            }
-
-            // ability to add custom mappings
-            val target = if (!isModern) "mcp" else "mojmap"
-            stub.withMappings("searge", target) {
-                c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-                c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-                // Fix: Fixed an inconsistent mapping in 1.16 and 1.16.1 between MCP and Mojmap
-                if (!isLegacy && (protocol == 735 || protocol == 736)) {
-                    c(
-                        "dng",
-                        listOf(
-                            "net/minecraft/client/gui/widget/Widget",
-                            "net/minecraft/client/gui/components/AbstractWidget"
-                        )
-                    ) {
-                        m("e", "()I", "func_238483_d_", "getHeightRealms")
-                    }
-                }
-            }
-
-            if (isMCPJar) {
-                if (protocol <= 2) { // MC a1.1.2_01 and below
-                    devNamespace("searge")
-                } else {
-                    devFallbackNamespace("searge")
-                }
-            } else if (usingIntermediary) {
-                devFallbackNamespace("intermediary")
-            }
-
-            if (shouldDowngrade) {
-                val apiVersion = if (buildVersion.isJava7) JavaVersion.VERSION_1_8 else buildVersion
-                runs.config("client") {
-                    val downgradeClient = tasks.create("downgradeClient", DowngradeFiles::class.java) {
-                        inputCollection = sourceSet.output.classesDirs + sourceSet.runtimeClasspath
-                        classpath = project.files()
-                    }
-                    launchClasspath = downgradeClient.outputCollection + files(jvmdg.getDowngradedApi(apiVersion))
-                    runFirst.add(downgradeClient)
-                }
-            }
+            devNamespace("official")
+            devFallbackNamespace("official")
         }
 
         minecraftRemapper.config {
@@ -350,9 +266,7 @@ subprojects {
                 jvmdg.debugSkipStubs.add(JavaVersion.VERSION_1_8)
             }
 
-            val remapJar = tasks.getByName<RemapJarTask>("remapJar") {
-                destinationDirectory = temporaryDir
-            }
+            val remapJar = tasks.getByName<ShadowJar>("shadowJar")
 
             tasks.getByName("assemble").dependsOn("shadeDowngradedApi")
             tasks.downgradeJar {

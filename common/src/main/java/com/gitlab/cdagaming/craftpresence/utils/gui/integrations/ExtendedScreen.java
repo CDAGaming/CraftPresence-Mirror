@@ -35,14 +35,14 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonContr
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.DynamicWidget;
+import com.mojang.minecraft.Minecraft;
+import com.mojang.minecraft.gui.Gui;
+import com.mojang.minecraft.gui.GuiButton;
+import com.mojang.minecraft.gui.GuiScreen;
+import com.mojang.minecraft.render.FontRenderer;
 import io.github.cdagaming.unicore.impl.Tuple;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiScreen;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -337,7 +337,7 @@ public class ExtendedScreen extends GuiScreen {
      * Event to trigger upon Window Reload
      */
     public void reloadUi() {
-        setWorldAndResolution(getGameInstance(), getScreenWidth(), getScreenHeight());
+        setResolution(getGameInstance(), getScreenWidth(), getScreenHeight());
     }
 
     /**
@@ -348,15 +348,15 @@ public class ExtendedScreen extends GuiScreen {
      * @param h    The New Screen Height
      */
     @Override
-    public void setWorldAndResolution(@Nonnull Minecraft mcIn, int w, int h) {
+    public void setResolution(@Nonnull Minecraft mcIn, int w, int h) {
         if (isLoaded()) {
             for (Gui extendedControl : getControls()) {
                 if (extendedControl instanceof ExtendedScreen extendedScreen) {
-                    extendedScreen.setWorldAndResolution(mcIn, w, h);
+                    extendedScreen.setResolution(mcIn, w, h);
                 }
             }
         }
-        super.setWorldAndResolution(mcIn, w, h);
+        super.setResolution(mcIn, w, h);
     }
 
     /**
@@ -529,7 +529,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public boolean hasWorld() {
-        return getGameInstance().theWorld != null;
+        return getGameInstance().mcWorld != null;
     }
 
     /**
@@ -610,7 +610,7 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     @Override
-    public void drawWorldBackground(int tint) {
+    public void func_567_a(int tint) {
         renderCriticalData();
     }
 
@@ -1438,7 +1438,7 @@ public class ExtendedScreen extends GuiScreen {
      * @return The Current Font Renderer for this Screen
      */
     public FontRenderer getFontRenderer() {
-        return getGameInstance().fontRenderer != null ? getGameInstance().fontRenderer : GuiUtils.getDefaultFontRenderer();
+        return getGameInstance().fontRender != null ? getGameInstance().fontRender : GuiUtils.getDefaultFontRenderer();
     }
 
     /**

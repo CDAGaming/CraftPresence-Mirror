@@ -28,13 +28,13 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
+import com.mojang.minecraft.gui.GuiContainer;
+import com.mojang.minecraft.gui.GuiScreen;
+import com.mojang.minecraft.render.FontRenderer;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.classgraph.ClassInfo;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiContainer;
 
 import java.util.List;
 import java.util.Map;
@@ -99,7 +99,7 @@ public class GuiUtils implements ExtendedModule {
      * @return The Default/Global Font Renderer
      */
     public static FontRenderer getDefaultFontRenderer() {
-        return CraftPresence.instance.fontRenderer;
+        return CraftPresence.instance.fontRender;
     }
 
     @Override

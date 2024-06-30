@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import net.minecraft.client.Minecraft;
+import com.mojang.minecraft.Minecraft;
 
 import javax.annotation.Nonnull;
 
@@ -157,12 +157,12 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Draws this button to the screen.
      */
     @Override
-    public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY) {
-        setCurrentFontRender(mc.fontRenderer);
+    public void func_561_a(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+        setCurrentFontRender(mc.fontRender);
         if (isControlVisible()) {
             setHoveringOver(isOverScreen() && RenderUtils.isMouseOver(mouseX, mouseY, this));
 
-            mouseDragged(mc, mouseX, mouseY);
+            func_560_b(mc, mouseX, mouseY);
             final int color = !isControlEnabled() ? 10526880 : 14737632;
 
             if (isChecked())
@@ -189,9 +189,9 @@ public class CheckBoxControl extends ExtendedButtonControl {
      * Equivalent of MouseListener.mouseDragged(MouseEvent e).
      */
     @Override
-    protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
+    protected void func_560_b(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            final int hoverState = getHoverState(isHoveringOrFocusingOver());
+            final int hoverState = func_558_a(isHoveringOrFocusingOver());
 
             final String borderColor = hoverState == 2 ? "#FFFFFF" : "#000000";
             final String contentColor = "#2b2b2b";

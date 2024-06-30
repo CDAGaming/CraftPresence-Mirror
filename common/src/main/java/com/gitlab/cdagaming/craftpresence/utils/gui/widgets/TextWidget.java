@@ -28,8 +28,8 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
+import com.mojang.minecraft.render.FontRenderer;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.FontRenderer;
 
 /**
  * Implementation for a Row-Style {@link ExtendedTextControl} Widget
