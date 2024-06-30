@@ -265,7 +265,26 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Config data && !areSettingsEqual(data)) {
+        if (target instanceof Config data) {
+            transferFlags(data);
+            transferSettings(data);
+        }
+    }
+
+    public void transferFlags(final Config data) {
+        if (!areFlagsEqual(data)) {
+            hasChanged = data.hasChanged;
+            isNewFile = data.isNewFile;
+            onApplySettings = data.onApplySettings;
+            onApplyFrom = data.onApplyFrom;
+            gameVersion = data.gameVersion;
+            _schemaVersion = data._schemaVersion;
+            _lastMCVersionId = data._lastMCVersionId;
+        }
+    }
+
+    public void transferSettings(final Config data) {
+        if (!areSettingsEqual(data)) {
             generalSettings = new General(data.generalSettings);
             biomeSettings = new Biome(data.biomeSettings);
             dimensionSettings = new Dimension(data.dimensionSettings);
@@ -405,9 +424,10 @@ public final class Config extends Module implements Serializable {
                 if (MathUtils.isWithinValue(currentVer, 5, 6, true, false)) {
                     // Schema Changes (v5 -> v6)
                     //  - Property: `advancedSettings.renderTooltips` -> `accessibilitySettings.renderTooltips`
-                    accessibilitySettings.renderTooltips = rawJson.getAsJsonObject()
-                            .getAsJsonObject("advancedSettings")
-                            .getAsJsonPrimitive("renderTooltips").getAsBoolean();
+                    // As of 06-30-2024, this is dead code and no longer used
+//                    accessibilitySettings.renderTooltips = rawJson.getAsJsonObject()
+//                            .getAsJsonObject("advancedSettings")
+//                            .getAsJsonPrimitive("renderTooltips").getAsBoolean();
                     currentVer = 6;
                 }
 
@@ -543,11 +563,6 @@ public final class Config extends Module implements Serializable {
         final int newMCVer = getGameVersion();
         if (oldMCVer != newMCVer) {
             _lastMCVersionId = newMCVer;
-
-            // Reset some config settings when game version changes
-            final Accessibility accessibilityDefaults = accessibilitySettings.getDefaults();
-            accessibilitySettings.guiBackground = accessibilityDefaults.guiBackground;
-            accessibilitySettings.altGuiBackground = accessibilityDefaults.altGuiBackground;
         }
 
         // Sync Flag Data

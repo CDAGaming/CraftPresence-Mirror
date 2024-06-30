@@ -313,6 +313,15 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
+    protected boolean setData(Config source, Config target) {
+        if (hasChangesBetween(source, target)) {
+            source.transferSettings(target);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     protected boolean hasChangesBetween(Config source, Config target) {
         return target != null && !source.areSettingsEqual(target);
     }

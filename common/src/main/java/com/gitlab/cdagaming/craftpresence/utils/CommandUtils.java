@@ -42,7 +42,6 @@ import com.gitlab.cdagaming.craftpresence.integrations.discord.ModFunctionsLib;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModIPCListener;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.gitlab.cdagaming.unilib.ModUtils;
-import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenConstants;
 import com.gitlab.cdagaming.unilib.impl.TranslationManager;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
@@ -322,12 +321,6 @@ public class CommandUtils {
             needsReboot = true; // Max Connection Attempts changed
         }
 
-        if (current.accessibilitySettings.renderTooltips != old.accessibilitySettings.renderTooltips
-                || !current.accessibilitySettings.tooltipBackground.equals(old.accessibilitySettings.tooltipBackground) ||
-                !current.accessibilitySettings.tooltipBorder.equals(old.accessibilitySettings.tooltipBorder)) {
-            setDefaultTooltip(); // Render Tooltips, Tooltip Background, or Tooltip Border changed
-        }
-
         if (current.advancedSettings.debugMode != old.advancedSettings.debugMode ||
                 current.advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
                 current.advancedSettings.refreshRate != old.advancedSettings.refreshRate) {
@@ -432,7 +425,6 @@ public class CommandUtils {
      */
     public static void init() {
         updateModes();
-        setDefaultTooltip();
         setupClassScan(false);
 
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
@@ -572,17 +564,6 @@ public class CommandUtils {
      */
     public static void syncDynamicVariables() {
         syncDynamicVariables(null);
-    }
-
-    /**
-     * Synchronize Data for Rendering Tooltips, using config data
-     */
-    public static void setDefaultTooltip() {
-        ScreenConstants.setDefaultTooltip(
-                CraftPresence.CONFIG.accessibilitySettings.renderTooltips,
-                CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
-                CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
-        );
     }
 
     /**

@@ -807,8 +807,8 @@ public class RenderUtils {
                                            final FontRenderer fontRenderer,
                                            final boolean isCentered,
                                            final boolean isTooltip,
-                                           final Tuple<Boolean, ColorData, ColorData> colorInfo) {
-        if (colorInfo.getFirst() && !textToInput.isEmpty() && fontRenderer != null) {
+                                           final ScreenConstants.TooltipData colorInfo) {
+        if (colorInfo.renderTooltips() && !textToInput.isEmpty() && fontRenderer != null) {
             List<String> textLines = textToInput;
             int tooltipTextWidth = 0;
 
@@ -900,8 +900,8 @@ public class RenderUtils {
                 }
             }
 
-            final ColorData backgroundColorInfo = colorInfo.getSecond();
-            final ColorData borderColorInfo = colorInfo.getThird();
+            final ColorData backgroundColorInfo = colorInfo.backgroundColor();
+            final ColorData borderColorInfo = colorInfo.borderColor();
             final int zLevel = 300;
 
             // Render Background

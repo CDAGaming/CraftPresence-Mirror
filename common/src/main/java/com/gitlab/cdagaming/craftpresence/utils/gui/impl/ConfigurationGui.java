@@ -279,7 +279,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         return null;
     }
 
-    private boolean setData(T source, T target) {
+    protected boolean setData(T source, T target) {
         if (hasChangesBetween(source, target)) {
             source.transferFrom(target);
             return true;

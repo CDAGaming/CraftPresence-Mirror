@@ -27,7 +27,6 @@ package com.gitlab.cdagaming.unilib.core.impl.screen;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
 import com.gitlab.cdagaming.unilib.core.config.element.ColorSection;
-import io.github.cdagaming.unicore.impl.Tuple;
 
 import java.util.function.Function;
 
@@ -83,13 +82,13 @@ public class ScreenConstants {
     /**
      * The default Tooltip Rendering Info
      */
-    private static final Tuple<Boolean, ColorData, ColorData> DEFAULT_TOOLTIP = new Tuple<>(
+    private static final TooltipData DEFAULT_TOOLTIP = new TooltipData(
             true, DEFAULT_TOOLTIP_BACKGROUND, DEFAULT_TOOLTIP_BORDER
     );
     /**
      * The tooltip Rendering Info for an Empty Background and Border
      */
-    private static final Tuple<Boolean, ColorData, ColorData> EMPTY_TOOLTIP = new Tuple<>(
+    private static final TooltipData EMPTY_TOOLTIP = new TooltipData(
             true, null, null
     );
 
@@ -136,7 +135,7 @@ public class ScreenConstants {
      *
      * @return the tooltip Rendering Info for an Empty Background and Border
      */
-    public static Tuple<Boolean, ColorData, ColorData> getEmptyTooltip() {
+    public static TooltipData getEmptyTooltip() {
         return EMPTY_TOOLTIP;
     }
 
@@ -145,22 +144,10 @@ public class ScreenConstants {
      *
      * @return the default Tooltip Rendering Info
      */
-    public static Tuple<Boolean, ColorData, ColorData> getDefaultTooltip() {
+    public static TooltipData getDefaultTooltip() {
         return DEFAULT_TOOLTIP;
     }
 
-    /**
-     * Sets the new default tooltip rendering info
-     *
-     * @param renderTooltips  Whether tooltips should be rendered
-     * @param backgroundColor The background color info
-     * @param borderColor     The border color info
-     */
-    public static void setDefaultTooltip(
-            final boolean renderTooltips,
-            final ColorData backgroundColor,
-            final ColorData borderColor
-    ) {
-        getDefaultTooltip().put(renderTooltips, backgroundColor, borderColor);
+    public record TooltipData(boolean renderTooltips, ColorData backgroundColor, ColorData borderColor) {
     }
 }

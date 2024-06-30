@@ -935,7 +935,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @return the tooltip Rendering Info for an Empty Background and Border
      */
-    public Tuple<Boolean, ColorData, ColorData> getEmptyTooltip() {
+    public ScreenConstants.TooltipData getEmptyTooltip() {
         return ScreenConstants.getEmptyTooltip();
     }
 
@@ -944,7 +944,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @return the default Tooltip Rendering Info
      */
-    public Tuple<Boolean, ColorData, ColorData> getDefaultTooltip() {
+    public ScreenConstants.TooltipData getDefaultTooltip() {
         return ScreenConstants.getDefaultTooltip();
     }
 
@@ -961,7 +961,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param isTooltip    Whether to render this layout in a tooltip-style (Issues may occur if combined with isCentered)
      * @param colorInfo    Color Data in the format of [renderTooltips,backgroundColorInfo,borderColorInfo]
      */
-    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth, final boolean isCentered, final boolean isTooltip, final Tuple<Boolean, ColorData, ColorData> colorInfo) {
+    public void drawMultiLineString(final List<String> textToInput, final int posX, final int posY, final int maxWidth, final int maxHeight, final int maxTextWidth, final boolean isCentered, final boolean isTooltip, final ScreenConstants.TooltipData colorInfo) {
         RenderUtils.drawMultiLineString(
                 getGameInstance(),
                 textToInput,
