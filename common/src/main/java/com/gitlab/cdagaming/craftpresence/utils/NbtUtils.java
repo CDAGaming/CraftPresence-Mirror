@@ -27,7 +27,10 @@ package com.gitlab.cdagaming.craftpresence.utils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.*;
+import com.mojang.nbt.*;
+import net.minecraft.core.entity.Entity;
+import net.minecraft.core.entity.EntityDispatcher;
+import net.minecraft.core.item.ItemStack;
 
 import java.util.List;
 
@@ -43,8 +46,8 @@ public class NbtUtils {
      * @param entity The Entity data to interpret
      * @return the resulting NBT Tag, or null if not found
      */
-    public static NBTTagCompound getNbt(final Entity entity) {
-        return entity != null ? serializeNBT(entity) : new NBTTagCompound();
+    public static CompoundTag getNbt(final Entity entity) {
+        return entity != null ? serializeNBT(entity) : new CompoundTag();
     }
 
     /**
@@ -53,8 +56,8 @@ public class NbtUtils {
      * @param stack The ItemStack data to interpret
      * @return the resulting NBT Tag, or null if not found
      */
-    public static NBTTagCompound getNbt(final ItemStack stack) {
-        NBTTagCompound result = new NBTTagCompound();
+    public static CompoundTag getNbt(final ItemStack stack) {
+        CompoundTag result = new CompoundTag();
         return stack != null ? stack.writeToNBT(result) : result;
     }
 
@@ -65,7 +68,7 @@ public class NbtUtils {
      * @param path The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static NBTBase getNbt(final Object data, final String... path) {
+    public static Tag<?> getNbt(final Object data, final String... path) {
         if (data instanceof Entity entity) {
             return getNbt(entity, path);
         } else if (data instanceof ItemStack stack) {
@@ -81,7 +84,7 @@ public class NbtUtils {
      * @param path   The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static NBTBase getNbt(final Entity entity, final String... path) {
+    public static Tag<?> getNbt(final Entity entity, final String... path) {
         return getNbt(
                 getNbt(entity), path
         );
@@ -94,7 +97,7 @@ public class NbtUtils {
      * @param path  The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static NBTBase getNbt(final ItemStack stack, final String... path) {
+    public static Tag<?> getNbt(final ItemStack stack, final String... path) {
         return getNbt(
                 getNbt(stack), path
         );
@@ -107,21 +110,20 @@ public class NbtUtils {
      * @param path The path to traverse from the root tag
      * @return the resulting NBT Tag, or null if not found
      */
-    public static NBTBase getNbt(final NBTTagCompound root, final String... path) {
+    public static Tag<?> getNbt(final CompoundTag root, final String... path) {
         if (path == null || path.length == 0) {
             return root;
         } else {
-            NBTBase currentTag = root;
+            Tag<?> currentTag = root;
             for (int i = 0; i < path.length; i++) {
-                if (currentTag instanceof NBTTagCompound temp) {
-                    for (Object item : temp.func_28110_c()) {
-                        NBTBase nbt = (NBTBase) item;
-                        if (nbt.getKey().equals(path[i])) {
+                if (currentTag instanceof CompoundTag temp) {
+                    for (Tag<?> nbt : temp.getValues()) {
+                        if (nbt.getTagName().equals(path[i])) {
                             currentTag = nbt;
                             break;
                         }
                     }
-                } else if (currentTag instanceof NBTTagList list) {
+                } else if (currentTag instanceof ListTag list) {
                     int index = Integer.parseInt(path[i]);
                     currentTag = list.tagAt(index);
                 } else {
@@ -141,30 +143,30 @@ public class NbtUtils {
      * @param tag The nbt tag to interpret
      * @return the primitive equivalent of the NBT Tag data
      */
-    public static Object parseTag(final NBTBase tag) {
+    public static Object parseTag(final Tag<?> tag) {
         if (tag == null) {
             return null;
         }
 
-        switch (tag.getType()) {
+        switch (tag.getId()) {
             case 1:
-                return ((NBTTagByte) tag).byteValue;
+                return ((ByteTag) tag).getValue();
             case 2:
-                return ((NBTTagShort) tag).shortValue;
+                return ((ShortTag) tag).getValue();
             case 3:
-                return ((NBTTagInt) tag).intValue;
+                return ((IntTag) tag).getValue();
             case 4:
-                return ((NBTTagLong) tag).longValue;
+                return ((LongTag) tag).getValue();
             case 5:
-                return ((NBTTagFloat) tag).floatValue;
+                return ((FloatTag) tag).getValue();
             case 6:
-                return ((NBTTagDouble) tag).doubleValue;
+                return ((DoubleTag) tag).getValue();
             case 7:
-                return ((NBTTagByteArray) tag).byteArray;
+                return ((ByteArrayTag) tag).getValue();
             case 8:
-                return ((NBTTagString) tag).stringValue;
+                return ((StringTag) tag).getValue();
             case 9: {
-                final NBTTagList list = ((NBTTagList) tag);
+                final ListTag list = ((ListTag) tag);
                 final List<Object> converted = StringUtils.newArrayList();
                 if (list.tagCount() <= 0) {
                     for (int i = 0; i < list.tagCount(); i++) {
@@ -189,13 +191,13 @@ public class NbtUtils {
         }
     }
 
-    public static NBTTagCompound serializeNBT(Entity entity) {
-        String name = EntityList.getEntityString(entity);
-        NBTTagCompound ret = new NBTTagCompound();
+    public static CompoundTag serializeNBT(Entity entity) {
+        String name = EntityDispatcher.getEntityString(entity);
+        CompoundTag ret = new CompoundTag();
         if (!StringUtils.isNullOrEmpty(name)) {
-            ret.setString("id", name);
+            ret.putString("id", name);
         }
-        entity.writeToNBT(ret);
+        entity.saveWithoutId(ret);
         return ret;
     }
 }

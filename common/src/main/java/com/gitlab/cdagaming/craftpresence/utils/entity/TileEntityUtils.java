@@ -28,9 +28,9 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.Block;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemStack;
 
 import java.util.List;
 import java.util.Map;
@@ -196,7 +196,7 @@ public class TileEntityUtils implements Module {
             if (itemStack.stackSize <= 0) {
                 return true;
             } else {
-                return itemStack.getItemDamage() < -32768 || itemStack.getItemDamage() > 65535;
+                return itemStack.getMetadata() < -32768 || itemStack.getMetadata() > 65535;
             }
         } else {
             return true;

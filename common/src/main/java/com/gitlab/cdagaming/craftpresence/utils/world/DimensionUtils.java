@@ -28,11 +28,10 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.classgraph.ClassInfo;
-import net.minecraft.src.WorldProvider;
+import net.minecraft.core.data.registry.Registries;
+import net.minecraft.core.world.type.WorldType;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -91,7 +90,7 @@ public class DimensionUtils implements ExtendedModule {
     /**
      * The Player's Current Dimension, if any
      */
-    private WorldProvider CURRENT_DIMENSION;
+    private WorldType CURRENT_DIMENSION;
 
     @Override
     public void clearFieldData() {
@@ -114,10 +113,10 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final WorldProvider newProvider = CraftPresence.player.worldObj.worldProvider;
-        final String newDimensionName = MappingUtils.getClassName(newProvider);
+        final WorldType newProvider = CraftPresence.player.world.getWorldType();
+        final String newDimensionName = Registries.WORLD_TYPES.getKey(newProvider);
 
-        final String newDimensionIdentifier = newDimensionName;
+        final String newDimensionIdentifier = StringUtils.getOrDefault(newDimensionName, MappingUtils.getClassName(newProvider));
 
         if (!newDimensionName.equals(RAW_DIMENSION_NAME) || !newDimensionIdentifier.equals(RAW_DIMENSION_IDENTIFIER)) {
             CURRENT_DIMENSION = newProvider;
@@ -183,36 +182,15 @@ public class DimensionUtils implements ExtendedModule {
      *
      * @return The detected Dimension Types found
      */
-    private List<WorldProvider> getDimensionTypes() {
-        List<WorldProvider> dimensionTypes = StringUtils.newArrayList();
-
-        if (dimensionTypes.isEmpty()) {
-            // Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
-                if (classInfo != null) {
-                    try {
-                        Class<?> classObj = FileUtils.loadClass(classInfo.getName());
-                        if (classObj != null) {
-                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
-                            if (!dimensionTypes.contains(providerObj)) {
-                                dimensionTypes.add(providerObj);
-                            }
-                        }
-                    } catch (Throwable ex) {
-                        printException(ex);
-                    }
-                }
-            }
-        }
-
-        return dimensionTypes;
+    private List<WorldType> getDimensionTypes() {
+        return StringUtils.newArrayList(Registries.WORLD_TYPES.iterator());
     }
 
     @Override
     public void getInternalData() {
-        for (WorldProvider TYPE : getDimensionTypes()) {
-            if (TYPE != null) {
-                String dimensionName = MappingUtils.getClassName(TYPE);
+        for (WorldType data : getDimensionTypes()) {
+            if (data != null) {
+                String dimensionName = Registries.WORLD_TYPES.getKey(data);
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {
                     DEFAULT_NAMES.add(name);
@@ -249,11 +227,6 @@ public class DimensionUtils implements ExtendedModule {
     @Override
     public String getOverrideText(ModuleData data) {
         return CraftPresence.CLIENT.getOverrideText(getPresenceData(data));
-    }
-
-    @Override
-    public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && FileUtils.isClassGraphEnabled() && FileUtils.canScanClasses();
     }
 
     @Override

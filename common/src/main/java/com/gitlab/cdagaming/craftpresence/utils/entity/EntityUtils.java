@@ -29,7 +29,9 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.*;
+import net.minecraft.core.entity.Entity;
+import net.minecraft.core.entity.EntityDispatcher;
+import net.minecraft.core.world.World;
 
 import java.util.List;
 import java.util.Map;
@@ -111,7 +113,7 @@ public class EntityUtils implements ExtendedModule {
         String result = "";
         if (entity != null) {
             result = StringUtils.getOrDefault(
-                    EntityList.getEntityString(entity)
+                    EntityDispatcher.getEntityString(entity)
             );
         }
 
@@ -139,16 +141,16 @@ public class EntityUtils implements ExtendedModule {
      */
     public static String getWeather(final World worldObj) {
         String name = "clear";
-        if (worldObj != null) {
-            final WorldInfo info = worldObj.getWorldInfo();
-            if (info.getThundering()) {
-                name = "thunder";
-            } else if (info.getRaining()) {
-                name = "rain";
-            } else {
-                name = "clear";
-            }
-        }
+//        if (worldObj != null) {
+//            final WorldInfo info = worldObj.getWorldInfo();
+//            if (info.getThundering()) {
+//                name = "thunder";
+//            } else if (info.getRaining()) {
+//                name = "rain";
+//            } else {
+//                name = "clear";
+//            }
+//        }
         return name;
     }
 
@@ -159,7 +161,7 @@ public class EntityUtils implements ExtendedModule {
      * @return the current weather data
      */
     public static String getWeather(final Entity entity) {
-        return getWeather(entity != null ? entity.worldObj : null);
+        return getWeather(entity != null ? entity.world : null);
     }
 
     @Override
@@ -187,8 +189,8 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
-        final Entity NEW_CURRENT_RIDING = CraftPresence.player.ridingEntity;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entity != null ? CraftPresence.instance.objectMouseOver.entity : null;
+        final Entity NEW_CURRENT_RIDING = CraftPresence.player.vehicle;
 
         final boolean hasTargetChanged = !Objects.equals(NEW_CURRENT_TARGET, CURRENT_TARGET);
         final boolean hasRidingChanged = !Objects.equals(NEW_CURRENT_RIDING, CURRENT_RIDING);
@@ -317,7 +319,7 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_1610_b", "b");
+        final Map mappings = (Map) StringUtils.getField(EntityDispatcher.class, null, "classToStringMapping", "field_1610_b", "b");
         if (!mappings.values().isEmpty()) {
             for (Object entityLocationObj : mappings.values()) {
                 final String entityLocation = (String) entityLocationObj;

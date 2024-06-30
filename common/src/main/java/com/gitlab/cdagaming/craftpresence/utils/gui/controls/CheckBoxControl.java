@@ -191,7 +191,7 @@ public class CheckBoxControl extends ExtendedButtonControl {
     @Override
     protected void mouseDragged(@Nonnull Minecraft mc, int mouseX, int mouseY) {
         if (isControlVisible()) {
-            final int hoverState = getHoverState(isHoveringOrFocusingOver());
+            final int hoverState = getButtonState(isHoveringOrFocusingOver());
 
             final String borderColor = hoverState == 2 ? "#FFFFFF" : "#000000";
             final String contentColor = "#2b2b2b";

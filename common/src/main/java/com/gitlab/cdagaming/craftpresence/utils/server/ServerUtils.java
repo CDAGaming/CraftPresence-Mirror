@@ -38,8 +38,8 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.GuiConnecting;
-import net.minecraft.src.NetClientHandler;
+import net.minecraft.client.gui.GuiConnecting;
+import net.minecraft.client.net.handler.NetClientHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -460,7 +460,7 @@ public class ServerUtils implements ExtendedModule {
     private void joinServer(final ServerData serverData) {
         try {
             if (CraftPresence.player != null) {
-                CraftPresence.player.worldObj.sendQuittingDisconnectingPacket();
+                CraftPresence.player.world.sendQuittingDisconnectingPacket();
                 CraftPresence.instance.changeWorld1(null);
             }
             CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance, serverData.serverIP, serverData.serverPort));
@@ -472,9 +472,9 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void initPresence() {
         // Player Position Arguments
-        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3));
-        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3));
-        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
+        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.x, 3));
+        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.y, 3));
+        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.z, 3));
 
         // Player Health Arguments
         syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.health, 0));
@@ -484,7 +484,7 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("world.difficulty", () -> {
             final String newDifficulty = false ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    Integer.toString(CraftPresence.player.worldObj.difficultySetting);
+                    Integer.toString(CraftPresence.player.world.difficultySetting);
             return StringUtils.getOrDefault(newDifficulty);
         });
         syncArgument("world.weather.name", () -> {
@@ -493,7 +493,7 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.player.worldObj.getWorldInfo().getWorldName();
+            final String primaryWorldName = CraftPresence.player.world.getLevelData().getWorldName();
             final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
@@ -501,22 +501,22 @@ public class ServerUtils implements ExtendedModule {
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.worldObj.getWorldTime()).getFirst()
+                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getFirst()
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.worldObj.getWorldTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.worldObj.getWorldTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.worldObj.getWorldTime())
+                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime())
         );
 
         // Default Arguments

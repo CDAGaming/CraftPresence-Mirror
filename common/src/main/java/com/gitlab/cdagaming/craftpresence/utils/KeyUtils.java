@@ -32,8 +32,8 @@ import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
 import com.gitlab.cdagaming.craftpresence.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiControls;
-import net.minecraft.src.KeyBinding;
+import net.minecraft.client.gui.options.GuiOptionsPageControls;
+import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -174,7 +174,7 @@ public class KeyUtils {
      * @param newKey   the new key for the specified KeyBinding
      */
     void setKey(final KeyBinding instance, final int newKey) {
-        instance.keyCode = newKey;
+        instance.key = newKey;
     }
 
     /**
@@ -242,7 +242,7 @@ public class KeyUtils {
         if (!areKeysRegistered()) {
             if (CraftPresence.instance.gameSettings != null) {
                 for (KeyBindData entry : KEY_MAPPINGS.values()) {
-                    CraftPresence.instance.gameSettings.keyBindings = StringUtils.addToArray(CraftPresence.instance.gameSettings.keyBindings, entry.binding());
+                    CraftPresence.instance.gameSettings.keys = StringUtils.addToArray(CraftPresence.instance.gameSettings.keys, entry.binding());
                 }
                 keysRegistered = true;
             } else {
@@ -263,7 +263,7 @@ public class KeyUtils {
 
                     if (!getKeyName(currentBind).equals(unknownKeyName) && !isValidClearCode(currentBind)) {
                         // Only process the key if it is not an unknown or invalid key
-                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiControls)) {
+                        if (Keyboard.isKeyDown(currentBind) && !(CraftPresence.instance.currentScreen instanceof GuiOptionsPageControls)) {
                             try {
                                 keyData.runEvent().run();
                             } catch (Throwable ex) {
@@ -405,7 +405,7 @@ public class KeyUtils {
          * @return the KeyBind description
          */
         public String description() {
-            return binding().keyDescription;
+            return binding().name;
         }
 
         /**
@@ -414,7 +414,7 @@ public class KeyUtils {
          * @return the currently assigned key code
          */
         public int keyCode() {
-            return binding().keyCode;
+            return binding().key;
         }
 
         /**
