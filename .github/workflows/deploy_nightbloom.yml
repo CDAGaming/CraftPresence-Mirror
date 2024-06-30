@@ -1,4 +1,4 @@
-name: Deploy Modrinth
+name: Deploy Nightbloom
 
 on: workflow_dispatch
 
