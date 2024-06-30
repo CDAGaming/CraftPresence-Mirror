@@ -26,17 +26,18 @@ package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
+import cpw.mods.fml.common.Mod;
 
 /**
  * The Primary Application Class and Utilities
  *
  * @author CDAGaming
  */
-@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json", acceptedMinecraftVersions = "*")
+@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, acceptedMinecraftVersions = "*")
 public class CraftPresenceForge {
     /**
      * Begins Scheduling Ticks on Class Initialization
@@ -45,9 +46,14 @@ public class CraftPresenceForge {
         if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
-        MappingUtils.setFilePath("/mappings-forge.srg");
-        Constants.MOD_COUNT_SUPPLIER = () -> Loader.instance().getModList().size();
-        new CraftPresence(this::setupIntegrations);
+
+        if (FMLCommonHandler.instance().getSide().isClient()) {
+            MappingUtils.setFilePath("/mappings-forge.srg");
+            Constants.MOD_COUNT_SUPPLIER = () -> Loader.instance().getModList().size();
+            new CraftPresence(this::setupIntegrations);
+        } else {
+            Constants.LOG.info("Disabling @MOD_NAME@, as it is client side only.");
+        }
     }
 
     /**

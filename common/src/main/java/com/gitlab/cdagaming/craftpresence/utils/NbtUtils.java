@@ -120,7 +120,7 @@ public class NbtUtils {
                     currentTag = compound.getTag(path[i]);
                 } else if (currentTag instanceof NBTTagList list) {
                     int index = Integer.parseInt(path[i]);
-                    currentTag = list.get(index);
+                    currentTag = (NBTBase) list.tagList.get(index);
                 } else {
                     if (i == path.length - 1) {
                         break;
@@ -163,9 +163,9 @@ public class NbtUtils {
             case 9: {
                 final NBTTagList list = ((NBTTagList) tag);
                 final List<Object> converted = StringUtils.newArrayList();
-                if (!list.hasNoTags()) {
+                if (list.tagCount() <= 0) {
                     for (int i = 0; i < list.tagCount(); i++) {
-                        converted.add(parseTag(list.get(i)));
+                        converted.add(parseTag((NBTBase) list.tagList.get(i)));
                     }
                 }
                 return converted;
