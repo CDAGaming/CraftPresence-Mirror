@@ -39,6 +39,18 @@ public class ReplaceStringClassVisitor extends ClassVisitor {
             }
 
             @Override
+            public void visitInvokeDynamicInsn(String name, String descriptor, Handle bootstrapMethodHandle, Object... bootstrapMethodArguments) {
+                for (int i = 0; i < bootstrapMethodArguments.length; i++) {
+                    Object value = bootstrapMethodArguments[i];
+                    if (value instanceof String data) {
+                        value = replaceMatching(data, replaceTokens);
+                        bootstrapMethodArguments[i] = value;
+                    }
+                }
+                super.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
+            }
+
+            @Override
             public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
                 return new ReplaceStringAnnotationVisitor(super.visitAnnotation(descriptor, visible), replaceTokens);
             }
