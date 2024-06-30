@@ -9,6 +9,9 @@ operator fun String.invoke(): String? {
     return project.properties[this] as String?
 }
 
+val modName: String by extra
+val modId: String by extra
+
 val isLegacy: Boolean by extra
 val protocol: Int by extra
 val isJarMod: Boolean by extra
@@ -68,6 +71,8 @@ val resourceTargets = listOf(
     "fabric.mod.json"
 )
 val replaceProperties = mapOf(
+    "mod_id" to modId,
+    "mod_name" to modName,
     "version" to baseVersionLabel,
     "mcversion" to mcVersionLabel,
     "game_version_range" to "fabric_game_version_range"()!!,

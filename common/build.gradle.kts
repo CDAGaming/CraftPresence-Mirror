@@ -2,7 +2,7 @@ import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 plugins {
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.4"
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.5"
 }
 
 /**
@@ -11,6 +11,9 @@ plugins {
 operator fun String.invoke(): String? {
     return project.properties[this] as String?
 }
+
+val modName: String by extra
+val modId: String by extra
 
 val isLegacy: Boolean by extra
 val protocol: Int by extra
@@ -175,7 +178,7 @@ tasks.shadowJar {
 }
 
 tasks.processResources {
-    filesMatching("assets/${rootProject.name.lowercase()}/lang/**") {
+    filesMatching("assets/$modId/lang/**") {
         val text = file.readText(Charsets.UTF_8)
         if (text.isEmpty() || text == "{}") {
             exclude()
@@ -186,8 +189,8 @@ tasks.processResources.get().outputs.upToDateWhen { false }
 
 tasks.register("generateMyResources") {
     doFirst {
-        val langDir = File(mainResources, "/assets/${rootProject.name.lowercase()}/lang")
-        val resultDir = File(generatedResources, "/assets/${rootProject.name.lowercase()}/lang")
+        val langDir = File(mainResources, "/assets/$modId/lang")
+        val resultDir = File(generatedResources, "/assets/$modId/lang")
         langDir.mkdirs()
         resultDir.mkdirs()
         langDir.walkTopDown().forEach { file ->
@@ -235,8 +238,7 @@ tasks.register("generateMyResources") {
     }
 }
 
-// Setup Name Schema for Uploading
-val archiveName = "mod_name"()!!
+// Setup Data for Uploading
 var targetFile = file("$rootDir/build/libs/$fileFormat.jar")
 if (!targetFile.exists() && (isJarMod)) {
     // Fallback to an alternative Sub-Project Output when in a Jar Mod configuration and the target file isn't there
@@ -268,16 +270,18 @@ publisher {
     apiKeys {
         curseforge(System.getenv("CF_APIKEY"))
         modrinth(System.getenv("MODRINTH_TOKEN"))
+        nightbloom(System.getenv("NIGHTBLOOM_TOKEN"))
     }
 
     debug = false
     curseID = "297038"
     modrinthID = "DFqQfIBR"
+    nightbloomID = modId
     versionType = "deploymentType"()!!.lowercase()
     changelog = file("$rootDir/Changes.md").readText()
     projectVersion = versionFormat.replace(Regex("\\s"), "").lowercase() // Modrinth Only
     displayName =
-        "$archiveName v${"versionId"()}${if (versionLabel.isEmpty()) "" else " $versionLabel"} ($mcVersionLabel)"
+        "$modName v${"versionId"()}${if (versionLabel.isEmpty()) "" else " $versionLabel"} ($mcVersionLabel)"
     gameVersions = uploadVersions
     loaders = uploadLoaders
     curseEnvironment = "client"

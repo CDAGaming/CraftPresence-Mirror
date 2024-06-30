@@ -1,4 +1,4 @@
-name: Deploy All
+name: Deploy Modrinth
 
 on: workflow_dispatch
 
@@ -40,7 +40,7 @@ jobs:
         run: ./gradlew --build-cache --info --stacktrace fusejars
 
       - name: Deploy with Gradle
-        run: ./gradlew --build-cache --info --stacktrace :common:publishMod
+        run: ./gradlew --build-cache --info --stacktrace :common:publishNightbloom
 
       - uses: actions/upload-artifact@v4
         with:

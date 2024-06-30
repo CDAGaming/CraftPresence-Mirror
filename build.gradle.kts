@@ -23,14 +23,16 @@ operator fun String.invoke(): String? {
 
 val extMcVersion = if ("display_version"()!!.isNotEmpty()) "display_version"() else "mc_version"()
 val extVersionLabel = "${if ("versionLabel"().equals("release", ignoreCase = true)) "" else "versionLabel"()}"
-val extModId = "${"mod_name"()}".lowercase()
+
+val extModName = "mod_name"()!!
+val extModId = "mod_id"()!!
 
 val extVersionInfoLabel = if (extVersionLabel.isEmpty()) "" else "-$extVersionLabel"
 val extBaseVersionLabel = ("versionId"() + extVersionInfoLabel.replace(Regex("\\s"), ".")).lowercase()
 val extClassPath = "${rootProject.group}".replace(".", "/") + "/$extModId"
 
 val extVersionFormat = "$extBaseVersionLabel+$extMcVersion"
-val extFileFormat = "${"mod_name"()}-$extVersionFormat"
+val extFileFormat = "$extModName-$extVersionFormat"
 
 val extProtocol = "mc_protocol"()!!.toInt()
 val extIsLegacy = "isLegacy"()!!.toBoolean()
@@ -53,6 +55,8 @@ subprojects {
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "io.github.goooler.shadow")
 
+    val modName by extra(extModName)
+    val modId by extra(extModId)
     val versionInfoLabel by extra(extVersionInfoLabel)
     val baseVersionLabel by extra(extBaseVersionLabel)
     val classPath by extra(extClassPath)
@@ -82,7 +86,7 @@ subprojects {
     group = rootProject.group
 
     extensions.getByType<BasePluginExtension>().apply {
-        archivesName = "mod_name"()
+        archivesName = modName
     }
 
     val sourceVersion = "source_java_version"()?.let { JavaVersion.toVersion(it) }!!
@@ -219,7 +223,7 @@ subprojects {
             // Only use Intermediaries on Versions that support it
             val usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
             if (usingIntermediary) {
-                if (extIsModern) {
+                if (isModern) {
                     intermediary()
                 } else {
                     legacyIntermediary()
@@ -227,7 +231,7 @@ subprojects {
             }
 
             // ability to add custom mappings
-            val target = if (!extIsModern) "mcp" else "mojmap"
+            val target = if (!isModern) "mcp" else "mojmap"
             stub.withMappings("searge", target) {
                 c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
                 c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
@@ -296,10 +300,10 @@ subprojects {
         manifest {
             attributes(
                 mapOf(
-                    "Specification-Title" to "mod_name"(),
+                    "Specification-Title" to modName,
                     "Specification-Vendor" to "CDAGaming",
                     "Specification-Version" to "1", // We are version 1 of ourselves
-                    "Implementation-Title" to "mod_name"(),
+                    "Implementation-Title" to modName,
                     "Implementation-Version" to archiveVersion.get(),
                     "Implementation-Vendor" to "CDAGaming"
                 )
@@ -321,11 +325,12 @@ subprojects {
         doLast {
             ProcessClasses.process(
                 destinationDirectory.asFile.getOrNull()!!.toPath(), mapOf(
-                    "MOD_NAME" to "mod_name"()!!,
+                    "MOD_ID" to modId,
+                    "MOD_NAME" to modName,
                     "VERSION_ID" to baseVersionLabel,
                     "VERSION_TYPE" to "deploymentType"()!!,
                     "MC_VERSION" to mcVersionLabel,
-                    "MC_PROTOCOL" to "mc_protocol"()!!,
+                    "MC_PROTOCOL" to protocol.toString(),
                     "IS_LEGACY" to isLegacy.toString(),
                     "IS_DEV" to "isDevState"()!!,
                     "IS_VERBOSE" to "isVerboseState"()!!
@@ -339,7 +344,7 @@ subprojects {
             // Setup JVMDG Globals
             jvmdg.downgradeTo = buildVersion
             jvmdg.shadePath = {
-                "$extModId/jvmdg/api"
+                "$modId/jvmdg/api"
             }
             if (buildVersion.isJava7) {
                 jvmdg.debugSkipStubs.add(JavaVersion.VERSION_1_8)

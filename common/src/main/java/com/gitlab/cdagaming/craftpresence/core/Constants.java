@@ -64,7 +64,7 @@ public class Constants {
     /**
      * The Application's Identifier
      */
-    public static final String MOD_ID = "craftpresence";
+    public static final String MOD_ID = "@MOD_ID@";
 
     /**
      * The Minecraft Version this Mod was compiled with

@@ -1,7 +1,7 @@
 [
   {
-    "modid": "craftpresence",
-    "name": "CraftPresence",
+    "modid": "${mod_id}",
+    "name": "${mod_name}",
     "description": "Completely Customize the way others see you play in Discord!",
     "version": "${version}",
     "mcversion": "${game_version_range}",

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "craftpresence",
+  "id": "${mod_id}",
   "version": "${version}",
-  "name": "CraftPresence",
+  "name": "${mod_name}",
   "description": "Completely Customize the way others see you play in Discord!",
   "authors": [
     "CDAGaming"

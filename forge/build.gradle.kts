@@ -9,6 +9,9 @@ operator fun String.invoke(): String? {
     return project.properties[this] as String?
 }
 
+val modName: String by extra
+val modId: String by extra
+
 val isLegacy: Boolean by extra
 val protocol: Int by extra
 val isJarMod: Boolean by extra
@@ -25,6 +28,7 @@ val canUseATs: Boolean by extra
 val baseVersionLabel: String by extra
 
 val forgeId = if (isNeoForge) "neoforge" else fmlName
+val forgeVersion = "forge_version"()!!
 
 unimined.minecraft {
     if (!isJarMod) {
@@ -32,7 +36,7 @@ unimined.minecraft {
             if (canUseATs) {
                 accessTransformer(aw2at(accessWidenerFile))
             }
-            loader("forge_version"()!!)
+            loader(forgeVersion)
             customSearge = (mcMappingsType != "mojmap" && mcMappingsType != "parchment")
         }
         if (isNeoForge) {
@@ -53,7 +57,7 @@ configurations.runtimeClasspath.get().extendsFrom(common)
 
 dependencies {
     if (isJarMod) {
-        "jarMod"("risugami:modloader:${"forge_version"()}")
+        "jarMod"("risugami:modloader:$forgeVersion")
     }
 
     common(project(path = ":common")) { isTransitive = false }
@@ -64,9 +68,11 @@ dependencies {
 }
 
 val resourceTargets = listOf(
-    "mcmod.info", "META-INF/mods.toml", "META-INF/neoforge.mods.toml", "mod_${"mod_name"()}.info"
+    "mcmod.info", "META-INF/mods.toml", "META-INF/neoforge.mods.toml", "mod_$modName.info"
 )
 val replaceProperties = mapOf(
+    "mod_id" to modId,
+    "mod_name" to modName,
     "version" to baseVersionLabel,
     "mcversion" to mcVersionLabel,
     "forge_id" to forgeId,
