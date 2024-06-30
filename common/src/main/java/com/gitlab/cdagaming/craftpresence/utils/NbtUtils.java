@@ -120,7 +120,7 @@ public class NbtUtils {
                     currentTag = compound.getTag(path[i]);
                 } else if (currentTag instanceof NBTTagList list) {
                     int index = Integer.parseInt(path[i]);
-                    currentTag = (NBTBase) list.tagList.get(index);
+                    currentTag = list.tagAt(index);
                 } else {
                     if (i == path.length - 1) {
                         break;
@@ -145,27 +145,27 @@ public class NbtUtils {
 
         switch (tag.getId()) {
             case 1:
-                return ((NBTTagByte) tag).getByte();
+                return ((NBTTagByte) tag).data;
             case 2:
-                return ((NBTTagShort) tag).getShort();
+                return ((NBTTagShort) tag).data;
             case 3:
-                return ((NBTTagInt) tag).getInt();
+                return ((NBTTagInt) tag).data;
             case 4:
-                return ((NBTTagLong) tag).getLong();
+                return ((NBTTagLong) tag).data;
             case 5:
-                return ((NBTTagFloat) tag).getFloat();
+                return ((NBTTagFloat) tag).data;
             case 6:
-                return ((NBTTagDouble) tag).getDouble();
+                return ((NBTTagDouble) tag).data;
             case 7:
-                return ((NBTTagByteArray) tag).getByteArray();
+                return ((NBTTagByteArray) tag).byteArray;
             case 8:
-                return ((NBTTagString) tag).getString();
+                return ((NBTTagString) tag).data;
             case 9: {
                 final NBTTagList list = ((NBTTagList) tag);
                 final List<Object> converted = StringUtils.newArrayList();
                 if (list.tagCount() <= 0) {
                     for (int i = 0; i < list.tagCount(); i++) {
-                        converted.add(parseTag((NBTBase) list.tagList.get(i)));
+                        converted.add(parseTag(list.tagAt(i)));
                     }
                 }
                 return converted;
@@ -178,7 +178,7 @@ public class NbtUtils {
                     return tag.toString();
                 }
             case 11:
-                return ((NBTTagIntArray) tag).getIntArray();
+                return ((NBTTagIntArray) tag).intArray;
             case 0:
             case 12:
             case 99:

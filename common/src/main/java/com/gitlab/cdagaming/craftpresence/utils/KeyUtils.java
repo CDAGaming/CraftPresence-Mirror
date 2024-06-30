@@ -123,7 +123,7 @@ public class KeyUtils {
      * @return the created KeyBind instance
      */
     KeyBinding createKey(final String id, final String name, final String category, final int defaultKey, final int currentKey) {
-        final KeyBinding result = new KeyBinding(name, defaultKey, category);
+        final KeyBinding result = new KeyBinding(name, defaultKey);
         keySyncQueue.put(id, currentKey);
         return result;
     }
@@ -158,8 +158,8 @@ public class KeyUtils {
                 id,
                 new KeyBindData(
                         keyBind,
-                        keyBind::getKeyCategory,
-                        keyBind::getKeyCodeDefault,
+                        () -> category,
+                        () -> defaultKey,
                         onPress, onBind, onOutdated,
                         callback
                 )
@@ -174,7 +174,7 @@ public class KeyUtils {
      * @param newKey   the new key for the specified KeyBinding
      */
     void setKey(final KeyBinding instance, final int newKey) {
-        instance.setKeyCode(newKey);
+        instance.keyCode = newKey;
         KeyBinding.resetKeyBindingArrayAndHash();
     }
 
@@ -406,7 +406,7 @@ public class KeyUtils {
          * @return the KeyBind description
          */
         public String description() {
-            return binding().getKeyDescription();
+            return binding().keyDescription;
         }
 
         /**
@@ -415,7 +415,7 @@ public class KeyUtils {
          * @return the currently assigned key code
          */
         public int keyCode() {
-            return binding().getKeyCode();
+            return binding().keyCode;
         }
 
         /**

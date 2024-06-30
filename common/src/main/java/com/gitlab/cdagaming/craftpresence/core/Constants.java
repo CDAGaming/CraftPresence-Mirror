@@ -24,7 +24,6 @@
 
 package com.gitlab.cdagaming.craftpresence.core;
 
-import com.gitlab.cdagaming.craftpresence.core.integrations.logging.ApacheLogger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.integrations.logging.JavaLogger;
 import io.github.cdagaming.unicore.integrations.logging.LoggingImpl;
@@ -120,7 +119,7 @@ public class Constants {
     /**
      * The Application's Instance of {@link LoggingImpl} for Logging Information
      */
-    public static final LoggingImpl LOG = IS_LEGACY_SOFT ? new JavaLogger(MOD_ID) : new ApacheLogger(MOD_ID);
+    public static final JavaLogger LOG = new JavaLogger(MOD_ID);
 
     /**
      * If this Application is in the Hard Floor of Legacy Mode

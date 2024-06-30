@@ -28,9 +28,9 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.utils.ResourceUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.client.resources.Resource;
+import net.minecraft.client.resources.ResourceManager;
+import net.minecraft.client.resources.ResourceManagerReloadListener;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 
 import java.io.InputStream;
@@ -42,7 +42,7 @@ import java.util.List;
  * @param instance The currently linked {@link TranslationUtils} instance
  * @author CDAGaming
  */
-public record TranslationManager(TranslationUtils instance) implements IResourceManagerReloadListener {
+public record TranslationManager(TranslationUtils instance) implements ResourceManagerReloadListener {
     /**
      * Initializes a new manager for the {@link TranslationUtils} instance
      *
@@ -67,8 +67,8 @@ public record TranslationManager(TranslationUtils instance) implements IResource
         instance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
-                final List<IResource> resources = CraftPresence.instance.getResourceManager().getAllResources(ResourceUtils.getResource(modId, langPath));
-                for (IResource resource : resources) {
+                final List<Resource> resources = CraftPresence.instance.getResourceManager().getAllResources(ResourceUtils.getResource(modId, langPath));
+                for (Resource resource : resources) {
                     results.add(resource.getInputStream());
                 }
             } catch (Exception ignored) {
@@ -87,7 +87,7 @@ public record TranslationManager(TranslationUtils instance) implements IResource
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void onResourceManagerReload(ResourceManager resourceManager) {
         instance().syncTranslations();
     }
 }

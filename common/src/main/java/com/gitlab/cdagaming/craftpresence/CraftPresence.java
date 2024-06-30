@@ -209,7 +209,6 @@ public class CraftPresence {
                 player = instance.thePlayer;
 
                 username = session.getUsername();
-                uuid = session.getPlayerID();
 
                 CommandUtils.reloadData(false);
             } else if (instance != null) {

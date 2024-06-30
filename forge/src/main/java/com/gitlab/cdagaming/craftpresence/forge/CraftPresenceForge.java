@@ -37,7 +37,7 @@ import cpw.mods.fml.common.Mod;
  *
  * @author CDAGaming
  */
-@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, acceptedMinecraftVersions = "*")
+@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", acceptedMinecraftVersions = "*")
 public class CraftPresenceForge {
     /**
      * Begins Scheduling Ticks on Class Initialization

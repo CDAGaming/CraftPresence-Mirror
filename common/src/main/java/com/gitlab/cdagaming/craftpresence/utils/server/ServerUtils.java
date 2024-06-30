@@ -33,19 +33,17 @@ import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
-import com.mojang.realmsclient.RealmsMainScreen;
-import com.mojang.realmsclient.dto.McoServer;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.client.gui.GuiScreenRealmsProxy;
 import net.minecraft.client.multiplayer.GuiConnecting;
+import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.client.network.NetHandlerPlayClient;
 
 import java.util.List;
 import java.util.Map;
@@ -162,13 +160,9 @@ public class ServerUtils implements ExtendedModule {
      */
     private ServerData currentServerData;
     /**
-     * The Current Realm Connection Data and Info
-     */
-    private McoServer currentRealmData;
-    /**
      * The Player's Current Connection Data
      */
-    private NetHandlerPlayClient currentConnection;
+    private NetClientHandler currentConnection;
     /**
      * If the RPC needs to be Updated or Re-Synchronized<p>
      * Needed here for Multiple-Condition RPC Triggers
@@ -209,7 +203,6 @@ public class ServerUtils implements ExtendedModule {
         currentServer_MOTD_Lines.clear();
         currentServer_Name = null;
         currentServerData = null;
-        currentRealmData = null;
         currentConnection = null;
         currentPlayers = 0;
         maxPlayers = 0;
@@ -234,36 +227,16 @@ public class ServerUtils implements ExtendedModule {
         joinInProgress = CraftPresence.CLIENT.STATUS == DiscordStatus.JoinGame || CraftPresence.CLIENT.STATUS == DiscordStatus.SpectateGame;
     }
 
-    /**
-     * Attempt to locate Realm Data from the current connection
-     *
-     * @param connection The Server Connection Data and Info
-     * @return the found realm data, or null
-     */
-    @SuppressWarnings("RedundantCast")
-    private McoServer findRealmData(final NetHandlerPlayClient connection) {
-        try {
-            if (connection.guiScreenServer instanceof GuiScreenRealmsProxy realmsProxy &&
-                    realmsProxy.method_6724() instanceof RealmsMainScreen realmsMainScreen) {
-                return (McoServer) StringUtils.executeMethod(
-                        RealmsMainScreen.class, realmsMainScreen,
-                        new Class[]{long.class},
-                        new Object[]{(long) StringUtils.getField(
-                                RealmsMainScreen.class, realmsMainScreen,
-                                "selectedServerId"
-                        )},
-                        "findServer"
-                );
-            }
-        } catch (Throwable ignored) {
-        }
-        return null;
-    }
-
     @Override
     public void updateData() {
-        final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
-        final NetHandlerPlayClient newConnection = CraftPresence.instance.getNetHandler();
+        ServerData newServerData;
+        final NetClientHandler newConnection = CraftPresence.instance.getNetHandler();
+
+        try {
+            newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "M");
+        } catch (Exception ex) {
+            newServerData = null;
+        }
 
         if (!joinInProgress) {
             // If connected to a Realm, locate the RealmServer instance
@@ -271,11 +244,7 @@ public class ServerUtils implements ExtendedModule {
             //
             // Note: A Realm is only checked for *once* under set conditions
             if (!hasCheckedRealm) {
-                final boolean canCheckRealm = newServerData != null && newConnection != null;
-                if (canCheckRealm) {
-                    currentRealmData = findRealmData(newConnection);
-                    isOnRealm = currentRealmData != null;
-                }
+                isOnRealm = false;
                 hasCheckedRealm = true;
             }
 
@@ -311,7 +280,7 @@ public class ServerUtils implements ExtendedModule {
      * @param newPlayerList         The Current Player Map, if available
      */
     private void processData(final boolean newLANStatus, final boolean newSinglePlayerStatus,
-                             final ServerData newServerData, final NetHandlerPlayClient newConnection,
+                             final ServerData newServerData, final NetClientHandler newConnection,
                              final String newServer_IP, final String newServer_MOTD, final String newServer_Name,
                              final int newCurrentPlayers, final int newMaxPlayers, final List<GuiPlayerInfo> newPlayerList) {
         if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer || ((newServerData != null && !newServerData.equals(currentServerData)) ||
@@ -387,21 +356,8 @@ public class ServerUtils implements ExtendedModule {
      * @param newServerData The Current Server Connection Data and Info
      * @param newConnection The Player's Current Connection Data
      */
-    private void processRealmData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
-        final List<GuiPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerInfoList) : StringUtils.newArrayList();
-        final int newCurrentPlayers = newConnection != null ? newConnection.playerInfoList.size() : 1;
-
-        final String newServer_IP = getServerAddress(newServerData);
-        final String newServer_Name = currentRealmData.getName();
-        final String newServer_MOTD = !isInvalidMotd(currentRealmData.getMotd()) ?
-                StringUtils.stripAllFormatting(currentRealmData.getMotd()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
-
-        processData(false, false,
-                newServerData, newConnection,
-                newServer_IP, newServer_MOTD, newServer_Name,
-                newCurrentPlayers, 10,
-                newPlayerList
-        );
+    private void processRealmData(final ServerData newServerData, final NetClientHandler newConnection) {
+        processServerData(newServerData, newConnection);
     }
 
     /**
@@ -410,12 +366,12 @@ public class ServerUtils implements ExtendedModule {
      * @param newServerData The Current Server Connection Data and Info
      * @param newConnection The Player's Current Connection Data
      */
-    private void processServerData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
+    private void processServerData(final ServerData newServerData, final NetClientHandler newConnection) {
         final List<GuiPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerInfoList) : StringUtils.newArrayList();
         final int newCurrentPlayers = newConnection != null ? newConnection.playerInfoList.size() : 1;
         final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
         final boolean newSinglePlayerStatus = CraftPresence.instance.isSingleplayer();
-        final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (newServerData != null && newServerData.isLanServer());
+        final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (CraftPresence.player != null && !CraftPresence.player.worldObj.isRemote);
 
         final String newServer_IP = getServerAddress(newServerData);
         final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
@@ -508,7 +464,7 @@ public class ServerUtils implements ExtendedModule {
         final boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
-            CraftPresence.instance.addScheduledTask(() -> joinServer(new ServerData(serverName, serverIP, false)));
+            joinServer(new ServerData(serverName, serverIP));
         } else {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
         }
@@ -555,7 +511,7 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("world.difficulty", () -> {
             final String newDifficulty = CraftPresence.player.worldObj.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.player.worldObj.difficultySetting.name().toLowerCase());
+                    Integer.toString(CraftPresence.player.worldObj.difficultySetting);
             return StringUtils.getOrDefault(newDifficulty);
         });
         syncArgument("world.weather.name", () -> {
@@ -660,7 +616,7 @@ public class ServerUtils implements ExtendedModule {
                 // Attempt to find alternative icons, if no overrides are present
                 if (StringUtils.isNullOrEmpty(currentServerIcon)) {
                     // Logic cloned from ScrollableListControl#renderSlotItem
-                    final String originalName = currentRealmData.owner;
+                    final String originalName = "";
                     final boolean isValidUuid = StringUtils.isValidUuid(originalName);
                     if (!CraftPresence.CONFIG.hasChanged() && CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                             !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.playerSkinEndpoint)) {

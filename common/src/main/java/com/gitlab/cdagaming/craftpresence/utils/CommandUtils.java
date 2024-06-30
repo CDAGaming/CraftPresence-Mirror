@@ -249,7 +249,7 @@ public class CommandUtils {
             manager.onTick();
         }
         CraftPresence.SCHEDULER.onTick();
-        CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
+        CraftPresence.KEYBINDINGS.onTick();
 
         CraftPresence.SCHEDULER.TICK_LOCK.lock();
         try {

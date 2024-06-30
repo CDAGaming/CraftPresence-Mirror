@@ -115,8 +115,7 @@ public class EntityUtils implements ExtendedModule {
         String result = "";
         if (entity != null) {
             result = StringUtils.getOrDefault(
-                    entity.getFormattedCommandSenderName().getFormattedText(),
-                    entity.getCommandSenderName()
+                    entity.getEntityName()
             );
         }
 
@@ -322,8 +321,9 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        if (!EntityList.method_8367().isEmpty()) {
-            for (Object entityLocationObj : EntityList.method_8367()) {
+        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_75626_c", "field_3269", "c");
+        if (!mappings.values().isEmpty()) {
+            for (Object entityLocationObj : mappings.values()) {
                 final String entityLocation = (String) entityLocationObj;
                 if (entityLocation != null) {
                     final String entityName = StringUtils.getOrDefault(entityLocation, "generic");
