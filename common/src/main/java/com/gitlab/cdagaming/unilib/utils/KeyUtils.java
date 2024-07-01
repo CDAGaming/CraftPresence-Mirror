@@ -24,6 +24,7 @@
 
 package com.gitlab.cdagaming.unilib.utils;
 
+import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.impl.KeyConverter;
 import io.github.cdagaming.unicore.impl.TriFunction;
@@ -84,6 +85,10 @@ public class KeyUtils {
         this.protocol = protocol;
     }
 
+    public KeyUtils() {
+        this(ModUtils.INSTANCE_GETTER, ModUtils.MCProtocolID);
+    }
+
     public Minecraft getInstance() {
         return instance.get();
     }
@@ -96,20 +101,22 @@ public class KeyUtils {
         return canSyncKeys.get();
     }
 
-    public void setCanCheckKeys(final Supplier<Boolean> canCheckKeys) {
+    public KeyUtils setCanCheckKeys(final Supplier<Boolean> canCheckKeys) {
         this.canCheckKeys = canCheckKeys;
+        return this;
     }
 
-    public void setCanCheckKeys(final boolean canCheckKeys) {
-        this.canCheckKeys = () -> canCheckKeys;
+    public KeyUtils setCanCheckKeys(final boolean canCheckKeys) {
+        return setCanCheckKeys(() -> canCheckKeys);
     }
 
-    public void setCanSyncKeys(final Supplier<Boolean> canSyncKeys) {
+    public KeyUtils setCanSyncKeys(final Supplier<Boolean> canSyncKeys) {
         this.canSyncKeys = canSyncKeys;
+        return this;
     }
 
-    public void setCanSyncKeys(final boolean canSyncKeys) {
-        this.canSyncKeys = () -> canSyncKeys;
+    public KeyUtils setCanSyncKeys(final boolean canSyncKeys) {
+        return setCanSyncKeys(() -> canSyncKeys);
     }
 
     /**
