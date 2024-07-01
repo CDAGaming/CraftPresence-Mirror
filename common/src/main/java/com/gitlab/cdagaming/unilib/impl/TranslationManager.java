@@ -47,7 +47,8 @@ public record TranslationManager(Minecraft client,
     /**
      * Initializes a new manager for the {@link TranslationUtils} instance
      *
-     * @param instance the {@link TranslationUtils} instance to attach to
+     * @param client   The current game instance
+     * @param instance The {@link TranslationUtils} instance to attach to
      */
     public TranslationManager(final Minecraft client, final TranslationUtils instance) {
         this.client = client;

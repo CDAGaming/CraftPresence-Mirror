@@ -503,6 +503,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param v                    The V Mapping Value
      * @param startColorObj        The starting texture RGB data to interpret
      * @param endColorObj          The ending texture RGB data to interpret
+     * @param texLocation          The game texture to render the object as
      */
     public void drawTexture(final double left, final double right,
                             final double top, final double bottom,
@@ -1332,6 +1333,9 @@ public class ExtendedScreen extends GuiScreen {
         return getScreenWidth();
     }
 
+    /**
+     * Applies any additional Screen Settings
+     */
     public void setScreenSettings() {
         // N/A
     }

@@ -80,41 +80,89 @@ public class KeyUtils {
      */
     private Supplier<Boolean> canSyncKeys = () -> true;
 
+    /**
+     * Create an instance of this class.
+     *
+     * @param instance The game instance for this module
+     * @param protocol The game protocol for this module
+     */
     public KeyUtils(final Supplier<Minecraft> instance, final int protocol) {
         this.instance = instance;
         this.protocol = protocol;
     }
 
+    /**
+     * Create an instance of this class.
+     */
     public KeyUtils() {
         this(ModUtils.INSTANCE_GETTER, ModUtils.MCProtocolID);
     }
 
+    /**
+     * Retrieve the game instance for this module
+     *
+     * @return the game instance for this module
+     */
     public Minecraft getInstance() {
         return instance.get();
     }
 
+    /**
+     * Retrieve whether registered keys can be iterated over
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
     public boolean canCheckKeys() {
         return canCheckKeys.get();
     }
 
+    /**
+     * Retrieve whether key sync operations are allowed
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
     public boolean canSyncKeys() {
         return canSyncKeys.get();
     }
 
+    /**
+     * Sets whether registered keys can be iterated over
+     *
+     * @param canCheckKeys the new condition
+     * @return the current instance of this module
+     */
     public KeyUtils setCanCheckKeys(final Supplier<Boolean> canCheckKeys) {
         this.canCheckKeys = canCheckKeys;
         return this;
     }
 
+    /**
+     * Sets whether registered keys can be iterated over
+     *
+     * @param canCheckKeys the new condition
+     * @return the current instance of this module
+     */
     public KeyUtils setCanCheckKeys(final boolean canCheckKeys) {
         return setCanCheckKeys(() -> canCheckKeys);
     }
 
+    /**
+     * Sets whether key sync operations are allowed
+     *
+     * @param canSyncKeys the new condition
+     * @return the current instance of this module
+     */
     public KeyUtils setCanSyncKeys(final Supplier<Boolean> canSyncKeys) {
         this.canSyncKeys = canSyncKeys;
         return this;
     }
 
+    /**
+     * Sets whether key sync operations are allowed
+     *
+     * @param canSyncKeys the new condition
+     * @return the current instance of this module
+     */
     public KeyUtils setCanSyncKeys(final boolean canSyncKeys) {
         return setCanSyncKeys(() -> canSyncKeys);
     }
@@ -185,15 +233,18 @@ public class KeyUtils {
     /**
      * Registers a new Keybinding with the specified info
      *
-     * @param id         The keybinding internal identifier, used for the Key Sync Queue
-     * @param name       The name or description of the keybinding
-     * @param category   The category for the keybinding
-     * @param defaultKey The default key for this binding
-     * @param currentKey The current key for this binding
-     * @param onPress    The event to execute when the KeyBind is being pressed
-     * @param onBind     The event to execute when the KeyBind is being rebound to another key
-     * @param onOutdated The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
-     * @param callback   The event to execute upon an exception occurring during KeyBind events
+     * @param id                The keybinding internal identifier, used for the Key Sync Queue
+     * @param name              The name or description of the keybinding
+     * @param nameFormatter     The Function to supply extra formatting to the key name
+     * @param category          The category for the keybinding
+     * @param categoryFormatter The Function to supply extra formatting to the key category
+     * @param defaultKey        The default key for this binding
+     * @param currentKey        The current key for this binding
+     * @param detailsSupplier   The supplier for additional key details
+     * @param onPress           The event to execute when the KeyBind is being pressed
+     * @param onBind            The event to execute when the KeyBind is being rebound to another key
+     * @param onOutdated        The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
+     * @param callback          The event to execute upon an exception occurring during KeyBind events
      * @return the created and registered KeyBind instance
      */
     public KeyBinding registerKey(final String id, final String name,
@@ -230,15 +281,16 @@ public class KeyUtils {
     /**
      * Registers a new Keybinding with the specified info
      *
-     * @param id         The keybinding internal identifier, used for the Key Sync Queue
-     * @param name       The name or description of the keybinding
-     * @param category   The category for the keybinding
-     * @param defaultKey The default key for this binding
-     * @param currentKey The current key for this binding
-     * @param onPress    The event to execute when the KeyBind is being pressed
-     * @param onBind     The event to execute when the KeyBind is being rebound to another key
-     * @param onOutdated The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
-     * @param callback   The event to execute upon an exception occurring during KeyBind events
+     * @param id              The keybinding internal identifier, used for the Key Sync Queue
+     * @param name            The name or description of the keybinding
+     * @param category        The category for the keybinding
+     * @param defaultKey      The default key for this binding
+     * @param currentKey      The current key for this binding
+     * @param detailsSupplier The supplier for additional key details
+     * @param onPress         The event to execute when the KeyBind is being pressed
+     * @param onBind          The event to execute when the KeyBind is being rebound to another key
+     * @param onOutdated      The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
+     * @param callback        The event to execute upon an exception occurring during KeyBind events
      * @return the created and registered KeyBind instance
      */
     public KeyBinding registerKey(final String id, final String name,
@@ -487,8 +539,11 @@ public class KeyUtils {
      * Mapping dictating KeyBind data attributes
      *
      * @param binding            The KeyBinding object attached to this instance
+     * @param nameFormatter      The Function to supply extra formatting to the key name
      * @param categorySupplier   The supplier for the KeyBind category title
+     * @param categoryFormatter  The Function to supply extra formatting to the key category
      * @param defaultKeySupplier The supplier for the default key for this KeyBind
+     * @param detailsSupplier    The supplier for additional key details
      * @param runEvent           The event to execute when the KeyBind is being pressed
      * @param configEvent        The event to execute when the KeyBind is being rebound to another key
      * @param vanillaPredicate   The event to determine whether the KeyBind is up-to-date (Ex: Vanilla==Config)
@@ -512,10 +567,20 @@ public class KeyUtils {
             return categorySupplier().get();
         }
 
+        /**
+         * Retrieve the category name for this KeyBind
+         *
+         * @return the KeyBind category name
+         */
         public String categoryName() {
             return categoryFormatter().apply(category());
         }
 
+        /**
+         * Retrieve the additional KeyBind details
+         *
+         * @return the additional KeyBind details
+         */
         public String details() {
             return detailsSupplier().get();
         }
@@ -529,6 +594,11 @@ public class KeyUtils {
             return binding().getKeyDescription();
         }
 
+        /**
+         * Retrieve the display name for this KeyBind
+         *
+         * @return the KeyBind display name
+         */
         public String displayName() {
             return nameFormatter().apply(description());
         }

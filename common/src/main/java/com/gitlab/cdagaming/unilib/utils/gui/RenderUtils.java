@@ -81,6 +81,7 @@ public class RenderUtils {
     /**
      * Retrieve the default Screen Textures as Texture Data
      *
+     * @param mc       The Minecraft Instance
      * @param protocol The Protocol to Target for this operation
      * @return the default Screen Textures
      */
@@ -91,6 +92,7 @@ public class RenderUtils {
     /**
      * Retrieve the default Widget Textures as Texture Data
      *
+     * @param mc       The Minecraft Instance
      * @param protocol The Protocol to Target for this operation
      * @return the default Widget Textures
      */
@@ -729,6 +731,7 @@ public class RenderUtils {
     /**
      * Retrieve texture data for the specified string, if possible
      *
+     * @param mc      The Minecraft Instance
      * @param texture The data to interpret
      * @return a {@link Tuple} with the mapping "usingExternalData:location:resource"
      */
