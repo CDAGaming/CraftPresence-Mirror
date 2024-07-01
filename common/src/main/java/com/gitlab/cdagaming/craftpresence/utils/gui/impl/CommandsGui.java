@@ -117,7 +117,7 @@ public class CommandsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         6, (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.back",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
                         () -> openScreen(getParent())
                 )
         );
@@ -125,7 +125,7 @@ public class CommandsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         6, 6,
                         95, 20,
-                        "gui.config.message.button.copy",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.copy"),
                         () -> copyToClipboard(executionString)
                 )
         );

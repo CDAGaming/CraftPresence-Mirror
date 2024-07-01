@@ -45,7 +45,10 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     private ExtendedButtonControl controlsButton;
 
     AccessibilitySettingsGui() {
-        super("gui.config.title", "gui.config.title.accessibility");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.accessibility")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
         isTextFormattingBlocked = CoreUtils.isTextFormattingBlocked(getProtocol());
@@ -64,7 +67,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         getButtonY(0),
                         180, 20,
                         () -> getInstanceData().languageId = languageIdText.getControlMessage(),
-                        "gui.config.name.accessibility.language_id",
+                        Constants.TRANSLATOR.translate("gui.config.name.accessibility.language_id"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.accessibility.language_id")
@@ -77,7 +80,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         stripTranslationColorsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(1),
-                        "gui.config.name.accessibility.strip_translation_colors",
+                        Constants.TRANSLATOR.translate("gui.config.name.accessibility.strip_translation_colors"),
                         getInstanceData().stripTranslationColors,
                         () -> getInstanceData().stripTranslationColors = stripTranslationColorsButton.isChecked(),
                         () -> drawMultiLineString(
@@ -90,7 +93,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         stripTranslationFormattingButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(2, -10),
-                        "gui.config.name.accessibility.strip_translation_formatting",
+                        Constants.TRANSLATOR.translate("gui.config.name.accessibility.strip_translation_formatting"),
                         getInstanceData().stripTranslationFormatting,
                         () -> getInstanceData().stripTranslationFormatting = stripTranslationFormattingButton.isChecked(),
                         () -> {
@@ -114,7 +117,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
         stripExtraGuiElementsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(3, -20),
-                        "gui.config.name.accessibility.strip_extra_gui_elements",
+                        Constants.TRANSLATOR.translate("gui.config.name.accessibility.strip_extra_gui_elements"),
                         getInstanceData().stripExtraGuiElements,
                         () -> getInstanceData().stripExtraGuiElements = stripExtraGuiElementsButton.isChecked(),
                         () -> drawMultiLineString(

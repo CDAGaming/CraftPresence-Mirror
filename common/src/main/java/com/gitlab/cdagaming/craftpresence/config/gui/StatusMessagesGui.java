@@ -112,7 +112,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                     new ExtendedButtonControl(
                             startX, getButtonY(buttonRow),
                             180, 20,
-                            entry.getKey(),
+                            Constants.TRANSLATOR.getLocalizedMessage(entry.getKey()),
                             () -> openScreen(
                                     new DynamicEditorGui(
                                             entry.getValue().getFirst(),
@@ -121,7 +121,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.defaultData = (ModuleData) getInstanceData().getDefaults().getProperty(attributeName);
                                                 screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.isDefaultValue = true;
-                                                screenInstance.resetText = "gui.config.message.button.reset_to_default";
+                                                screenInstance.resetText = Constants.TRANSLATOR.translate("gui.config.message.button.reset_to_default");
                                             },
                                             (attributeName, screenInstance) -> {
                                                 // Event to occur when initializing existing data
@@ -132,7 +132,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                 screenInstance.isDefaultValue = screenInstance.isPreliminaryData || (screenInstance.currentData.equals(screenInstance.defaultData));
-                                                screenInstance.resetText = "gui.config.message.button.reset_to_default";
+                                                screenInstance.resetText = Constants.TRANSLATOR.translate("gui.config.message.button.reset_to_default");
                                             },
                                             (screenInstance, attributeName, inputText) -> {
                                                 // Event to occur when adjusting set data

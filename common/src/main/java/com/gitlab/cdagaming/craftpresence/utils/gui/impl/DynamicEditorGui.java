@@ -87,7 +87,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     public void initializeUi() {
         int controlIndex = 0;
         if (!isLoaded() && !initialized) {
-            resetText = "gui.config.message.button.remove";
+            resetText = Constants.TRANSLATOR.translate("gui.config.message.button.remove");
             if (isNewValue) {
                 mainTitle = Constants.TRANSLATOR.translate("gui.config.title.editor.add.new");
                 if (onNewInit != null) {
@@ -196,7 +196,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                             getButtonY(controlIndex++),
                             147, 20,
                             () -> onSpecificCallback.accept(defaultIcon.getControlMessage(), this, false),
-                            "gui.config.message.editor.icon.change"
+                            Constants.TRANSLATOR.translate("gui.config.message.editor.icon.change")
                     )
             );
             ConfigurationGui.addIconSelector(this, childFrame, () -> defaultIcon,
@@ -209,7 +209,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                     new ExtendedButtonControl(
                             (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                             180, 20,
-                            "gui.config.title.editor.presence",
+                            Constants.TRANSLATOR.translate("gui.config.title.editor.presence"),
                             () -> onSpecificCallback.accept(attributeName, this, true),
                             () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
@@ -224,7 +224,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.back",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
                         () -> {
                             if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getControlMessage())) {
                                 attributeName = secondaryInput.getControlMessage();
@@ -251,10 +251,10 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        proceedButton.setControlMessage(
+        proceedButton.setControlMessage(Constants.TRANSLATOR.translate(
                 isAdjusting() ?
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
-        );
+        ));
 
         proceedButton.setControlEnabled(isValidEntries());
 

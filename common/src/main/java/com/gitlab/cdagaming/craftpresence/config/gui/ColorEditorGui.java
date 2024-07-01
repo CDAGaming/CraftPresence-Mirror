@@ -49,7 +49,10 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
     private SliderControl tintFactor;
 
     ColorEditorGui(ColorData moduleData, ColorData defaultData) {
-        super("gui.config.title", "gui.config.title.editor.color");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.editor.color")
+        );
         DEFAULTS = defaultData;
         INSTANCE = moduleData.copy();
         CURRENT = moduleData;
@@ -97,7 +100,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                 ));
                             }
                         },
-                        "gui.config.message.editor.hex_code"
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.hex_code")
                 )
         );
         startRed = childFrame.addControl(
@@ -186,7 +189,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                                 ));
                             }
                         },
-                        "gui.config.message.editor.hex_code"
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.hex_code")
                 )
         );
         endRed = childFrame.addControl(
@@ -268,7 +271,7 @@ public class ColorEditorGui extends ConfigurationGui<ColorData> {
                         getButtonY(13),
                         180, 20,
                         () -> getInstanceData().setTexLocation(textureLocationText.getControlMessage()),
-                        "gui.config.message.editor.texture_path"
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.texture_path")
                 )
         );
         textureLocationText.setControlMessage(getInstanceData().getTexLocation());

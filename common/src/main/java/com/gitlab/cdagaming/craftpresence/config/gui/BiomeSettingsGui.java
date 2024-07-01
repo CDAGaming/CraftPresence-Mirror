@@ -45,7 +45,10 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     private TextWidget defaultMessage, defaultIcon;
 
     BiomeSettingsGui() {
-        super("gui.config.title", "gui.config.title.biome_messages");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.biome_messages")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -67,7 +70,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                             defaultBiomeData.setTextOverride(defaultMessage.getControlMessage());
                             getInstanceData().biomeData.put("default", defaultBiomeData);
                         },
-                        "gui.config.message.default.biome",
+                        Constants.TRANSLATOR.translate("gui.config.message.default.biome"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
@@ -85,7 +88,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         getButtonY(1),
                         147, 20,
                         () -> getInstanceData().fallbackBiomeIcon = defaultIcon.getControlMessage(),
-                        "gui.config.name.biome_messages.biome_icon",
+                        Constants.TRANSLATOR.translate("gui.config.name.biome_messages.biome_icon"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
@@ -102,7 +105,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
-                        "gui.config.name.biome_messages.biome_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.biome_messages.biome_messages"),
                         () -> openScreen(
                                 new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.biome"), CraftPresence.BIOMES.BIOME_NAMES,

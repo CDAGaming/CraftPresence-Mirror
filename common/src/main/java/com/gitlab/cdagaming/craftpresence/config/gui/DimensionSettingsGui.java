@@ -45,7 +45,10 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     private TextWidget defaultMessage, defaultIcon;
 
     DimensionSettingsGui() {
-        super("gui.config.title", "gui.config.title.dimension_messages");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.dimension_messages")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -67,7 +70,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                             defaultDimensionData.setTextOverride(defaultMessage.getControlMessage());
                             getInstanceData().dimensionData.put("default", defaultDimensionData);
                         },
-                        "gui.config.message.default.dimension",
+                        Constants.TRANSLATOR.translate("gui.config.message.default.dimension"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
@@ -85,7 +88,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         getButtonY(1),
                         147, 20,
                         () -> getInstanceData().fallbackDimensionIcon = defaultIcon.getControlMessage(),
-                        "gui.config.name.dimension_messages.dimension_icon",
+                        Constants.TRANSLATOR.translate("gui.config.name.dimension_messages.dimension_icon"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
@@ -102,7 +105,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
-                        "gui.config.name.dimension_messages.dimension_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.dimension_messages.dimension_messages"),
                         () -> openScreen(
                                 new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.dimension"), CraftPresence.DIMENSIONS.DIMENSION_NAMES,

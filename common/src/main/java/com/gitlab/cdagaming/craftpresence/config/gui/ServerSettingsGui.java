@@ -45,7 +45,10 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     private TextWidget defaultMOTD, defaultName, defaultMessage, defaultIcon;
 
     ServerSettingsGui() {
-        super("gui.config.title", "gui.config.title.server_messages");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.server_messages")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -63,7 +66,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(0),
                         180, 20,
                         () -> getInstanceData().fallbackServerName = defaultName.getControlMessage(),
-                        "gui.config.name.server_messages.server_name",
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.server_name"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_name")
@@ -78,7 +81,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(1),
                         180, 20,
                         () -> getInstanceData().fallbackServerMotd = defaultMOTD.getControlMessage(),
-                        "gui.config.name.server_messages.server_motd",
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.server_motd"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_motd")
@@ -97,7 +100,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                             defaultServerData.setTextOverride(defaultMessage.getControlMessage());
                             getInstanceData().serverData.put("default", defaultServerData);
                         },
-                        "gui.config.message.default.server",
+                        Constants.TRANSLATOR.translate("gui.config.message.default.server"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
@@ -115,7 +118,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(3),
                         147, 20,
                         () -> getInstanceData().fallbackServerIcon = defaultIcon.getControlMessage(),
-                        "gui.config.name.server_messages.server_icon",
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.server_icon"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_icon")
@@ -132,7 +135,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(4),
                         180, 20,
-                        "gui.config.name.server_messages.server_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.server_messages"),
                         () -> openScreen(
                                 new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.server"), CraftPresence.SERVER.knownAddresses,

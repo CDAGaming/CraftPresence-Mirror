@@ -40,7 +40,10 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
     private final Display INSTANCE, DEFAULTS;
 
     DisplaySettingsGui() {
-        super("gui.config.title", "gui.config.title.display_settings");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.display_settings")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -54,7 +57,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(0),
                         180, 20,
-                        "gui.config.title.editor.presence",
+                        Constants.TRANSLATOR.translate("gui.config.title.editor.presence"),
                         () -> openScreen(
                                 new PresenceEditorGui(
                                         getInstanceData().presenceData,
@@ -76,7 +79,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(1),
                         180, 20,
-                        "gui.config.name.display.dynamic_icons",
+                        Constants.TRANSLATOR.translate("gui.config.name.display.dynamic_icons"),
                         () -> openScreen(
                                 new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
@@ -166,7 +169,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
-                        "gui.config.name.display.dynamic_variables",
+                        Constants.TRANSLATOR.translate("gui.config.name.display.dynamic_variables"),
                         () -> openScreen(
                                 new SelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.item"), getInstanceData().dynamicVariables.keySet(),

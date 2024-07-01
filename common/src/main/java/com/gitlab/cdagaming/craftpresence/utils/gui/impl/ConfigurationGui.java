@@ -84,7 +84,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.back",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
                         () -> {
                             applySettings();
                             openScreen(getParent());
@@ -95,7 +95,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 new ExtendedButtonControl(
                         6, (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.reset_to_default",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.reset_to_default"),
                         () -> {
                             if (resetData()) {
                                 reloadUi();
@@ -116,7 +116,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 new ExtendedButtonControl(
                         (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.sync.config",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.sync.config"),
                         () -> {
                             if (syncData()) {
                                 reloadUi();

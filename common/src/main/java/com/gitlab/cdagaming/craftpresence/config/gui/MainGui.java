@@ -42,7 +42,9 @@ public class MainGui extends ConfigurationGui<Config> {
             serverSet;
 
     public MainGui(GuiScreen parentScreen) {
-        super("gui.config.title");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title")
+        );
         setParent(parentScreen);
 
         DEFAULTS = getCurrentData().getDefaults();
@@ -84,7 +86,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.general",
+                        Constants.TRANSLATOR.translate("gui.config.title.general"),
                         () -> openScreen(new GeneralSettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -97,7 +99,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.biome_messages",
+                        Constants.TRANSLATOR.translate("gui.config.title.biome_messages"),
                         () -> openScreen(new BiomeSettingsGui()),
                         () -> {
                             if (!biomeSet.isControlEnabled()) {
@@ -123,7 +125,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.dimension_messages",
+                        Constants.TRANSLATOR.translate("gui.config.title.dimension_messages"),
                         () -> openScreen(new DimensionSettingsGui()),
                         () -> {
                             if (!dimensionSet.isControlEnabled()) {
@@ -148,7 +150,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.server_messages",
+                        Constants.TRANSLATOR.translate("gui.config.title.server_messages"),
                         () -> openScreen(new ServerSettingsGui()),
                         () -> {
                             if (!serverSet.isControlEnabled()) {
@@ -175,7 +177,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.status_messages",
+                        Constants.TRANSLATOR.translate("gui.config.title.status_messages"),
                         () -> openScreen(new StatusMessagesGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -189,7 +191,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.advanced",
+                        Constants.TRANSLATOR.translate("gui.config.title.advanced"),
                         () -> openScreen(new AdvancedSettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -204,7 +206,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.accessibility",
+                        Constants.TRANSLATOR.translate("gui.config.title.accessibility"),
                         () -> openScreen(new AccessibilitySettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -218,7 +220,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.display_settings",
+                        Constants.TRANSLATOR.translate("gui.config.title.display_settings"),
                         () -> openScreen(new DisplaySettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(

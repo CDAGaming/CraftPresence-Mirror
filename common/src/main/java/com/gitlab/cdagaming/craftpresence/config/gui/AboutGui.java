@@ -42,7 +42,7 @@ public class AboutGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.version_info",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.version_info"),
                         () -> openScreen(new UpdateInfoGui(Constants.MOD_ID, CraftPresence.UPDATER))
                 )
         );
@@ -52,7 +52,7 @@ public class AboutGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         6, (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.back",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
                         () -> openScreen(getParent())
                 )
         );
@@ -62,7 +62,7 @@ public class AboutGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 51),
                         180, 20,
-                        "gui.config.message.button.view_source",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.view_source"),
                         () -> UrlUtils.openUrl(Constants.URL_SOURCE)
                 )
         );
@@ -72,7 +72,7 @@ public class AboutGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.wiki",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.wiki"),
                         () -> UrlUtils.openUrl(Constants.URL_README)
                 )
         );
