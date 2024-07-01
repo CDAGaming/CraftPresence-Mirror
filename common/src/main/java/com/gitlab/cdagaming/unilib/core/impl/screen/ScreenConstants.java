@@ -25,9 +25,9 @@
 package com.gitlab.cdagaming.unilib.core.impl.screen;
 
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
-import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
-import com.gitlab.cdagaming.unilib.core.config.element.ColorSection;
+import io.github.cdagaming.unicore.utils.StringUtils;
 
+import java.awt.*;
 import java.util.function.Function;
 
 /**
@@ -149,5 +149,91 @@ public class ScreenConstants {
     }
 
     public record TooltipData(boolean renderTooltips, ColorData backgroundColor, ColorData borderColor) {
+    }
+
+    public record ColorData(ColorSection start, ColorSection end, String texLocation) {
+        public ColorData(ColorSection start, ColorSection end) {
+            this(start, end, "");
+        }
+
+        public ColorData(ColorSection start, String texLocation) {
+            this(start, null, texLocation);
+        }
+
+        public ColorData(ColorSection start) {
+            this(start, "");
+        }
+
+        public ColorData(Color start, Color end, String texLocation) {
+            this(new ColorSection(start), end != null ? new ColorSection(end) : null, texLocation);
+        }
+
+        public ColorData(Color start, Color end) {
+            this(start, end, "");
+        }
+
+        public ColorData(Color start, String texLocation) {
+            this(start, null, texLocation);
+        }
+
+        public ColorData(Color start) {
+            this(start, "");
+        }
+
+        public ColorData(String texLocation) {
+            this(new ColorSection(), null, texLocation);
+        }
+
+        public ColorData() {
+            this(new ColorSection(), null, "");
+        }
+
+        public ColorData(ColorData other) {
+            this(other.start, other.end, other.texLocation);
+        }
+
+        public boolean hasEnd() {
+            return end != null;
+        }
+
+        @Override
+        public ColorSection end() {
+            return hasEnd() ? end : start();
+        }
+
+        public Color startColor() {
+            return start().color();
+        }
+
+        public Color endColor() {
+            return end().color();
+        }
+
+        public boolean hasTexLocation() {
+            return !StringUtils.isNullOrEmpty(texLocation);
+        }
+
+        @Override
+        public String texLocation() {
+            return hasTexLocation() ? texLocation : "";
+        }
+    }
+
+    public record ColorSection(int red, int green, int blue, int alpha) {
+        public ColorSection(Color color) {
+            this(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        }
+
+        public ColorSection(ColorSection other) {
+            this(other.red, other.green, other.blue, other.alpha);
+        }
+
+        public ColorSection() {
+            this(Color.white);
+        }
+
+        public Color color() {
+            return new Color(red(), green(), blue(), alpha());
+        }
     }
 }

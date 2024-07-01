@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.unilib.utils.gui;
 
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
-import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
 import com.gitlab.cdagaming.unilib.core.impl.screen.ScissorStack;
 import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenConstants;
 import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenRectangle;
@@ -900,16 +899,16 @@ public class RenderUtils {
                 }
             }
 
-            final ColorData backgroundColorInfo = colorInfo.backgroundColor();
-            final ColorData borderColorInfo = colorInfo.borderColor();
+            final ScreenConstants.ColorData backgroundColorInfo = colorInfo.backgroundColor();
+            final ScreenConstants.ColorData borderColorInfo = colorInfo.borderColor();
             final int zLevel = 300;
 
             // Render Background
             if (backgroundColorInfo != null) {
-                final Color backgroundStart = backgroundColorInfo.getStartColor();
-                final Color backgroundEnd = backgroundColorInfo.getEndColor();
+                final Color backgroundStart = backgroundColorInfo.startColor();
+                final Color backgroundEnd = backgroundColorInfo.endColor();
 
-                if (StringUtils.isNullOrEmpty(backgroundColorInfo.getTexLocation())) {
+                if (StringUtils.isNullOrEmpty(backgroundColorInfo.texLocation())) {
                     // Draw with Colors
                     drawGradientBox(
                             tooltipX - 4, tooltipY - 4,
@@ -920,7 +919,7 @@ public class RenderUtils {
                             backgroundStart, backgroundEnd
                     );
                 } else {
-                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(mc, backgroundColorInfo.getTexLocation());
+                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(mc, backgroundColorInfo.texLocation());
                     final boolean usingExternalTexture = textureData.getFirst();
                     final ResourceLocation backGroundTexture = textureData.getThird();
 
@@ -943,10 +942,10 @@ public class RenderUtils {
 
             // Render Border
             if (borderColorInfo != null) {
-                final Color borderStart = borderColorInfo.getStartColor();
-                final Color borderEnd = borderColorInfo.getEndColor();
+                final Color borderStart = borderColorInfo.startColor();
+                final Color borderEnd = borderColorInfo.endColor();
 
-                if (StringUtils.isNullOrEmpty(borderColorInfo.getTexLocation())) {
+                if (StringUtils.isNullOrEmpty(borderColorInfo.texLocation())) {
                     // Draw with Colors
                     drawGradientBox(
                             tooltipX - 3, tooltipY - 3,
@@ -956,7 +955,7 @@ public class RenderUtils {
                             null, null
                     );
                 } else {
-                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(mc, borderColorInfo.getTexLocation());
+                    final Tuple<Boolean, String, ResourceLocation> textureData = getTextureData(mc, borderColorInfo.texLocation());
                     final boolean usingExternalTexture = textureData.getFirst();
                     final ResourceLocation borderTexture = textureData.getThird();
 

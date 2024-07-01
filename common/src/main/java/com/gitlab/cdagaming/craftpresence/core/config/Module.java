@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.unilib.core.config;
+package com.gitlab.cdagaming.craftpresence.core.config;
 
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;

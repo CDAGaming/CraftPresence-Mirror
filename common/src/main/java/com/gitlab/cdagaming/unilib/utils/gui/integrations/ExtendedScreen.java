@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.unilib.utils.gui.integrations;
 
 import com.gitlab.cdagaming.unilib.ModUtils;
-import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
 import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenConstants;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
@@ -432,19 +431,19 @@ public class ExtendedScreen extends GuiScreen {
      * @param tintFactor The factor at which to tint the background to
      * @param u          The U Mapping Value
      * @param v          The V Mapping Value
-     * @param data       The {@link ColorData} to be used to render the background
+     * @param data       The {@link ScreenConstants.ColorData} to be used to render the background
      */
     public void drawBackground(final double left, final double right,
                                final double top, final double bottom,
                                final double offset, float tintFactor,
                                final double u, final double v,
-                               final ColorData data) {
+                               final ScreenConstants.ColorData data) {
         // Setup Colors + Tint Data
         tintFactor = MathUtils.clamp(tintFactor, 0.0f, 1.0f);
-        final Color startColor = StringUtils.offsetColor(data.getStartColor(), tintFactor);
-        final Color endColor = StringUtils.offsetColor(data.getEndColor(), tintFactor);
+        final Color startColor = StringUtils.offsetColor(data.startColor(), tintFactor);
+        final Color endColor = StringUtils.offsetColor(data.endColor(), tintFactor);
 
-        if (StringUtils.isNullOrEmpty(data.getTexLocation())) {
+        if (StringUtils.isNullOrEmpty(data.texLocation())) {
             RenderUtils.drawGradient(left, right, top, bottom,
                     300.0F,
                     startColor, endColor
@@ -452,7 +451,7 @@ public class ExtendedScreen extends GuiScreen {
         } else {
             final Tuple<Boolean, String, ResourceLocation> textureData = RenderUtils.getTextureData(
                     getGameInstance(),
-                    data.getTexLocation()
+                    data.texLocation()
             );
             final boolean usingExternalTexture = textureData.getFirst();
             final ResourceLocation texLocation = textureData.getThird();
@@ -477,12 +476,12 @@ public class ExtendedScreen extends GuiScreen {
      * @param bottom     The Bottom Position of the Object
      * @param offset     The vertical offset to render the background to
      * @param tintFactor The factor at which to tint the background to
-     * @param data       The {@link ColorData} to be used to render the background
+     * @param data       The {@link ScreenConstants.ColorData} to be used to render the background
      */
     public void drawBackground(final double left, final double right,
                                final double top, final double bottom,
                                final double offset, float tintFactor,
-                               final ColorData data) {
+                               final ScreenConstants.ColorData data) {
         drawBackground(
                 left, right, top, bottom,
                 offset, tintFactor,
@@ -532,17 +531,6 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Retrieve the raw background data
-     *
-     * @return the raw background data
-     */
-    public ColorData getRawBackground() {
-        return hasWorld() ?
-                ScreenConstants.DEFAULT_ALT_SCREEN_BACKGROUND :
-                ScreenConstants.DEFAULT_SCREEN_BACKGROUND;
-    }
-
-    /**
      * Retrieve the factor at which to tint the background
      *
      * @return the current tint factor
@@ -556,14 +544,10 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @return the default background
      */
-    public ColorData getScreenBackground() {
-        final ColorData data = getRawBackground();
-        if (!hasWorld()) {
-            // Hotfix: When not in a world, animation issues can occur when alpha is under 255
-            data.getStart().alpha = 255;
-            data.getEnd().alpha = 255;
-        }
-        return data;
+    public ScreenConstants.ColorData getScreenBackground() {
+        return hasWorld() ?
+                ScreenConstants.DEFAULT_ALT_SCREEN_BACKGROUND :
+                ScreenConstants.DEFAULT_SCREEN_BACKGROUND;
     }
 
     /**

@@ -24,7 +24,7 @@
 
 package com.gitlab.cdagaming.unilib.utils.gui.widgets;
 
-import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
+import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenConstants;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -62,9 +62,9 @@ public class TexturedWidget implements DynamicWidget {
      */
     private Supplier<Float> tintSupplier;
     /**
-     * Supplier for the {@link ColorData} to be used to render the content
+     * Supplier for the {@link ScreenConstants.ColorData} to be used to render the content
      */
-    private Supplier<ColorData> infoSupplier;
+    private Supplier<ScreenConstants.ColorData> infoSupplier;
     /**
      * Whether the content should have a surrounding border
      */
@@ -79,7 +79,7 @@ public class TexturedWidget implements DynamicWidget {
      * @param height       The height of the widget
      * @param offset       The vertical offset to render the content to
      * @param tintSupplier The Supplier for the factor at which to tint the content to
-     * @param infoSupplier The Supplier for the {@link ColorData} to be used to render the content
+     * @param infoSupplier The Supplier for the {@link ScreenConstants.ColorData} to be used to render the content
      * @param hasBorder    Whether the content should have a surrounding border
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
@@ -88,7 +88,7 @@ public class TexturedWidget implements DynamicWidget {
             final int width, final int height,
             final double offset,
             final Supplier<Float> tintSupplier,
-            final Supplier<ColorData> infoSupplier,
+            final Supplier<ScreenConstants.ColorData> infoSupplier,
             final boolean hasBorder) {
         setControlPosX(startX);
         setControlPosY(startY);
@@ -177,29 +177,29 @@ public class TexturedWidget implements DynamicWidget {
     }
 
     /**
-     * Retrieve the Supplier for the {@link ColorData} to be used to render the content
+     * Retrieve the Supplier for the {@link ScreenConstants.ColorData} to be used to render the content
      *
-     * @return the current supplier for the {@link ColorData} info
+     * @return the current supplier for the {@link ScreenConstants.ColorData} info
      */
-    public Supplier<ColorData> getInfoSupplier() {
+    public Supplier<ScreenConstants.ColorData> getInfoSupplier() {
         return infoSupplier;
     }
 
     /**
-     * Set the Supplier for the {@link ColorData} to be used to render the content
+     * Set the Supplier for the {@link ScreenConstants.ColorData} to be used to render the content
      *
-     * @param infoSupplier the new supplier for the {@link ColorData} info
+     * @param infoSupplier the new supplier for the {@link ScreenConstants.ColorData} info
      */
-    public void setInfoSupplier(Supplier<ColorData> infoSupplier) {
+    public void setInfoSupplier(Supplier<ScreenConstants.ColorData> infoSupplier) {
         this.infoSupplier = infoSupplier;
     }
 
     /**
-     * Retrieve the {@link ColorData} to be used to render the content
+     * Retrieve the {@link ScreenConstants.ColorData} to be used to render the content
      *
-     * @return the {@link ColorData} info
+     * @return the {@link ScreenConstants.ColorData} info
      */
-    public ColorData getInfo() {
+    public ScreenConstants.ColorData getInfo() {
         return getInfoSupplier().get();
     }
 

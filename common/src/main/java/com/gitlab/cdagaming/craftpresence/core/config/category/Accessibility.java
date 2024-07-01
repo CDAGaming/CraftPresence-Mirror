@@ -24,8 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.core.config.category;
 
+import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
-import com.gitlab.cdagaming.unilib.core.config.Module;
 
 import java.io.Serial;
 import java.io.Serializable;

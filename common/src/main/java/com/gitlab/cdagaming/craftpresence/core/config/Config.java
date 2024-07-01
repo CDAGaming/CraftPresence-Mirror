@@ -33,13 +33,9 @@ import com.gitlab.cdagaming.craftpresence.core.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.TextReplacer;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
-import com.gitlab.cdagaming.unilib.core.config.Module;
-import com.gitlab.cdagaming.unilib.core.config.element.ColorData;
-import com.gitlab.cdagaming.unilib.core.config.element.ColorSection;
 import com.gitlab.cdagaming.unilib.core.impl.KeyConverter;
 import com.gitlab.cdagaming.unilib.core.impl.TranslationConverter;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
@@ -367,47 +363,48 @@ public final class Config extends Module implements Serializable {
                 if (MathUtils.isWithinValue(currentVer, 3, 4, true, false)) {
                     // Schema Changes (v3 -> v4)
                     //  - Migrate Color-Related Settings to new System
-                    final JsonObject oldData = rawJson.getAsJsonObject()
-                            .getAsJsonObject("accessibilitySettings");
-                    final boolean showBackgroundAsDark = oldData
-                            .getAsJsonPrimitive("showBackgroundAsDark").getAsBoolean();
-                    final Map<String, String> propsToChange = new HashMapBuilder<String, String>()
-                            .put("tooltipBackgroundColor", "tooltipBackground")
-                            .put("tooltipBorderColor", "tooltipBorder")
-                            .put("guiBackgroundColor", "guiBackground")
-                            .build();
-
-                    for (Map.Entry<String, String> entry : propsToChange.entrySet()) {
-                        final String oldValue = oldData.getAsJsonPrimitive(entry.getKey()).getAsString();
-                        final ColorData newValue = new ColorData();
-
-                        if (!StringUtils.isNullOrEmpty(oldValue)) {
-                            if (StringUtils.isValidColorCode(oldValue)) {
-                                final ColorSection startColor = new ColorSection(
-                                        StringUtils.findColor(oldValue)
-                                );
-                                newValue.setStartColor(startColor);
-
-                                if (entry.getKey().equalsIgnoreCase("tooltipBorderColor")) {
-                                    final int borderColorCode = startColor.getColor().getRGB();
-                                    final String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
-                                    newValue.setEndColor(new ColorSection(
-                                            StringUtils.findColor(borderColorEnd)
-                                    ));
-                                }
-                            } else {
-                                final boolean applyTint = showBackgroundAsDark && entry.getKey().equalsIgnoreCase("guiBackgroundColor");
-                                if (applyTint) {
-                                    newValue.setStartColor(
-                                            new ColorSection(64, 64, 64, 255)
-                                    );
-                                }
-                                newValue.setTexLocation(oldValue);
-                            }
-                        }
-
-                        accessibilitySettings.setProperty(entry.getValue(), newValue);
-                    }
+                    // As of 06-30-2024, this is dead code and no longer used
+//                    final JsonObject oldData = rawJson.getAsJsonObject()
+//                            .getAsJsonObject("accessibilitySettings");
+//                    final boolean showBackgroundAsDark = oldData
+//                            .getAsJsonPrimitive("showBackgroundAsDark").getAsBoolean();
+//                    final Map<String, String> propsToChange = new HashMapBuilder<String, String>()
+//                            .put("tooltipBackgroundColor", "tooltipBackground")
+//                            .put("tooltipBorderColor", "tooltipBorder")
+//                            .put("guiBackgroundColor", "guiBackground")
+//                            .build();
+//
+//                    for (Map.Entry<String, String> entry : propsToChange.entrySet()) {
+//                        final String oldValue = oldData.getAsJsonPrimitive(entry.getKey()).getAsString();
+//                        final ColorData newValue = new ColorData();
+//
+//                        if (!StringUtils.isNullOrEmpty(oldValue)) {
+//                            if (StringUtils.isValidColorCode(oldValue)) {
+//                                final ColorSection startColor = new ColorSection(
+//                                        StringUtils.findColor(oldValue)
+//                                );
+//                                newValue.setStartColor(startColor);
+//
+//                                if (entry.getKey().equalsIgnoreCase("tooltipBorderColor")) {
+//                                    final int borderColorCode = startColor.getColor().getRGB();
+//                                    final String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
+//                                    newValue.setEndColor(new ColorSection(
+//                                            StringUtils.findColor(borderColorEnd)
+//                                    ));
+//                                }
+//                            } else {
+//                                final boolean applyTint = showBackgroundAsDark && entry.getKey().equalsIgnoreCase("guiBackgroundColor");
+//                                if (applyTint) {
+//                                    newValue.setStartColor(
+//                                            new ColorSection(64, 64, 64, 255)
+//                                    );
+//                                }
+//                                newValue.setTexLocation(oldValue);
+//                            }
+//                        }
+//
+//                        accessibilitySettings.setProperty(entry.getValue(), newValue);
+//                    }
                     currentVer = 4;
                 }
                 if (MathUtils.isWithinValue(currentVer, 4, 5, true, false)) {
@@ -461,7 +458,7 @@ public final class Config extends Module implements Serializable {
                 boolean shouldReset = false, shouldContinue = true;
 
                 if (defaultValue == null) {
-                    if (currentValue == null || !(parentValue instanceof ColorData || parentValue instanceof ColorSection || parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
+                    if (currentValue == null || !(parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
                         Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.prop.invalid", rawName));
                         shouldContinue = false;
                     } else {
