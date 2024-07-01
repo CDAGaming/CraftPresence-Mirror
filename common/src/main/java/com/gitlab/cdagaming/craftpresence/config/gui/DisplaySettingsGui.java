@@ -29,10 +29,10 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
@@ -81,10 +81,10 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.name.display.dynamic_icons"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                         null, null,
-                                        true, true, ScrollableListControl.RenderType.CustomDiscordAsset,
+                                        true, true, DynamicScrollableList.RenderType.CustomDiscordAsset,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -171,10 +171,10 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.name.display.dynamic_variables"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.item"), getInstanceData().dynamicVariables.keySet(),
                                         null, null,
-                                        true, true, ScrollableListControl.RenderType.None,
+                                        true, true, DynamicScrollableList.RenderType.None,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data

@@ -29,11 +29,10 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Advanced;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.IdentifierType;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
@@ -108,10 +107,10 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.name.advanced.gui_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.gui"), CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
-                                        true, true, RenderType.None,
+                                        true, true, DynamicScrollableList.RenderType.None,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -175,7 +174,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                     ), parentScreen
                                             );
                                         }
-                                ).setIdentifierType(IdentifierType.Gui)
+                                ).setIdentifierType(DynamicScrollableList.IdentifierType.Gui)
                         ),
                         () -> {
                             if (!guiMessagesButton.isControlEnabled()) {
@@ -201,10 +200,10 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.name.advanced.item_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.item"), CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
-                                        true, true, RenderType.ItemData,
+                                        true, true, DynamicScrollableList.RenderType.ItemData,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -281,10 +280,10 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.name.advanced.entity_target_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
-                                        true, true, RenderType.EntityData,
+                                        true, true, DynamicScrollableList.RenderType.EntityData,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -377,10 +376,10 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.name.advanced.entity_riding_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
-                                        true, true, RenderType.EntityData,
+                                        true, true, DynamicScrollableList.RenderType.EntityData,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data

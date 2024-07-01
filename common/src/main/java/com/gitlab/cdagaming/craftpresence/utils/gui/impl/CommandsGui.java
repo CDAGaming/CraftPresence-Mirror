@@ -30,7 +30,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
@@ -299,11 +299,11 @@ public class CommandsGui extends ExtendedScreen {
                         );
 
                         if (!results.isEmpty()) {
-                            openScreen(new SelectorGui(
+                            openScreen(new DynamicSelectorGui(
                                     Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                     results,
                                     null, null,
-                                    false, false, RenderType.Placeholder,
+                                    false, false, DynamicScrollableList.RenderType.Placeholder,
                                     null, null
                             ));
                         } else {
@@ -336,11 +336,11 @@ public class CommandsGui extends ExtendedScreen {
                             return;
                         } else if (executionCommandArgs[1].equalsIgnoreCase("items")) {
                             if (CraftPresence.TILE_ENTITIES.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                         CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
-                                        false, false, RenderType.ItemData,
+                                        false, false, DynamicScrollableList.RenderType.ItemData,
                                         null, null
                                 ));
                             } else {
@@ -350,11 +350,11 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("entities")) {
                             if (CraftPresence.ENTITIES.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.entities"),
                                         CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
-                                        false, false, RenderType.EntityData,
+                                        false, false, DynamicScrollableList.RenderType.EntityData,
                                         null, null
                                 ));
                             } else {
@@ -364,11 +364,11 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("servers")) {
                             if (CraftPresence.SERVER.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.servers"),
                                         CraftPresence.SERVER.knownAddresses,
                                         null, null,
-                                        false, false, RenderType.ServerData,
+                                        false, false, DynamicScrollableList.RenderType.ServerData,
                                         null, null
                                 ));
                             } else {
@@ -378,7 +378,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("screens")) {
                             if (CraftPresence.GUIS.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.guis"),
                                         CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
@@ -392,7 +392,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("biomes")) {
                             if (CraftPresence.BIOMES.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.biomes"),
                                         CraftPresence.BIOMES.BIOME_NAMES,
                                         null, null,
@@ -406,7 +406,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("dimensions")) {
                             if (CraftPresence.DIMENSIONS.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.dimensions"),
                                         CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
@@ -448,19 +448,19 @@ public class CommandsGui extends ExtendedScreen {
                                 executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.view.assets");
                             } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[2])) {
                                 if (executionCommandArgs[2].equalsIgnoreCase("custom")) {
-                                    openScreen(new SelectorGui(
+                                    openScreen(new DynamicSelectorGui(
                                             Constants.TRANSLATOR.translate("gui.config.title.selector.view.assets.custom"),
                                             DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                             null, null,
-                                            false, false, RenderType.CustomDiscordAsset,
+                                            false, false, DynamicScrollableList.RenderType.CustomDiscordAsset,
                                             null, null
                                     ));
                                 } else if (executionCommandArgs[2].equalsIgnoreCase("all")) {
-                                    openScreen(new SelectorGui(
+                                    openScreen(new DynamicSelectorGui(
                                             Constants.TRANSLATOR.translate("gui.config.title.selector.view.assets.all"),
                                             DiscordAssetUtils.ASSET_LIST.keySet(),
                                             null, null,
-                                            false, false, RenderType.DiscordAsset,
+                                            false, false, DynamicScrollableList.RenderType.DiscordAsset,
                                             null, null
                                     ));
                                 }

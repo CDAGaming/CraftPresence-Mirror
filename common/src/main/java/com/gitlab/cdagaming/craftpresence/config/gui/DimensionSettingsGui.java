@@ -30,10 +30,10 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Dimension;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -107,10 +107,10 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.name.dimension_messages.dimension_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.dimension"), CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
-                                        true, true, RenderType.None,
+                                        true, true, DynamicScrollableList.RenderType.None,
                                         (attributeName, currentValue) -> {
                                             final ModuleData defaultDimensionData = getInstanceData().dimensionData.get("default");
                                             final ModuleData currentDimensionData = getInstanceData().dimensionData.get(attributeName);

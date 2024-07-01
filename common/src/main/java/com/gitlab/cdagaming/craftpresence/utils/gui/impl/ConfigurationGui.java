@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.config.gui.AboutGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
@@ -66,10 +66,10 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         30, 20,
                         "...",
                         () -> currentScreen.openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                         StringUtils.getOrDefault(textWidget.get().getControlMessage()), null,
-                                        true, false, ScrollableListControl.RenderType.DiscordAsset,
+                                        true, false, DynamicScrollableList.RenderType.DiscordAsset,
                                         onUpdatedCallback,
                                         null
                                 )
