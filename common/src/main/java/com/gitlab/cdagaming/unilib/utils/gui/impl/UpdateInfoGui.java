@@ -61,7 +61,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.check_for_updates",
+                        "Check for Updates",
                         () -> {
                             resetNotes();
                             modUpdater.checkForUpdates(this::updateNotes);
@@ -73,7 +73,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         6, (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.back",
+                        "Back",
                         () -> openScreen(getParent())
                 )
         );
@@ -81,7 +81,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.download",
+                        "Download",
                         () -> UrlUtils.openUrl(modUpdater.getDownloadUrl())
                 )
         );

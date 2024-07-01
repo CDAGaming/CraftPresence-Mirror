@@ -43,7 +43,7 @@ public class AboutGui extends ExtendedScreen {
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.message.button.version_info"),
-                        () -> openScreen(new UpdateInfoGui(Constants.MOD_ID, CraftPresence.UPDATER))
+                        () -> openScreen(new UpdateInfoGui(Constants.NAME, CraftPresence.UPDATER))
                 )
         );
 

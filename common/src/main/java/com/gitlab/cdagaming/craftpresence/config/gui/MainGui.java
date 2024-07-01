@@ -249,7 +249,9 @@ public class MainGui extends ConfigurationGui<Config> {
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.isEnabled());
         serverSet.setControlEnabled(CraftPresence.SERVER.isEnabled());
 
-        proceedButton.setControlMessage(getCurrentData().hasChanged() ? "gui.config.message.button.save" : "gui.config.message.button.back");
+        proceedButton.setControlMessage(Constants.TRANSLATOR.translate(
+                getCurrentData().hasChanged() ? "gui.config.message.button.save" : "gui.config.message.button.back"
+        ));
     }
 
     @Override
