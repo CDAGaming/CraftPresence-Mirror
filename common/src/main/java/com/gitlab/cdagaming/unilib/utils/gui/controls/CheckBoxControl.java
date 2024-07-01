@@ -176,8 +176,8 @@ public class CheckBoxControl extends ExtendedButtonControl {
 
             final int left = getControlPosX() + getBoxWidth() + 2;
             RenderUtils.renderScrollingString(mc,
-                    getFontRenderer(), getDisplayMessage(),
-                    left + (RenderUtils.getStringWidth(getFontRenderer(), getDisplayMessage()) / 2),
+                    getFontRenderer(), getControlMessage(),
+                    left + (RenderUtils.getStringWidth(getFontRenderer(), getControlMessage()) / 2),
                     left, getTop(), getRight() - 2, getBottom(),
                     color
             );

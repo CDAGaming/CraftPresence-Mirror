@@ -182,15 +182,6 @@ public class TextWidget extends ExtendedTextControl {
     }
 
     /**
-     * Retrieve the text to be displayed alongside this control
-     *
-     * @return the current attached message
-     */
-    public String getDisplayTitle() {
-        return getTitle();
-    }
-
-    /**
      * Sets the Event to occur upon Title Mouse Over
      *
      * @param event The event to occur
@@ -224,7 +215,7 @@ public class TextWidget extends ExtendedTextControl {
     @Override
     public void draw(ExtendedScreen screen) {
         if (hasTitle() && setDimensions) {
-            final String mainTitle = getDisplayTitle();
+            final String mainTitle = getTitle();
 
             screen.renderScrollingString(
                     mainTitle,

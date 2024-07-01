@@ -218,7 +218,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
             }
 
             RenderUtils.renderScrollingString(mc,
-                    getFontRenderer(), getDisplayMessage(),
+                    getFontRenderer(), getControlMessage(),
                     getLeft() + 2, getTop(),
                     getRight() - 2, getBottom(),
                     color
@@ -376,15 +376,6 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
         if (onHoverEvent != null) {
             onHoverEvent.run();
         }
-    }
-
-    /**
-     * Gets the control's current display message
-     *
-     * @return The control's current display message
-     */
-    public String getDisplayMessage() {
-        return getControlMessage();
     }
 
     /**
