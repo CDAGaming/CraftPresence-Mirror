@@ -161,7 +161,7 @@ public class ControlsGui extends ExtendedScreen {
             for (String keyName : entry.getValue()) {
                 final KeyUtils.KeyBindData keyData = keyMappings.get(keyName);
 
-                final String keyTitle = keyData.description();
+                final String keyTitle = keyData.displayName();
                 final int keyCode = instance.keySyncQueue.getOrDefault(keyName, keyData.keyCode());
                 final ButtonWidget keyCodeWidget = new ButtonWidget(
                         getButtonY(currentAllocatedRow),
@@ -185,7 +185,7 @@ public class ControlsGui extends ExtendedScreen {
                         middle + keyCodeWidget.getControlWidth() + 15,
                         getButtonY(currentAllocatedRow),
                         70, 20,
-                        "gui.config.message.button.reset"
+                        "Reset"
                 );
 
                 keyResetButton.setOnClick(() -> resetEntryData(keyCodeWidget, keyResetButton, keyData));
