@@ -37,8 +37,8 @@ import java.util.Map;
  * The Update Info Gui Screen
  */
 public class UpdateInfoGui extends ExtendedScreen {
-    private final String mainTitle = "Update Checker";
     private final String changelogPrefix = "Changelog:";
+    private final String mainTitle;
     private final ModUpdaterUtils modUpdater;
     private TextDisplayWidget infoPane;
     private ExtendedButtonControl downloadButton, checkButton;
@@ -46,10 +46,12 @@ public class UpdateInfoGui extends ExtendedScreen {
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
+     * @param modID      The calling mod identifier
      * @param modUpdater An instance of the {@link ModUpdaterUtils}
      */
-    public UpdateInfoGui(final ModUpdaterUtils modUpdater) {
+    public UpdateInfoGui(final String modID, final ModUpdaterUtils modUpdater) {
         super();
+        this.mainTitle = modID + " - Update Info";
         this.modUpdater = modUpdater;
     }
 

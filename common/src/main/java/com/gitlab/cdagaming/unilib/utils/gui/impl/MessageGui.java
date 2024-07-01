@@ -34,25 +34,29 @@ import java.util.List;
  * The Message Gui Screen Implementation
  */
 public class MessageGui extends ExtendedScreen {
+    private final String mainTitle;
     private final List<String> messageData;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
+     * @param modID       The calling mod identifier
      * @param messageData The message to display for this Instance
      */
-    public MessageGui(final List<String> messageData) {
+    public MessageGui(final String modID, final List<String> messageData) {
         super();
+        this.mainTitle = modID + " - Message";
         this.messageData = StringUtils.newArrayList(messageData);
     }
 
     /**
      * Initialization Event for this Control, assigning defined arguments
      *
+     * @param modID       The calling mod identifier
      * @param messageData The message to display for this Instance
      */
-    public MessageGui(final String messageData) {
-        this(StringUtils.splitTextByNewLine(
+    public MessageGui(final String modID, final String messageData) {
+        this(modID, StringUtils.splitTextByNewLine(
                 messageData
         ));
     }
@@ -75,7 +79,7 @@ public class MessageGui extends ExtendedScreen {
     @Override
     public void renderExtra() {
         renderScrollingString(
-                "Message",
+                mainTitle,
                 30, 0,
                 getScreenWidth() - 30, 32,
                 0xFFFFFF
