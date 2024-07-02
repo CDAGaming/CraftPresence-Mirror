@@ -39,6 +39,7 @@ import java.util.List;
 /**
  * Utilities for Hooking a {@link TranslationUtils} instance to the Game Resource Manager
  *
+ * @param client   The current game instance
  * @param instance The currently linked {@link TranslationUtils} instance
  * @author CDAGaming
  */

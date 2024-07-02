@@ -529,19 +529,39 @@ public class ExtendedScreen extends GuiScreen {
         return getGameInstance().world != null;
     }
 
+    /**
+     * Retrieve the Screen Title, if any
+     *
+     * @return the Screen title
+     */
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    /**
+     * Sets the Screen Title
+     *
+     * @param title the new title for the screen
+     */
+    public void setTitle(final String title) {
         this.title = title;
     }
 
+    /**
+     * Retrieve the Screen subtitle, if any
+     *
+     * @return the Screen subtitle
+     */
     public String getSubTitle() {
         return subTitle;
     }
 
-    public void setSubTitle(String subTitle) {
+    /**
+     * Sets the Screen subtitle
+     *
+     * @param subTitle the new subtitle for the screen
+     */
+    public void setSubTitle(final String subTitle) {
         this.subTitle = subTitle;
     }
 
