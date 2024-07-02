@@ -87,7 +87,10 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
             .build();
 
     StatusMessagesGui() {
-        super("gui.config.title", "gui.config.title.status_messages");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.status_messages")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
