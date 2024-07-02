@@ -40,7 +40,7 @@ import java.util.function.BiConsumer;
  * The Selector Gui Screen
  */
 public class SelectorGui extends ExtendedScreen {
-    private final String mainTitle, attributeName, originalValue;
+    private final String attributeName, originalValue;
     private final List<String> originalList;
     private final boolean allowContinuing, allowDynamicEditing;
     private final BiConsumer<String, String> onUpdatedCallback;
@@ -64,10 +64,9 @@ public class SelectorGui extends ExtendedScreen {
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
     public SelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
-        super();
+        super(mainTitle);
         itemList = originalList = StringUtils.newArrayList(list);
         originalValue = currentValue;
-        this.mainTitle = mainTitle;
         this.attributeName = attributeName;
         this.allowContinuing = allowContinuing;
         this.allowDynamicEditing = allowDynamicEditing;
@@ -258,26 +257,16 @@ public class SelectorGui extends ExtendedScreen {
     }
 
     @Override
-    public void renderExtra() {
-        final String searchText = "Search:";
+    public void renderStringData() {
+        super.renderStringData();
+
         final int renderY = searchBox.getBottom() - (searchBox.getControlHeight() / 2) - (getFontHeight() / 2);
 
-        final String extraText = isVerboseMode() ? String.format("(%1$s Displayed; %2$s Total)", itemList.size(), originalList.size()) : "";
-        final String displayText = mainTitle + " " + extraText;
-
         renderScrollingString(
-                searchText,
+                "Search:",
                 2, renderY,
                 58, renderY + getFontHeight(),
                 0xFFFFFF
         );
-        renderScrollingString(
-                displayText,
-                30, 0,
-                getScreenWidth() - 30, 32,
-                0xFFFFFF
-        );
-
-        super.renderExtra();
     }
 }

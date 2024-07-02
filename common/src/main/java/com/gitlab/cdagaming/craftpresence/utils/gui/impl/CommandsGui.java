@@ -61,7 +61,7 @@ public class CommandsGui extends ExtendedScreen {
     private List<String> tabCompletions = StringUtils.newArrayList();
 
     public CommandsGui(String... commandArgs) {
-        super();
+        super(Constants.TRANSLATOR.translate("gui.config.title.commands"));
         executionCommandArgs = commandArgs;
         executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.main");
     }
@@ -166,20 +166,6 @@ public class CommandsGui extends ExtendedScreen {
         previewArea.setMessage(executionString);
 
         super.preRender();
-    }
-
-    @Override
-    public void renderExtra() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.commands");
-
-        renderScrollingString(
-                mainTitle,
-                30, 0,
-                getScreenWidth() - 30, 32,
-                0xFFFFFF
-        );
-
-        super.renderExtra();
     }
 
     /**

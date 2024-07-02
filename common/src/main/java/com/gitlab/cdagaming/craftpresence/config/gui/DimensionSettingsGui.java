@@ -139,7 +139,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 screenInstance.defaultData = getInstanceData().dimensionData.get("default");
                                                                 screenInstance.currentData = getInstanceData().dimensionData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
+                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },

@@ -40,18 +40,14 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen {
-    private final String title, subTitle;
     protected ScrollPane childFrame;
     protected ExtendedButtonControl resetConfigButton, syncConfigButton, proceedButton;
 
-    public ConfigurationGui(String title, String subTitle) {
-        super();
-
-        this.title = title;
-        this.subTitle = subTitle;
+    public ConfigurationGui(final String title, final String subTitle) {
+        super(title, subTitle);
     }
 
-    public ConfigurationGui(String title) {
+    public ConfigurationGui(final String title) {
         this(title, null);
     }
 
@@ -151,40 +147,6 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         syncRenderStates();
 
         super.preRender();
-    }
-
-    @Override
-    public void renderExtra() {
-        final boolean hasMainTitle = !StringUtils.isNullOrEmpty(title);
-        final boolean hasSubTitle = !StringUtils.isNullOrEmpty(subTitle);
-        if (hasMainTitle) {
-            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(title);
-            if (hasSubTitle) {
-                final String otherTitle = Constants.TRANSLATOR.getLocalizedMessage(subTitle);
-
-                renderScrollingString(
-                        mainTitle,
-                        30, 2,
-                        getScreenWidth() - 30, 16,
-                        0xFFFFFF
-                );
-                renderScrollingString(
-                        otherTitle,
-                        30, 16,
-                        getScreenWidth() - 30, 30,
-                        0xFFFFFF
-                );
-            } else {
-                renderScrollingString(
-                        mainTitle,
-                        30, 0,
-                        getScreenWidth() - 30, 32,
-                        0xFFFFFF
-                );
-            }
-        }
-
-        super.renderExtra();
     }
 
     protected void addIconSelector(final ExtendedScreen parent, final Supplier<TextWidget> textWidget, final BiConsumer<String, String> onUpdatedCallback) {

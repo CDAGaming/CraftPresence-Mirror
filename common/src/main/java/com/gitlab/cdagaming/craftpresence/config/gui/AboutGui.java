@@ -35,6 +35,10 @@ import io.github.cdagaming.unicore.utils.UrlUtils;
 import java.util.List;
 
 public class AboutGui extends ExtendedScreen {
+    public AboutGui() {
+        super(Constants.TRANSLATOR.translate("gui.config.title.about.config"));
+    }
+
     @Override
     public void initializeUi() {
         // Adding Version Check Button
@@ -81,23 +85,16 @@ public class AboutGui extends ExtendedScreen {
     }
 
     @Override
-    public void renderExtra() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.about.config");
+    public void renderStringData() {
+        super.renderStringData();
+
         final List<String> notice = StringUtils.splitTextByNewLine(Constants.TRANSLATOR.translate("gui.config.message.credits"));
 
-        renderScrollingString(
-                mainTitle,
-                30, 0,
-                getScreenWidth() - 30, 32,
-                0xFFFFFF
-        );
         drawMultiLineString(
                 notice,
                 0, getScreenHeight() / 3,
                 getScreenWidth(), -1, -1,
                 true, false
         );
-
-        super.renderExtra();
     }
 }

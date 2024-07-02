@@ -78,6 +78,14 @@ public class ExtendedScreen extends GuiScreen {
      */
     private final List<GuiSlot> extendedLists = StringUtils.newArrayList();
     /**
+     * The Screen Title, if any
+     */
+    private String title;
+    /**
+     * The Screen subtitle, if any
+     */
+    private String subTitle;
+    /**
      * The Parent or Past Screen
      */
     private GuiScreen parentScreen;
@@ -85,14 +93,6 @@ public class ExtendedScreen extends GuiScreen {
      * The Current Screen Phase, used to define where in the initialization it is at
      */
     private Phase currentPhase = Phase.PREINIT;
-    /**
-     * Whether to enable debug mode screen data, specified from screen developers
-     */
-    private boolean debugMode = false;
-    /**
-     * Whether to enable verbose mode screen data, specified from screen developers
-     */
-    private boolean verboseMode = false;
 
     /**
      * The Screen's Current X coordinate position
@@ -132,11 +132,15 @@ public class ExtendedScreen extends GuiScreen {
      * Initialization Event for this Control, assigning defined arguments
      *
      * @param parentScreen The Parent Screen for this Instance
+     * @param title        The Screen Title, if any
+     * @param subTitle     The Screen subtitle, if any
      */
-    public ExtendedScreen(final GuiScreen parentScreen) {
+    public ExtendedScreen(final GuiScreen parentScreen, final String title, final String subTitle) {
         setGameInstance(ModUtils.INSTANCE_GETTER.get());
         setParent(parentScreen);
         currentScreen = this;
+        setTitle(title);
+        setSubTitle(subTitle);
         setCanClose(true);
         setContentHeight(0);
         setScreenSettings();
@@ -144,53 +148,47 @@ public class ExtendedScreen extends GuiScreen {
 
     /**
      * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen The Parent Screen for this Instance
+     * @param title        The Screen Title, if any
+     */
+    public ExtendedScreen(final GuiScreen parentScreen, final String title) {
+        this(parentScreen, title, null);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param parentScreen The Parent Screen for this Instance
+     */
+    public ExtendedScreen(final GuiScreen parentScreen) {
+        this(parentScreen, null);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param title    The Screen Title, if any
+     * @param subTitle The Screen subtitle, if any
+     */
+    public ExtendedScreen(final String title, final String subTitle) {
+        this(null, title, subTitle);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
+     *
+     * @param title The Screen Title, if any
+     */
+    public ExtendedScreen(final String title) {
+        this(title, null);
+    }
+
+    /**
+     * Initialization Event for this Control, assigning defined arguments
      */
     public ExtendedScreen() {
-        this(null);
-    }
-
-    /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param parentScreen The Parent Screen for this Instance
-     * @param debugMode    Whether debug mode should be enabled for this screen
-     */
-    public ExtendedScreen(final GuiScreen parentScreen, final boolean debugMode) {
-        this(parentScreen);
-        setDebugMode(debugMode);
-    }
-
-    /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param debugMode Whether debug mode should be enabled for this screen
-     */
-    public ExtendedScreen(final boolean debugMode) {
-        this();
-        setDebugMode(debugMode);
-    }
-
-    /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param parentScreen The Parent Screen for this Instance
-     * @param debugMode    Whether debug mode should be enabled for this screen
-     * @param verboseMode  Whether verbose mode should be enabled for this screen
-     */
-    public ExtendedScreen(final GuiScreen parentScreen, final boolean debugMode, final boolean verboseMode) {
-        this(parentScreen, debugMode);
-        setVerboseMode(verboseMode);
-    }
-
-    /**
-     * Initialization Event for this Control, assigning defined arguments
-     *
-     * @param debugMode   Whether debug mode should be enabled for this screen
-     * @param verboseMode Whether verbose mode should be enabled for this screen
-     */
-    public ExtendedScreen(final boolean debugMode, final boolean verboseMode) {
-        this(debugMode);
-        setVerboseMode(verboseMode);
+        this((GuiScreen) null);
     }
 
     /**
@@ -531,6 +529,22 @@ public class ExtendedScreen extends GuiScreen {
         return getGameInstance().world != null;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
     /**
      * Retrieve the factor at which to tint the background
      *
@@ -549,6 +563,27 @@ public class ExtendedScreen extends GuiScreen {
         return hasWorld() ?
                 ScreenConstants.DEFAULT_ALT_SCREEN_BACKGROUND :
                 ScreenConstants.DEFAULT_SCREEN_BACKGROUND;
+    }
+
+    /**
+     * Retrieve the default tooltip data
+     *
+     * @param isTooltip Whether this is a normal tooltip
+     * @return the default tooltip
+     */
+    public ScreenConstants.TooltipData getTooltipData(final boolean isTooltip) {
+        return isTooltip ?
+                ScreenConstants.getDefaultTooltip() :
+                ScreenConstants.getEmptyTooltip();
+    }
+
+    /**
+     * Retrieve the default tooltip data
+     *
+     * @return the default tooltip
+     */
+    public ScreenConstants.TooltipData getTooltipData() {
+        return getTooltipData(true);
     }
 
     /**
@@ -577,8 +612,50 @@ public class ExtendedScreen extends GuiScreen {
      * Primarily used for rendering title data and extra elements
      */
     public void renderExtra() {
+        renderStringData();
         for (DynamicWidget widget : getWidgets()) {
             widget.draw(this);
+        }
+    }
+
+    /**
+     * Render any String Data, such as the Screen Title or other elements
+     */
+    public void renderStringData() {
+        renderTitles(getTitle(), getSubTitle());
+    }
+
+    /**
+     * Render Screen Title Data, if any is present
+     *
+     * @param title    The Screen title to interpret
+     * @param subTitle The Screen subtitle to interpret
+     */
+    public void renderTitles(final String title, final String subTitle) {
+        final boolean hasMainTitle = !StringUtils.isNullOrEmpty(title);
+        final boolean hasSubTitle = !StringUtils.isNullOrEmpty(subTitle);
+        if (hasMainTitle) {
+            if (hasSubTitle) {
+                renderScrollingString(
+                        title,
+                        30, 2,
+                        getScreenWidth() - 30, 16,
+                        0xFFFFFF
+                );
+                renderScrollingString(
+                        subTitle,
+                        30, 16,
+                        getScreenWidth() - 30, 30,
+                        0xFFFFFF
+                );
+            } else {
+                renderScrollingString(
+                        title,
+                        30, 0,
+                        getScreenWidth() - 30, 32,
+                        0xFFFFFF
+                );
+            }
         }
     }
 
@@ -916,24 +993,6 @@ public class ExtendedScreen extends GuiScreen {
     }
 
     /**
-     * Retrieve the tooltip Rendering Info for an Empty Background and Border
-     *
-     * @return the tooltip Rendering Info for an Empty Background and Border
-     */
-    public ScreenConstants.TooltipData getEmptyTooltip() {
-        return ScreenConstants.getEmptyTooltip();
-    }
-
-    /**
-     * Retrieve the Default Tooltip Rendering Info
-     *
-     * @return the default Tooltip Rendering Info
-     */
-    public ScreenConstants.TooltipData getDefaultTooltip() {
-        return ScreenConstants.getDefaultTooltip();
-    }
-
-    /**
      * Renders a Specified Multi-Line String, constrained by position and dimension arguments
      *
      * @param textToInput  The Specified Multi-Line String, split by lines into a list
@@ -977,7 +1036,7 @@ public class ExtendedScreen extends GuiScreen {
                 maxWidth, maxHeight,
                 maxTextWidth,
                 isCentered, isTooltip,
-                isTooltip ? getDefaultTooltip() : getEmptyTooltip()
+                getTooltipData(isTooltip)
         );
     }
 
@@ -1459,42 +1518,6 @@ public class ExtendedScreen extends GuiScreen {
      */
     public int getTop() {
         return getScreenY();
-    }
-
-    /**
-     * Gets whether to display any Debug display data for this screen
-     *
-     * @return Whether to display any Debug display data for this screen
-     */
-    public boolean isDebugMode() {
-        return debugMode;
-    }
-
-    /**
-     * Sets whether to display any Debug display data for this screen
-     *
-     * @param isDebugMode Whether to display any Debug display data for this screen
-     */
-    public void setDebugMode(final boolean isDebugMode) {
-        this.debugMode = isDebugMode;
-    }
-
-    /**
-     * Gets whether to display any Verbose display data for this screen
-     *
-     * @return Whether to display any Verbose display data for this screen
-     */
-    public boolean isVerboseMode() {
-        return verboseMode;
-    }
-
-    /**
-     * Sets whether to display any Verbose display data for this screen
-     *
-     * @param isVerboseMode Whether to display any Verbose display data for this screen
-     */
-    public void setVerboseMode(final boolean isVerboseMode) {
-        this.verboseMode = isVerboseMode;
     }
 
     /**

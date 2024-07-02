@@ -55,7 +55,7 @@ public class ControlsGui extends ExtendedScreen {
     private ScrollPane childFrame;
 
     public ControlsGui(final KeyUtils instance, final Runnable onKeyChanged, final Map<String, KeyUtils.KeyBindData> keyMappings) {
-        super();
+        super("Controls");
         this.instance = instance;
         this.onKeyChanged = onKeyChanged;
         this.keyMappings = keyMappings;
@@ -95,18 +95,6 @@ public class ControlsGui extends ExtendedScreen {
         setupScreenData();
 
         super.initializeUi();
-    }
-
-    @Override
-    public void renderExtra() {
-        renderScrollingString(
-                "Controls",
-                30, 0,
-                getScreenWidth() - 30, 32,
-                0xFFFFFF
-        );
-
-        super.renderExtra();
     }
 
     @Override

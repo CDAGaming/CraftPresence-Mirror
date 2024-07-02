@@ -34,7 +34,6 @@ import java.util.List;
  * The Message Gui Screen Implementation
  */
 public class MessageGui extends ExtendedScreen {
-    private final String mainTitle;
     private final List<String> messageData;
 
     /**
@@ -44,8 +43,7 @@ public class MessageGui extends ExtendedScreen {
      * @param messageData The message to display for this Instance
      */
     public MessageGui(final String modID, final List<String> messageData) {
-        super();
-        this.mainTitle = modID + " - Message";
+        super(modID + " - Message");
         this.messageData = StringUtils.newArrayList(messageData);
     }
 
@@ -77,20 +75,14 @@ public class MessageGui extends ExtendedScreen {
     }
 
     @Override
-    public void renderExtra() {
-        renderScrollingString(
-                mainTitle,
-                30, 0,
-                getScreenWidth() - 30, 32,
-                0xFFFFFF
-        );
+    public void renderStringData() {
+        super.renderStringData();
+
         drawMultiLineString(
                 messageData,
                 0, getScreenHeight() / 3,
                 getScreenWidth(), -1, -1,
                 true, false
         );
-
-        super.renderExtra();
     }
 }

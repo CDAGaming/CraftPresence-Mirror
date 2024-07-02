@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.controls;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.unilib.utils.ImageUtils;
 import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
@@ -211,7 +212,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                         new Pair<>("server.address.full", () -> originalName)
                 ).get().toString();
                 texture = ImageUtils.getTextureFromUrl(mc, originalName, endpointUrl);
-                if (currentScreen.isDebugMode() && isHovering) {
+                if (CommandUtils.isDebugMode() && isHovering) {
                     hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
             }
@@ -221,7 +222,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                     originalName,
                     CraftPresence.CLIENT::getResult
             );
-            if (currentScreen.isDebugMode() && isHovering) {
+            if (CommandUtils.isDebugMode() && isHovering) {
                 hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
             }
             texture = ImageUtils.getTextureFromUrl(mc, originalName, assetUrl);
@@ -239,7 +240,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                         new Pair<>("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
                 ).get().toString();
                 texture = ImageUtils.getTextureFromUrl(mc, originalName, endpointUrl);
-                if (currentScreen.isDebugMode() && isHovering) {
+                if (CommandUtils.isDebugMode() && isHovering) {
                     hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
             }
@@ -277,7 +278,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                     Color.white, Color.white,
                     texture
             );
-            if (currentScreen.isDebugMode() && isHovering) {
+            if (CommandUtils.isDebugMode() && isHovering) {
                 hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.texture_path") + " " + texture);
             }
             // Note: 35 Added to xOffset to accommodate for Image Size

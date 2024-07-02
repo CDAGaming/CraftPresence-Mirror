@@ -139,7 +139,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                 screenInstance.defaultData = getInstanceData().biomeData.get("default");
                                                                 screenInstance.currentData = getInstanceData().biomeData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
+                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },

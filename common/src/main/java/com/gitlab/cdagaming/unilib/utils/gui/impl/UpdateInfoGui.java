@@ -38,7 +38,6 @@ import java.util.Map;
  */
 public class UpdateInfoGui extends ExtendedScreen {
     private final String changelogPrefix = "Changelog:";
-    private final String mainTitle;
     private final ModUpdaterUtils modUpdater;
     private TextDisplayWidget infoPane;
     private ExtendedButtonControl downloadButton, checkButton;
@@ -50,8 +49,7 @@ public class UpdateInfoGui extends ExtendedScreen {
      * @param modUpdater An instance of the {@link ModUpdaterUtils}
      */
     public UpdateInfoGui(final String modID, final ModUpdaterUtils modUpdater) {
-        super();
-        this.mainTitle = modID + " - Update Info";
+        super(modID + " - Update Info");
         this.modUpdater = modUpdater;
     }
 
@@ -63,6 +61,7 @@ public class UpdateInfoGui extends ExtendedScreen {
                         180, 20,
                         "Check for Updates",
                         () -> {
+                            updateInfo(ModUpdaterUtils.UpdateState.PENDING.getDisplayName());
                             resetNotes();
                             modUpdater.checkForUpdates(this::updateNotes);
                         }
@@ -113,26 +112,6 @@ public class UpdateInfoGui extends ExtendedScreen {
         super.preRender();
     }
 
-    @Override
-    public void renderExtra() {
-        final String subTitle = String.format("Version Check Info (State: %1$s)", modUpdater.getStatus().getDisplayName());
-
-        renderScrollingString(
-                mainTitle,
-                30, 2,
-                getScreenWidth() - 30, 16,
-                0xFFFFFF
-        );
-        renderScrollingString(
-                subTitle,
-                30, 16,
-                getScreenWidth() - 30, 30,
-                0xFFFFFF
-        );
-
-        super.renderExtra();
-    }
-
     private void resetNotes() {
         final String notice = changelogPrefix +
                 '\n' + "  " + "N/A";
@@ -154,5 +133,14 @@ public class UpdateInfoGui extends ExtendedScreen {
         } else {
             resetNotes();
         }
+        updateInfo();
+    }
+
+    private void updateInfo(final String status) {
+        setSubTitle(String.format("Version Check Info (State: %1$s)", status));
+    }
+
+    private void updateInfo() {
+        updateInfo(modUpdater.getStatus().getDisplayName());
     }
 }
