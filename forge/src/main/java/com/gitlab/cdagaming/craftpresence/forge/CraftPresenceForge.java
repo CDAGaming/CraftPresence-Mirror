@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
