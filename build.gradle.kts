@@ -45,7 +45,7 @@ val extFmlName = if (extIsJarMod) "modloader" else "forge"
 
 // Only apply ATs to forge on non-legacy builds, or on Legacy Protocols above 1.5
 // due to the way Forge requires core-mods for lower version usage
-val extAWFile = file("$rootDir/fabric/src/main/resources/craftpresence.accesswidener")
+val extAWFile = file("$rootDir/fabric/src/main/resources/$extModId.accesswidener")
 val extCanUseATs = extAWFile.exists() && (!extIsLegacy || extProtocol > 60)
 
 subprojects {
@@ -381,7 +381,7 @@ fusioner {
         inputFile = "build/libs/$extFileFormat-fabric.jar"
     }
 
-    relocateDuplicate("com.gitlab.cdagaming.craftpresence.core")
+    relocateDuplicate("com.gitlab.cdagaming.$extModId.core")
     relocateDuplicate("com.gitlab.cdagaming.unilib.core") // TODO: Remove when UniLib is moved into its own project
 }
 
