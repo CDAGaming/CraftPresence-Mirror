@@ -37,6 +37,7 @@ import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
+import com.gitlab.cdagaming.unilib.impl.TranslationListener;
 import com.gitlab.cdagaming.unilib.utils.KeyUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.MappingUtils;
@@ -145,6 +146,8 @@ public class CraftPresence {
      */
     public CraftPresence(final Runnable callback) {
         initCallback = callback;
+
+        preInit();
         scheduleTick();
     }
 
@@ -153,6 +156,19 @@ public class CraftPresence {
      */
     public CraftPresence() {
         this(null);
+    }
+
+    /**
+     * The Mod's Pre-Initialization Event
+     * <p>
+     * Consists of Data Initialization through the Main Thread
+     */
+    private void preInit() {
+        // TODO: Move to UniLib once seperated
+        ModUtils.registerReloadListener(
+                CoreUtils.MOD_ID + ":translation_listener",
+                TranslationListener.INSTANCE
+        );
     }
 
     /**
@@ -217,7 +233,7 @@ public class CraftPresence {
      */
     private void clientTick() {
         if (!CoreUtils.IS_CLOSING) {
-            instance = ModUtils.INSTANCE_GETTER.get();
+            instance = ModUtils.getMinecraft();
             if (initialized) {
                 session = instance.getSession();
                 player = instance.player;

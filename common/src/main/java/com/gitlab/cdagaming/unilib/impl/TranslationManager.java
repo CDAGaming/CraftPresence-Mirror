@@ -28,10 +28,6 @@ import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
 
 import java.io.InputStream;
 import java.util.List;
@@ -44,7 +40,7 @@ import java.util.List;
  * @author CDAGaming
  */
 public record TranslationManager(Minecraft client,
-                                 TranslationUtils instance) implements IResourceManagerReloadListener {
+                                 TranslationUtils instance) {
     /**
      * Initializes a new manager for the {@link TranslationUtils} instance
      *
@@ -55,15 +51,12 @@ public record TranslationManager(Minecraft client,
         this.client = client;
         this.instance = instance;
 
-        ((SimpleReloadableResourceManager) client().getResourceManager()).registerReloadListener(this);
-
         instance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
-                final List<IResource> resources = client().getResourceManager().getAllResources(ResourceUtils.getResource(modId, langPath));
-                for (IResource resource : resources) {
-                    results.add(resource.getInputStream());
-                }
+                client().getResourceManager().getAllResources(
+                        ResourceUtils.getResource(modId, langPath)
+                ).forEach(resource -> results.add(resource.getInputStream()));
             } catch (Exception ignored) {
             }
             return results;
@@ -79,8 +72,10 @@ public record TranslationManager(Minecraft client,
         instance().onTick();
     }
 
-    @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    /**
+     * The Event to run upon reloading resources
+     */
+    public void onReload() {
         instance().syncTranslations();
     }
 }

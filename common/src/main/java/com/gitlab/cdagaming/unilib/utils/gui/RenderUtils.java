@@ -184,7 +184,7 @@ public class RenderUtils {
      * @return The Default/Global Font Renderer
      */
     public static FontRenderer getDefaultFontRenderer() {
-        return ModUtils.INSTANCE_GETTER.get().fontRenderer;
+        return ModUtils.getMinecraft().fontRenderer;
     }
 
     /**
@@ -194,7 +194,7 @@ public class RenderUtils {
      * @param targetScreen The target Gui Screen to display
      */
     public static void openScreen(@Nonnull final Minecraft client, final GuiScreen targetScreen) {
-        client.addScheduledTask(() -> client.displayGuiScreen(targetScreen));
+        ModUtils.executeOnMainThread(client, () -> client.displayGuiScreen(targetScreen));
     }
 
     /**

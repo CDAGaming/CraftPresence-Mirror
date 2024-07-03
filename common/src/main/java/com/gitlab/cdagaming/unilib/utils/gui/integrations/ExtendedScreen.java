@@ -136,7 +136,7 @@ public class ExtendedScreen extends GuiScreen {
      * @param subTitle     The Screen subtitle, if any
      */
     public ExtendedScreen(final GuiScreen parentScreen, final String title, final String subTitle) {
-        setGameInstance(ModUtils.INSTANCE_GETTER.get());
+        setGameInstance(ModUtils.getMinecraft());
         setParent(parentScreen);
         currentScreen = this;
         setTitle(title);

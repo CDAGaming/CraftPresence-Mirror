@@ -42,6 +42,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.discord.ModFunctionsLib;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModIPCListener;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.impl.TranslationListener;
 import com.gitlab.cdagaming.unilib.impl.TranslationManager;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
@@ -58,10 +59,6 @@ import java.util.Map;
  * @author CDAGaming
  */
 public class CommandUtils {
-    /**
-     * A mapping of currently loaded {@link TranslationManager} instances
-     */
-    private static final Map<String, TranslationManager> translationManagerList = StringUtils.newHashMap();
     /**
      * A mapping of the currently loaded Rich Presence Modules
      */
@@ -236,7 +233,7 @@ public class CommandUtils {
      * @param instance The instance of the module
      */
     public static void addModule(final String moduleId, final TranslationManager instance) {
-        translationManagerList.put(moduleId, instance);
+        TranslationListener.INSTANCE.addModule(moduleId, instance);
     }
 
     /**
@@ -245,11 +242,12 @@ public class CommandUtils {
      * @param forceUpdateRPC Whether to Force an Update to the RPC Data
      */
     public static void reloadData(final boolean forceUpdateRPC) {
-        for (TranslationManager manager : translationManagerList.values()) {
-            manager.onTick();
-        }
+        TranslationListener.INSTANCE.onTick();
         CraftPresence.SCHEDULER.onTick();
-        CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
+        ModUtils.executeOnMainThread(
+                CraftPresence.KEYBINDINGS.getInstance(),
+                CraftPresence.KEYBINDINGS::onTick
+        );
 
         CraftPresence.SCHEDULER.TICK_LOCK.lock();
         try {

@@ -28,8 +28,11 @@ import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.realms.RealmsSharedConstants;
 
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 /**
@@ -61,5 +64,64 @@ public class ModUtils {
     /**
      * Getter for the Game Client Instance
      */
-    public static final Supplier<Minecraft> INSTANCE_GETTER = Minecraft::getMinecraft;
+    private static final Supplier<Minecraft> INSTANCE_GETTER = Minecraft::getMinecraft;
+
+    /**
+     * Consumer Event for Resource Reload Listener Registration
+     */
+    private static final BiConsumer<String, IResourceManagerReloadListener> RELOAD_LISTENER_HOOK = (
+            (id, listener) -> ((SimpleReloadableResourceManager) getMinecraft().getResourceManager()).registerReloadListener(listener)
+    );
+
+    /**
+     * Consumer Event for running events on the Main Game Thread
+     */
+    private static final BiConsumer<Minecraft, Runnable> MAIN_THREAD_EXECUTOR = Minecraft::addScheduledTask;
+
+    /**
+     * Retrieve the Game Client Instance Supplier
+     *
+     * @return the Game Client Instance Supplier
+     */
+    public static Supplier<Minecraft> getMinecraftSupplier() {
+        return INSTANCE_GETTER;
+    }
+
+    /**
+     * Retrieve the Game Client Instance
+     *
+     * @return the Game Client Instance
+     */
+    public static Minecraft getMinecraft() {
+        return getMinecraftSupplier().get();
+    }
+
+    /**
+     * Register a Resource Reload Listener
+     *
+     * @param id       The ID for the listener
+     * @param listener The Listener to register
+     */
+    public static void registerReloadListener(final String id, final IResourceManagerReloadListener listener) {
+        RELOAD_LISTENER_HOOK.accept(id, listener);
+    }
+
+    /**
+     * Execute and Event to run on the Main Game Thread, if possible
+     *
+     * @param client the game client instance
+     * @param event  the event to run
+     */
+    public static void executeOnMainThread(final Minecraft client, final Runnable event) {
+        MAIN_THREAD_EXECUTOR.accept(client, event);
+    }
+
+    /**
+     * Execute and Event to run on the Main Game Thread, if possible
+     *
+     * @param event the event to run
+     */
+    public static void executeOnMainThread(final Runnable event) {
+        MAIN_THREAD_EXECUTOR.accept(getMinecraft(), event);
+    }
 }

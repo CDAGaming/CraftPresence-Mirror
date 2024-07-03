@@ -95,7 +95,7 @@ public class KeyUtils {
      * Create an instance of this class.
      */
     public KeyUtils() {
-        this(ModUtils.INSTANCE_GETTER, ModUtils.MCProtocolID);
+        this(ModUtils.getMinecraftSupplier(), ModUtils.MCProtocolID);
     }
 
     /**
