@@ -16,17 +16,17 @@ by [jagrosh](https://github.com/jagrosh)!
 
 ## General Notes
 
-* CraftPresence identifies as a **Client Side-only** mod
+* This mod identifies as a **Client Side-only** mod
     * This means it **will not run** on the Server's side.
     * Fabric and Quilt mod loaders will simply ignore the
       mod, while other mod loaders may crash.
-* Some versions of CraftPresence for Minecraft 1.14.x and above require
+* Some versions of the mod for Minecraft 1.14.x and above require
   the [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
   and the [Fabric mod loader](https://fabricmc.net/use/installer)
-* Some versions of CraftPresence for Minecraft 1.13.x require
+* Some versions of the mod for Minecraft 1.13.x require
   the [Rift API](https://www.curseforge.com/minecraft/mc-mods/rift)
   and the [Rift mod loader](https://github.com/DimensionalDevelopment/Rift/releases)
-* Versions of CraftPresence for Minecraft 1.1.0 and below
+* Versions of the mod for Minecraft 1.1.0 and below
   require [Risugami's ModLoader](https://mcarchive.net/mods/modloader)
 
 ## Features
@@ -338,8 +338,8 @@ These issues can hinder certain portions of the backend in addition to cause cer
 With this in mind, please note the following:
 
 * **Minecraft 1.16 and above**
-    * As more parts of the game become data-driven, modded data is no longer able to be automatically retrieved without
-      first being in the world.
+    * As more parts of the game become data-driven, some modded data is no longer able to be automatically retrieved
+      without first being in the world.
     * So far, Biome and Dimension Modules are effected by this change and only display default data, with extra data
       needing to be discovered first.
 * **Minecraft 1.15 and below**
@@ -350,27 +350,14 @@ With this in mind, please note the following:
     * On these versions, the Biome and Dimension Modules are **stubbed** with default data, due to the logic for these
       methods being missing (Having been initially implemented in Alpha 1.2.6)
 * **Miscellaneous Issues**
-    * Due to obfuscation issues in earlier versions of Minecraft, the Biome and Dimension Modules may fail to
-      auto-detect some necessary information.
+    * Due to obfuscation issues in earlier versions of Minecraft, incorrect data may appear when using certain parts of
+      the mod.
+        * In this case, the Biome and Dimension Modules may fail to auto-detect some necessary information
         * As a fallback, the mod is also designed to add selectable Module Data when said biome/dimension is first
           discovered.
         * The "Add New" option found in some of the module lists can also be used to work around this issue.
 
-Additionally, in select Minecraft Versions, the following config settings are effected:
-
-* `guiBackground` (`RenderUtils#DEFAULT_GUI_BACKGROUND`)
-    * MC 1.20.5 and above: `minecraft:textures/gui/menu_background.png`
-    * MC 1.6 until 1.20.5: `minecraft:textures/gui/options_background.png`
-    * MC 1.5.2 until a1.1.2_01: `/gui/background.png`
-    * MC a1.1.2_01 and below: `/dirt.png`
-* `altGuiBackground` (`RenderUtils#DEFAULT_GUI_BACKGROUND_ALT`)
-    * MC 1.20.5 and above: `minecraft:textures/gui/menu_list_background.png`
-    * MC 1.20.4 and below: `ColorData(start=[16,16,16,192],end=[16,16,16,208])`
-* `stripTranslationFormatting` (`ModUtils#IS_TEXT_FORMATTING_BLOCKED`)
-    * This option is forcefully disabled on MC 1.1.0 and below due to various issues regarding combined TextColor usage,
-      including possible crashes
-    * This change is also auto-applied to existing configs trying to bypass this, unlike the background colors, since
-      resource packs can re-implement those textures
+Additionally, some settings or API calls may perform differently under certain MC versions.
 
 ### Icon Requesting
 

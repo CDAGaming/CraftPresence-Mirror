@@ -68,7 +68,8 @@ dependencies {
 }
 
 val resourceTargets = listOf(
-    "fabric.mod.json"
+    "fabric.mod.json",
+    "pack.mcmeta"
 )
 val replaceProperties = mapOf(
     "mod_id" to modId,

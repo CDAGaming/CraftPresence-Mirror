@@ -68,7 +68,11 @@ dependencies {
 }
 
 val resourceTargets = listOf(
-    "mcmod.info", "META-INF/mods.toml", "META-INF/neoforge.mods.toml", "mod_$modName.info"
+    "mcmod.info",
+    "META-INF/mods.toml",
+    "META-INF/neoforge.mods.toml",
+    "mod_$modName.info",
+    "pack.mcmeta"
 )
 val replaceProperties = mapOf(
     "mod_id" to modId,

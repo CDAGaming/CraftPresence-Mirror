@@ -331,9 +331,7 @@ subprojects {
                     "VERSION_TYPE" to "deploymentType"()!!,
                     "MC_VERSION" to mcVersionLabel,
                     "MC_PROTOCOL" to protocol.toString(),
-                    "IS_LEGACY" to isLegacy.toString(),
-                    "IS_DEV" to "isDevState"()!!,
-                    "IS_VERBOSE" to "isVerboseState"()!!
+                    "IS_LEGACY" to isLegacy.toString()
                 )
             )
         }
