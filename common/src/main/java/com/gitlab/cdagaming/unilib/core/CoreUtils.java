@@ -53,7 +53,7 @@ public class CoreUtils {
     /**
      * The Application's Version ID
      */
-    public static final String VERSION_ID = "v0.0.0";
+    public static final String VERSION_ID = "v1.0.0";
 
     /**
      * The Application's Version Release Type
