@@ -22,36 +22,28 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.forge;
+package com.gitlab.cdagaming.unilib.fabric;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.unilib.forge.UniLibForge;
+import com.gitlab.cdagaming.unilib.UniLib;
+import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.minecraftforge.fml.common.Mod;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 
 /**
  * The Primary Application Class and Utilities
  *
  * @author CDAGaming
  */
-@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json", acceptedMinecraftVersions = "*")
-public class CraftPresenceForge {
-    /**
-     * Begins Scheduling Ticks on Class Initialization
-     */
-    public CraftPresenceForge() {
+public class UniLibFabric {
+    public UniLibFabric() {
         if (OSUtils.JAVA_SPEC < 1.8f) {
-            throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
+            throw new UnsupportedOperationException("Incompatible JVM!!! UniLib requires Java 8 or above to work properly!");
         }
+        MappingUtils.setFilePath("/mappings-fabric.srg");
+        CoreUtils.MOD_COUNT_SUPPLIER = () -> FabricLoader.getInstance().getAllMods().size();
 
-        new UniLibForge(); // TODO: Remove when uniLib is seperated
-        new CraftPresence(this::setupIntegrations);
-    }
-
-    /**
-     * Setup external integrations and attachments to the primary application
-     */
-    public void setupIntegrations() {
-        // N/A
+        UniLib.assertLoaded();
     }
 }

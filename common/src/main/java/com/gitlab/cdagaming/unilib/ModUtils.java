@@ -97,7 +97,34 @@ public class ModUtils {
     }
 
     /**
+     * Retrieve the game's current language
+     *
+     * @param fallback The fallback language
+     * @return the current language
+     */
+    public static String getLanguage(final String fallback) {
+        final String result;
+        if (getMinecraft().gameSettings != null) {
+            result = getMinecraft().gameSettings.language;
+        } else {
+            result = fallback;
+        }
+        return result;
+    }
+
+    /**
+     * Retrieve the game's current language
+     *
+     * @return the current language
+     */
+    public static String getLanguage() {
+        return getLanguage(CoreUtils.getDefaultLanguage());
+    }
+
+    /**
      * Register a Resource Reload Listener
+     * <p>
+     * Must be executed on the Main Thread to avoid issues
      *
      * @param id       The ID for the listener
      * @param listener The Listener to register

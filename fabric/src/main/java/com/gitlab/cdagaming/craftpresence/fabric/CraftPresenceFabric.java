@@ -25,11 +25,9 @@
 package com.gitlab.cdagaming.craftpresence.fabric;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import io.github.cdagaming.unicore.utils.MappingUtils;
+import com.gitlab.cdagaming.unilib.fabric.UniLibFabric;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 
 /**
  * The Primary Application Class and Utilities
@@ -39,13 +37,11 @@ import net.fabricmc.loader.api.FabricLoader;
 public class CraftPresenceFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        // TODO: Move to UniLib once seperated
         if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
-        MappingUtils.setFilePath("/mappings-fabric.srg");
-        CoreUtils.MOD_COUNT_SUPPLIER = () -> FabricLoader.getInstance().getAllMods().size();
 
+        new UniLibFabric(); // TODO: Remove when uniLib is seperated
         new CraftPresence(this::setupIntegrations);
     }
 

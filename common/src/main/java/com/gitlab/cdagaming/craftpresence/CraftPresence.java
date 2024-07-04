@@ -35,15 +35,13 @@ import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
 import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.UniLib;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
-import com.gitlab.cdagaming.unilib.impl.TranslationListener;
 import com.gitlab.cdagaming.unilib.utils.KeyUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
-import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
@@ -145,9 +143,10 @@ public class CraftPresence {
      * @param callback The callback to run upon post-initialization
      */
     public CraftPresence(final Runnable callback) {
-        initCallback = callback;
+        // Ensure UniLib is loaded
+        UniLib.assertLoaded();
 
-        preInit();
+        initCallback = callback;
         scheduleTick();
     }
 
@@ -159,19 +158,6 @@ public class CraftPresence {
     }
 
     /**
-     * The Mod's Pre-Initialization Event
-     * <p>
-     * Consists of Data Initialization through the Main Thread
-     */
-    private void preInit() {
-        // TODO: Move to UniLib once seperated
-        ModUtils.registerReloadListener(
-                CoreUtils.MOD_ID + ":translation_listener",
-                TranslationListener.INSTANCE
-        );
-    }
-
-    /**
      * The Mod's Initialization Event
      * <p>
      * Consists of Data Initialization and RPC Setup
@@ -179,7 +165,6 @@ public class CraftPresence {
     private void init() {
         // Initialize Dynamic Mappings and Critical Data
         CommandUtils.updateModes();
-        MappingUtils.getClassMap();
 
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info
         Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.debug_mode"));
@@ -212,18 +197,7 @@ public class CraftPresence {
      * Schedules the Next Tick to Occur if not currently closing
      */
     private void scheduleTick() {
-        if (!CoreUtils.IS_CLOSING) {
-            Constants.getThreadPool().scheduleAtFixedRate(
-                    () -> {
-                        try {
-                            this.clientTick();
-                        } catch (Throwable ex) {
-                            Constants.LOG.error(ex);
-                        }
-                    },
-                    0, 50, TimeUtils.getTimeUnitFrom("MILLISECONDS")
-            );
-        }
+        CoreUtils.registerTickEvent(Constants.MOD_ID, this::clientTick);
     }
 
     /**

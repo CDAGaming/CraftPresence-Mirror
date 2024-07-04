@@ -499,36 +499,14 @@ public class CommandUtils {
                                 .setStripFormatting(
                                         CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting
                                 )
-                                .setLanguageSupplier(CommandUtils::getLanguage)
+                                .setLanguageSupplier((defaultLanguage) -> StringUtils.getOrDefault(
+                                        ModUtils.getLanguage(null),
+                                        CraftPresence.CONFIG != null ? CraftPresence.CONFIG.accessibilitySettings.languageId : defaultLanguage
+                                ))
                 ));
-                if (ModUtils.RAW_TRANSLATOR != null) {
-                    addModule("minecraft", new TranslationManager(
-                            CraftPresence.instance,
-                            ModUtils.RAW_TRANSLATOR
-                                    .setLanguageSupplier(CommandUtils::getLanguage)
-                    ));
-                }
             }
         }
         CraftPresence.CLIENT.updatePresence();
-    }
-
-    /**
-     * Retrieve the game's current language
-     *
-     * @param fallback The fallback language
-     * @return the current language
-     */
-    public static String getLanguage(final String fallback) {
-        final String result;
-        if (CraftPresence.instance.gameSettings != null) {
-            result = CraftPresence.instance.gameSettings.language;
-        } else if (CraftPresence.CONFIG != null) {
-            result = CraftPresence.CONFIG.accessibilitySettings.languageId;
-        } else {
-            result = fallback;
-        }
-        return result;
     }
 
     /**

@@ -28,12 +28,10 @@ import com.gitlab.cdagaming.unilib.core.integrations.logging.ApacheLogger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.integrations.logging.JavaLogger;
 import io.github.cdagaming.unicore.integrations.logging.LoggingImpl;
-import io.github.cdagaming.unicore.utils.FileUtils;
-import io.github.cdagaming.unicore.utils.OSUtils;
-import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.cdagaming.unicore.utils.TranslationUtils;
+import io.github.cdagaming.unicore.utils.*;
 
 import java.io.File;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.function.Function;
@@ -66,6 +64,11 @@ public class CoreUtils {
      * The Application's Identifier
      */
     public static final String MOD_ID = "unicore";
+
+    /**
+     * The URL to receive Update Information from
+     */
+    public static final String UPDATE_JSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/UniLib/update.json";
 
     /**
      * The Minecraft Version this Mod was compiled with
@@ -128,6 +131,12 @@ public class CoreUtils {
      */
     private static final String DEFAULT_LANGUAGE = getDefaultLanguage(MCBuildProtocol);
     /**
+     * A mapping of Runnable Events, that are run each tick
+     * <p>
+     * Initialized in {@link CoreUtils#setup()}
+     */
+    private static final Map<String, Runnable> onTickEvents = StringUtils.newConcurrentHashMap();
+    /**
      * If the Application is Currently Closing and Clearing Data
      */
     public static boolean IS_CLOSING = false;
@@ -141,13 +150,52 @@ public class CoreUtils {
      */
     private static int DETECTED_MOD_COUNT = -1;
 
-    static {
+    /**
+     * Registers an event to run once per client tick, after initialization
+     *
+     * @param id    The ID to store this event as
+     * @param event The event to store
+     */
+    public static void registerTickEvent(final String id, final Runnable event) {
+        if (!onTickEvents.containsKey(id)) {
+            onTickEvents.put(id, event);
+        }
+    }
+
+    /**
+     * Registers an event to run once per client tick, after initialization
+     *
+     * @param event The event to store
+     */
+    public static void registerTickEvent(final Runnable event) {
+        registerTickEvent(MOD_ID, event);
+    }
+
+    /**
+     * Setup Important Data for this Module
+     */
+    public static void setup() {
         Runtime.getRuntime().addShutdownHook(
                 getThreadFactory().newThread(() -> {
                     IS_CLOSING = true;
                     FileUtils.shutdownSchedulers();
                 })
         );
+
+        if (!IS_CLOSING) {
+            getThreadPool().scheduleAtFixedRate(
+                    () -> {
+                        for (Runnable event : onTickEvents.values()) {
+                            try {
+                                event.run();
+                            } catch (Throwable ex) {
+                                LOG.error(ex);
+                            }
+                        }
+                    },
+                    0, 50, TimeUtils.getTimeUnitFrom("MILLISECONDS")
+            );
+        }
     }
 
     /**
