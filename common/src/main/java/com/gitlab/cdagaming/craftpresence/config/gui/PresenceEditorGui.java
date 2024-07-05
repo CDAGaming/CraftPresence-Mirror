@@ -305,7 +305,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.attributeName = "button_" + getInstanceData().buttons.size();
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName));
                                                                 screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 final Button defaultData = getInstanceData().buttons.get("default");
@@ -317,7 +317,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                                 screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.overrideSecondaryRender = true;
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName));
                                                                 final Button defaultData = getInstanceData().buttons.get("default");
                                                                 final Button currentData = getInstanceData().buttons.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentData == null;

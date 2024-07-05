@@ -105,7 +105,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName));
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().dynamicIcons.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
@@ -191,7 +191,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName));
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().dynamicVariables.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().dynamicVariables.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },

@@ -89,7 +89,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         if (!isLoaded() && !initialized) {
             resetText = Constants.TRANSLATOR.translate("gui.config.message.button.remove");
             if (isNewValue) {
-                setTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new"));
+                setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new"));
                 if (onNewInit != null) {
                     onNewInit.accept(attributeName, this);
                 }
@@ -120,7 +120,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
         if (isNewValue || isPreliminaryData) {
             if (isPreliminaryData && !StringUtils.isNullOrEmpty(attributeName)) {
-                setTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName));
+                setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName));
             }
             if (isModuleMode && defaultData != null && currentData == null) {
                 currentData = new ModuleData(defaultData);

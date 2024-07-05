@@ -169,7 +169,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                                 screenInstance.defaultData = getInstanceData().serverData.get("default");
                                                                 screenInstance.currentData = getInstanceData().serverData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },

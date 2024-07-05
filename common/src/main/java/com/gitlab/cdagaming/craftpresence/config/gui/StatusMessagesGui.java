@@ -131,7 +131,7 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.defaultData = (ModuleData) getInstanceData().getDefaults().getProperty(attributeName);
                                                 screenInstance.currentData = (ModuleData) getInstanceData().getProperty(attributeName);
                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.status.edit_specific_status", attributeName));
+                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.status.edit_specific_status", attributeName));
                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                 screenInstance.isDefaultValue = screenInstance.isPreliminaryData || (screenInstance.currentData.equals(screenInstance.defaultData));

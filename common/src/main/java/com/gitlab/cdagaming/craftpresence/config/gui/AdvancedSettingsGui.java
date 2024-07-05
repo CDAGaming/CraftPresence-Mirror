@@ -127,7 +127,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getInstanceData().guiSettings.guiData.get("default");
                                                                 screenInstance.currentData = getInstanceData().guiSettings.guiData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -216,7 +216,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName));
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().itemMessages.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().itemMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
@@ -300,7 +300,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getInstanceData().entitySettings.targetData.get("default");
                                                                 screenInstance.currentData = getInstanceData().entitySettings.targetData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -396,7 +396,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getInstanceData().entitySettings.ridingData.get("default");
                                                                 screenInstance.currentData = getInstanceData().entitySettings.ridingData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.setTitle(Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName));
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
