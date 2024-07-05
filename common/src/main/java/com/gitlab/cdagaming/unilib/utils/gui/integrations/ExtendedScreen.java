@@ -139,8 +139,8 @@ public class ExtendedScreen extends GuiScreen {
         setGameInstance(ModUtils.getMinecraft());
         setParent(parentScreen);
         currentScreen = this;
-        setTitle(title);
-        setSubTitle(subTitle);
+        setScreenTitle(title);
+        setScreenSubTitle(subTitle);
         setCanClose(true);
         setContentHeight(0);
         setScreenSettings();
@@ -534,7 +534,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @return the Screen title
      */
-    public String getTitle() {
+    public String getScreenTitle() {
         return title;
     }
 
@@ -543,7 +543,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param title the new title for the screen
      */
-    public void setTitle(final String title) {
+    public void setScreenTitle(final String title) {
         this.title = title;
     }
 
@@ -552,7 +552,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @return the Screen subtitle
      */
-    public String getSubTitle() {
+    public String getScreenSubTitle() {
         return subTitle;
     }
 
@@ -561,7 +561,7 @@ public class ExtendedScreen extends GuiScreen {
      *
      * @param subTitle the new subtitle for the screen
      */
-    public void setSubTitle(final String subTitle) {
+    public void setScreenSubTitle(final String subTitle) {
         this.subTitle = subTitle;
     }
 
@@ -642,7 +642,7 @@ public class ExtendedScreen extends GuiScreen {
      * Render any String Data, such as the Screen Title or other elements
      */
     public void renderStringData() {
-        renderTitles(getTitle(), getSubTitle());
+        renderTitles(getScreenTitle(), getScreenSubTitle());
     }
 
     /**

@@ -122,7 +122,7 @@ public class SelectorGui extends ExtendedScreen {
 
     @Override
     public void initializeUi() {
-        if (itemList != null && !itemList.isEmpty()) {
+        if (getItemList() != null && !getItemList().isEmpty()) {
             appendListControl();
             appendControls();
             super.initializeUi();
@@ -149,7 +149,7 @@ public class SelectorGui extends ExtendedScreen {
                         getGameInstance(), this,
                         getScreenWidth(), getScreenHeight(),
                         32, getScreenHeight() - 32,
-                        getItemList(), originalValue
+                        getItemList(), getOriginalValue()
                 )
         ));
     }
@@ -162,8 +162,8 @@ public class SelectorGui extends ExtendedScreen {
                         "Back",
                         () -> {
                             if (allowContinuing && scrollList.currentValue != null) {
-                                if (originalValue != null) {
-                                    if (!scrollList.currentValue.equals(originalValue)) {
+                                if (getOriginalValue() != null) {
+                                    if (!scrollList.currentValue.equals(getOriginalValue())) {
                                         if (onUpdatedCallback != null) {
                                             onUpdatedCallback.accept(attributeName, scrollList.currentValue);
                                             openScreen(getParent());
@@ -235,21 +235,21 @@ public class SelectorGui extends ExtendedScreen {
             itemList = originalItems;
         }
 
-        if (!itemList.equals(originalItems) && !itemList.contains(scrollList.currentValue)) {
-            if (originalValue != null && itemList.contains(originalValue)) {
-                scrollList.currentValue = originalValue;
+        if (!getItemList().equals(originalItems) && !getItemList().contains(scrollList.currentValue)) {
+            if (getOriginalValue() != null && getItemList().contains(getOriginalValue())) {
+                scrollList.currentValue = getOriginalValue();
             } else {
                 scrollList.currentValue = null;
             }
-        } else if (scrollList.currentValue == null && originalValue != null) {
-            scrollList.currentValue = originalValue;
+        } else if (scrollList.currentValue == null && getOriginalValue() != null) {
+            scrollList.currentValue = getOriginalValue();
         }
 
-        scrollList.setList(itemList);
+        scrollList.setList(getItemList());
 
         proceedButton.setControlMessage(
                 allowContinuing && scrollList.currentValue != null &&
-                        ((originalValue != null && !scrollList.currentValue.equals(originalValue)) || (StringUtils.isNullOrEmpty(originalValue))) ?
+                        ((getOriginalValue() != null && !scrollList.currentValue.equals(getOriginalValue())) || (StringUtils.isNullOrEmpty(getOriginalValue()))) ?
                         "Continue" : "Back"
         );
 

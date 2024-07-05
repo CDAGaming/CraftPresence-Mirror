@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TranslationUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
 
 import java.io.InputStream;
 import java.util.List;
@@ -54,9 +55,10 @@ public record TranslationManager(Minecraft client,
         instance().setResourceSupplier((modId, assetsPath, langPath) -> {
             final List<InputStream> results = StringUtils.newArrayList();
             try {
-                client().getResourceManager().getAllResources(
-                        ResourceUtils.getResource(modId, langPath)
-                ).forEach(resource -> results.add(resource.getInputStream()));
+                final List<IResource> resources = client().getResourceManager().getAllResources(ResourceUtils.getResource(modId, langPath));
+                for (IResource resource : resources) {
+                    results.add(resource.getInputStream());
+                }
             } catch (Exception ignored) {
             }
             return results;

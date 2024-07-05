@@ -169,7 +169,7 @@ public class ExtendedButtonControl extends GuiButton implements DynamicWidget {
      * @param displayString The display text, to display within this Control
      */
     public ExtendedButtonControl(final int id, final int xPos, final int yPos, final String displayString) {
-        super(id, xPos, yPos, displayString);
+        this(id, xPos, yPos, 200, 20, displayString);
     }
 
     /**

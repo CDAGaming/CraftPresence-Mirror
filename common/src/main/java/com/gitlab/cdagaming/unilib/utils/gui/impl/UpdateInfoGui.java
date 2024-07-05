@@ -137,7 +137,7 @@ public class UpdateInfoGui extends ExtendedScreen {
     }
 
     private void updateInfo(final String status) {
-        setSubTitle(String.format("Version Check Info (State: %1$s)", status));
+        setScreenSubTitle(String.format("Version Check Info (State: %1$s)", status));
     }
 
     private void updateInfo() {
