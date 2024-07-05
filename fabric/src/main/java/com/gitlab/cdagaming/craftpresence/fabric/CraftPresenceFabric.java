@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.fabric;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.unilib.fabric.UniLibFabric;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import net.fabricmc.api.ClientModInitializer;
 
@@ -40,8 +39,6 @@ public class CraftPresenceFabric implements ClientModInitializer {
         if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
-
-        new UniLibFabric(); // TODO: Remove when uniLib is seperated
         new CraftPresence(this::setupIntegrations);
     }
 

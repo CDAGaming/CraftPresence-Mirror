@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.unilib.forge.UniLibForge;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import net.minecraftforge.fml.common.Mod;
 
@@ -43,8 +42,6 @@ public class CraftPresenceForge {
         if (OSUtils.JAVA_SPEC < 1.8f) {
             throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
         }
-
-        new UniLibForge(); // TODO: Remove when uniLib is seperated
         new CraftPresence(this::setupIntegrations);
     }
 

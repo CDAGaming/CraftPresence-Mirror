@@ -61,17 +61,9 @@ dependencies {
         }
     }
 
-    // CORE APIs
-    shade("io.github.CDAGaming:unicore:${"core_version"()!!}") {
-        isTransitive = false
-    }
-
     // Java-Specific Dependencies
     shade("com.kohlschutter.junixsocket:junixsocket-common:${"junixsocket_version"()!!}")
     shade("com.kohlschutter.junixsocket:junixsocket-native-common:${"junixsocket_version"()!!}")
-
-    // LeniReflect
-    shade("net.lenni0451:Reflect:${"reflect_version"()!!}")
 
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${"ipc_version"()!!}") {
@@ -79,22 +71,13 @@ dependencies {
     }
     // StarScript (Used for Placeholder Expressions)
     shade("io.github.CDAGaming:starscript:${"starscript_version"()!!}")
-    shade("io.github.classgraph:classgraph:${"classgraph_version"()!!}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {
-        shade("org.slf4j:slf4j-api:1.7.36")
+        implementation("org.slf4j:slf4j-api:1.7.36")
         if (isLegacy) {
-            shade("org.slf4j:slf4j-jdk14:1.7.36")
+            implementation("org.slf4j:slf4j-jdk14:1.7.36")
         } else {
             runtime("org.slf4j:slf4j-jdk14:1.7.36")
-
-            // 17w15a (1.12) and higher use 2.x's full releases of Log4j
-            // while anything below that uses (Or should be using) the *fixed* version of 2.0-beta9
-            val log4jVersion = if (protocol >= 321) "2.0" else "2.0-beta9"
-            shadeOnly("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion") {
-                exclude(group = "org.apache.logging.log4j", module = "log4j-api")
-                exclude(group = "org.apache.logging.log4j", module = "log4j-core")
-            }
         }
     }
 

@@ -4,6 +4,7 @@ import xyz.wagyourtail.jvmdg.gradle.task.files.DowngradeFiles
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
+import java.util.*
 
 plugins {
     java
@@ -280,10 +281,20 @@ subprojects {
         }
     }
 
+    val libPrefix = "UniLib"
+    val libName = if (path == ":common") "fabric" else name
+    val libVersion = "1.0.0"
+
     dependencies {
         // Annotations
         "compileOnly"("com.google.code.findbugs:jsr305:3.0.2")
         "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.8.6")
+
+        "modImplementation"("com.gitlab.cdagaming.unilib:$libPrefix-${libName.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.getDefault()
+            ) else it.toString()
+        }}:$libVersion+$mcVersion:$libName")
     }
 
     tasks.withType<JavaCompile>().configureEach {

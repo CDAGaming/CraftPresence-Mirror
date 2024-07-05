@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import io.github.classgraph.ClassInfo;
+import external.io.github.classgraph.ClassInfo;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 
