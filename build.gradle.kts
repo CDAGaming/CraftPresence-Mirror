@@ -401,7 +401,6 @@ fusioner {
     }
 
     relocateDuplicate("com.gitlab.cdagaming.$extModId.core")
-    relocateDuplicate("com.gitlab.cdagaming.unilib.core") // TODO: Remove when UniLib is moved into its own project
 }
 
 tasks {

@@ -45,7 +45,7 @@ public class CraftPresenceForge {
             }
             new CraftPresence(this::setupIntegrations);
         } catch (NoClassDefFoundError ex) {
-            throw new UnsupportedOperationException("Unable to initialize @MOD_NAME@! @UNILIB_NAME@ (unilib) is required to run this mod (Requires @UNILIB_MIN_VERSION@ or above)");
+            throw new UnsupportedOperationException("Unable to initialize @MOD_NAME@! @UNILIB_NAME@ (unilib) is required to run this mod (Requires @UNILIB_MIN_VERSION@ or above)", ex);
         }
     }
 
