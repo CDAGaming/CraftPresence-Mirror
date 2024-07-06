@@ -77,7 +77,8 @@ val replaceProperties = mapOf(
     "version" to baseVersionLabel,
     "mcversion" to mcVersionLabel,
     "game_version_range" to "fabric_game_version_range"()!!,
-    "loader_version_range" to "fabric_loader_version_range"()!!
+    "loader_version_range" to "fabric_loader_version_range"()!!,
+    "unilib_min_version" to "unilib_minimum_version"()!!
 )
 
 tasks.processResources {

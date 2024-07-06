@@ -82,7 +82,8 @@ val replaceProperties = mapOf(
     "forge_id" to forgeId,
     "fml_version_range" to "fml_version_range"(),
     "game_version_range" to "forge_game_version_range"(),
-    "loader_version_range" to "forge_loader_version_range"()
+    "loader_version_range" to "forge_loader_version_range"(),
+    "unilib_min_version" to "unilib_minimum_version"()!!
 )
 
 tasks.processResources {

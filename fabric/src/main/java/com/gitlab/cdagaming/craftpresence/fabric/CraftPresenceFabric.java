@@ -36,10 +36,14 @@ import net.fabricmc.api.ClientModInitializer;
 public class CraftPresenceFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        if (OSUtils.JAVA_SPEC < 1.8f) {
-            throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
+        try {
+            if (OSUtils.JAVA_SPEC < 1.8f) {
+                throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
+            }
+            new CraftPresence(this::setupIntegrations);
+        } catch (NoClassDefFoundError ex) {
+            throw new UnsupportedOperationException("Unable to initialize @MOD_NAME@! @UNILIB_NAME@ (unilib) is required to run this mod (Requires @UNILIB_MIN_VERSION@ or above)");
         }
-        new CraftPresence(this::setupIntegrations);
     }
 
     /**

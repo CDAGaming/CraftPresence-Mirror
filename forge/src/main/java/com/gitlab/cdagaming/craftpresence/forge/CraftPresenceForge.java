@@ -33,16 +33,20 @@ import net.minecraftforge.fml.common.Mod;
  *
  * @author CDAGaming
  */
-@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json", acceptedMinecraftVersions = "*")
+@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json", acceptedMinecraftVersions = "*", dependencies = "required-after:unilib@[1.0.0,]")
 public class CraftPresenceForge {
     /**
      * Begins Scheduling Ticks on Class Initialization
      */
     public CraftPresenceForge() {
-        if (OSUtils.JAVA_SPEC < 1.8f) {
-            throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
+        try {
+            if (OSUtils.JAVA_SPEC < 1.8f) {
+                throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
+            }
+            new CraftPresence(this::setupIntegrations);
+        } catch (NoClassDefFoundError ex) {
+            throw new UnsupportedOperationException("Unable to initialize @MOD_NAME@! @UNILIB_NAME@ (unilib) is required to run this mod (Requires @UNILIB_MIN_VERSION@ or above)");
         }
-        new CraftPresence(this::setupIntegrations);
     }
 
     /**

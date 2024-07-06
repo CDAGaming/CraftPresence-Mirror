@@ -281,20 +281,26 @@ subprojects {
         }
     }
 
-    val libPrefix = "UniLib"
+    // Setup UniLib attachment data
+    val libPrefix = "unilib_name"()!!
     val libName = if (path == ":common") "fabric" else name
-    val libVersion = "1.0.0"
+    val libVersion = "unilib_build_version"()!!
 
     dependencies {
         // Annotations
         "compileOnly"("com.google.code.findbugs:jsr305:3.0.2")
         "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.8.6")
 
-        "modImplementation"("com.gitlab.cdagaming.unilib:$libPrefix-${libName.replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase(
-                Locale.getDefault()
-            ) else it.toString()
-        }}:$libVersion+$mcVersion:$libName")
+        // Attach UniLib dependency
+        "modImplementation"(
+            "com.gitlab.cdagaming.unilib:$libPrefix-${
+                libName.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
+            }:$libVersion+$mcVersion:$libName"
+        )
     }
 
     tasks.withType<JavaCompile>().configureEach {
@@ -342,7 +348,9 @@ subprojects {
                     "VERSION_TYPE" to "deploymentType"()!!,
                     "MC_VERSION" to mcVersionLabel,
                     "MC_PROTOCOL" to protocol.toString(),
-                    "IS_LEGACY" to isLegacy.toString()
+                    "IS_LEGACY" to isLegacy.toString(),
+                    "UNILIB_NAME" to libPrefix,
+                    "UNILIB_MIN_VERSION" to "unilib_minimum_version"()!!
                 )
             )
         }
