@@ -4,6 +4,33 @@ on:
   push:
     branches-ignore:
       - l10n_master
+  workflow_dispatch:
+    inputs:
+      release_all:
+        description: 'Deploy All'
+        required: true
+        default: false
+        type: boolean
+      release_curseforge:
+        description: 'Deploy CurseForge'
+        required: true
+        default: false
+        type: boolean
+      release_modrinth:
+        description: 'Deploy Modrinth'
+        required: true
+        default: false
+        type: boolean
+      release_nightbloom:
+        description: 'Deploy NightBloom'
+        required: true
+        default: false
+        type: boolean
+
+env:
+  CF_APIKEY: ${{ secrets.CF_APIKEY }}
+  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+  NIGHTBLOOM_TOKEN: ${{ secrets.NIGHTBLOOM_TOKEN }}
 
 jobs:
   build:
@@ -34,13 +61,32 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew --build-cache --info --stacktrace build
 
-      - name: Merge Jars with Gradle
-        run: ./gradlew --build-cache --info --stacktrace fusejars
+      - name: Deploy to CurseForge
+        if: |
+          github.event.inputs.release_all || github.event.inputs.release_curseforge
+        run: ./gradlew --build-cache --info --stacktrace publishCurseforge
+
+      - name: Deploy to Modrinth
+        if: |
+          github.event.inputs.release_all || github.event.inputs.release_modrinth
+        run: ./gradlew --build-cache --info --stacktrace publishModrinth
+
+      - name: Deploy to NightBloom
+        if: |
+          github.event.inputs.release_all || github.event.inputs.release_nightbloom
+        run: ./gradlew --build-cache --info --stacktrace publishNightbloom
 
       - uses: actions/upload-artifact@v4
         with:
           name: artifacts
-          path: build/libs/*.jar
+          path: |
+            **/build/libs/
+            !buildSrc/build/libs/
+            !build/libs/
+            !**/*-dev.jar
+            !**/*-shadow.jar
+            !**/*-transformProduction*.jar
+            !**/testmod*/
 
       - name: stop daemon
         run: ./gradlew --stop
