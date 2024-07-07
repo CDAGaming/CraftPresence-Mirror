@@ -1,10 +1,6 @@
 import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
-plugins {
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.5"
-}
-
 /**
  * Retrieve a Project Property
  */
@@ -219,54 +215,4 @@ tasks.register("generateMyResources") {
             }
         }
     }
-}
-
-// Setup Data for Uploading
-var targetFile = file("$rootDir/build/libs/$fileFormat.jar")
-if (!targetFile.exists() && (isJarMod)) {
-    // Fallback to an alternative Sub-Project Output when in a Jar Mod configuration and the target file isn't there
-    targetFile = file("$rootDir/$fmlName/build/libs/$fileFormat-$fmlName.jar")
-}
-
-// Setup Game Versions to upload for
-val uploadVersions = mutableListOf("mc_version"()!!)
-for (v in "additional_mc_versions"()!!.split(",")) {
-    if (v.isNotEmpty()) {
-        uploadVersions.add(v)
-    }
-}
-
-// Setup Game Loaders to upload for
-var uploadLoaders = "enabled_platforms"()!!.split(",").toMutableList()
-for (v in "additional_loaders"()!!.split(",")) {
-    if (v.isNotEmpty()) {
-        uploadLoaders.add(v)
-    }
-}
-
-// Ensure Forge // NeoForge Upload Compatibility, when specified
-if (isNeoForge) {
-    uploadLoaders = uploadLoaders.map { if (it == "forge") "neoforge" else it }.toMutableList()
-}
-
-publisher {
-    apiKeys {
-        curseforge(System.getenv("CF_APIKEY"))
-        modrinth(System.getenv("MODRINTH_TOKEN"))
-        nightbloom(System.getenv("NIGHTBLOOM_TOKEN"))
-    }
-
-    debug = false
-    curseID = "297038"
-    modrinthID = "DFqQfIBR"
-    nightbloomID = modId
-    versionType = "deploymentType"()!!.lowercase()
-    changelog = file("$rootDir/Changes.md").readText()
-    projectVersion = versionFormat.replace(Regex("\\s"), "").lowercase() // Modrinth Only
-    displayName =
-        "$modName v${"versionId"()}${if (versionLabel.isEmpty()) "" else " $versionLabel"} ($mcVersionLabel)"
-    gameVersions = uploadVersions
-    loaders = uploadLoaders
-    curseEnvironment = "client"
-    artifact = targetFile
 }
