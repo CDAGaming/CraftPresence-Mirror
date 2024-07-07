@@ -405,9 +405,12 @@ subprojects {
     if (isLoaderSource) {
         val targetFile = "build/libs/$fileFormat-$fileName.jar"
         val uploadLoaders = mutableListOf(fileName)
-        for (v in "additional_${name}_loaders"()!!.split(",")) {
-            if (v.isNotEmpty()) {
-                uploadLoaders.add(v)
+        val additionalLoaders = "additional_${name}_loaders"()
+        if (!additionalLoaders.isNullOrEmpty()) {
+            for (v in additionalLoaders.split(",")) {
+                if (v.isNotEmpty()) {
+                    uploadLoaders.add(v)
+                }
             }
         }
 
