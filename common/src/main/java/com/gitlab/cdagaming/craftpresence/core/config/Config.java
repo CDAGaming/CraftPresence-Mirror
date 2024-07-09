@@ -26,14 +26,16 @@ package com.gitlab.cdagaming.craftpresence.core.config;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.category.*;
-import com.gitlab.cdagaming.craftpresence.core.config.element.*;
+import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
+import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
+import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.HypherConverter;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.Legacy2Modern;
 import com.gitlab.cdagaming.craftpresence.core.config.migration.TextReplacer;
-import com.gitlab.cdagaming.craftpresence.core.impl.KeyConverter;
-import com.gitlab.cdagaming.craftpresence.core.impl.TranslationConverter;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.impl.KeyConverter;
+import com.gitlab.cdagaming.unilib.core.impl.TranslationConverter;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.impl.Tuple;
@@ -60,7 +62,7 @@ public final class Config extends Module implements Serializable {
     private static final long serialVersionUID = -4853238501768086595L;
 
     // Constants
-    private static final int MC_VERSION = Constants.MCBuildProtocol;
+    private static final int MC_VERSION = CoreUtils.MCBuildProtocol;
     private static final int VERSION = 6;
     private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
@@ -259,7 +261,26 @@ public final class Config extends Module implements Serializable {
 
     @Override
     public void transferFrom(Module target) {
-        if (target instanceof Config data && !areSettingsEqual(data)) {
+        if (target instanceof Config data) {
+            transferFlags(data);
+            transferSettings(data);
+        }
+    }
+
+    public void transferFlags(final Config data) {
+        if (!areFlagsEqual(data)) {
+            hasChanged = data.hasChanged;
+            isNewFile = data.isNewFile;
+            onApplySettings = data.onApplySettings;
+            onApplyFrom = data.onApplyFrom;
+            gameVersion = data.gameVersion;
+            _schemaVersion = data._schemaVersion;
+            _lastMCVersionId = data._lastMCVersionId;
+        }
+    }
+
+    public void transferSettings(final Config data) {
+        if (!areSettingsEqual(data)) {
             generalSettings = new General(data.generalSettings);
             biomeSettings = new Biome(data.biomeSettings);
             dimensionSettings = new Dimension(data.dimensionSettings);
@@ -342,47 +363,48 @@ public final class Config extends Module implements Serializable {
                 if (MathUtils.isWithinValue(currentVer, 3, 4, true, false)) {
                     // Schema Changes (v3 -> v4)
                     //  - Migrate Color-Related Settings to new System
-                    final JsonObject oldData = rawJson.getAsJsonObject()
-                            .getAsJsonObject("accessibilitySettings");
-                    final boolean showBackgroundAsDark = oldData
-                            .getAsJsonPrimitive("showBackgroundAsDark").getAsBoolean();
-                    final Map<String, String> propsToChange = new HashMapBuilder<String, String>()
-                            .put("tooltipBackgroundColor", "tooltipBackground")
-                            .put("tooltipBorderColor", "tooltipBorder")
-                            .put("guiBackgroundColor", "guiBackground")
-                            .build();
-
-                    for (Map.Entry<String, String> entry : propsToChange.entrySet()) {
-                        final String oldValue = oldData.getAsJsonPrimitive(entry.getKey()).getAsString();
-                        final ColorData newValue = new ColorData();
-
-                        if (!StringUtils.isNullOrEmpty(oldValue)) {
-                            if (StringUtils.isValidColorCode(oldValue)) {
-                                final ColorSection startColor = new ColorSection(
-                                        StringUtils.findColor(oldValue)
-                                );
-                                newValue.setStartColor(startColor);
-
-                                if (entry.getKey().equalsIgnoreCase("tooltipBorderColor")) {
-                                    final int borderColorCode = startColor.getColor().getRGB();
-                                    final String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
-                                    newValue.setEndColor(new ColorSection(
-                                            StringUtils.findColor(borderColorEnd)
-                                    ));
-                                }
-                            } else {
-                                final boolean applyTint = showBackgroundAsDark && entry.getKey().equalsIgnoreCase("guiBackgroundColor");
-                                if (applyTint) {
-                                    newValue.setStartColor(
-                                            new ColorSection(64, 64, 64, 255)
-                                    );
-                                }
-                                newValue.setTexLocation(oldValue);
-                            }
-                        }
-
-                        accessibilitySettings.setProperty(entry.getValue(), newValue);
-                    }
+                    // As of 06-30-2024, this is dead code and no longer used
+//                    final JsonObject oldData = rawJson.getAsJsonObject()
+//                            .getAsJsonObject("accessibilitySettings");
+//                    final boolean showBackgroundAsDark = oldData
+//                            .getAsJsonPrimitive("showBackgroundAsDark").getAsBoolean();
+//                    final Map<String, String> propsToChange = new HashMapBuilder<String, String>()
+//                            .put("tooltipBackgroundColor", "tooltipBackground")
+//                            .put("tooltipBorderColor", "tooltipBorder")
+//                            .put("guiBackgroundColor", "guiBackground")
+//                            .build();
+//
+//                    for (Map.Entry<String, String> entry : propsToChange.entrySet()) {
+//                        final String oldValue = oldData.getAsJsonPrimitive(entry.getKey()).getAsString();
+//                        final ColorData newValue = new ColorData();
+//
+//                        if (!StringUtils.isNullOrEmpty(oldValue)) {
+//                            if (StringUtils.isValidColorCode(oldValue)) {
+//                                final ColorSection startColor = new ColorSection(
+//                                        StringUtils.findColor(oldValue)
+//                                );
+//                                newValue.setStartColor(startColor);
+//
+//                                if (entry.getKey().equalsIgnoreCase("tooltipBorderColor")) {
+//                                    final int borderColorCode = startColor.getColor().getRGB();
+//                                    final String borderColorEnd = Integer.toString((borderColorCode & 0xFEFEFE) >> 1 | borderColorCode & 0xFF000000);
+//                                    newValue.setEndColor(new ColorSection(
+//                                            StringUtils.findColor(borderColorEnd)
+//                                    ));
+//                                }
+//                            } else {
+//                                final boolean applyTint = showBackgroundAsDark && entry.getKey().equalsIgnoreCase("guiBackgroundColor");
+//                                if (applyTint) {
+//                                    newValue.setStartColor(
+//                                            new ColorSection(64, 64, 64, 255)
+//                                    );
+//                                }
+//                                newValue.setTexLocation(oldValue);
+//                            }
+//                        }
+//
+//                        accessibilitySettings.setProperty(entry.getValue(), newValue);
+//                    }
                     currentVer = 4;
                 }
                 if (MathUtils.isWithinValue(currentVer, 4, 5, true, false)) {
@@ -399,9 +421,10 @@ public final class Config extends Module implements Serializable {
                 if (MathUtils.isWithinValue(currentVer, 5, 6, true, false)) {
                     // Schema Changes (v5 -> v6)
                     //  - Property: `advancedSettings.renderTooltips` -> `accessibilitySettings.renderTooltips`
-                    accessibilitySettings.renderTooltips = rawJson.getAsJsonObject()
-                            .getAsJsonObject("advancedSettings")
-                            .getAsJsonPrimitive("renderTooltips").getAsBoolean();
+                    // As of 06-30-2024, this is dead code and no longer used
+//                    accessibilitySettings.renderTooltips = rawJson.getAsJsonObject()
+//                            .getAsJsonObject("advancedSettings")
+//                            .getAsJsonPrimitive("renderTooltips").getAsBoolean();
                     currentVer = 6;
                 }
 
@@ -435,7 +458,7 @@ public final class Config extends Module implements Serializable {
                 boolean shouldReset = false, shouldContinue = true;
 
                 if (defaultValue == null) {
-                    if (currentValue == null || !(parentValue instanceof ColorData || parentValue instanceof ColorSection || parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
+                    if (currentValue == null || !(parentValue instanceof PresenceData || parentValue instanceof ModuleData || parentValue instanceof Button)) {
                         Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.prop.invalid", rawName));
                         shouldContinue = false;
                     } else {
@@ -537,15 +560,10 @@ public final class Config extends Module implements Serializable {
         final int newMCVer = getGameVersion();
         if (oldMCVer != newMCVer) {
             _lastMCVersionId = newMCVer;
-
-            // Reset some config settings when game version changes
-            final Accessibility accessibilityDefaults = accessibilitySettings.getDefaults();
-            accessibilitySettings.guiBackground = accessibilityDefaults.guiBackground;
-            accessibilitySettings.altGuiBackground = accessibilityDefaults.altGuiBackground;
         }
 
         // Sync Flag Data
-        if (Constants.isTextFormattingBlocked()) {
+        if (CoreUtils.isTextFormattingBlocked()) {
             accessibilitySettings.stripTranslationFormatting = true;
         }
 

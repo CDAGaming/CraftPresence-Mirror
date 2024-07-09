@@ -27,15 +27,15 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextDisplayWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextDisplayWidget;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
@@ -61,7 +61,7 @@ public class CommandsGui extends ExtendedScreen {
     private List<String> tabCompletions = StringUtils.newArrayList();
 
     public CommandsGui(String... commandArgs) {
-        super();
+        super(Constants.TRANSLATOR.translate("gui.config.title.commands"));
         executionCommandArgs = commandArgs;
         executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.main");
     }
@@ -117,7 +117,7 @@ public class CommandsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         6, (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.back",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
                         () -> openScreen(getParent())
                 )
         );
@@ -125,7 +125,7 @@ public class CommandsGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         6, 6,
                         95, 20,
-                        "gui.config.message.button.copy",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.copy"),
                         () -> copyToClipboard(executionString)
                 )
         );
@@ -166,20 +166,6 @@ public class CommandsGui extends ExtendedScreen {
         previewArea.setMessage(executionString);
 
         super.preRender();
-    }
-
-    @Override
-    public void renderExtra() {
-        final String mainTitle = Constants.TRANSLATOR.translate("gui.config.title.commands");
-
-        renderScrollingString(
-                mainTitle,
-                30, 0,
-                getScreenWidth() - 30, 32,
-                0xFFFFFF
-        );
-
-        super.renderExtra();
     }
 
     /**
@@ -299,11 +285,11 @@ public class CommandsGui extends ExtendedScreen {
                         );
 
                         if (!results.isEmpty()) {
-                            openScreen(new SelectorGui(
+                            openScreen(new DynamicSelectorGui(
                                     Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                     results,
                                     null, null,
-                                    false, false, RenderType.Placeholder,
+                                    false, false, DynamicScrollableList.RenderType.Placeholder,
                                     null, null
                             ));
                         } else {
@@ -336,11 +322,11 @@ public class CommandsGui extends ExtendedScreen {
                             return;
                         } else if (executionCommandArgs[1].equalsIgnoreCase("items")) {
                             if (CraftPresence.TILE_ENTITIES.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.items"),
                                         CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
-                                        false, false, RenderType.ItemData,
+                                        false, false, DynamicScrollableList.RenderType.ItemData,
                                         null, null
                                 ));
                             } else {
@@ -350,11 +336,11 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("entities")) {
                             if (CraftPresence.ENTITIES.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.entities"),
                                         CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
-                                        false, false, RenderType.EntityData,
+                                        false, false, DynamicScrollableList.RenderType.EntityData,
                                         null, null
                                 ));
                             } else {
@@ -364,11 +350,11 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("servers")) {
                             if (CraftPresence.SERVER.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.servers"),
                                         CraftPresence.SERVER.knownAddresses,
                                         null, null,
-                                        false, false, RenderType.ServerData,
+                                        false, false, DynamicScrollableList.RenderType.ServerData,
                                         null, null
                                 ));
                             } else {
@@ -378,7 +364,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("screens")) {
                             if (CraftPresence.GUIS.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.guis"),
                                         CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
@@ -392,7 +378,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("biomes")) {
                             if (CraftPresence.BIOMES.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.biomes"),
                                         CraftPresence.BIOMES.BIOME_NAMES,
                                         null, null,
@@ -406,7 +392,7 @@ public class CommandsGui extends ExtendedScreen {
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("dimensions")) {
                             if (CraftPresence.DIMENSIONS.isEnabled()) {
-                                openScreen(new SelectorGui(
+                                openScreen(new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.dimensions"),
                                         CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
@@ -448,19 +434,19 @@ public class CommandsGui extends ExtendedScreen {
                                 executionString = Constants.TRANSLATOR.translate("craftpresence.command.usage.view.assets");
                             } else if (!StringUtils.isNullOrEmpty(executionCommandArgs[2])) {
                                 if (executionCommandArgs[2].equalsIgnoreCase("custom")) {
-                                    openScreen(new SelectorGui(
+                                    openScreen(new DynamicSelectorGui(
                                             Constants.TRANSLATOR.translate("gui.config.title.selector.view.assets.custom"),
                                             DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                             null, null,
-                                            false, false, RenderType.CustomDiscordAsset,
+                                            false, false, DynamicScrollableList.RenderType.CustomDiscordAsset,
                                             null, null
                                     ));
                                 } else if (executionCommandArgs[2].equalsIgnoreCase("all")) {
-                                    openScreen(new SelectorGui(
+                                    openScreen(new DynamicSelectorGui(
                                             Constants.TRANSLATOR.translate("gui.config.title.selector.view.assets.all"),
                                             DiscordAssetUtils.ASSET_LIST.keySet(),
                                             null, null,
-                                            false, false, RenderType.DiscordAsset,
+                                            false, false, DynamicScrollableList.RenderType.DiscordAsset,
                                             null, null
                                     ));
                                 }

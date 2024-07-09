@@ -29,14 +29,14 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.function.Consumer;
@@ -53,7 +53,10 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                       final boolean isDefault,
                       Consumer<PresenceData> changedCallback
     ) {
-        super("gui.config.title", "gui.config.title.editor.presence");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.editor.presence")
+        );
         DEFAULTS = defaultData;
         INSTANCE = moduleData.copy();
         CURRENT = moduleData;
@@ -92,7 +95,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
             enabledCheckbox = childFrame.addControl(
                     new CheckBoxControl(
                             calc1, getButtonY(controlIndex),
-                            "gui.config.message.editor.presence.enabled",
+                            Constants.TRANSLATOR.translate("gui.config.message.editor.presence.enabled"),
                             getInstanceData().enabled,
                             () -> getInstanceData().enabled = enabledCheckbox.isChecked(),
                             () -> drawMultiLineString(
@@ -105,7 +108,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
             useAsMainCheckbox = childFrame.addControl(
                     new CheckBoxControl(
                             calc2, getButtonY(controlIndex),
-                            "gui.config.message.editor.presence.use_as_main",
+                            Constants.TRANSLATOR.translate("gui.config.message.editor.presence.use_as_main"),
                             getInstanceData().useAsMain,
                             () -> getInstanceData().useAsMain = useAsMainCheckbox.isChecked(),
                             () -> drawMultiLineString(
@@ -125,7 +128,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().setDetails(detailsFormat.getControlMessage()),
-                        "gui.config.message.editor.presence.details",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.details"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -140,7 +143,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().setGameState(gameStateFormat.getControlMessage()),
-                        "gui.config.message.editor.presence.game_state",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.game_state"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -166,7 +169,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().largeImageText = largeImageFormat.getControlMessage(),
-                        "gui.config.message.editor.message",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.message"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -181,7 +184,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         getButtonY(controlIndex++),
                         147, 20,
                         () -> getInstanceData().largeImageKey = largeImageKeyFormat.getControlMessage(),
-                        "gui.config.message.editor.icon.change",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.icon.change"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.icon",
@@ -210,7 +213,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().smallImageText = smallImageFormat.getControlMessage(),
-                        "gui.config.message.editor.message",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.message"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -225,7 +228,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         getButtonY(controlIndex++),
                         147, 20,
                         () -> getInstanceData().smallImageKey = smallImageKeyFormat.getControlMessage(),
-                        "gui.config.message.editor.icon.change",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.icon.change"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.icon",
@@ -254,7 +257,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().setStartTime(startTimeFormat.getControlMessage()),
-                        "gui.config.message.editor.presence.start_timestamp",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.start_timestamp"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -269,7 +272,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         getButtonY(controlIndex++),
                         180, 20,
                         () -> getInstanceData().setEndTime(endTimeFormat.getControlMessage()),
-                        "gui.config.message.editor.presence.end_timestamp",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.end_timestamp"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -287,12 +290,12 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                         180, 20,
-                        "gui.config.message.editor.presence.button_editor",
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.button_editor"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.button"), getInstanceData().buttons.keySet(),
                                         null, null,
-                                        true, true, ScrollableListControl.RenderType.None,
+                                        true, true, DynamicScrollableList.RenderType.None,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -302,7 +305,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.attributeName = "button_" + getInstanceData().buttons.size();
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName));
                                                                 screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 final Button defaultData = getInstanceData().buttons.get("default");
@@ -314,7 +317,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                                 screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.overrideSecondaryRender = true;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName));
                                                                 final Button defaultData = getInstanceData().buttons.get("default");
                                                                 final Button currentData = getInstanceData().buttons.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentData == null;

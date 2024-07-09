@@ -24,11 +24,8 @@
 
 package com.gitlab.cdagaming.craftpresence.core.config.category;
 
-import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorData;
-import com.gitlab.cdagaming.craftpresence.core.config.element.ColorSection;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -38,22 +35,11 @@ public class Accessibility extends Module implements Serializable {
     @Serial
     private static final long serialVersionUID = -6804925684173174749L;
     private static final Accessibility DEFAULT = new Accessibility();
-    public ColorData tooltipBackground = ScreenConstants.DEFAULT_TOOLTIP_BACKGROUND;
-    public ColorData tooltipBorder = ScreenConstants.DEFAULT_TOOLTIP_BORDER;
-    public ColorData guiBackground = new ColorData(
-            new ColorSection(64, 64, 64, 255),
-            ScreenConstants.getDefaultGUIBackground()
-    );
-    public ColorData altGuiBackground = new ColorData(
-            new ColorSection(16, 16, 16, 192),
-            new ColorSection(16, 16, 16, 208)
-    );
-    public String languageId = Constants.getDefaultLanguage();
+    public String languageId = CoreUtils.getDefaultLanguage();
     public boolean stripTranslationColors = false;
-    public boolean stripTranslationFormatting = Constants.isTextFormattingBlocked();
+    public boolean stripTranslationFormatting = CoreUtils.isTextFormattingBlocked();
     public boolean stripExtraGuiElements = false;
-    public boolean renderTooltips = true;
-    public int configKeyCode = Constants.MCBuildProtocol > 340 ? 96 : 41;
+    public int configKeyCode = CoreUtils.MCBuildProtocol > 340 ? 96 : 41;
 
     public Accessibility(final Accessibility other) {
         transferFrom(other);
@@ -76,16 +62,10 @@ public class Accessibility extends Module implements Serializable {
     @Override
     public void transferFrom(Module target) {
         if (target instanceof Accessibility data && !equals(target)) {
-
-            tooltipBackground = new ColorData(data.tooltipBackground);
-            tooltipBorder = new ColorData(data.tooltipBorder);
-            guiBackground = new ColorData(data.guiBackground);
-            altGuiBackground = new ColorData(data.altGuiBackground);
             languageId = data.languageId;
             stripTranslationColors = data.stripTranslationColors;
             stripTranslationFormatting = data.stripTranslationFormatting;
             stripExtraGuiElements = data.stripExtraGuiElements;
-            renderTooltips = data.renderTooltips;
             configKeyCode = data.configKeyCode;
         }
     }
@@ -93,15 +73,10 @@ public class Accessibility extends Module implements Serializable {
     @Override
     public Object getProperty(String name) {
         return switch (name) {
-            case "tooltipBackground" -> tooltipBackground;
-            case "tooltipBorder" -> tooltipBorder;
-            case "guiBackground" -> guiBackground;
-            case "altGuiBackground" -> altGuiBackground;
             case "languageId" -> languageId;
             case "stripTranslationColors" -> stripTranslationColors;
             case "stripTranslationFormatting" -> stripTranslationFormatting;
             case "stripExtraGuiElements" -> stripExtraGuiElements;
-            case "renderTooltips" -> renderTooltips;
             case "configKeyCode" -> configKeyCode;
             default -> null;
         };
@@ -111,18 +86,6 @@ public class Accessibility extends Module implements Serializable {
     public void setProperty(String name, Object value) {
         try {
             switch (name) {
-                case "tooltipBackground":
-                    tooltipBackground = (ColorData) value;
-                    break;
-                case "tooltipBorder":
-                    tooltipBorder = (ColorData) value;
-                    break;
-                case "guiBackground":
-                    guiBackground = (ColorData) value;
-                    break;
-                case "altGuiBackground":
-                    altGuiBackground = (ColorData) value;
-                    break;
                 case "languageId":
                     languageId = (String) value;
                     break;
@@ -134,9 +97,6 @@ public class Accessibility extends Module implements Serializable {
                     break;
                 case "stripExtraGuiElements":
                     stripExtraGuiElements = (Boolean) value;
-                    break;
-                case "renderTooltips":
-                    renderTooltips = (Boolean) value;
                     break;
                 case "configKeyCode":
                     configKeyCode = (Integer) value;
@@ -159,26 +119,19 @@ public class Accessibility extends Module implements Serializable {
             return false;
         }
 
-        return Objects.equals(other.tooltipBackground, tooltipBackground) &&
-                Objects.equals(other.tooltipBorder, tooltipBorder) &&
-                Objects.equals(other.guiBackground, guiBackground) &&
-                Objects.equals(other.altGuiBackground, altGuiBackground) &&
-                Objects.equals(other.languageId, languageId) &&
+        return Objects.equals(other.languageId, languageId) &&
                 Objects.equals(other.stripTranslationColors, stripTranslationColors) &&
                 Objects.equals(other.stripTranslationFormatting, stripTranslationFormatting) &&
                 Objects.equals(other.stripExtraGuiElements, stripExtraGuiElements) &&
-                Objects.equals(other.renderTooltips, renderTooltips) &&
                 Objects.equals(other.configKeyCode, configKeyCode);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                tooltipBackground, tooltipBorder,
-                guiBackground, altGuiBackground,
                 languageId,
                 stripTranslationColors, stripTranslationFormatting,
-                stripExtraGuiElements, renderTooltips,
+                stripExtraGuiElements,
                 configKeyCode
         );
     }

@@ -1,10 +1,6 @@
 import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
-plugins {
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.5"
-}
-
 /**
  * Retrieve a Project Property
  */
@@ -61,17 +57,9 @@ dependencies {
         }
     }
 
-    // CORE APIs
-    shade("io.github.CDAGaming:unicore:${"core_version"()!!}") {
-        isTransitive = false
-    }
-
     // Java-Specific Dependencies
     shade("com.kohlschutter.junixsocket:junixsocket-common:${"junixsocket_version"()!!}")
     shade("com.kohlschutter.junixsocket:junixsocket-native-common:${"junixsocket_version"()!!}")
-
-    // LeniReflect
-    shade("net.lenni0451:Reflect:${"reflect_version"()!!}")
 
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${"ipc_version"()!!}") {
@@ -79,22 +67,13 @@ dependencies {
     }
     // StarScript (Used for Placeholder Expressions)
     shade("io.github.CDAGaming:starscript:${"starscript_version"()!!}")
-    shade("io.github.classgraph:classgraph:${"classgraph_version"()!!}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {
-        shade("org.slf4j:slf4j-api:1.7.36")
+        implementation("org.slf4j:slf4j-api:1.7.36")
         if (isLegacy) {
-            shade("org.slf4j:slf4j-jdk14:1.7.36")
+            implementation("org.slf4j:slf4j-jdk14:1.7.36")
         } else {
             runtime("org.slf4j:slf4j-jdk14:1.7.36")
-
-            // 17w15a (1.12) and higher use 2.x's full releases of Log4j
-            // while anything below that uses (Or should be using) the *fixed* version of 2.0-beta9
-            val log4jVersion = if (protocol >= 321) "2.0" else "2.0-beta9"
-            shadeOnly("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion") {
-                exclude(group = "org.apache.logging.log4j", module = "log4j-api")
-                exclude(group = "org.apache.logging.log4j", module = "log4j-core")
-            }
         }
     }
 
@@ -236,54 +215,4 @@ tasks.register("generateMyResources") {
             }
         }
     }
-}
-
-// Setup Data for Uploading
-var targetFile = file("$rootDir/build/libs/$fileFormat.jar")
-if (!targetFile.exists() && (isJarMod)) {
-    // Fallback to an alternative Sub-Project Output when in a Jar Mod configuration and the target file isn't there
-    targetFile = file("$rootDir/$fmlName/build/libs/$fileFormat-$fmlName.jar")
-}
-
-// Setup Game Versions to upload for
-val uploadVersions = mutableListOf("mc_version"()!!)
-for (v in "additional_mc_versions"()!!.split(",")) {
-    if (v.isNotEmpty()) {
-        uploadVersions.add(v)
-    }
-}
-
-// Setup Game Loaders to upload for
-var uploadLoaders = "enabled_platforms"()!!.split(",").toMutableList()
-for (v in "additional_loaders"()!!.split(",")) {
-    if (v.isNotEmpty()) {
-        uploadLoaders.add(v)
-    }
-}
-
-// Ensure Forge // NeoForge Upload Compatibility, when specified
-if (isNeoForge) {
-    uploadLoaders = uploadLoaders.map { if (it == "forge") "neoforge" else it }.toMutableList()
-}
-
-publisher {
-    apiKeys {
-        curseforge(System.getenv("CF_APIKEY"))
-        modrinth(System.getenv("MODRINTH_TOKEN"))
-        nightbloom(System.getenv("NIGHTBLOOM_TOKEN"))
-    }
-
-    debug = false
-    curseID = "297038"
-    modrinthID = "DFqQfIBR"
-    nightbloomID = modId
-    versionType = "deploymentType"()!!.lowercase()
-    changelog = file("$rootDir/Changes.md").readText()
-    projectVersion = versionFormat.replace(Regex("\\s"), "").lowercase() // Modrinth Only
-    displayName =
-        "$modName v${"versionId"()}${if (versionLabel.isEmpty()) "" else " $versionLabel"} ($mcVersionLabel)"
-    gameVersions = uploadVersions
-    loaders = uploadLoaders
-    curseEnvironment = "client"
-    artifact = targetFile
 }

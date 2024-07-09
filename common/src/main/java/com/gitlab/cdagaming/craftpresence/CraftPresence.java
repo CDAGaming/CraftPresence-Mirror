@@ -26,20 +26,22 @@ package com.gitlab.cdagaming.craftpresence;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.DiscordUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.KeyUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.GuiUtils;
 import com.gitlab.cdagaming.craftpresence.utils.server.ServerUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.BiomeUtils;
 import com.gitlab.cdagaming.craftpresence.utils.world.DimensionUtils;
+import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.UniLib;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
+import com.gitlab.cdagaming.unilib.utils.KeyUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
-import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
@@ -51,10 +53,6 @@ import net.minecraft.util.Session;
  */
 @SuppressFBWarnings("MS_CANNOT_BE_FINAL")
 public class CraftPresence {
-    /**
-     * The {@link KeyUtils} Instance for this Mod
-     */
-    public static final KeyUtils KEYBINDINGS = new KeyUtils();
     /**
      * The {@link DiscordUtils} Instance for this Mod
      */
@@ -84,6 +82,15 @@ public class CraftPresence {
      */
     public static final GuiUtils GUIS = new GuiUtils();
     /**
+     * The Application's Instance of {@link ModUpdaterUtils} for Retrieving if the Application has an update
+     */
+    public static final ModUpdaterUtils UPDATER = new ModUpdaterUtils(
+            Constants.MOD_ID,
+            Constants.UPDATE_JSON,
+            Constants.VERSION_ID,
+            ModUtils.MCVersion
+    );
+    /**
      * The Minecraft Instance attached to this Mod
      */
     public static Minecraft instance;
@@ -108,6 +115,12 @@ public class CraftPresence {
      */
     public static Config CONFIG;
     /**
+     * The {@link KeyUtils} Instance for this Mod
+     */
+    public static final KeyUtils KEYBINDINGS = new KeyUtils()
+            .setCanCheckKeys(() -> CONFIG != null)
+            .setCanSyncKeys(() -> !CONFIG.hasChanged());
+    /**
      * The {@link ScheduleUtils} Instance for this Mod
      */
     public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);
@@ -130,6 +143,9 @@ public class CraftPresence {
      * @param callback The callback to run upon post-initialization
      */
     public CraftPresence(final Runnable callback) {
+        // Ensure UniLib is loaded
+        UniLib.assertLoaded();
+
         initCallback = callback;
         scheduleTick();
     }
@@ -149,14 +165,13 @@ public class CraftPresence {
     private void init() {
         // Initialize Dynamic Mappings and Critical Data
         CommandUtils.updateModes();
-        MappingUtils.getClassMap();
 
         // If running in Developer Mode, Warn of Possible Issues and Log OS Info
         Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.debug_mode"));
         Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.os", OSUtils.OS_NAME, OSUtils.OS_ARCH, OSUtils.IS_64_BIT));
 
         // Check for Updates before continuing
-        ModUtils.UPDATER.checkForUpdates();
+        UPDATER.checkForUpdates();
 
         CONFIG = Config.loadOrCreate(
                 config -> config.applyEvents(
@@ -182,18 +197,7 @@ public class CraftPresence {
      * Schedules the Next Tick to Occur if not currently closing
      */
     private void scheduleTick() {
-        if (!Constants.IS_GAME_CLOSING) {
-            Constants.getThreadPool().scheduleAtFixedRate(
-                    () -> {
-                        try {
-                            this.clientTick();
-                        } catch (Throwable ex) {
-                            Constants.LOG.error(ex);
-                        }
-                    },
-                    0, 50, TimeUtils.getTimeUnitFrom("MILLISECONDS")
-            );
-        }
+        CoreUtils.registerTickEvent(Constants.MOD_ID, this::clientTick);
     }
 
     /**
@@ -202,8 +206,8 @@ public class CraftPresence {
      * Consists of Synchronizing Data, and Updating RPC Data as needed
      */
     private void clientTick() {
-        if (!Constants.IS_GAME_CLOSING) {
-            instance = Minecraft.getMinecraft();
+        if (!CoreUtils.IS_CLOSING) {
+            instance = ModUtils.getMinecraft();
             if (initialized) {
                 session = instance.getSession();
                 player = instance.player;

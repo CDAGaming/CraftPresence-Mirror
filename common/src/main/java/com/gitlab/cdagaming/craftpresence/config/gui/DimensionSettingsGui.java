@@ -30,12 +30,12 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Dimension;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 @SuppressWarnings("DuplicatedCode")
@@ -45,7 +45,10 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     private TextWidget defaultMessage, defaultIcon;
 
     DimensionSettingsGui() {
-        super("gui.config.title", "gui.config.title.dimension_messages");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.dimension_messages")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -67,7 +70,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                             defaultDimensionData.setTextOverride(defaultMessage.getControlMessage());
                             getInstanceData().dimensionData.put("default", defaultDimensionData);
                         },
-                        "gui.config.message.default.dimension",
+                        Constants.TRANSLATOR.translate("gui.config.message.default.dimension"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_messages",
@@ -85,7 +88,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         getButtonY(1),
                         147, 20,
                         () -> getInstanceData().fallbackDimensionIcon = defaultIcon.getControlMessage(),
-                        "gui.config.name.dimension_messages.dimension_icon",
+                        Constants.TRANSLATOR.translate("gui.config.name.dimension_messages.dimension_icon"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.dimension_messages.dimension_icon")
@@ -102,12 +105,12 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
-                        "gui.config.name.dimension_messages.dimension_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.dimension_messages.dimension_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.dimension"), CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
-                                        true, true, RenderType.None,
+                                        true, true, DynamicScrollableList.RenderType.None,
                                         (attributeName, currentValue) -> {
                                             final ModuleData defaultDimensionData = getInstanceData().dimensionData.get("default");
                                             final ModuleData currentDimensionData = getInstanceData().dimensionData.get(attributeName);
@@ -136,7 +139,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 screenInstance.defaultData = getInstanceData().dimensionData.get("default");
                                                                 screenInstance.currentData = getInstanceData().dimensionData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.dimension.edit_specific_dimension", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },

@@ -25,7 +25,6 @@
 package com.gitlab.cdagaming.craftpresence.utils.server;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
@@ -33,6 +32,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
+import com.gitlab.cdagaming.unilib.ModUtils;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 import io.github.cdagaming.unicore.impl.Pair;
@@ -508,7 +508,7 @@ public class ServerUtils implements ExtendedModule {
         final boolean isValidSecret = boolParts.length <= 4 && stringParts.length <= 3 && containsValidClientID;
 
         if (isValidSecret) {
-            CraftPresence.instance.addScheduledTask(() -> joinServer(new ServerData(serverName, serverIP, false)));
+            ModUtils.executeOnMainThread(CraftPresence.instance, () -> joinServer(new ServerData(serverName, serverIP, false)));
         } else {
             Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.discord.join", secret));
         }

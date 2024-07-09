@@ -30,12 +30,12 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Server;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 @SuppressWarnings("DuplicatedCode")
@@ -45,7 +45,10 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     private TextWidget defaultMOTD, defaultName, defaultMessage, defaultIcon;
 
     ServerSettingsGui() {
-        super("gui.config.title", "gui.config.title.server_messages");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.server_messages")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -63,7 +66,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(0),
                         180, 20,
                         () -> getInstanceData().fallbackServerName = defaultName.getControlMessage(),
-                        "gui.config.name.server_messages.server_name",
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.server_name"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_name")
@@ -78,7 +81,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(1),
                         180, 20,
                         () -> getInstanceData().fallbackServerMotd = defaultMOTD.getControlMessage(),
-                        "gui.config.name.server_messages.server_motd",
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.server_motd"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_motd")
@@ -97,7 +100,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                             defaultServerData.setTextOverride(defaultMessage.getControlMessage());
                             getInstanceData().serverData.put("default", defaultServerData);
                         },
-                        "gui.config.message.default.server",
+                        Constants.TRANSLATOR.translate("gui.config.message.default.server"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_messages",
@@ -115,7 +118,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         getButtonY(3),
                         147, 20,
                         () -> getInstanceData().fallbackServerIcon = defaultIcon.getControlMessage(),
-                        "gui.config.name.server_messages.server_icon",
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.server_icon"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.server_messages.server_icon")
@@ -132,12 +135,12 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(4),
                         180, 20,
-                        "gui.config.name.server_messages.server_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.server_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.server"), CraftPresence.SERVER.knownAddresses,
                                         null, null,
-                                        true, true, RenderType.ServerData,
+                                        true, true, DynamicScrollableList.RenderType.ServerData,
                                         (attributeName, currentValue) -> {
                                             final ModuleData defaultServerData = getInstanceData().serverData.get("default");
                                             final ModuleData currentServerData = getInstanceData().serverData.get(attributeName);
@@ -166,7 +169,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                                 screenInstance.defaultData = getInstanceData().serverData.get("default");
                                                                 screenInstance.currentData = getInstanceData().serverData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.server.edit_specific_server", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },

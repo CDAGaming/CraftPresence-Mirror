@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core.utils.discord;
+package com.gitlab.cdagaming.craftpresence.core.integrations.discord;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
@@ -30,9 +30,9 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.core.integrations.discord.FunctionsLib;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
@@ -43,7 +43,6 @@ import com.jagrosh.discordipc.entities.User;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 import io.github.cdagaming.unicore.impl.Pair;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
@@ -264,11 +263,7 @@ public class DiscordUtils {
      */
     public void setup() {
         Runtime.getRuntime().addShutdownHook(
-                Constants.getThreadFactory().newThread(() -> {
-                    Constants.IS_GAME_CLOSING = true;
-                    FileUtils.shutdownSchedulers();
-                    shutDown();
-                })
+                Constants.getThreadFactory().newThread(this::shutDown)
         );
 
         // Setup Default / Static Placeholders
@@ -1301,9 +1296,9 @@ public class DiscordUtils {
      */
     public void syncPlaceholders() {
         FunctionsLib.init(this);
-        syncArgument("general.mods", Constants::getModCount);
-        syncArgument("data.general.version", () -> Constants.MCBuildVersion, true);
-        syncArgument("data.general.protocol", () -> Constants.MCBuildProtocol);
+        syncArgument("general.mods", CoreUtils::getModCount);
+        syncArgument("data.general.version", () -> CoreUtils.MCBuildVersion, true);
+        syncArgument("data.general.protocol", () -> CoreUtils.MCBuildProtocol);
         syncTimestamp(() -> {
             final long currentStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
                     lastStartTime : TimeUtils.toEpochMilli();

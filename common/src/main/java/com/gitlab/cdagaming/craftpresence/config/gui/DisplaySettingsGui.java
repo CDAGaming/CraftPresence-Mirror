@@ -27,20 +27,23 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Display;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAsset;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 public class DisplaySettingsGui extends ConfigurationGui<Display> {
     private final Display INSTANCE, DEFAULTS;
 
     DisplaySettingsGui() {
-        super("gui.config.title", "gui.config.title.display_settings");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.display_settings")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -54,7 +57,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(0),
                         180, 20,
-                        "gui.config.title.editor.presence",
+                        Constants.TRANSLATOR.translate("gui.config.title.editor.presence"),
                         () -> openScreen(
                                 new PresenceEditorGui(
                                         getInstanceData().presenceData,
@@ -76,12 +79,12 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(1),
                         180, 20,
-                        "gui.config.name.display.dynamic_icons",
+                        Constants.TRANSLATOR.translate("gui.config.name.display.dynamic_icons"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.CUSTOM_ASSET_LIST.keySet(),
                                         null, null,
-                                        true, true, ScrollableListControl.RenderType.CustomDiscordAsset,
+                                        true, true, DynamicScrollableList.RenderType.CustomDiscordAsset,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -102,7 +105,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName));
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().dynamicIcons.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
@@ -166,12 +169,12 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
-                        "gui.config.name.display.dynamic_variables",
+                        Constants.TRANSLATOR.translate("gui.config.name.display.dynamic_variables"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.item"), getInstanceData().dynamicVariables.keySet(),
                                         null, null,
-                                        true, true, ScrollableListControl.RenderType.None,
+                                        true, true, DynamicScrollableList.RenderType.None,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -188,7 +191,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName));
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().dynamicVariables.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().dynamicVariables.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },

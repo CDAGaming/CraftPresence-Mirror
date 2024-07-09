@@ -24,10 +24,10 @@
 
 package com.gitlab.cdagaming.craftpresence.integrations.discord;
 
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.FunctionsLib;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.DiscordUtils;
-import com.gitlab.cdagaming.craftpresence.utils.NbtUtils;
+import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.utils.NbtUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import org.meteordev.starscript.Starscript;
 import org.meteordev.starscript.value.Value;

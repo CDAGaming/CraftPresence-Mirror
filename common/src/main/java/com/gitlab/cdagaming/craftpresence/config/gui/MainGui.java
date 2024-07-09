@@ -25,12 +25,13 @@
 package com.gitlab.cdagaming.craftpresence.config.gui;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
+import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -41,7 +42,9 @@ public class MainGui extends ConfigurationGui<Config> {
             serverSet;
 
     public MainGui(GuiScreen parentScreen) {
-        super("gui.config.title");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title")
+        );
         setParent(parentScreen);
 
         DEFAULTS = getCurrentData().getDefaults();
@@ -65,8 +68,8 @@ public class MainGui extends ConfigurationGui<Config> {
         String releaseNotice = "";
         if (Constants.VERSION_TYPE.equalsIgnoreCase("alpha")) {
             releaseNotice = Constants.TRANSLATOR.translate("gui.config.message.tentative", Constants.VERSION_ID);
-        } else if (!ModUtils.MCVersion.equalsIgnoreCase(Constants.MCBuildVersion)) {
-            releaseNotice = Constants.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, Constants.MCBuildVersion);
+        } else if (!ModUtils.MCVersion.equalsIgnoreCase(CoreUtils.MCBuildVersion)) {
+            releaseNotice = Constants.TRANSLATOR.translate("gui.config.message.version_difference", ModUtils.MCVersion, CoreUtils.MCBuildVersion);
         }
         if (!StringUtils.isNullOrEmpty(releaseNotice)) {
             currentY++;
@@ -83,7 +86,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.general",
+                        Constants.TRANSLATOR.translate("gui.config.title.general"),
                         () -> openScreen(new GeneralSettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -96,7 +99,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.biome_messages",
+                        Constants.TRANSLATOR.translate("gui.config.title.biome_messages"),
                         () -> openScreen(new BiomeSettingsGui()),
                         () -> {
                             if (!biomeSet.isControlEnabled()) {
@@ -122,7 +125,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.dimension_messages",
+                        Constants.TRANSLATOR.translate("gui.config.title.dimension_messages"),
                         () -> openScreen(new DimensionSettingsGui()),
                         () -> {
                             if (!dimensionSet.isControlEnabled()) {
@@ -147,7 +150,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.server_messages",
+                        Constants.TRANSLATOR.translate("gui.config.title.server_messages"),
                         () -> openScreen(new ServerSettingsGui()),
                         () -> {
                             if (!serverSet.isControlEnabled()) {
@@ -174,7 +177,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.status_messages",
+                        Constants.TRANSLATOR.translate("gui.config.title.status_messages"),
                         () -> openScreen(new StatusMessagesGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -188,7 +191,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.advanced",
+                        Constants.TRANSLATOR.translate("gui.config.title.advanced"),
                         () -> openScreen(new AdvancedSettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -203,7 +206,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.accessibility",
+                        Constants.TRANSLATOR.translate("gui.config.title.accessibility"),
                         () -> openScreen(new AccessibilitySettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -217,7 +220,7 @@ public class MainGui extends ConfigurationGui<Config> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(currentY),
                         180, 20,
-                        "gui.config.title.display_settings",
+                        Constants.TRANSLATOR.translate("gui.config.title.display_settings"),
                         () -> openScreen(new DisplaySettingsGui()),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
@@ -246,7 +249,9 @@ public class MainGui extends ConfigurationGui<Config> {
         dimensionSet.setControlEnabled(CraftPresence.DIMENSIONS.isEnabled());
         serverSet.setControlEnabled(CraftPresence.SERVER.isEnabled());
 
-        proceedButton.setControlMessage(getCurrentData().hasChanged() ? "gui.config.message.button.save" : "gui.config.message.button.back");
+        proceedButton.setControlMessage(Constants.TRANSLATOR.translate(
+                getCurrentData().hasChanged() ? "gui.config.message.button.save" : "gui.config.message.button.back"
+        ));
     }
 
     @Override
@@ -307,6 +312,15 @@ public class MainGui extends ConfigurationGui<Config> {
         if (setCurrentData(data)) {
             getCurrentData().applyFrom(getInstanceData());
             return setInstanceData(data);
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean setData(Config source, Config target) {
+        if (hasChangesBetween(source, target)) {
+            source.transferSettings(target);
+            return true;
         }
         return false;
     }

@@ -29,16 +29,15 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Advanced;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.CheckBoxControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.IdentifierType;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.ScrollableTextWidget;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -55,7 +54,10 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
             playerSkinEndpoint, serverIconEndpoint;
 
     AdvancedSettingsGui() {
-        super("gui.config.title", "gui.config.title.advanced");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.advanced")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -73,7 +75,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         getButtonY(0),
                         180, 20,
                         () -> getInstanceData().refreshRate = StringUtils.getValidInteger(refreshRate.getControlMessage()).getSecond(),
-                        "gui.config.name.advanced.refresh_rate",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.refresh_rate"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.refresh_rate")
@@ -89,7 +91,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         getButtonY(1),
                         180, 20,
                         () -> getInstanceData().maxConnectionAttempts = StringUtils.getValidInteger(maxConnectionAttempts.getControlMessage()).getSecond(),
-                        "gui.config.name.advanced.max_connection_attempts",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.max_connection_attempts"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.max_connection_attempts")
@@ -103,12 +105,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(2),
                         180, 20,
-                        "gui.config.name.advanced.gui_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.gui_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.gui"), CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
-                                        true, true, RenderType.None,
+                                        true, true, DynamicScrollableList.RenderType.None,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -125,7 +127,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getInstanceData().guiSettings.guiData.get("default");
                                                                 screenInstance.currentData = getInstanceData().guiSettings.guiData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.gui.edit_specific_gui", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -172,7 +174,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                     ), parentScreen
                                             );
                                         }
-                                ).setIdentifierType(IdentifierType.Gui)
+                                ).setIdentifierType(DynamicScrollableList.IdentifierType.Gui)
                         ),
                         () -> {
                             if (!guiMessagesButton.isControlEnabled()) {
@@ -196,12 +198,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(2),
                         180, 20,
-                        "gui.config.name.advanced.item_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.item_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.item"), CraftPresence.TILE_ENTITIES.TILE_ENTITY_NAMES,
                                         null, null,
-                                        true, true, RenderType.ItemData,
+                                        true, true, DynamicScrollableList.RenderType.ItemData,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -214,7 +216,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName));
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().itemMessages.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().itemMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
@@ -276,12 +278,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new ExtendedButtonControl(
                         calc1, getButtonY(3),
                         180, 20,
-                        "gui.config.name.advanced.entity_target_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.entity_target_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
-                                        true, true, RenderType.EntityData,
+                                        true, true, DynamicScrollableList.RenderType.EntityData,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -298,7 +300,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getInstanceData().entitySettings.targetData.get("default");
                                                                 screenInstance.currentData = getInstanceData().entitySettings.targetData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -372,12 +374,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                 new ExtendedButtonControl(
                         calc2, getButtonY(3),
                         180, 20,
-                        "gui.config.name.advanced.entity_riding_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.entity_riding_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.entity"), CraftPresence.ENTITIES.ENTITY_NAMES,
                                         null, null,
-                                        true, true, RenderType.EntityData,
+                                        true, true, DynamicScrollableList.RenderType.EntityData,
                                         null,
                                         (currentValue, parentScreen) -> {
                                             // Event to occur when Setting Dynamic/Specific Data
@@ -394,7 +396,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                                 screenInstance.defaultData = getInstanceData().entitySettings.ridingData.get("default");
                                                                 screenInstance.currentData = getInstanceData().entitySettings.ridingData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.entity.edit_specific_entity", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
@@ -468,7 +470,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         enablePerGuiButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(4),
-                        "gui.config.name.advanced.enable_per_gui",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui"),
                         getInstanceData().enablePerGui,
                         () -> getInstanceData().enablePerGui = enablePerGuiButton.isChecked(),
                         () -> drawMultiLineString(
@@ -481,7 +483,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         enablePerItemButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc2, getButtonY(4),
-                        "gui.config.name.advanced.enable_per_item",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_item"),
                         getInstanceData().enablePerItem,
                         () -> getInstanceData().enablePerItem = enablePerItemButton.isChecked(),
                         () -> drawMultiLineString(
@@ -494,7 +496,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         enablePerEntityButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(5, -10),
-                        "gui.config.name.advanced.enable_per_entity",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_entity"),
                         getInstanceData().enablePerEntity,
                         () -> getInstanceData().enablePerEntity = enablePerEntityButton.isChecked(),
                         () -> drawMultiLineString(
@@ -507,12 +509,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         debugModeButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc2, getButtonY(5, -10),
-                        "gui.config.name.advanced.debug_mode",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.debug_mode"),
                         getInstanceData().debugMode,
                         () -> getInstanceData().debugMode = debugModeButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode", Constants.IS_DEV_FLAG)
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.debug_mode")
                                 )
                         )
                 )
@@ -520,7 +522,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         formatWordsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(6, -20),
-                        "gui.config.name.advanced.format_words",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.format_words"),
                         getInstanceData().formatWords,
                         () -> getInstanceData().formatWords = formatWordsButton.isChecked(),
                         () -> drawMultiLineString(
@@ -533,12 +535,12 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         verboseModeButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc2, getButtonY(6, -20),
-                        "gui.config.name.advanced.verbose_mode",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.verbose_mode"),
                         getInstanceData().verboseMode,
                         () -> getInstanceData().verboseMode = verboseModeButton.isChecked(),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode", Constants.IS_VERBOSE_FLAG)
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.verbose_mode")
                                 )
                         )
                 )
@@ -546,7 +548,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         allowPlaceholderPreviewsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(7, -30),
-                        "gui.config.name.advanced.allow_placeholder_previews",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.allow_placeholder_previews"),
                         getInstanceData().allowPlaceholderPreviews,
                         () -> getInstanceData().allowPlaceholderPreviews = allowPlaceholderPreviewsButton.isChecked(),
                         () -> drawMultiLineString(
@@ -559,7 +561,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         allowEndpointIconsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc2, getButtonY(7, -30),
-                        "gui.config.name.advanced.allow_endpoint_icons",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.allow_endpoint_icons"),
                         getInstanceData().allowEndpointIcons,
                         () -> getInstanceData().allowEndpointIcons = allowEndpointIconsButton.isChecked(),
                         () -> drawMultiLineString(
@@ -572,7 +574,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         allowDuplicatePacketsButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc1, getButtonY(8, -40),
-                        "gui.config.name.advanced.allow_duplicate_packets",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.allow_duplicate_packets"),
                         getInstanceData().allowDuplicatePackets,
                         () -> getInstanceData().allowDuplicatePackets = allowDuplicatePacketsButton.isChecked(),
                         () -> drawMultiLineString(
@@ -585,7 +587,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         enableClassGraphButton = childFrame.addControl(
                 new CheckBoxControl(
                         calc2, getButtonY(8, -40),
-                        "gui.config.name.advanced.enable_class_graph",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_class_graph"),
                         getInstanceData().enableClassGraph,
                         () -> getInstanceData().enableClassGraph = enableClassGraphButton.isChecked(),
                         () -> drawMultiLineString(
@@ -618,7 +620,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         getButtonY(8),
                         180, 20,
                         () -> getInstanceData().playerSkinEndpoint = playerSkinEndpoint.getControlMessage(),
-                        "gui.config.name.advanced.player_skin_endpoint",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.player_skin_endpoint"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.player_skin_endpoint")
@@ -634,7 +636,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         getButtonY(9),
                         180, 20,
                         () -> getInstanceData().serverIconEndpoint = serverIconEndpoint.getControlMessage(),
-                        "gui.config.name.advanced.server_icon_endpoint",
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.server_icon_endpoint"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.server_icon_endpoint")

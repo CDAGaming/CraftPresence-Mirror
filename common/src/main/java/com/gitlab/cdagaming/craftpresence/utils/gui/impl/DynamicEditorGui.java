@@ -26,11 +26,11 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedTextControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.impl.TupleConsumer;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
@@ -41,7 +41,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private final TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, onRemoveEntry;
     private final BiConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback;
     private final TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback;
-    public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, mainTitle, primaryText, secondaryText;
+    public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, primaryText, secondaryText;
     public boolean initialized = false, isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
     public String resetText;
@@ -87,9 +87,9 @@ public class DynamicEditorGui extends ExtendedScreen {
     public void initializeUi() {
         int controlIndex = 0;
         if (!isLoaded() && !initialized) {
-            resetText = "gui.config.message.button.remove";
+            resetText = Constants.TRANSLATOR.translate("gui.config.message.button.remove");
             if (isNewValue) {
-                mainTitle = Constants.TRANSLATOR.translate("gui.config.title.editor.add.new");
+                setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new"));
                 if (onNewInit != null) {
                     onNewInit.accept(attributeName, this);
                 }
@@ -120,7 +120,7 @@ public class DynamicEditorGui extends ExtendedScreen {
 
         if (isNewValue || isPreliminaryData) {
             if (isPreliminaryData && !StringUtils.isNullOrEmpty(attributeName)) {
-                mainTitle = Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName);
+                setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", attributeName));
             }
             if (isModuleMode && defaultData != null && currentData == null) {
                 currentData = new ModuleData(defaultData);
@@ -196,7 +196,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                             getButtonY(controlIndex++),
                             147, 20,
                             () -> onSpecificCallback.accept(defaultIcon.getControlMessage(), this, false),
-                            "gui.config.message.editor.icon.change"
+                            Constants.TRANSLATOR.translate("gui.config.message.editor.icon.change")
                     )
             );
             ConfigurationGui.addIconSelector(this, childFrame, () -> defaultIcon,
@@ -209,7 +209,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                     new ExtendedButtonControl(
                             (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                             180, 20,
-                            "gui.config.title.editor.presence",
+                            Constants.TRANSLATOR.translate("gui.config.title.editor.presence"),
                             () -> onSpecificCallback.accept(attributeName, this, true),
                             () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
@@ -224,7 +224,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.back",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
                         () -> {
                             if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getControlMessage())) {
                                 attributeName = secondaryInput.getControlMessage();
@@ -251,26 +251,14 @@ public class DynamicEditorGui extends ExtendedScreen {
 
     @Override
     public void preRender() {
-        proceedButton.setControlMessage(
+        proceedButton.setControlMessage(Constants.TRANSLATOR.translate(
                 isAdjusting() ?
                         "gui.config.message.button.continue" : "gui.config.message.button.back"
-        );
+        ));
 
         proceedButton.setControlEnabled(isValidEntries());
 
         super.preRender();
-    }
-
-    @Override
-    public void renderExtra() {
-        renderScrollingString(
-                mainTitle,
-                30, 0,
-                getScreenWidth() - 30, 32,
-                0xFFFFFF
-        );
-
-        super.renderExtra();
     }
 
     /**

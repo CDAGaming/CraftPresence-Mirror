@@ -303,7 +303,6 @@ public class Legacy2Modern implements DataMigrator {
             .put("languageId", "accessibilitySettings.languageId")
             .put("stripTranslationColors", "accessibilitySettings.stripTranslationColors")
             .put("stripExtraGuiElements", "accessibilitySettings.stripExtraGuiElements")
-            .put("renderTooltips", "accessibilitySettings.renderTooltips")
             .put("configGuiKeybind", "accessibilitySettings.configKeyCode")
             //
             .put("gameStateMessageFormat", "displaySettings.presenceData.gameState")
@@ -316,7 +315,7 @@ public class Legacy2Modern implements DataMigrator {
             .put("dynamicIcons", "displaySettings.dynamicIcons")
             .build();
     private final List<String> excludedOptions = StringUtils.newArrayList(
-            "schemaVersion", "splitCharacter",
+            "schemaVersion", "splitCharacter", "renderTooltips",
             "guiBackgroundColor", "tooltipBackgroundColor", "tooltipBorderColor"
     );
 

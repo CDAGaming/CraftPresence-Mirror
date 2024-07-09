@@ -30,12 +30,12 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Biome;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl.RenderType;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.impl.SelectorGui;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 @SuppressWarnings("DuplicatedCode")
@@ -45,7 +45,10 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     private TextWidget defaultMessage, defaultIcon;
 
     BiomeSettingsGui() {
-        super("gui.config.title", "gui.config.title.biome_messages");
+        super(
+                Constants.TRANSLATOR.translate("gui.config.title"),
+                Constants.TRANSLATOR.translate("gui.config.title.biome_messages")
+        );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
     }
@@ -67,7 +70,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                             defaultBiomeData.setTextOverride(defaultMessage.getControlMessage());
                             getInstanceData().biomeData.put("default", defaultBiomeData);
                         },
-                        "gui.config.message.default.biome",
+                        Constants.TRANSLATOR.translate("gui.config.message.default.biome"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_messages",
@@ -85,7 +88,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         getButtonY(1),
                         147, 20,
                         () -> getInstanceData().fallbackBiomeIcon = defaultIcon.getControlMessage(),
-                        "gui.config.name.biome_messages.biome_icon",
+                        Constants.TRANSLATOR.translate("gui.config.name.biome_messages.biome_icon"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.biome_messages.biome_icon")
@@ -102,12 +105,12 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, getButtonY(2),
                         180, 20,
-                        "gui.config.name.biome_messages.biome_messages",
+                        Constants.TRANSLATOR.translate("gui.config.name.biome_messages.biome_messages"),
                         () -> openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.biome"), CraftPresence.BIOMES.BIOME_NAMES,
                                         null, null,
-                                        true, true, RenderType.None,
+                                        true, true, DynamicScrollableList.RenderType.None,
                                         (attributeName, currentValue) -> {
                                             final ModuleData defaultBiomeData = getInstanceData().biomeData.get("default");
                                             final ModuleData currentBiomeData = getInstanceData().biomeData.get(attributeName);
@@ -136,7 +139,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                                 screenInstance.defaultData = getInstanceData().biomeData.get("default");
                                                                 screenInstance.currentData = getInstanceData().biomeData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
-                                                                screenInstance.mainTitle = Constants.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName);
+                                                                screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.biome.edit_specific_biome", attributeName));
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.gitlab.cdagaming.craftpresence.core.utils.discord.assets;
+package com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import io.github.cdagaming.unicore.utils.FileUtils;

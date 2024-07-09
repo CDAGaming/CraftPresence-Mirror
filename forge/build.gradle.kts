@@ -27,7 +27,6 @@ val mcMappingsType: String by extra
 val canUseATs: Boolean by extra
 val baseVersionLabel: String by extra
 
-val forgeId = if (isNeoForge) "neoforge" else fmlName
 val forgeVersion = "forge_version"()!!
 
 unimined.minecraft {
@@ -68,17 +67,22 @@ dependencies {
 }
 
 val resourceTargets = listOf(
-    "mcmod.info", "META-INF/mods.toml", "META-INF/neoforge.mods.toml", "mod_$modName.info"
+    "mcmod.info",
+    "META-INF/mods.toml",
+    "META-INF/neoforge.mods.toml",
+    "mod_$modName.info",
+    "pack.mcmeta"
 )
 val replaceProperties = mapOf(
     "mod_id" to modId,
     "mod_name" to modName,
     "version" to baseVersionLabel,
     "mcversion" to mcVersionLabel,
-    "forge_id" to forgeId,
+    "forge_id" to fmlName,
     "fml_version_range" to "fml_version_range"(),
     "game_version_range" to "forge_game_version_range"(),
-    "loader_version_range" to "forge_loader_version_range"()
+    "loader_version_range" to "forge_loader_version_range"(),
+    "unilib_min_version" to "unilib_minimum_version"()!!
 )
 
 tasks.processResources {

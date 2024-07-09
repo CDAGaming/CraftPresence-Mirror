@@ -28,30 +28,26 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.gui.AboutGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
-import com.gitlab.cdagaming.craftpresence.core.utils.discord.assets.DiscordAssetUtils;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ExtendedButtonControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.controls.ScrollableListControl;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ExtendedScreen;
-import com.gitlab.cdagaming.craftpresence.utils.gui.integrations.ScrollPane;
-import com.gitlab.cdagaming.craftpresence.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
+import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen {
-    private final String title, subTitle;
     protected ScrollPane childFrame;
     protected ExtendedButtonControl resetConfigButton, syncConfigButton, proceedButton;
 
-    public ConfigurationGui(String title, String subTitle) {
-        super();
-
-        this.title = title;
-        this.subTitle = subTitle;
+    public ConfigurationGui(final String title, final String subTitle) {
+        super(title, subTitle);
     }
 
-    public ConfigurationGui(String title) {
+    public ConfigurationGui(final String title) {
         this(title, null);
     }
 
@@ -66,10 +62,10 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                         30, 20,
                         "...",
                         () -> currentScreen.openScreen(
-                                new SelectorGui(
+                                new DynamicSelectorGui(
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.icon"), DiscordAssetUtils.ASSET_LIST.keySet(),
                                         StringUtils.getOrDefault(textWidget.get().getControlMessage()), null,
-                                        true, false, ScrollableListControl.RenderType.DiscordAsset,
+                                        true, false, DynamicScrollableList.RenderType.DiscordAsset,
                                         onUpdatedCallback,
                                         null
                                 )
@@ -84,7 +80,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
                         180, 20,
-                        "gui.config.message.button.back",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
                         () -> {
                             applySettings();
                             openScreen(getParent());
@@ -95,7 +91,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 new ExtendedButtonControl(
                         6, (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.reset_to_default",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.reset_to_default"),
                         () -> {
                             if (resetData()) {
                                 reloadUi();
@@ -116,7 +112,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 new ExtendedButtonControl(
                         (getScreenWidth() - 101), (getScreenHeight() - 26),
                         95, 20,
-                        "gui.config.message.button.sync.config",
+                        Constants.TRANSLATOR.translate("gui.config.message.button.sync.config"),
                         () -> {
                             if (syncData()) {
                                 reloadUi();
@@ -151,40 +147,6 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         syncRenderStates();
 
         super.preRender();
-    }
-
-    @Override
-    public void renderExtra() {
-        final boolean hasMainTitle = !StringUtils.isNullOrEmpty(title);
-        final boolean hasSubTitle = !StringUtils.isNullOrEmpty(subTitle);
-        if (hasMainTitle) {
-            final String mainTitle = Constants.TRANSLATOR.getLocalizedMessage(title);
-            if (hasSubTitle) {
-                final String otherTitle = Constants.TRANSLATOR.getLocalizedMessage(subTitle);
-
-                renderScrollingString(
-                        mainTitle,
-                        30, 2,
-                        getScreenWidth() - 30, 16,
-                        0xFFFFFF
-                );
-                renderScrollingString(
-                        otherTitle,
-                        30, 16,
-                        getScreenWidth() - 30, 30,
-                        0xFFFFFF
-                );
-            } else {
-                renderScrollingString(
-                        mainTitle,
-                        30, 0,
-                        getScreenWidth() - 30, 32,
-                        0xFFFFFF
-                );
-            }
-        }
-
-        super.renderExtra();
     }
 
     protected void addIconSelector(final ExtendedScreen parent, final Supplier<TextWidget> textWidget, final BiConsumer<String, String> onUpdatedCallback) {
@@ -279,7 +241,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         return null;
     }
 
-    private boolean setData(T source, T target) {
+    protected boolean setData(T source, T target) {
         if (hasChangesBetween(source, target)) {
             source.transferFrom(target);
             return true;

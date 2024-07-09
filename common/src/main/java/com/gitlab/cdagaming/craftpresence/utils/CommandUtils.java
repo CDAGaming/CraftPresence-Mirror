@@ -25,7 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.utils;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import com.gitlab.cdagaming.craftpresence.ModUtils;
+import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
@@ -38,11 +38,14 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.pack.mcupdater.MCUpd
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.modrinth.ModrinthUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.multimc.MultiMCUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.pack.technic.TechnicUtils;
-import com.gitlab.cdagaming.craftpresence.core.integrations.screen.ScreenConstants;
-import com.gitlab.cdagaming.craftpresence.impl.TranslationManager;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModFunctionsLib;
 import com.gitlab.cdagaming.craftpresence.integrations.discord.ModIPCListener;
 import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
+import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.impl.TranslationListener;
+import com.gitlab.cdagaming.unilib.impl.TranslationManager;
+import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
+import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.jagrosh.discordipc.entities.DiscordBuild;
 import io.github.cdagaming.unicore.impl.TreeMapBuilder;
 import io.github.cdagaming.unicore.utils.FileUtils;
@@ -56,10 +59,6 @@ import java.util.Map;
  * @author CDAGaming
  */
 public class CommandUtils {
-    /**
-     * A mapping of currently loaded {@link TranslationManager} instances
-     */
-    private static final Map<String, TranslationManager> translationManagerList = StringUtils.newHashMap();
     /**
      * A mapping of the currently loaded Rich Presence Modules
      */
@@ -159,8 +158,7 @@ public class CommandUtils {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isDebugMode() {
-        return Constants.IS_DEV_FLAG ||
-                isVerboseMode() || (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.debugMode);
+        return isVerboseMode() || (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.debugMode);
     }
 
     /**
@@ -169,8 +167,7 @@ public class CommandUtils {
      * @return {@link Boolean#TRUE} if condition is satisfied
      */
     public static boolean isVerboseMode() {
-        return Constants.IS_VERBOSE_FLAG ||
-                (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.verboseMode);
+        return (CraftPresence.CONFIG != null && CraftPresence.CONFIG.advancedSettings.verboseMode);
     }
 
     /**
@@ -236,7 +233,7 @@ public class CommandUtils {
      * @param instance The instance of the module
      */
     public static void addModule(final String moduleId, final TranslationManager instance) {
-        translationManagerList.put(moduleId, instance);
+        TranslationListener.INSTANCE.addModule(moduleId, instance);
     }
 
     /**
@@ -245,11 +242,12 @@ public class CommandUtils {
      * @param forceUpdateRPC Whether to Force an Update to the RPC Data
      */
     public static void reloadData(final boolean forceUpdateRPC) {
-        for (TranslationManager manager : translationManagerList.values()) {
-            manager.onTick();
-        }
+        TranslationListener.INSTANCE.onTick();
         CraftPresence.SCHEDULER.onTick();
-        CraftPresence.instance.addScheduledTask(CraftPresence.KEYBINDINGS::onTick);
+        ModUtils.executeOnMainThread(
+                CraftPresence.KEYBINDINGS.getInstance(),
+                CraftPresence.KEYBINDINGS::onTick
+        );
 
         CraftPresence.SCHEDULER.TICK_LOCK.lock();
         try {
@@ -321,12 +319,6 @@ public class CommandUtils {
             needsReboot = true; // Max Connection Attempts changed
         }
 
-        if (current.accessibilitySettings.renderTooltips != old.accessibilitySettings.renderTooltips
-                || !current.accessibilitySettings.tooltipBackground.equals(old.accessibilitySettings.tooltipBackground) ||
-                !current.accessibilitySettings.tooltipBorder.equals(old.accessibilitySettings.tooltipBorder)) {
-            setDefaultTooltip(); // Render Tooltips, Tooltip Background, or Tooltip Border changed
-        }
-
         if (current.advancedSettings.debugMode != old.advancedSettings.debugMode ||
                 current.advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
                 current.advancedSettings.refreshRate != old.advancedSettings.refreshRate) {
@@ -392,10 +384,7 @@ public class CommandUtils {
         CraftPresence.CLIENT.syncArgument("_config.instance", () -> CraftPresence.CONFIG);
 
         // Sync Custom Variables
-        CraftPresence.CLIENT.syncDynamicVariables(null,
-                CraftPresence.CONFIG.displaySettings.dynamicVariables,
-                (entry) -> () -> CraftPresence.CONFIG.displaySettings.dynamicVariables.get(entry)
-        );
+        syncDynamicVariables();
 
         // Add Any Generalized Argument Data needed
         CraftPresence.CLIENT.syncArgument("player.name", () -> CraftPresence.username, true);
@@ -434,7 +423,6 @@ public class CommandUtils {
      */
     public static void init() {
         updateModes();
-        setDefaultTooltip();
         setupClassScan(false);
 
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
@@ -451,13 +439,46 @@ public class CommandUtils {
                 }
             }
         }
-        CraftPresence.KEYBINDINGS.register();
+        registerKeybinds();
 
         // Setup Mod Integrations that are not Platform-Dependent
         // Use the loader-specific `setupIntegrations` methods for platform-dependent modules
         if (Constants.hasReplayMod()) {
             addModule("integration.replaymod", new ReplayModUtils());
         }
+    }
+
+    /**
+     * Registers KeyBindings and critical KeyCode information to the game's KeyCode systems
+     * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
+     */
+    public static void registerKeybinds() {
+        CraftPresence.KEYBINDINGS.registerKey(
+                "configKeyCode",
+                "key.craftpresence.config_keycode.name",
+                Constants.TRANSLATOR::translate,
+                "key.craftpresence.category",
+                Constants.TRANSLATOR::translate,
+                CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
+                CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
+                () -> Constants.TRANSLATOR.translate("key.craftpresence.config_keycode.description"),
+                () -> {
+                    if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
+                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(), CraftPresence.instance.currentScreen);
+                    }
+                },
+                (keyCode, shouldSave) -> {
+                    CraftPresence.CONFIG.accessibilitySettings.configKeyCode = keyCode;
+                    if (shouldSave) {
+                        CraftPresence.CONFIG.save();
+                    }
+                },
+                vanillaBind -> vanillaBind != CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
+                (ex, keyName, keyData) -> {
+                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyData.description()));
+                    return false; // Let KeyUtils handle resetting the keycode
+                }
+        );
     }
 
     /**
@@ -470,6 +491,7 @@ public class CommandUtils {
             Constants.HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
             if (Constants.HAS_GAME_LOADED) {
                 addModule(Constants.MOD_ID, new TranslationManager(
+                        CraftPresence.instance,
                         Constants.TRANSLATOR
                                 .setStripColors(
                                         CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors
@@ -477,10 +499,11 @@ public class CommandUtils {
                                 .setStripFormatting(
                                         CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting
                                 )
+                                .setLanguageSupplier((defaultLanguage) -> StringUtils.getOrDefault(
+                                        ModUtils.getLanguage(null),
+                                        CraftPresence.CONFIG != null ? CraftPresence.CONFIG.accessibilitySettings.languageId : defaultLanguage
+                                ))
                 ));
-                if (ModUtils.RAW_TRANSLATOR != null) {
-                    addModule("minecraft", new TranslationManager(ModUtils.RAW_TRANSLATOR));
-                }
             }
         }
         CraftPresence.CLIENT.updatePresence();
@@ -513,14 +536,10 @@ public class CommandUtils {
     }
 
     /**
-     * Synchronize Data for Rendering Tooltips, using config data
+     * Refresh Dynamic Variable Data, removing any data no longer in-play
      */
-    public static void setDefaultTooltip() {
-        ScreenConstants.setDefaultTooltip(
-                CraftPresence.CONFIG.accessibilitySettings.renderTooltips,
-                CraftPresence.CONFIG.accessibilitySettings.tooltipBackground,
-                CraftPresence.CONFIG.accessibilitySettings.tooltipBorder
-        );
+    public static void syncDynamicVariables() {
+        syncDynamicVariables(null);
     }
 
     /**
