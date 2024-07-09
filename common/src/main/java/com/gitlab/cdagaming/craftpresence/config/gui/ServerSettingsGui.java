@@ -173,24 +173,29 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
-                                                            (screenInstance, attributeName, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when adjusting set data
+                                                                final String attributeName = screenInstance.getSecondaryEntry();
+                                                                final String inputText = screenInstance.getPrimaryEntry();
+
                                                                 screenInstance.currentData.setTextOverride(inputText);
                                                                 getInstanceData().serverData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.SERVER.knownAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.add(attributeName);
                                                                 }
                                                             },
-                                                            (screenInstance, attributeName, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when removing set data
+                                                                final String attributeName = screenInstance.getSecondaryEntry();
+
                                                                 getInstanceData().serverData.remove(attributeName);
                                                                 if (!CraftPresence.SERVER.defaultAddresses.contains(attributeName)) {
                                                                     CraftPresence.SERVER.knownAddresses.remove(attributeName);
                                                                 }
                                                             },
-                                                            (attributeName, screenInstance, isPresenceButton) -> {
+                                                            (attributeName, screenInstance) -> {
                                                                 // Event to occur when adding specific info to set data
-                                                                if (isPresenceButton) {
+                                                                if (screenInstance.isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
                                                                     screenInstance.openScreen(

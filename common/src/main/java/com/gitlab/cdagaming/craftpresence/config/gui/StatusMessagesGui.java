@@ -137,18 +137,23 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
                                                 screenInstance.isDefaultValue = screenInstance.isPreliminaryData || (screenInstance.currentData.equals(screenInstance.defaultData));
                                                 screenInstance.resetText = Constants.TRANSLATOR.translate("gui.config.message.button.reset_to_default");
                                             },
-                                            (screenInstance, attributeName, inputText) -> {
+                                            (screenInstance) -> {
                                                 // Event to occur when adjusting set data
+                                                final String attributeName = screenInstance.getSecondaryEntry();
+                                                final String inputText = screenInstance.getPrimaryEntry();
+
                                                 screenInstance.currentData.setTextOverride(inputText);
                                                 getInstanceData().setProperty(attributeName, screenInstance.currentData);
                                             },
-                                            (screenInstance, attributeName, inputText) -> {
+                                            (screenInstance) -> {
                                                 // Event to occur when removing set data
+                                                final String attributeName = screenInstance.getSecondaryEntry();
+
                                                 getInstanceData().resetProperty(attributeName);
                                             },
-                                            (attributeName, screenInstance, isPresenceButton) -> {
+                                            (attributeName, screenInstance) -> {
                                                 // Event to occur when adding specific info to set data
-                                                if (isPresenceButton) {
+                                                if (screenInstance.isPresenceButton) {
                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
                                                     screenInstance.openScreen(

@@ -109,8 +109,11 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().dynamicIcons.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
-                                                            (screenInstance, attributeName, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when adjusting set data
+                                                                final String attributeName = screenInstance.getSecondaryEntry();
+                                                                final String inputText = screenInstance.getPrimaryEntry();
+
                                                                 getInstanceData().dynamicIcons.put(attributeName, inputText);
                                                                 final DiscordAsset asset = new DiscordAsset()
                                                                         .setName(attributeName)
@@ -125,8 +128,10 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                     DiscordAssetUtils.ASSET_LIST.put(asset.getName(), asset);
                                                                 }
                                                             },
-                                                            (screenInstance, attributeName, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when removing set data
+                                                                final String attributeName = screenInstance.getSecondaryEntry();
+
                                                                 getInstanceData().dynamicIcons.remove(attributeName);
                                                                 if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
                                                                     DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
@@ -195,12 +200,17 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().dynamicVariables.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().dynamicVariables.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
-                                                            (screenInstance, attributeName, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when adjusting set data
+                                                                final String attributeName = screenInstance.getSecondaryEntry();
+                                                                final String inputText = screenInstance.getPrimaryEntry();
+
                                                                 getInstanceData().dynamicVariables.put(attributeName, inputText);
                                                             },
-                                                            (screenInstance, attributeName, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when removing set data
+                                                                final String attributeName = screenInstance.getSecondaryEntry();
+
                                                                 getInstanceData().dynamicVariables.remove(attributeName);
                                                             }, null,
                                                             (attributeName, screenInstance) -> {

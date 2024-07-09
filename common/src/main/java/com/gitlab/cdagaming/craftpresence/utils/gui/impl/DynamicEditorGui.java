@@ -31,18 +31,17 @@ import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
-import io.github.cdagaming.unicore.impl.TupleConsumer;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @SuppressWarnings("DuplicatedCode")
 public class DynamicEditorGui extends ExtendedScreen {
-    private final TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, onRemoveEntry;
-    private final BiConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback;
-    private final TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback;
+    private final Consumer<DynamicEditorGui> onAdjustEntry, onRemoveEntry;
+    private final BiConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback, onSpecificCallback;
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, primaryText, secondaryText;
-    public boolean initialized = false, isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false;
+    public boolean initialized = false, isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false, isPresenceButton = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
     public String resetText;
     public ModuleData defaultData, originalData, currentData;
@@ -50,7 +49,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private ExtendedTextControl primaryInput, secondaryInput;
     private TextWidget defaultIcon;
 
-    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, BiConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
+    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, Consumer<DynamicEditorGui> onAdjustEntry, Consumer<DynamicEditorGui> onRemoveEntry, BiConsumer<String, DynamicEditorGui> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, BiConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super();
         this.attributeName = attributeName;
         this.isNewValue = StringUtils.isNullOrEmpty(attributeName);
@@ -65,7 +64,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         this.onHoverSecondaryCallback = onHoverSecondaryCallback;
     }
 
-    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
+    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, Consumer<DynamicEditorGui> onAdjustEntry, Consumer<DynamicEditorGui> onRemoveEntry, BiConsumer<String, DynamicEditorGui> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback) {
         this(attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, onHoverPrimaryCallback, (name, screenInstance) ->
                 screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
@@ -74,7 +73,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                 ));
     }
 
-    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, TupleConsumer<DynamicEditorGui, String, String> onAdjustEntry, TupleConsumer<DynamicEditorGui, String, String> onRemoveEntry, TupleConsumer<String, DynamicEditorGui, Boolean> onSpecificCallback) {
+    public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, Consumer<DynamicEditorGui> onAdjustEntry, Consumer<DynamicEditorGui> onRemoveEntry, BiConsumer<String, DynamicEditorGui> onSpecificCallback) {
         this(attributeName, onNewInit, onAdjustInit, onAdjustEntry, onRemoveEntry, onSpecificCallback, (name, screenInstance) ->
                 screenInstance.drawMultiLineString(
                         StringUtils.splitTextByNewLine(
@@ -134,7 +133,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                             resetText,
                             () -> {
                                 if (onRemoveEntry != null) {
-                                    onRemoveEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
+                                    onRemoveEntry.accept(this);
                                 }
                                 openScreen(getParent());
                             }
@@ -195,12 +194,18 @@ public class DynamicEditorGui extends ExtendedScreen {
                             getFontRenderer(),
                             getButtonY(controlIndex++),
                             147, 20,
-                            () -> onSpecificCallback.accept(defaultIcon.getControlMessage(), this, false),
+                            () -> {
+                                isPresenceButton = false;
+                                onSpecificCallback.accept(defaultIcon.getControlMessage(), this);
+                            },
                             Constants.TRANSLATOR.translate("gui.config.message.editor.icon.change")
                     )
             );
             ConfigurationGui.addIconSelector(this, childFrame, () -> defaultIcon,
-                    (attributeName, currentValue) -> onSpecificCallback.accept(currentValue, this, false)
+                    (attributeName, currentValue) -> {
+                        isPresenceButton = false;
+                        onSpecificCallback.accept(currentValue, this);
+                    }
             );
             defaultIcon.setControlMessage(currentData.getIconOverride() != null ? currentData.getIconOverride() : "");
 
@@ -210,7 +215,10 @@ public class DynamicEditorGui extends ExtendedScreen {
                             (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
                             180, 20,
                             Constants.TRANSLATOR.translate("gui.config.title.editor.presence"),
-                            () -> onSpecificCallback.accept(attributeName, this, true),
+                            () -> {
+                                isPresenceButton = true;
+                                onSpecificCallback.accept(attributeName, this);
+                            },
                             () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
                                             Constants.TRANSLATOR.translate("gui.config.message.hover.presence_editor")
@@ -230,7 +238,7 @@ public class DynamicEditorGui extends ExtendedScreen {
                                 attributeName = secondaryInput.getControlMessage();
                             }
                             if (isAdjusting() && onAdjustEntry != null) {
-                                onAdjustEntry.accept(this, willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName, primaryInput.getControlMessage());
+                                onAdjustEntry.accept(this);
                             }
                             openScreen(getParent());
                         },
@@ -262,12 +270,30 @@ public class DynamicEditorGui extends ExtendedScreen {
     }
 
     /**
+     * Retrieve the primary entry text
+     *
+     * @return the primary entry text
+     */
+    public String getPrimaryEntry() {
+        return primaryInput.getControlMessage();
+    }
+
+    /**
+     * Retrieve the secondary entry text
+     *
+     * @return the secondary entry text
+     */
+    public String getSecondaryEntry() {
+        return willRenderSecondaryInput ? secondaryInput.getControlMessage() : attributeName;
+    }
+
+    /**
      * Whether the inputs in this screen classify as being adjusted
      *
      * @return {@link Boolean#TRUE} if we are doing an adjustment
      */
     private boolean isAdjusting() {
-        final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
+        final String primaryText = primaryInput != null ? getPrimaryEntry() : "";
         final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
         final String secondaryText = secondaryInput != null ? secondaryInput.getControlMessage() : "";
         final boolean isSecondaryEmpty = StringUtils.isNullOrEmpty(secondaryText);
@@ -300,7 +326,7 @@ public class DynamicEditorGui extends ExtendedScreen {
      * @return {@link Boolean#TRUE} if inputs are valid
      */
     private boolean isValidEntries() {
-        final String primaryText = primaryInput != null ? primaryInput.getControlMessage() : "";
+        final String primaryText = primaryInput != null ? getPrimaryEntry() : "";
         final boolean isPrimaryEmpty = StringUtils.isNullOrEmpty(primaryText);
 
         if (isDefaultValue) {

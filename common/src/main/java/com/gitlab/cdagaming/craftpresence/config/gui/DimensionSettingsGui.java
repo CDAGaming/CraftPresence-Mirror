@@ -143,24 +143,29 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                                 screenInstance.originalPrimaryMessage = Config.getProperty(screenInstance.defaultData, "textOverride") != null ? screenInstance.defaultData.getTextOverride() : "";
                                                                 screenInstance.primaryMessage = Config.getProperty(screenInstance.currentData, "textOverride") != null ? screenInstance.currentData.getTextOverride() : screenInstance.originalPrimaryMessage;
                                                             },
-                                                            (screenInstance, attributeName, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when adjusting set data
+                                                                final String attributeName = screenInstance.getSecondaryEntry();
+                                                                final String inputText = screenInstance.getPrimaryEntry();
+
                                                                 screenInstance.currentData.setTextOverride(inputText);
                                                                 getInstanceData().dimensionData.put(attributeName, screenInstance.currentData);
                                                                 if (!CraftPresence.DIMENSIONS.DIMENSION_NAMES.contains(attributeName)) {
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.add(attributeName);
                                                                 }
                                                             },
-                                                            (screenInstance, attributeName, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when removing set data
+                                                                final String attributeName = screenInstance.getSecondaryEntry();
+
                                                                 getInstanceData().dimensionData.remove(attributeName);
                                                                 if (!CraftPresence.DIMENSIONS.DEFAULT_NAMES.contains(attributeName)) {
                                                                     CraftPresence.DIMENSIONS.DIMENSION_NAMES.remove(attributeName);
                                                                 }
                                                             },
-                                                            (attributeName, screenInstance, isPresenceButton) -> {
+                                                            (attributeName, screenInstance) -> {
                                                                 // Event to occur when adding specific info to set data
-                                                                if (isPresenceButton) {
+                                                                if (screenInstance.isPresenceButton) {
                                                                     final PresenceData defaultPresenceData = Config.getProperty(screenInstance.defaultData, "data") != null ? screenInstance.defaultData.getData() : new PresenceData();
                                                                     final PresenceData currentPresenceData = Config.getProperty(screenInstance.currentData, "data") != null ? screenInstance.currentData.getData() : defaultPresenceData;
                                                                     screenInstance.openScreen(

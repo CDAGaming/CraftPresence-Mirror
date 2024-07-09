@@ -474,8 +474,8 @@ public class CommandUtils {
                     }
                 },
                 vanillaBind -> vanillaBind != CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
-                (ex, keyName, keyData) -> {
-                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyData.description()));
+                (ex, keyInfo) -> {
+                    Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.keycode", keyInfo.getSecond().description()));
                     return false; // Let KeyUtils handle resetting the keycode
                 }
         );

@@ -326,11 +326,14 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                                 screenInstance.primaryMessage = Config.getProperty(currentData, "label") != null ? currentData.label : screenInstance.originalPrimaryMessage;
                                                                 screenInstance.secondaryMessage = Config.getProperty(currentData, "url") != null ? currentData.url : screenInstance.originalSecondaryMessage;
                                                             },
-                                                            (screenInstance, secondaryText, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when adjusting set data
+                                                                final String secondaryText = screenInstance.getSecondaryEntry();
+                                                                final String inputText = screenInstance.getPrimaryEntry();
+
                                                                 getInstanceData().addButton(screenInstance.attributeName, new Button(inputText, secondaryText));
                                                             },
-                                                            (screenInstance, secondaryText, inputText) -> {
+                                                            (screenInstance) -> {
                                                                 // Event to occur when removing set data
                                                                 getInstanceData().removeButton(screenInstance.attributeName);
                                                             }, null,
