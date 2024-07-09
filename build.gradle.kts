@@ -302,7 +302,7 @@ subprojects {
 
     // Setup UniLib attachment data
     val libPrefix = "unilib_name"()!!
-    val libName = if (path == ":common") "fabric" else name
+    val libName = if (path == ":common") "fabric" else fileName
     val libVersion = "unilib_build_version"()!!
 
     dependencies {
