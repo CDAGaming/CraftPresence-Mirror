@@ -200,7 +200,7 @@ public class DynamicScrollableList extends ScrollableListControl {
 
             if (data != null && !StringUtils.isNullOrEmpty(data.getBase64EncodedIconData())) {
                 assetUrl = "data:image/png;base64," + data.getBase64EncodedIconData();
-                texture = ImageUtils.getTextureFromUrl(mc, originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
+                texture = ImageUtils.getTextureFromUrl(getGameInstance(), originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
             } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
                 final String formattedIP = originalName.contains(":") ? StringUtils.formatAddress(originalName, false) : originalName;
@@ -211,7 +211,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                         new Pair<>("server.address.short", () -> formattedIP),
                         new Pair<>("server.address.full", () -> originalName)
                 ).get().toString();
-                texture = ImageUtils.getTextureFromUrl(mc, originalName, endpointUrl);
+                texture = ImageUtils.getTextureFromUrl(getGameInstance(), originalName, endpointUrl);
                 if (CommandUtils.isDebugMode() && isHovering) {
                     hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
@@ -225,7 +225,7 @@ public class DynamicScrollableList extends ScrollableListControl {
             if (CommandUtils.isDebugMode() && isHovering) {
                 hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + assetUrl);
             }
-            texture = ImageUtils.getTextureFromUrl(mc, originalName, assetUrl);
+            texture = ImageUtils.getTextureFromUrl(getGameInstance(), originalName, assetUrl);
         } else if (renderType == RenderType.EntityData) {
             final boolean isPlayer = CraftPresence.ENTITIES.PLAYER_BINDINGS.containsKey(originalName);
             final boolean isValidUuid = StringUtils.isValidUuid(originalName);
@@ -239,7 +239,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                         new Pair<>("player.uuid.full", () -> isValidUuid ? StringUtils.getFromUuid(originalName, false) : ""),
                         new Pair<>("player.uuid.short", () -> isValidUuid ? StringUtils.getFromUuid(originalName, true) : "")
                 ).get().toString();
-                texture = ImageUtils.getTextureFromUrl(mc, originalName, endpointUrl);
+                texture = ImageUtils.getTextureFromUrl(getGameInstance(), originalName, endpointUrl);
                 if (CommandUtils.isDebugMode() && isHovering) {
                     hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.url") + " " + endpointUrl);
                 }
@@ -250,7 +250,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                 final ItemStack stack = data.get(originalName);
                 if (!TileEntityUtils.isEmpty(stack)) {
                     RenderUtils.drawItemStack(
-                            mc, getFontRenderer(), xOffset, yPos + 4, stack,
+                            getGameInstance(), getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f
                     );
                     xOffset += 35;
@@ -270,7 +270,7 @@ public class DynamicScrollableList extends ScrollableListControl {
         if (renderType.canRenderImage() && !ImageUtils.isTextureNull(texture)) {
             final double yOffset = yPos + 4.5;
             final double size = 32;
-            RenderUtils.drawTexture(mc,
+            RenderUtils.drawTexture(getGameInstance(),
                     xOffset, xOffset + size, yOffset, yOffset + size,
                     0.0D,
                     0.0D, 1.0D,
