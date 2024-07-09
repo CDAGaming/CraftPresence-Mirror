@@ -302,7 +302,8 @@ subprojects {
 
     // Setup UniLib attachment data
     val libPrefix = "unilib_name"()!!
-    val libName = if (path == ":common") "fabric" else fileName
+    val libName = if (!isLoaderSource) "fabric" else name
+    val libSuffix = if (name == "forge") fmlName else libName
     val libVersion = "unilib_build_version"()!!
 
     dependencies {
@@ -318,7 +319,7 @@ subprojects {
                         Locale.getDefault()
                     ) else it.toString()
                 }
-            }:$libVersion+$mcVersion:$libName"
+            }:$libVersion+$mcVersion:$libSuffix"
         )
     }
 
