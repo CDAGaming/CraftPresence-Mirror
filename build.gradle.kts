@@ -319,7 +319,7 @@ subprojects {
                         Locale.getDefault()
                     ) else it.toString()
                 }
-            }:$libVersion+$mcVersion:$libSuffix"
+            }:$libVersion+$mcVersionLabel:$libSuffix"
         )
     }
 
