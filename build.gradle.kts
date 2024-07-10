@@ -275,13 +275,14 @@ subprojects {
 
             if (shouldDowngrade) {
                 val apiVersion = if (buildVersion.isJava7) JavaVersion.VERSION_1_8 else buildVersion
-                val downgradeClient = tasks.create("downgradeClient", DowngradeFiles::class.java) {
+                val downgradeClient = tasks.register("downgradeClient", DowngradeFiles::class.java) {
                     inputCollection = sourceSet.output.classesDirs + sourceSet.runtimeClasspath
                     classpath = project.files()
+                    outputCollection.files
                 }
 
                 runs.config("client") {
-                    classpath = downgradeClient.outputCollection + files(jvmdg.getDowngradedApi(apiVersion))
+                    classpath = downgradeClient.get().outputCollection + files(jvmdg.getDowngradedApi(apiVersion))
                 }
             }
         }
