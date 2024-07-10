@@ -1,5 +1,3 @@
-import xyz.wagyourtail.unimined.api.mapping.task.ExportMappingsTask
-import xyz.wagyourtail.unimined.api.minecraft.patch.forge.ForgeLikePatcher
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 
 /**
@@ -84,25 +82,7 @@ tasks.processResources {
     filesMatching(resourceTargets) {
         expand(replaceProperties)
     }
-
-    filesMatching("mappings-$name.srg") {
-        filter { line ->
-            @Suppress("NULL_FOR_NONNULL_TYPE")
-            if (line.startsWith("CL:")) line.replace("/", ".") else null
-        }
-    }
 }
-
-tasks.named<ExportMappingsTask>("exportMappings") {
-    val target = if ("mc_mappings_type"() == "retroMCP") "mcp" else "searge"
-    export {
-        setTargetNamespaces(listOf(target))
-        setSourceNamespace("official")
-        location = file("$projectDir/src/main/resources/mappings-$name.srg")
-        setType("SRG")
-    }
-}
-tasks.processResources.get().dependsOn(tasks.named("exportMappings"))
 
 tasks.shadowJar {
     mustRunAfter(project(":common").tasks.shadowJar)

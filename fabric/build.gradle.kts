@@ -1,4 +1,3 @@
-import xyz.wagyourtail.unimined.api.mapping.task.ExportMappingsTask
 import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 
@@ -86,25 +85,7 @@ tasks.processResources {
     filesMatching(resourceTargets) {
         expand(replaceProperties)
     }
-
-    filesMatching("mappings-fabric.srg") {
-        filter { line ->
-            @Suppress("NULL_FOR_NONNULL_TYPE")
-            if (line.startsWith("CL:")) line.replace("/", ".") else null
-        }
-    }
 }
-
-tasks.named<ExportMappingsTask>("exportMappings") {
-    val target = if (isMCPJar) "searge" else (if (!isModern) "mcp" else "mojmap")
-    export {
-        setTargetNamespaces(listOf(target))
-        setSourceNamespace(if (isJarMod) "official" else "intermediary")
-        location = file("$projectDir/src/main/resources/mappings-fabric.srg")
-        setType("SRG")
-    }
-}
-tasks.processResources.get().dependsOn(tasks.named("exportMappings"))
 
 tasks.shadowJar {
     mustRunAfter(project(":common").tasks.shadowJar)
