@@ -18,7 +18,6 @@ val isJarMod: Boolean by extra
 val accessWidenerFile: File by extra
 val isMCPJar: Boolean by extra
 val isModern: Boolean by extra
-val fmlName: String by extra
 val versionFormat: String by extra
 val versionLabel: String by extra
 val mcVersionLabel: String by extra
@@ -170,7 +169,7 @@ tasks.named<RemapJarTask>("remapJar") {
     }
     inputFile.set(tasks.shadowJar.get().archiveFile)
     dependsOn(tasks.shadowJar.get())
-    archiveClassifier.set("fabric")
+    archiveClassifier.set(project.name)
 }
 
 tasks.jar {

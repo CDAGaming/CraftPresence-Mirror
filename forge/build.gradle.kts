@@ -15,11 +15,9 @@ val modId: String by extra
 val isLegacy: Boolean by extra
 val protocol: Int by extra
 val isJarMod: Boolean by extra
-val isNeoForge: Boolean by extra
 val accessWidenerFile: File by extra
 val isMCPJar: Boolean by extra
 val isModern: Boolean by extra
-val fmlName: String by extra
 val versionFormat: String by extra
 val versionLabel: String by extra
 val mcVersionLabel: String by extra
@@ -31,17 +29,12 @@ val forgeVersion = "forge_version"()!!
 
 unimined.minecraft {
     if (!isJarMod) {
-        val forgeData: ForgeLikePatcher<*>.() -> Unit = {
+        minecraftForge {
             if (canUseATs) {
                 accessTransformer(aw2at(accessWidenerFile))
             }
             loader(forgeVersion)
             customSearge = (mcMappingsType != "mojmap" && mcMappingsType != "parchment")
-        }
-        if (isNeoForge) {
-            neoForge(forgeData)
-        } else {
-            minecraftForge(forgeData)
         }
     } else {
         jarMod {}
@@ -78,7 +71,7 @@ val replaceProperties = mapOf(
     "mod_name" to modName,
     "version" to baseVersionLabel,
     "mcversion" to mcVersionLabel,
-    "forge_id" to fmlName,
+    "forge_id" to name,
     "fml_version_range" to "fml_version_range"(),
     "game_version_range" to "forge_game_version_range"(),
     "loader_version_range" to "forge_loader_version_range"(),
@@ -92,7 +85,7 @@ tasks.processResources {
         expand(replaceProperties)
     }
 
-    filesMatching("mappings-$fmlName.srg") {
+    filesMatching("mappings-$name.srg") {
         filter { line ->
             @Suppress("NULL_FOR_NONNULL_TYPE")
             if (line.startsWith("CL:")) line.replace("/", ".") else null
@@ -100,18 +93,16 @@ tasks.processResources {
     }
 }
 
-if (!isNeoForge) {
-    tasks.named<ExportMappingsTask>("exportMappings") {
-        val target = if ("mc_mappings_type"() == "retroMCP") "mcp" else "searge"
-        export {
-            setTargetNamespaces(listOf(target))
-            setSourceNamespace("official")
-            location = file("$projectDir/src/main/resources/mappings-$fmlName.srg")
-            setType("SRG")
-        }
+tasks.named<ExportMappingsTask>("exportMappings") {
+    val target = if ("mc_mappings_type"() == "retroMCP") "mcp" else "searge"
+    export {
+        setTargetNamespaces(listOf(target))
+        setSourceNamespace("official")
+        location = file("$projectDir/src/main/resources/mappings-$name.srg")
+        setType("SRG")
     }
-    tasks.processResources.get().dependsOn(tasks.named("exportMappings"))
 }
+tasks.processResources.get().dependsOn(tasks.named("exportMappings"))
 
 tasks.shadowJar {
     mustRunAfter(project(":common").tasks.shadowJar)
@@ -173,7 +164,7 @@ tasks.shadowJar {
 tasks.named<RemapJarTask>("remapJar") {
     inputFile.set(tasks.shadowJar.get().archiveFile)
     dependsOn(tasks.shadowJar.get())
-    archiveClassifier.set(fmlName)
+    archiveClassifier.set(project.name)
 }
 
 tasks.jar {
