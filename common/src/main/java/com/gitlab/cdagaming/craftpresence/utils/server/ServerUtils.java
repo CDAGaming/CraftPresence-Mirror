@@ -279,7 +279,11 @@ public class ServerUtils implements ExtendedModule {
     @SuppressWarnings("RedundantCast")
     private RealmsServer findRealmData(final NetHandlerPlayClient connection) {
         try {
-            if (connection.guiScreenServer instanceof GuiScreenRealmsProxy realmsProxy &&
+            final Object guiScreenServer = StringUtils.getField(
+                    NetHandlerPlayClient.class, connection,
+                    "guiScreenServer", "field_147307_j", "d"
+            );
+            if (guiScreenServer instanceof GuiScreenRealmsProxy realmsProxy &&
                     realmsProxy.getProxy() instanceof RealmsMainScreen realmsMainScreen) {
                 return (RealmsServer) StringUtils.executeMethod(
                         RealmsMainScreen.class, realmsMainScreen,
