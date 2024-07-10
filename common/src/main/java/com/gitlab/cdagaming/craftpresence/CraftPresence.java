@@ -202,7 +202,7 @@ public class CraftPresence {
      * Schedules the Next Tick to Occur if not currently closing
      */
     private void scheduleTick() {
-        CoreUtils.registerTickEvent(Constants.MOD_ID, this::clientTick);
+        CoreUtils.scheduleTickEvent(Constants.NAME, this::clientTick);
     }
 
     /**
