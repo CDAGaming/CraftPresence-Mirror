@@ -1,0 +1,14 @@
+{
+    "id": "${mod_id}",
+    "name": "${mod_name}",
+    "version": "${version}",
+    "authors": [
+      "CDAGaming"
+    ],
+    "listeners": [
+      "com.gitlab.cdagaming.craftpresence.rift.CraftPresenceRift"
+    ],
+    "url": "https://www.curseforge.com/minecraft/mc-mods/craftpresence",
+    "description": "Completely Customize the way others see you play in Discord!",
+    "icon_file": "logo.png"
+  }
