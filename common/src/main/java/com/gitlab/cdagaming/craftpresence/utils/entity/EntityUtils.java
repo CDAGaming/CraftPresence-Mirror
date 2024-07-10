@@ -28,13 +28,12 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
+import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -105,69 +104,6 @@ public class EntityUtils implements ExtendedModule {
      */
     private Entity CURRENT_RIDING;
 
-    /**
-     * Retrieves the entities display name, derived from the original supplied name
-     *
-     * @param entity          The entity to interpret
-     * @param stripFormatting Whether the resulting name should have its formatting stripped
-     * @return The formatted entity display name to use
-     */
-    public static String getName(final Entity entity, final boolean stripFormatting) {
-        String result = "";
-        if (entity != null) {
-            result = StringUtils.getOrDefault(
-                    entity.getDisplayName().getFormattedText(),
-                    entity.getName()
-            );
-        }
-
-        if (stripFormatting) {
-            result = StringUtils.stripAllFormatting(result);
-        }
-        return result;
-    }
-
-    /**
-     * Retrieves the entities display name, derived from the original supplied name
-     *
-     * @param entity The entity to interpret
-     * @return The formatted entity display name to use
-     */
-    public static String getName(final Entity entity) {
-        return getName(entity, true);
-    }
-
-    /**
-     * Retrieve the weather, utilizing the world
-     *
-     * @param worldObj The world object to interpret
-     * @return the current weather data
-     */
-    public static String getWeather(final World worldObj) {
-        String name = "clear";
-        if (worldObj != null) {
-            final WorldInfo info = worldObj.getWorldInfo();
-            if (info.isThundering()) {
-                name = "thunder";
-            } else if (info.isRaining()) {
-                name = "rain";
-            } else {
-                name = "clear";
-            }
-        }
-        return name;
-    }
-
-    /**
-     * Retrieve the weather, utilizing the entity's world
-     *
-     * @param entity The entity to interpret
-     * @return the current weather data
-     */
-    public static String getWeather(final Entity entity) {
-        return getWeather(entity != null ? entity.world : null);
-    }
-
     @Override
     public void clearFieldData() {
         DEFAULT_NAMES.clear();
@@ -201,7 +137,7 @@ public class EntityUtils implements ExtendedModule {
 
         if (hasTargetChanged) {
             CURRENT_TARGET = NEW_CURRENT_TARGET;
-            CURRENT_TARGET_NAME = getName(CURRENT_TARGET);
+            CURRENT_TARGET_NAME = WorldUtils.getEntityName(CURRENT_TARGET);
 
             if (CURRENT_TARGET != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.target.time");
@@ -217,7 +153,7 @@ public class EntityUtils implements ExtendedModule {
 
         if (hasRidingChanged) {
             CURRENT_RIDING = NEW_CURRENT_RIDING;
-            CURRENT_RIDING_NAME = getName(CURRENT_RIDING);
+            CURRENT_RIDING_NAME = WorldUtils.getEntityName(CURRENT_RIDING);
 
             if (CURRENT_RIDING != null) {
                 CraftPresence.CLIENT.syncTimestamp("data.entity.riding.time");

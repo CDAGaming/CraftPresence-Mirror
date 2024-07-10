@@ -114,7 +114,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Biome newBiome = CraftPresence.player.world.getBiome(CraftPresence.player.getPosition());
+        final Biome newBiome = CraftPresence.world.getBiome(CraftPresence.player.getPosition());
         final String newBiomeName = newBiome.getBiomeName();
 
         final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));

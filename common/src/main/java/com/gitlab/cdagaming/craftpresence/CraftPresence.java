@@ -38,13 +38,16 @@ import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.UniLib;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
+import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.KeyUtils;
+import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Session;
+import net.minecraft.world.World;
 
 /**
  * The Primary Application Class and Utilities
@@ -102,6 +105,10 @@ public class CraftPresence {
      * The Current Player detected from the Minecraft Instance
      */
     public static EntityPlayer player;
+    /**
+     * The Current World detected from the Minecraft Instance
+     */
+    public static World world;
     /**
      * The current player username
      */
@@ -163,13 +170,6 @@ public class CraftPresence {
      * Consists of Data Initialization and RPC Setup
      */
     private void init() {
-        // Initialize Dynamic Mappings and Critical Data
-        CommandUtils.updateModes();
-
-        // If running in Developer Mode, Warn of Possible Issues and Log OS Info
-        Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.debug_mode"));
-        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.os", OSUtils.OS_NAME, OSUtils.OS_ARCH, OSUtils.IS_64_BIT));
-
         // Check for Updates before continuing
         UPDATER.checkForUpdates();
 
@@ -181,6 +181,11 @@ public class CraftPresence {
         );
 
         CommandUtils.init();
+
+        // If running in Debug Mode, Warn of Possible Issues and Log OS Info
+        Constants.LOG.debugWarn(Constants.TRANSLATOR.translate("craftpresence.logger.warning.debug_mode"));
+        Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.os", OSUtils.OS_NAME, OSUtils.OS_ARCH, OSUtils.IS_64_BIT));
+
         if (initCallback != null) {
             initCallback.run();
         }
@@ -208,17 +213,18 @@ public class CraftPresence {
     private void clientTick() {
         if (!CoreUtils.IS_CLOSING) {
             instance = ModUtils.getMinecraft();
-            if (initialized) {
-                session = instance.getSession();
-                player = instance.player;
+            if (initialized || instance != null) {
+                session = GameUtils.getSession(instance);
 
-                username = session.getUsername();
-                uuid = session.getPlayerID();
+                if (initialized) {
+                    player = WorldUtils.getPlayer(instance);
+                    world = WorldUtils.getWorld(player);
 
-                CommandUtils.reloadData(false);
-            } else if (instance != null) {
-                session = instance.getSession();
-                if (session != null) {
+                    username = GameUtils.getUsername(instance);
+                    uuid = GameUtils.getUuid(instance);
+
+                    CommandUtils.reloadData(false);
+                } else if (session != null) {
                     init();
                 }
             }

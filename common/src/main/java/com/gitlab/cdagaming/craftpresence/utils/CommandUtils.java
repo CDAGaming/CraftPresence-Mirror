@@ -44,6 +44,7 @@ import com.gitlab.cdagaming.craftpresence.integrations.replaymod.ReplayModUtils;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.impl.TranslationListener;
 import com.gitlab.cdagaming.unilib.impl.TranslationManager;
+import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.jagrosh.discordipc.entities.DiscordBuild;
@@ -380,7 +381,7 @@ public class CommandUtils {
 
         CraftPresence.CLIENT.syncArgument("_general.instance", () -> CraftPresence.instance);
         CraftPresence.CLIENT.syncArgument("_general.player", () -> CraftPresence.player);
-        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.player != null ? CraftPresence.player.world : null);
+        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.world);
         CraftPresence.CLIENT.syncArgument("_config.instance", () -> CraftPresence.CONFIG);
 
         // Sync Custom Variables
@@ -463,8 +464,8 @@ public class CommandUtils {
                 CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
                 () -> Constants.TRANSLATOR.translate("key.craftpresence.config_keycode.description"),
                 () -> {
-                    if (!CraftPresence.GUIS.isFocused && !(CraftPresence.instance.currentScreen instanceof ExtendedScreen)) {
-                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(), CraftPresence.instance.currentScreen);
+                    if (!GameUtils.isFocused(CraftPresence.instance) && !(GameUtils.getCurrentScreen(CraftPresence.instance) instanceof ExtendedScreen)) {
+                        RenderUtils.openScreen(CraftPresence.instance, new MainGui(), GameUtils.getCurrentScreen(CraftPresence.instance));
                     }
                 },
                 (keyCode, shouldSave) -> {
@@ -488,7 +489,7 @@ public class CommandUtils {
      */
     public static void onTick() {
         if (!Constants.HAS_GAME_LOADED) {
-            Constants.HAS_GAME_LOADED = CraftPresence.instance.currentScreen != null || CraftPresence.player != null;
+            Constants.HAS_GAME_LOADED = GameUtils.isLoaded(CraftPresence.instance);
             if (Constants.HAS_GAME_LOADED) {
                 addModule(Constants.MOD_ID, new TranslationManager(
                         CraftPresence.instance,

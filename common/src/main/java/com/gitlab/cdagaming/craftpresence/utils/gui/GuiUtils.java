@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
+import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import external.io.github.classgraph.ClassInfo;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
@@ -50,11 +51,6 @@ public class GuiUtils implements ExtendedModule {
      * A List of the detected Gui Screen Classes
      */
     public final Map<String, ClassInfo> GUI_CLASSES = StringUtils.newHashMap();
-    /**
-     * If an Element is being focused on in a GUI or if a GUI is currently open
-     * <p>Conditions depend on Game Version
-     */
-    public boolean isFocused = false;
     /**
      * A List of the detected Gui Screen Names
      */
@@ -110,16 +106,12 @@ public class GuiUtils implements ExtendedModule {
     }
 
     @Override
-    public void preTick() {
-        isFocused = CraftPresence.instance.currentScreen != null && (CraftPresence.instance.currentScreen.isFocused() || CraftPresence.player != null);
-    }
-
-    @Override
     public void updateData() {
-        if (CraftPresence.instance.currentScreen == null) {
+        final GuiScreen newScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
+
+        if (newScreen == null) {
             clearClientData();
         } else {
-            final GuiScreen newScreen = CraftPresence.instance.currentScreen;
             final String newScreenName = StringUtils.getOrDefault(
                     MappingUtils.getClassName(newScreen),
                     MappingUtils.getClassName(GuiScreen.class)
@@ -234,7 +226,7 @@ public class GuiUtils implements ExtendedModule {
 
     @Override
     public boolean canBeUsed() {
-        return CraftPresence.instance.currentScreen != null;
+        return GameUtils.getCurrentScreen(CraftPresence.instance) != null;
     }
 
     @Override

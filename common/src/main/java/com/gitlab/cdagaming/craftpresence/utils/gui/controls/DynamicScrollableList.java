@@ -28,8 +28,8 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
-import com.gitlab.cdagaming.craftpresence.utils.entity.TileEntityUtils;
 import com.gitlab.cdagaming.unilib.utils.ImageUtils;
+import com.gitlab.cdagaming.unilib.utils.ItemUtils;
 import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
@@ -248,7 +248,7 @@ public class DynamicScrollableList extends ScrollableListControl {
             final Map<String, ItemStack> data = CraftPresence.TILE_ENTITIES.TILE_ENTITY_RESOURCES;
             if (data.containsKey(originalName)) {
                 final ItemStack stack = data.get(originalName);
-                if (!TileEntityUtils.isEmpty(stack)) {
+                if (!ItemUtils.isItemEmpty(stack)) {
                     RenderUtils.drawItemStack(
                             getGameInstance(), getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f

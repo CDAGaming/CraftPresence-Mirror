@@ -31,8 +31,10 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
-import com.gitlab.cdagaming.craftpresence.utils.entity.EntityUtils;
 import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.utils.GameUtils;
+import com.gitlab.cdagaming.unilib.utils.WorldUtils;
+import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 import io.github.cdagaming.unicore.impl.Pair;
@@ -40,6 +42,7 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenRealmsProxy;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
@@ -531,10 +534,19 @@ public class ServerUtils implements ExtendedModule {
             }
 
             if (CraftPresence.player != null) {
-                CraftPresence.player.world.sendQuittingDisconnectingPacket();
+                CraftPresence.world.sendQuittingDisconnectingPacket();
                 CraftPresence.instance.loadWorld(null);
             }
-            CraftPresence.instance.displayGuiScreen(new GuiConnecting(CraftPresence.instance.currentScreen != null ? CraftPresence.instance.currentScreen : new GuiMainMenu(), CraftPresence.instance, serverData));
+
+            final GuiScreen currentScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
+            RenderUtils.openScreen(
+                    CraftPresence.instance,
+                    new GuiConnecting(
+                            currentScreen != null ? currentScreen : new GuiMainMenu(),
+                            CraftPresence.instance,
+                            serverData
+                    )
+            );
         } catch (Throwable ex) {
             printException(ex);
         }
@@ -553,41 +565,41 @@ public class ServerUtils implements ExtendedModule {
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String newDifficulty = CraftPresence.player.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
+            final String newDifficulty = CraftPresence.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.player.world.getDifficulty().name().toLowerCase());
+                    StringUtils.formatWord(CraftPresence.world.getDifficulty().name().toLowerCase());
             return StringUtils.getOrDefault(newDifficulty);
         });
         syncArgument("world.weather.name", () -> {
-            final String newWeatherData = EntityUtils.getWeather(CraftPresence.player);
+            final String newWeatherData = WorldUtils.getWeather(CraftPresence.player);
             final String newWeatherName = Constants.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData);
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
             final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.player.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         });
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getFirst()
+                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()).getFirst()
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.player.world.getWorldTime())
+                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime())
         );
 
         // Default Arguments

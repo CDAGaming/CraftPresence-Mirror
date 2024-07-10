@@ -116,7 +116,7 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final WorldProvider newProvider = CraftPresence.player.world.provider;
+        final WorldProvider newProvider = CraftPresence.world.provider;
         final DimensionType newDimensionType = newProvider.getDimensionType();
         final String newDimensionName = newDimensionType.getName();
 
