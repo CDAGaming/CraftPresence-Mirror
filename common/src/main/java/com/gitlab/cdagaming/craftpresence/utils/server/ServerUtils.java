@@ -631,11 +631,11 @@ public class ServerUtils implements ExtendedModule {
                 callbackEvent.run();
             } catch (UnknownHostException unknownHostException) {
                 serverData.pingToServer = -1L;
-                serverData.serverMOTD = "§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_resolve");
+                serverData.serverMOTD = "§4Can't resolve hostname";
                 callbackEvent.run();
             } catch (Exception ex) {
                 serverData.pingToServer = -1L;
-                serverData.serverMOTD = "§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_connect");
+                serverData.serverMOTD = "§4Can't connect to server.";
                 callbackEvent.run();
             }
         });
