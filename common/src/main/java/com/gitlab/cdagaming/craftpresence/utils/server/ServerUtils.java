@@ -220,8 +220,8 @@ public class ServerUtils implements ExtendedModule {
         final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
 
         try {
-            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "ab");
-            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "ac");
+            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "Y");
+            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "Z");
             newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerData(retrievedIP, retrievedPort) : null;
         } catch (Exception ex) {
             newServerData = null;
@@ -605,7 +605,7 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.world.getWorldInfo().getWorldName();
+            final String primaryWorldName = CraftPresence.world.func_22144_v().getWorldName();
             final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
