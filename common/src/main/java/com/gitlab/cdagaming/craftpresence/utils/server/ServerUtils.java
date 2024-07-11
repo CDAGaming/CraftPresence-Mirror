@@ -219,8 +219,8 @@ public class ServerUtils implements ExtendedModule {
         final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
 
         try {
-            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "W");
-            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "X");
+            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "V");
+            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "W");
             newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerData(retrievedIP, retrievedPort) : null;
         } catch (Exception ex) {
             newServerData = null;
@@ -518,30 +518,28 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.world.func_22144_v().getWorldName();
-            final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
-            final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
+            final String newWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             return StringUtils.getOrDefault(newWorldName);
         });
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.func_22139_r()).getFirst()
+                TimeUtils.fromWorldTime(CraftPresence.world.worldTime).getFirst()
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.world.func_22139_r()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.worldTime).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.world.func_22139_r()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.worldTime).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.func_22139_r())
+                TimeUtils.fromWorldTime(CraftPresence.world.worldTime)
         );
 
         // Default Arguments
