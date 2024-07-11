@@ -220,7 +220,7 @@ public class ServerUtils implements ExtendedModule {
         ServerNBTStorage newServerData;
         try {
             if (CraftPresence.world instanceof WorldClient clientWorld) {
-                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, clientWorld, "sendQueue", "field_1052_A", "A");
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, clientWorld, "sendQueue", "field_1052_A", "z");
             }
         } catch (Exception ex) {
             newConnection = null;
@@ -610,7 +610,7 @@ public class ServerUtils implements ExtendedModule {
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTY_LEVELS", "field_1558_z", "z");
+            final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTY_LEVELS", "field_1558_z", "y");
             int difficulty = CraftPresence.world.difficultySetting;
             if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
                 difficulty = 0;
