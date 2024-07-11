@@ -31,7 +31,6 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.unilib.ModUtils;
-import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import io.github.cdagaming.unicore.impl.Pair;
@@ -39,9 +38,7 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.client.multiplayer.ServerData;
@@ -239,7 +236,7 @@ public class ServerUtils implements ExtendedModule {
     public void updateData() {
         final IntegratedServer newIntegratedData = CraftPresence.instance.getIntegratedServer();
         ServerData newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.getNetHandler();
+        final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
             newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "M");
@@ -534,11 +531,9 @@ public class ServerUtils implements ExtendedModule {
                 CraftPresence.instance.loadWorld(null);
             }
 
-            final GuiScreen currentScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
             RenderUtils.openScreen(
                     CraftPresence.instance,
                     new GuiConnecting(
-                            currentScreen != null ? currentScreen : new GuiMainMenu(),
                             CraftPresence.instance,
                             serverData
                     )
