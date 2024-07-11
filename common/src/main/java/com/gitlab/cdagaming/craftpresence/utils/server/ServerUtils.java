@@ -571,7 +571,7 @@ public class ServerUtils implements ExtendedModule {
 
             if (CraftPresence.player != null) {
                 CraftPresence.world.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.changeWorld1(null);
+                CraftPresence.instance.func_6261_a(null);
             }
 
             RenderUtils.openScreen(
