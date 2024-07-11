@@ -33,7 +33,6 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -260,9 +259,9 @@ public class EntityUtils implements ExtendedModule {
     @Override
     public void getInternalData() {
         if (!EntityList.getEntityNameList().isEmpty()) {
-            for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
+            for (String entityLocation : EntityList.getEntityNameList()) {
                 if (entityLocation != null) {
-                    final String entityName = StringUtils.getOrDefault(EntityList.getTranslationName(entityLocation), "generic");
+                    final String entityName = StringUtils.getOrDefault(entityLocation, "generic");
                     if (!DEFAULT_NAMES.contains(entityName)) {
                         DEFAULT_NAMES.add(entityName);
                     }
