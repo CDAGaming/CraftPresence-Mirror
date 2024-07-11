@@ -1,0 +1,61 @@
+{
+    "schema_version": 1,
+    "quilt_loader": {
+      "id": "${mod_id}",
+      "group": "com.gitlab.cdagaming",
+      "version": "${version}",
+      "metadata": {
+        "name": "${mod_name}",
+        "description": "Completely Customize the way others see you play in Discord!",
+        "contributors": {
+          "CDAGaming": "Owner"
+        },
+        "contact": {
+          "homepage": "https://www.curseforge.com/minecraft/mc-mods/craftpresence",
+          "sources": "https://gitlab.com/CDAGaming/CraftPresence",
+          "issues": "https://gitlab.com/CDAGaming/CraftPresence/issues"
+        },
+        "license": "MIT",
+        "icon": "logo.png"
+      },
+      "intermediate_mappings": "net.fabricmc:intermediary",
+      "entrypoints": {
+        "client_init": "com.gitlab.cdagaming.craftpresence.quilt.CraftPresenceQuilt",
+        "modmenu": "com.gitlab.cdagaming.craftpresence.quilt.impl.ModMenuImpl"
+      },
+      "depends": [
+        {
+          "id": "quilt_loader",
+          "versions": "${loader_version_range}"
+        },
+        {
+          "id": "quilted_fabric_api",
+          "versions": ">=1.0.0-"
+        },
+        {
+          "id": "minecraft",
+          "versions": {
+            "all": [
+              "${game_version_range_start}",
+              "${game_version_range_end}"
+            ]
+          }
+        },
+        {
+          "id": "unilib",
+          "versions": ">=${unilib_min_version}"
+        },
+        {
+          "id": "java",
+          "versions": ">=17"
+        }
+      ],
+      "breaks": [
+        {
+          "id": "fabric",
+          "reason": "This mod uses QSL for its content, please use Quilted Fabric API instead of Fabric API to allow for this.",
+          "unless": "quilted_fabric_api"
+        }
+      ]
+    }
+  }
