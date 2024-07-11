@@ -162,7 +162,7 @@ public class HypherConverter implements DataMigrator {
 
             // Per-GUI Events
             instance.advancedSettings.enablePerGui = true;
-            instance.advancedSettings.guiSettings.guiData.put("GuiMultiplayer", new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("GuiSelectServer", new ModuleData()
                     .setData(convertPresenceData(conf.get("server_list"))));
             instance.advancedSettings.guiSettings.guiData.put("GuiDownloadTerrain", new ModuleData()
                     .setData(convertPresenceData(conf.get("join_game"))));
