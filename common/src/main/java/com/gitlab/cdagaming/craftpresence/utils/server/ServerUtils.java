@@ -566,7 +566,7 @@ public class ServerUtils implements ExtendedModule {
 
             if (CraftPresence.player != null) {
                 CraftPresence.world.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.changeWorld1(null);
+                CraftPresence.instance.changeWorld(null);
             }
 
             RenderUtils.openScreen(
@@ -590,8 +590,8 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.z, 3));
 
         // Player Health Arguments
-        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.health, 0));
-        syncArgument("player.health.max", () -> MathUtils.roundDouble(20.0D, 0));
+        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
+        syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
