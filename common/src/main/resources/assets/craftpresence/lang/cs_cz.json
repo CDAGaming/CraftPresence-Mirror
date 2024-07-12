@@ -8,7 +8,6 @@
   "craftpresence.placeholders.server.default.icon.description": "Výchozí ikona serveru",
   "craftpresence.placeholders.server.icon.description": "Aktuální ikona serveru",
   "craftpresence.placeholders.server.players.current.description": "Aktuální počet hráčů na serveru",
-  "gui.config.comment.title.changes": "Minecraft verze -> %1$s",
   "gui.config.comment.title.status_messages": "Přizpůsobit zprávy týkající se různých herních stavů",
   "gui.config.message.button.back": "Zpět",
   "gui.config.message.button.commands": "Příkazy",

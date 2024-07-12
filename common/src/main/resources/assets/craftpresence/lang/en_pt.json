@@ -6,5 +6,6 @@
   "craftpresence.defaults.integrations.replaymod.renderer": "{player.name} be exportin' a replay ({replaymod.frames.current}/{replaymod.frames.total} frames)",
   "craftpresence.defaults.server_messages.server_messages": "Playin' on {server.motd.raw}",
   "craftpresence.defaults.state.lan": "Playin' on a LAN Server",
-  "craftpresence.defaults.state.loading": "Loadin'..."
+  "craftpresence.defaults.state.loading": "Loadin'...",
+  "craftpresence.defaults.state.realm": "Playin' on {server.motd.raw}"
 }

@@ -1,6 +1,5 @@
 {
   "gui.config.comment.title": "Şimdiki Sürüm -> %1$s (Şema v%2$s)",
-  "gui.config.comment.title.changes": "Minecraft Sürümü -> %1$s",
   "gui.config.comment.title.general": "Görüntü bilgileri için genel ayarlar",
   "gui.config.title": "CraftPresence - Yapılandırma Ayarları",
   "gui.config.title.about.config": "Bu Yapılandırma Arayüzü Hakkında",
@@ -8,7 +7,6 @@
   "gui.config.title.advanced": "Gelişmiş Ayarlar",
   "gui.config.title.biome.edit_specific_biome": "CraftPresence - Biyomu Düzenle (%1$s)",
   "gui.config.title.biome_messages": "Biyom Mesajlarını Özelleştir",
-  "gui.config.title.changes": "Sürüm Kontrol Bilgisi (Durum: %1$s)",
   "gui.config.title.commands": "CraftPresence - Komut Girişi",
   "gui.config.title.dimension.edit_specific_dimension": "CraftPresence - Boyutu Düzenle (%1$s)",
   "gui.config.title.dimension_messages": "Boyut Mesajlarını Özelleştir",
@@ -20,7 +18,6 @@
   "gui.config.title.general": "Genel Ayarlar",
   "gui.config.title.gui.edit_specific_gui": "CraftPresence - Arayüzü Düzenle (%1$s)",
   "gui.config.title.item.edit_specific_item": "CraftPresence - Eşyayı Düzenle (%1$s)",
-  "gui.config.title.message": "CraftPresence - Mesaj",
   "gui.config.title.selector.biome": "CraftPresence - Bir biyom seç",
   "gui.config.title.selector.button": "CraftPresence - Bir buton seç",
   "gui.config.title.selector.dimension": "CraftPresence - Bir boyut seç",
