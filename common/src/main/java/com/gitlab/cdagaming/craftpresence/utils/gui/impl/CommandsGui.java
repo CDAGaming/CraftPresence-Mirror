@@ -368,9 +368,9 @@ public class CommandsGui extends ExtendedScreen {
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.guis"),
                                         CraftPresence.GUIS.GUI_NAMES,
                                         null, null,
-                                        false, false, null,
+                                        false, false, DynamicScrollableList.RenderType.None,
                                         null, null
-                                ));
+                                ).setIdentifierType(DynamicScrollableList.IdentifierType.Gui));
                             } else {
                                 executionString = Constants.TRANSLATOR.translate("gui.config.message.hover.access",
                                         Constants.TRANSLATOR.translate("gui.config.name.advanced.enable_per_gui")
@@ -382,7 +382,7 @@ public class CommandsGui extends ExtendedScreen {
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.biomes"),
                                         CraftPresence.BIOMES.BIOME_NAMES,
                                         null, null,
-                                        false, false, null,
+                                        false, false, DynamicScrollableList.RenderType.None,
                                         null, null
                                 ));
                             } else {
@@ -396,7 +396,7 @@ public class CommandsGui extends ExtendedScreen {
                                         Constants.TRANSLATOR.translate("gui.config.title.selector.view.dimensions"),
                                         CraftPresence.DIMENSIONS.DIMENSION_NAMES,
                                         null, null,
-                                        false, false, null,
+                                        false, false, DynamicScrollableList.RenderType.None,
                                         null, null
                                 ));
                             } else {
