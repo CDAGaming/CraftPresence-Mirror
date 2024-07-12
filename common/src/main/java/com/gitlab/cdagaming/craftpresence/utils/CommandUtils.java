@@ -45,6 +45,7 @@ import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.impl.TranslationListener;
 import com.gitlab.cdagaming.unilib.impl.TranslationManager;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
+import com.gitlab.cdagaming.unilib.utils.KeyUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.jagrosh.discordipc.entities.DiscordBuild;
@@ -243,13 +244,7 @@ public class CommandUtils {
      * @param forceUpdateRPC Whether to Force an Update to the RPC Data
      */
     public static void reloadData(final boolean forceUpdateRPC) {
-        TranslationListener.INSTANCE.onTick();
         CraftPresence.SCHEDULER.onTick();
-        ModUtils.executeOnMainThread(
-                CraftPresence.KEYBINDINGS.getInstance(),
-                CraftPresence.KEYBINDINGS::onTick
-        );
-
         CraftPresence.SCHEDULER.TICK_LOCK.lock();
         try {
             for (Module module : modules.values()) {
@@ -454,7 +449,7 @@ public class CommandUtils {
      * <p>Note: It's mandatory for KeyBindings to be registered here, or they will not be recognized on either end
      */
     public static void registerKeybinds() {
-        CraftPresence.KEYBINDINGS.registerKey(
+        KeyUtils.INSTANCE.registerKey(
                 "configKeyCode",
                 "key.craftpresence.config_keycode.name",
                 Constants.TRANSLATOR::translate,
@@ -463,6 +458,8 @@ public class CommandUtils {
                 CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
                 CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
                 () -> Constants.TRANSLATOR.translate("key.craftpresence.config_keycode.description"),
+                () -> CraftPresence.CONFIG != null,
+                () -> !CraftPresence.CONFIG.hasChanged(),
                 () -> {
                     if (!GameUtils.isFocused(CraftPresence.instance) && !(GameUtils.getCurrentScreen(CraftPresence.instance) instanceof ExtendedScreen)) {
                         RenderUtils.openScreen(CraftPresence.instance, new MainGui(), GameUtils.getCurrentScreen(CraftPresence.instance));

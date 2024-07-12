@@ -122,12 +122,6 @@ public class CraftPresence {
      */
     public static Config CONFIG;
     /**
-     * The {@link KeyUtils} Instance for this Mod
-     */
-    public static final KeyUtils KEYBINDINGS = new KeyUtils()
-            .setCanCheckKeys(() -> CONFIG != null)
-            .setCanSyncKeys(() -> !CONFIG.hasChanged());
-    /**
      * The {@link ScheduleUtils} Instance for this Mod
      */
     public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);

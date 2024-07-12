@@ -29,6 +29,7 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.category.Accessibility;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import com.gitlab.cdagaming.unilib.utils.KeyUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedTextControl;
@@ -136,7 +137,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                         "Controls",
                         () -> openScreen(
                                 new ControlsGui(
-                                        CraftPresence.KEYBINDINGS,
+                                        KeyUtils.INSTANCE,
                                         this::markAsChanged,
                                         "key.craftpresence.category"
                                 )
@@ -154,7 +155,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
     protected void syncRenderStates() {
         super.syncRenderStates();
 
-        controlsButton.setControlEnabled(CraftPresence.KEYBINDINGS.areKeysRegistered());
+        controlsButton.setControlEnabled(KeyUtils.INSTANCE.areKeysRegistered());
         proceedButton.setControlEnabled(!StringUtils.isNullOrEmpty(languageIdText.getControlMessage()));
     }
 
