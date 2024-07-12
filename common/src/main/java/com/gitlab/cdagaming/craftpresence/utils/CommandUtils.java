@@ -421,6 +421,21 @@ public class CommandUtils {
         updateModes();
         setupClassScan(false);
 
+        addModule(Constants.MOD_ID, new TranslationManager(
+                CraftPresence.instance,
+                Constants.TRANSLATOR
+                        .setStripColors(
+                                CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors
+                        )
+                        .setStripFormatting(
+                                CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting
+                        )
+                        .setLanguageSupplier((defaultLanguage) -> StringUtils.getOrDefault(
+                                ModUtils.getLanguage(CraftPresence.CONFIG.accessibilitySettings.languageId),
+                                defaultLanguage
+                        ))
+        ));
+
         for (Map.Entry<String, Pack> pack : packModules.entrySet()) {
             final String type = pack.getKey();
             final Pack data = pack.getValue();
@@ -487,22 +502,6 @@ public class CommandUtils {
     public static void onTick() {
         if (!Constants.HAS_GAME_LOADED) {
             Constants.HAS_GAME_LOADED = GameUtils.isLoaded(CraftPresence.instance);
-            if (Constants.HAS_GAME_LOADED) {
-                addModule(Constants.MOD_ID, new TranslationManager(
-                        CraftPresence.instance,
-                        Constants.TRANSLATOR
-                                .setStripColors(
-                                        CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationColors
-                                )
-                                .setStripFormatting(
-                                        CraftPresence.CONFIG != null && CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting
-                                )
-                                .setLanguageSupplier((defaultLanguage) -> StringUtils.getOrDefault(
-                                        ModUtils.getLanguage(null),
-                                        CraftPresence.CONFIG != null ? CraftPresence.CONFIG.accessibilitySettings.languageId : defaultLanguage
-                                ))
-                ));
-            }
         }
         CraftPresence.CLIENT.updatePresence();
     }
