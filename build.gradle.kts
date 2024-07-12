@@ -12,7 +12,7 @@ plugins {
     id("xyz.wagyourtail.jvmdowngrader") version "0.8.2"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
     id("io.github.goooler.shadow") version "8.1.7" apply false
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.5" apply false
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.6" apply false
 }
 
 /**
@@ -154,8 +154,8 @@ subprojects {
         maven("https://s01.oss.sonatype.org/content/repositories/releases")
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
         // HypherionMC Mavens
-        maven("https://maven.firstdarkdev.xyz/releases")
-        maven("https://maven.firstdarkdev.xyz/snapshots")
+        maven("https://maven.firstdark.dev/releases")
+        maven("https://maven.firstdark.dev/snapshots")
         // Mod Integration Mavens
         if (isModern) {
             maven("https://maven.terraformersmc.com/releases/") {

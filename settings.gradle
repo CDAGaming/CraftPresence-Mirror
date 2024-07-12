@@ -14,8 +14,8 @@ pluginManagement {
         maven { url "https://maven.lenni0451.net/releases/" }
         maven { url "https://maven.lenni0451.net/snapshots/" }
         // HypherionMC Mavens
-        maven { url "https://maven.firstdarkdev.xyz/releases" }
-        maven { url "https://maven.firstdarkdev.xyz/snapshots" }
+        maven { url "https://maven.firstdark.dev/releases" }
+        maven { url "https://maven.firstdark.dev/snapshots" }
         // Gradle Plugin Portal
         gradlePluginPortal() {
             content {

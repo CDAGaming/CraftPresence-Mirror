@@ -13,7 +13,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Unimined (`1.2.14` -> `1.3.1`)
     * JVMDowngrader (`0.7.2` -> `0.8.2`)
     * Gradle (`8.8` -> `8.9`)
-    * ModPublisher (`2.1.4` -> `2.1.5`)
+    * ModPublisher (`2.1.4` -> `2.1.6`)
     * ModFusioner (`1.0.12` -> `removed`)
     * UniLib (`local` -> `1.0.0`)
 * Several packaging changes have been made for ease-of-access and for future development:
