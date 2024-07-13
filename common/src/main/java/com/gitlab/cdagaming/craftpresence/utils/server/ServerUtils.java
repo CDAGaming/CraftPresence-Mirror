@@ -49,6 +49,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.server.integrated.IntegratedServer;
 
 import java.util.List;
 import java.util.Map;
@@ -161,6 +162,10 @@ public class ServerUtils implements ExtendedModule {
      */
     private int serverIndex = 0;
     /**
+     * The Current Integrated Server Data and Info
+     */
+    private IntegratedServer currentIntegratedData;
+    /**
      * The Current Server Connection Data and Info
      */
     private ServerData currentServerData;
@@ -211,6 +216,7 @@ public class ServerUtils implements ExtendedModule {
         currentServer_MOTD = null;
         currentServer_MOTD_Lines.clear();
         currentServer_Name = null;
+        currentIntegratedData = null;
         currentServerData = null;
         currentRealmData = null;
         currentConnection = null;
@@ -265,6 +271,7 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
+        final IntegratedServer newIntegratedData = CraftPresence.instance.getIntegratedServer();
         final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
         final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
 
@@ -285,7 +292,7 @@ public class ServerUtils implements ExtendedModule {
             if (isOnRealm) {
                 processRealmData(newServerData, newConnection);
             } else {
-                processServerData(newServerData, newConnection);
+                processServerData(newIntegratedData, newServerData, newConnection);
             }
         }
 
@@ -304,6 +311,7 @@ public class ServerUtils implements ExtendedModule {
      *
      * @param newLANStatus          If the Current Server is on a LAN-Based Connection (A Local Network Game)
      * @param newSinglePlayerStatus If the Current Server is a Local Single-Player Connection
+     * @param newIntegratedData     The Integrated Server Connection Data and Info
      * @param newServerData         The Current Server Connection Data and Info
      * @param newConnection         The Player's Current Connection Data
      * @param newServer_IP          The IP Address of the Current Server the Player is in
@@ -314,11 +322,14 @@ public class ServerUtils implements ExtendedModule {
      * @param newPlayerList         The Current Player Map, if available
      */
     private void processData(final boolean newLANStatus, final boolean newSinglePlayerStatus,
-                             final ServerData newServerData, final NetHandlerPlayClient newConnection,
+                             final IntegratedServer newIntegratedData, final ServerData newServerData, final NetHandlerPlayClient newConnection,
                              final String newServer_IP, final String newServer_MOTD, final String newServer_Name,
                              final int newCurrentPlayers, final int newMaxPlayers, final List<NetworkPlayerInfo> newPlayerList) {
-        if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer || ((newServerData != null && !newServerData.equals(currentServerData)) ||
-                (newServerData == null && currentServerData != null)) ||
+        if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer ||
+                ((newIntegratedData != null && !newIntegratedData.equals(currentIntegratedData)) ||
+                        (newIntegratedData == null && currentIntegratedData != null)) ||
+                ((newServerData != null && !newServerData.equals(currentServerData)) ||
+                        (newServerData == null && currentServerData != null)) ||
                 (newConnection != null && !newConnection.equals(currentConnection)) || !newServer_IP.equals(currentServer_IP) ||
                 (!StringUtils.isNullOrEmpty(newServer_MOTD) && !newServer_MOTD.equals(currentServer_MOTD)) ||
                 (!StringUtils.isNullOrEmpty(newServer_Name) && !newServer_Name.equals(currentServer_Name))) {
@@ -329,6 +340,7 @@ public class ServerUtils implements ExtendedModule {
                 currentServer_MOTD_Lines = StringUtils.splitTextByNewLine(newServer_MOTD);
             }
             currentServer_Name = newServer_Name;
+            currentIntegratedData = newIntegratedData;
             currentServerData = newServerData;
             currentConnection = newConnection;
             isOnLAN = newLANStatus;
@@ -385,6 +397,23 @@ public class ServerUtils implements ExtendedModule {
     }
 
     /**
+     * Retrieve the server message of the day from the specified data
+     *
+     * @param newIntegratedData The Integrated Server Connection Data and Info
+     * @param newServerData     The Current Server Connection Data and Info
+     * @return the found server message of the day
+     */
+    private String getServerMotd(final IntegratedServer newIntegratedData, final ServerData newServerData) {
+        String result = "";
+        if (newServerData != null && newServerData.serverMOTD != null) {
+            result = newServerData.serverMOTD;
+        } else if (newIntegratedData != null && newIntegratedData.getMOTD() != null) {
+            result = newIntegratedData.getMOTD();
+        }
+        return !isInvalidMotd(result) ? StringUtils.stripAllFormatting(result) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+    }
+
+    /**
      * Process Realm Data from the supplied arguments
      *
      * @param newServerData The Current Server Connection Data and Info
@@ -400,7 +429,7 @@ public class ServerUtils implements ExtendedModule {
                 StringUtils.stripAllFormatting(currentRealmData.getDescription()) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
 
         processData(false, false,
-                newServerData, newConnection,
+                null, newServerData, newConnection,
                 newServer_IP, newServer_MOTD, newServer_Name,
                 newCurrentPlayers, 10,
                 newPlayerList
@@ -410,23 +439,23 @@ public class ServerUtils implements ExtendedModule {
     /**
      * Process Server Data from the supplied arguments
      *
-     * @param newServerData The Current Server Connection Data and Info
-     * @param newConnection The Player's Current Connection Data
+     * @param newIntegratedData The Integrated Server Connection Data and Info
+     * @param newServerData     The Current Server Connection Data and Info
+     * @param newConnection     The Player's Current Connection Data
      */
-    private void processServerData(final ServerData newServerData, final NetHandlerPlayClient newConnection) {
+    private void processServerData(final IntegratedServer newIntegratedData, final ServerData newServerData, final NetHandlerPlayClient newConnection) {
         final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
         final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
         final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
-        final boolean newSinglePlayerStatus = CraftPresence.instance.isSingleplayer();
-        final boolean newLANStatus = (newSinglePlayerStatus && newCurrentPlayers > 1) || (newServerData != null && newServerData.isOnLAN());
+        final boolean newLANStatus = (newIntegratedData != null && newIntegratedData.getPublic()) || (newServerData != null && newServerData.isOnLAN());
+        final boolean newSinglePlayerStatus = !newLANStatus && CraftPresence.instance.isSingleplayer();
 
         final String newServer_IP = getServerAddress(newServerData);
         final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
-        final String newServer_MOTD = !newLANStatus && !newSinglePlayerStatus &&
-                newServerData != null && !isInvalidMotd(newServerData.serverMOTD) ? StringUtils.stripAllFormatting(newServerData.serverMOTD) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
+        final String newServer_MOTD = getServerMotd(newIntegratedData, newServerData);
 
         processData(newLANStatus, newSinglePlayerStatus,
-                newServerData, newConnection,
+                newIntegratedData, newServerData, newConnection,
                 newServer_IP, newServer_MOTD, newServer_Name,
                 newCurrentPlayers, newMaxPlayers,
                 newPlayerList
@@ -606,7 +635,7 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("server.default.icon", () -> CraftPresence.CONFIG.serverSettings.fallbackServerIcon);
 
         syncArgument("server.message", () -> {
-            final boolean inServer = !isOnRealm && !isOnSinglePlayer && currentServerData != null;
+            final boolean inServer = !isOnRealm && !isOnSinglePlayer && (isOnLAN || currentServerData != null);
             if (inServer) {
                 if (isOnLAN) {
                     final ModuleData primaryData = CraftPresence.CONFIG.statusMessages.lanData;
@@ -631,7 +660,7 @@ public class ServerUtils implements ExtendedModule {
             return null;
         });
         syncArgument("server.icon", () -> {
-            final boolean inServer = !isOnRealm && !isOnSinglePlayer && currentServerData != null;
+            final boolean inServer = !isOnRealm && !isOnSinglePlayer && (isOnLAN || currentServerData != null);
             String currentServerIcon = "";
             ModuleData resultData = null;
             if (inServer) {
@@ -693,7 +722,7 @@ public class ServerUtils implements ExtendedModule {
             if (!isInUse()) return null;
 
             ModuleData resultData = null;
-            if (!isOnRealm && !isOnSinglePlayer && currentServerData != null) {
+            if (!isOnRealm && !isOnSinglePlayer && (isOnLAN || currentServerData != null)) {
                 if (isOnLAN) {
                     resultData = CraftPresence.CONFIG.statusMessages.lanData;
                 } else {
@@ -734,7 +763,7 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public void updatePresence() {
-        if (!isOnSinglePlayer && currentServerData != null) {
+        if (!isOnSinglePlayer && (isOnLAN || currentServerData != null)) {
             if (!hasInitializedServer) {
                 initServerArgs();
                 hasInitializedServer = true;
