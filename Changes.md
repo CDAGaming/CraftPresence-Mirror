@@ -25,6 +25,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Removed several config options that were not applicable to CraftPresence or were redundant metadata:
     * From `main`: `_README`, `_SOURCE`
     * From `accessibility`: `tooltipBackground`, `tooltipBorder`, `guiBackground`, `altGuiBackground`, `renderTooltips`
+* Improved LAN support for the `server` module
+    * Several fixes have been made for "hosting" LAN servers alongside fixes for LAN in general
+    * This also effects Essential Mod support, given the similar networking tech involved
 * Misc. Optimizations and Performance Improvements across several APIs
     * A large portion of CraftPresence's APIs have now branched off into [UniLib](https://gitlab.com/CDAGaming/UniLib),
       now being served as a required dependency for CraftPresence
@@ -45,6 +48,7 @@ to [UniLib](https://gitlab.com/CDAGaming/UniLib)_
 * Fixed inconsistent world data retrieval on some Legacy MC versions compared to others
 * Fixed [an issue](https://gitlab.com/CDAGaming/CraftPresence/-/issues/224) where a crash can occur while registering
   Translation Listeners
+* Fixed potential issues where `server.players.current` could be above `server.players.max`
 
 ___
 

@@ -423,6 +423,12 @@ public class ServerUtils implements ExtendedModule {
         final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
         final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
 
+        // Setup Player Maximum (Hardcoded for Realms)
+        int newMaxPlayers = 10;
+        if (newMaxPlayers < newCurrentPlayers) {
+            newMaxPlayers = newCurrentPlayers + 1;
+        }
+
         final String newServer_IP = getServerAddress(newServerData);
         final String newServer_Name = currentRealmData.getName();
         final String newServer_MOTD = !isInvalidMotd(currentRealmData.getDescription()) ?
@@ -431,7 +437,7 @@ public class ServerUtils implements ExtendedModule {
         processData(false, false,
                 null, newServerData, newConnection,
                 newServer_IP, newServer_MOTD, newServer_Name,
-                newCurrentPlayers, 10,
+                newCurrentPlayers, newMaxPlayers,
                 newPlayerList
         );
     }
@@ -446,9 +452,21 @@ public class ServerUtils implements ExtendedModule {
     private void processServerData(final IntegratedServer newIntegratedData, final ServerData newServerData, final NetHandlerPlayClient newConnection) {
         final List<NetworkPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.getPlayerInfoMap()) : StringUtils.newArrayList();
         final int newCurrentPlayers = newConnection != null ? newConnection.getPlayerInfoMap().size() : 1;
-        final int newMaxPlayers = newConnection != null && newConnection.currentServerMaxPlayers >= newCurrentPlayers ? newConnection.currentServerMaxPlayers : newCurrentPlayers + 1;
+
         final boolean newLANStatus = (newIntegratedData != null && newIntegratedData.getPublic()) || (newServerData != null && newServerData.isOnLAN());
         final boolean newSinglePlayerStatus = !newLANStatus && CraftPresence.instance.isSingleplayer();
+
+        // Setup Player Maximum (Hardcoded for LAN)
+        int newMaxPlayers = 0;
+        if (newLANStatus) {
+            newMaxPlayers = 8;
+        } else if (newConnection != null) {
+            newMaxPlayers = newConnection.currentServerMaxPlayers;
+        }
+
+        if (newMaxPlayers < newCurrentPlayers) {
+            newMaxPlayers = newCurrentPlayers + 1;
+        }
 
         final String newServer_IP = getServerAddress(newServerData);
         final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
