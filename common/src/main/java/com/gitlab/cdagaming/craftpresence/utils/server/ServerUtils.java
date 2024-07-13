@@ -219,8 +219,8 @@ public class ServerUtils implements ExtendedModule {
         final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
-            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "ac");
-            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "ad");
+            String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "ab");
+            int retrievedPort = (Integer) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverPort", "field_9233_W", "ac");
             newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerData(retrievedIP, retrievedPort) : null;
         } catch (Exception ex) {
             newServerData = null;
@@ -363,23 +363,14 @@ public class ServerUtils implements ExtendedModule {
      * @param newConnection The Player's Current Connection Data
      */
     private void processServerData(final ServerData newServerData, final NetClientHandler newConnection) {
-        final List<String> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.field_35786_c) : StringUtils.newArrayList();
-        final int newCurrentPlayers = newConnection != null ? newConnection.field_35786_c.size() : 1;
+        final List<String> newPlayerList = StringUtils.newArrayList();
+        final int newCurrentPlayers = 1;
 
         final boolean newLANStatus = false;
         final boolean newSinglePlayerStatus = !newLANStatus && !CraftPresence.instance.isMultiplayerWorld();
 
         // Setup Player Maximum (Hardcoded for LAN)
-        int newMaxPlayers = 0;
-        if (newLANStatus) {
-            newMaxPlayers = 8;
-        } else if (newConnection != null) {
-            newMaxPlayers = newConnection.field_35785_d;
-        }
-
-        if (newMaxPlayers < newCurrentPlayers) {
-            newMaxPlayers = newCurrentPlayers + 1;
-        }
+        final int newMaxPlayers = newCurrentPlayers + 1;
 
         final String newServer_IP = getServerAddress(newServerData);
         final String newServer_Name = newServerData != null && !isInvalidName(newServerData.serverName) ? newServerData.serverName : CraftPresence.CONFIG.serverSettings.fallbackServerName;
