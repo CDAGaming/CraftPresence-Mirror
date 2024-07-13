@@ -48,7 +48,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.server.IntegratedServer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.realms.RealmsScreen;
 
 import java.util.List;
@@ -570,8 +570,8 @@ public class ServerUtils implements ExtendedModule {
                 // Stub Server Data if not pinged
                 serverData.pinged = true;
                 serverData.ping = -2L;
-                serverData.motd = TextComponent.EMPTY;
-                serverData.status = TextComponent.EMPTY;
+                serverData.motd = CommonComponents.EMPTY;
+                serverData.status = CommonComponents.EMPTY;
             }
 
             final Screen currentScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
