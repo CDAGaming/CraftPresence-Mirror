@@ -35,7 +35,6 @@ import net.minecraft.src.WorldProvider;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -188,35 +187,19 @@ public class DimensionUtils implements ExtendedModule {
         List<WorldProvider> dimensionTypes = StringUtils.newArrayList();
 
         if (dimensionTypes.isEmpty()) {
-            // Fallback 1: Use Reflected Dimension Types
-            Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(FileUtils.loadClass("forge.DimensionManager"), null, "providers");
-            if (reflectedDimensionTypes != null) {
-                for (Object objectType : reflectedDimensionTypes.values()) {
+            // Use Manual Class Lookup
+            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
+                if (classInfo != null) {
                     try {
-                        WorldProvider type = (objectType instanceof WorldProvider) ? (WorldProvider) objectType : null;
-
-                        if (type != null && !dimensionTypes.contains(type)) {
-                            dimensionTypes.add(type);
+                        Class<?> classObj = FileUtils.loadClass(classInfo.getName());
+                        if (classObj != null) {
+                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
+                            if (!dimensionTypes.contains(providerObj)) {
+                                dimensionTypes.add(providerObj);
+                            }
                         }
                     } catch (Throwable ex) {
                         printException(ex);
-                    }
-                }
-            } else if (FileUtils.isClassGraphEnabled()) {
-                // Fallback 2: Use Manual Class Lookup
-                for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
-                    if (classInfo != null) {
-                        try {
-                            Class<?> classObj = FileUtils.loadClass(classInfo.getName());
-                            if (classObj != null) {
-                                WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
-                                if (!dimensionTypes.contains(providerObj)) {
-                                    dimensionTypes.add(providerObj);
-                                }
-                            }
-                        } catch (Throwable ex) {
-                            printException(ex);
-                        }
                     }
                 }
             }
@@ -270,7 +253,7 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
+        return MappingUtils.areMappingsLoaded() && FileUtils.isClassGraphEnabled() && FileUtils.canScanClasses();
     }
 
     @Override
