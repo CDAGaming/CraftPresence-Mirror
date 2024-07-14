@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.core.impl.discord.CompiledPresence;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
@@ -98,45 +99,9 @@ public class DiscordUtils {
      */
     public DiscordStatus STATUS = DiscordStatus.Closed;
     /**
-     * The Current Message tied to the Party/Game Status Field of the RPC
+     * The current compiled Presence Data
      */
-    public String GAME_STATE;
-    /**
-     * The Current Message tied to the current action / Details Field of the RPC
-     */
-    public String DETAILS;
-    /**
-     * The Current Small Image Asset being displayed in the RPC, if any
-     */
-    public DiscordAsset SMALL_IMAGE_ASSET;
-    /**
-     * The Current Small Image Icon being displayed in the RPC, if any
-     */
-    public String SMALL_IMAGE_KEY;
-    /**
-     * The Current Raw Small Image Icon being displayed in the RPC, if any
-     */
-    public String SMALL_IMAGE_RAW;
-    /**
-     * The Current Message tied to the Small Image, if any
-     */
-    public String SMALL_IMAGE_TEXT;
-    /**
-     * The Current Large Image Asset being displayed in the RPC, if any
-     */
-    public DiscordAsset LARGE_IMAGE_ASSET;
-    /**
-     * The Current Large Image Icon being displayed in the RPC, if any
-     */
-    public String LARGE_IMAGE_KEY;
-    /**
-     * The Current Raw Large Image Icon being displayed in the RPC, if any
-     */
-    public String LARGE_IMAGE_RAW;
-    /**
-     * The Current Message tied to the Large Image, if any
-     */
-    public String LARGE_IMAGE_TEXT;
+    public CompiledPresence PRESENCE;
     /**
      * Whether placeholder previews can be shows when generating argument messages
      */
@@ -182,10 +147,6 @@ public class DiscordUtils {
      */
     public int MAX_CONNECTION_ATTEMPTS;
     /**
-     * The Current Starting Unix Timestamp from Epoch, used for Elapsed Time
-     */
-    public long START_TIMESTAMP;
-    /**
      * The Party Session ID that's tied to the RPC, if any
      */
     public String PARTY_ID;
@@ -207,12 +168,6 @@ public class DiscordUtils {
      */
     public String JOIN_SECRET;
     /**
-     * The Current Ending Unix Timestamp from Epoch
-     * <p>
-     * Used for Time Until if combined with {@link DiscordUtils#START_TIMESTAMP}
-     */
-    public long END_TIMESTAMP;
-    /**
      * The Current Match Secret Key tied to the RPC, if any
      */
     public String MATCH_SECRET;
@@ -220,10 +175,6 @@ public class DiscordUtils {
      * The Current Spectate Secret Key tied to the RPC, if any
      */
     public String SPECTATE_SECRET;
-    /**
-     * The current button array tied to the RPC, if any
-     */
-    public JsonArray BUTTONS = new JsonArray();
     /**
      * The Instance Code attached to the RPC, if any
      */
@@ -1516,15 +1467,15 @@ public class DiscordUtils {
      * Clears all Data from the RPC Presence Fields
      */
     public void clearPresenceData() {
-        GAME_STATE = "";
-        DETAILS = "";
-        LARGE_IMAGE_ASSET = null;
-        LARGE_IMAGE_KEY = "";
-        LARGE_IMAGE_TEXT = "";
-        SMALL_IMAGE_ASSET = null;
-        SMALL_IMAGE_KEY = "";
-        SMALL_IMAGE_TEXT = "";
-        BUTTONS = new JsonArray();
+        PRESENCE = new CompiledPresence(
+                "", "",
+                "", "",
+                null, null,
+                "", "",
+                "", "",
+                0L, 0L,
+                new JsonArray()
+        );
 
         clearPartyData();
     }
@@ -1562,55 +1513,62 @@ public class DiscordUtils {
     }
 
     /**
-     * Builds a New Instance of {@link RichPresence} based on Queued Data
+     * Compiles Presence Data based on Queued Data
      *
      * @param configData The {@link PresenceData} to be interpreted
-     * @return A New Instance of {@link RichPresence}
+     * @param useAsMain  Whether the compiled data should be used as the main data
+     * @return A copy of the {@link CompiledPresence} alongside A New Instance of {@link RichPresence}
      */
-    public RichPresence buildRichPresence(final PresenceData configData) {
+    public Pair<CompiledPresence, RichPresence> compilePresence(final PresenceData configData, final boolean useAsMain) {
         // Do not compile Presence while offline or in-progress of connecting
-        if (!isAvailable() || !isConnected() || connectThreadActive || configData == null) {
-            return null;
+        if (useAsMain) {
+            if (!isAvailable() || !isConnected() || connectThreadActive || configData == null) {
+                return null;
+            }
         }
 
         final boolean formatWords = canFormatWords.get();
 
         // Format Presence based on Arguments available in argumentData
-        DETAILS = StringUtils.formatWord(getResult(configData.details, "details"), formatWords, true, 1);
-        GAME_STATE = StringUtils.formatWord(getResult(configData.gameState, "gameState"), formatWords, true, 1);
+        String details = StringUtils.formatWord(getResult(configData.details, "details"), formatWords, true, 1);
+        String state = StringUtils.formatWord(getResult(configData.gameState, "gameState"), formatWords, true, 1);
 
-        LARGE_IMAGE_RAW = getResult(configData.largeImageKey, "largeImageKey");
-        SMALL_IMAGE_RAW = getResult(configData.smallImageKey, "smallImageKey");
+        final String rawLargeImage = getResult(configData.largeImageKey, "largeImageKey");
+        final String rawSmallImage = getResult(configData.smallImageKey, "smallImageKey");
 
-        LARGE_IMAGE_ASSET = DiscordAssetUtils.get(LARGE_IMAGE_RAW);
-        SMALL_IMAGE_ASSET = DiscordAssetUtils.get(SMALL_IMAGE_RAW);
+        final DiscordAsset largeAsset = DiscordAssetUtils.get(rawLargeImage);
+        final DiscordAsset smallAsset = DiscordAssetUtils.get(rawSmallImage);
 
-        LARGE_IMAGE_KEY = LARGE_IMAGE_ASSET != null ? (LARGE_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
-                getResult(LARGE_IMAGE_ASSET.getUrl()) : LARGE_IMAGE_ASSET.getName()) : LARGE_IMAGE_RAW;
-        SMALL_IMAGE_KEY = SMALL_IMAGE_ASSET != null ? (SMALL_IMAGE_ASSET.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
-                getResult(SMALL_IMAGE_ASSET.getUrl()) : SMALL_IMAGE_ASSET.getName()) : SMALL_IMAGE_RAW;
+        String largeImageKey = largeAsset != null ? (largeAsset.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
+                getResult(largeAsset.getUrl()) : largeAsset.getName()) : rawLargeImage;
+        String smallImageKey = smallAsset != null ? (smallAsset.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
+                getResult(smallAsset.getUrl()) : smallAsset.getName()) : rawSmallImage;
 
-        LARGE_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), formatWords, true, 1);
-        SMALL_IMAGE_TEXT = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), formatWords, true, 1);
+        String largeImageText = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), formatWords, true, 1);
+        String smallImageText = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), formatWords, true, 1);
 
         final Pair<Boolean, Long> startData = StringUtils.getValidLong(
                 getResult(configData.startTimestamp, "startTimestamp")
         );
+        long startTimestamp, endTimestamp;
         if (startData.getFirst()) {
-            START_TIMESTAMP = startData.getSecond();
+            startTimestamp = startData.getSecond();
             final Pair<Boolean, Long> endData = StringUtils.getValidLong(
                     getResult(configData.endTimestamp, "endTimestamp")
             );
-            END_TIMESTAMP = endData.getFirst() ? endData.getSecond() : 0;
+            endTimestamp = endData.getFirst() ? endData.getSecond() : 0;
         } else {
-            START_TIMESTAMP = 0;
-            END_TIMESTAMP = 0;
+            startTimestamp = 0;
+            endTimestamp = 0;
         }
 
         // Format Buttons Array based on Config Value
-        BUTTONS = new JsonArray();
-        if (StringUtils.isNullOrEmpty(JOIN_SECRET) && StringUtils.isNullOrEmpty(MATCH_SECRET) && StringUtils.isNullOrEmpty(SPECTATE_SECRET)) {
-            // Only add Buttons if Discord is not overriding it
+        final JsonArray buttons = new JsonArray();
+        if (!useAsMain || (StringUtils.isNullOrEmpty(JOIN_SECRET) &&
+                StringUtils.isNullOrEmpty(MATCH_SECRET) &&
+                StringUtils.isNullOrEmpty(SPECTATE_SECRET)
+        )) {
+            // Only add Buttons if Discord is not overriding it, or not compiling for main
             for (Map.Entry<String, Button> buttonElement : configData.buttons.entrySet()) {
                 final JsonObject buttonObj = new JsonObject();
                 final String overrideId = buttonElement.getKey();
@@ -1631,43 +1589,91 @@ public class DiscordUtils {
                     if (!StringUtils.isNullOrEmpty(label) && !StringUtils.isNullOrEmpty(url)) {
                         buttonObj.addProperty("label", label);
                         buttonObj.addProperty("url", url);
-                        BUTTONS.add(buttonObj);
+                        buttons.add(buttonObj);
                     }
                 }
             }
         }
 
-        final RichPresence newRPCData = new RichPresence.Builder()
-                .setState(GAME_STATE = sanitizePlaceholders(GAME_STATE, 128))
-                .setDetails(DETAILS = sanitizePlaceholders(DETAILS, 128))
-                .setStartTimestamp(START_TIMESTAMP)
-                .setEndTimestamp(END_TIMESTAMP)
-                .setLargeImage(LARGE_IMAGE_KEY = sanitizePlaceholders(LARGE_IMAGE_KEY, 256),
-                        LARGE_IMAGE_TEXT = sanitizePlaceholders(LARGE_IMAGE_TEXT, 128))
-                .setSmallImage(SMALL_IMAGE_KEY = sanitizePlaceholders(SMALL_IMAGE_KEY, 256),
-                        SMALL_IMAGE_TEXT = sanitizePlaceholders(SMALL_IMAGE_TEXT, 128))
-                .setParty(
-                        PARTY_ID = sanitizePlaceholders(PARTY_ID, 128),
-                        PARTY_SIZE, PARTY_MAX,
-                        PARTY_PRIVACY.ordinal()
-                )
-                .setMatchSecret(MATCH_SECRET = sanitizePlaceholders(MATCH_SECRET, 128))
-                .setJoinSecret(JOIN_SECRET = sanitizePlaceholders(JOIN_SECRET, 128))
-                .setSpectateSecret(SPECTATE_SECRET = sanitizePlaceholders(SPECTATE_SECRET, 128))
-                .setButtons(BUTTONS)
-                .build();
+        final RichPresence.Builder newRPCData = new RichPresence.Builder()
+                .setState(state = sanitizePlaceholders(state, 128))
+                .setDetails(details = sanitizePlaceholders(details, 128))
+                .setStartTimestamp(startTimestamp)
+                .setEndTimestamp(endTimestamp)
+                .setLargeImage(largeImageKey = sanitizePlaceholders(largeImageKey, 256),
+                        largeImageText = sanitizePlaceholders(largeImageText, 128))
+                .setSmallImage(smallImageKey = sanitizePlaceholders(smallImageKey, 256),
+                        smallImageText = sanitizePlaceholders(smallImageText, 128))
+                .setButtons(buttons);
 
         // Format Data to UTF_8 after Sent to RPC (RPC has its own Encoding)
-        GAME_STATE = StringUtils.convertString(GAME_STATE, "UTF-8", false);
-        DETAILS = StringUtils.convertString(DETAILS, "UTF-8", false);
+        state = StringUtils.convertString(state, "UTF-8", false);
+        details = StringUtils.convertString(details, "UTF-8", false);
 
-        LARGE_IMAGE_KEY = StringUtils.convertString(LARGE_IMAGE_KEY, "UTF-8", false);
-        SMALL_IMAGE_KEY = StringUtils.convertString(SMALL_IMAGE_KEY, "UTF-8", false);
+        largeImageKey = StringUtils.convertString(largeImageKey, "UTF-8", false);
+        smallImageKey = StringUtils.convertString(smallImageKey, "UTF-8", false);
 
-        LARGE_IMAGE_TEXT = StringUtils.convertString(LARGE_IMAGE_TEXT, "UTF-8", false);
-        SMALL_IMAGE_TEXT = StringUtils.convertString(SMALL_IMAGE_TEXT, "UTF-8", false);
+        largeImageText = StringUtils.convertString(largeImageText, "UTF-8", false);
+        smallImageText = StringUtils.convertString(smallImageText, "UTF-8", false);
 
-        return newRPCData;
+        final CompiledPresence data = new CompiledPresence(
+                details, state,
+                rawLargeImage, rawSmallImage,
+                largeAsset, smallAsset,
+                largeImageKey, smallImageKey,
+                largeImageText, smallImageText,
+                startTimestamp, endTimestamp,
+                buttons
+        );
+
+        if (useAsMain) {
+            // Apply Data to Global Fields
+            PRESENCE = data;
+
+            // Assign Secret Data to the RPC Builder
+            newRPCData
+                    .setParty(
+                            PARTY_ID = sanitizePlaceholders(PARTY_ID, 128),
+                            PARTY_SIZE, PARTY_MAX,
+                            PARTY_PRIVACY.ordinal()
+                    )
+                    .setMatchSecret(MATCH_SECRET = sanitizePlaceholders(MATCH_SECRET, 128))
+                    .setJoinSecret(JOIN_SECRET = sanitizePlaceholders(JOIN_SECRET, 128))
+                    .setSpectateSecret(SPECTATE_SECRET = sanitizePlaceholders(SPECTATE_SECRET, 128));
+        }
+
+        return new Pair<>(data, newRPCData.build());
+    }
+
+    /**
+     * Compiles Presence Data based on Queued Data
+     *
+     * @param configData The {@link PresenceData} to be interpreted
+     * @return A copy of the {@link CompiledPresence} alongside A New Instance of {@link RichPresence}
+     */
+    public CompiledPresence compilePresence(final PresenceData configData) {
+        final Pair<CompiledPresence, RichPresence> data = compilePresence(configData, false);
+        return data == null ? null : data.getFirst();
+    }
+
+    /**
+     * Compiles Presence Data based on Queued Data
+     *
+     * @return A copy of the {@link CompiledPresence} alongside A New Instance of {@link RichPresence}
+     */
+    public CompiledPresence compilePresence() {
+        return compilePresence(getPresenceData());
+    }
+
+    /**
+     * Builds a New Instance of {@link RichPresence} based on Queued Data
+     *
+     * @param configData The {@link PresenceData} to be interpreted
+     * @return A New Instance of {@link RichPresence}
+     */
+    public RichPresence buildRichPresence(final PresenceData configData) {
+        final Pair<CompiledPresence, RichPresence> data = compilePresence(configData, true);
+        return data == null ? null : data.getSecond();
     }
 
     /**

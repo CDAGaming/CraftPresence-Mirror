@@ -405,25 +405,25 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                             }
                         } else if (executionCommandArgs[1].equalsIgnoreCase("currentData")) {
-                            if (CraftPresence.CLIENT.isAvailable()) {
+                            if (CraftPresence.CLIENT.isAvailable() && CraftPresence.CLIENT.PRESENCE != null) {
                                 executionString = Constants.TRANSLATOR.translate("craftpresence.command.current_data",
                                         CraftPresence.CLIENT.CURRENT_USER.getEffectiveName(),
-                                        StringUtils.convertString(CraftPresence.CLIENT.DETAILS, "UTF-8", true),
-                                        StringUtils.convertString(CraftPresence.CLIENT.GAME_STATE, "UTF-8", true),
-                                        CraftPresence.CLIENT.START_TIMESTAMP,
+                                        StringUtils.convertString(CraftPresence.CLIENT.PRESENCE.details(), "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.PRESENCE.state(), "UTF-8", true),
+                                        CraftPresence.CLIENT.PRESENCE.startTimestamp(),
                                         CraftPresence.CLIENT.CLIENT_ID,
-                                        StringUtils.convertString(CraftPresence.CLIENT.LARGE_IMAGE_KEY, "UTF-8", true),
-                                        StringUtils.convertString(CraftPresence.CLIENT.LARGE_IMAGE_TEXT, "UTF-8", true),
-                                        StringUtils.convertString(CraftPresence.CLIENT.SMALL_IMAGE_KEY, "UTF-8", true),
-                                        StringUtils.convertString(CraftPresence.CLIENT.SMALL_IMAGE_TEXT, "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.PRESENCE.largeImageKey(), "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.PRESENCE.largeImageText(), "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.PRESENCE.smallImageKey(), "UTF-8", true),
+                                        StringUtils.convertString(CraftPresence.CLIENT.PRESENCE.smallImageText(), "UTF-8", true),
                                         CraftPresence.CLIENT.PARTY_ID,
                                         CraftPresence.CLIENT.PARTY_SIZE,
                                         CraftPresence.CLIENT.PARTY_MAX,
                                         CraftPresence.CLIENT.PARTY_PRIVACY.name(),
                                         CraftPresence.CLIENT.JOIN_SECRET,
-                                        CraftPresence.CLIENT.END_TIMESTAMP,
+                                        CraftPresence.CLIENT.PRESENCE.endTimestamp(),
                                         CraftPresence.CLIENT.MATCH_SECRET, CraftPresence.CLIENT.SPECTATE_SECRET,
-                                        CraftPresence.CLIENT.BUTTONS.toString(),
+                                        CraftPresence.CLIENT.PRESENCE.buttons().toString(),
                                         CraftPresence.CLIENT.INSTANCE
                                 );
                             } else {
