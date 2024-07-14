@@ -39,7 +39,6 @@ import com.gitlab.cdagaming.unilib.UniLib;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
-import com.gitlab.cdagaming.unilib.utils.KeyUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.OSUtils;
@@ -98,6 +97,10 @@ public class CraftPresence {
      */
     public static Minecraft instance;
     /**
+     * The {@link ScheduleUtils} Instance for this Mod
+     */
+    public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);
+    /**
      * The Minecraft Instance Session attached to this Mod
      */
     public static Session session;
@@ -121,10 +124,6 @@ public class CraftPresence {
      * The {@link Config} Instance for this Mod
      */
     public static Config CONFIG;
-    /**
-     * The {@link ScheduleUtils} Instance for this Mod
-     */
-    public static final ScheduleUtils SCHEDULER = new ScheduleUtils(CommandUtils::onTick);
     /**
      * Whether module data for the Mod has completed its Initialization Phase
      */
