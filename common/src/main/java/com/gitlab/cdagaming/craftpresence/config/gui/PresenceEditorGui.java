@@ -29,16 +29,24 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
+import com.gitlab.cdagaming.craftpresence.core.impl.discord.CompiledPresence;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
+import com.gitlab.cdagaming.unilib.core.impl.screen.ScreenConstants;
+import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
+import com.gitlab.cdagaming.unilib.utils.gui.widgets.TexturedWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import io.github.cdagaming.unicore.utils.UrlUtils;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
@@ -48,6 +56,14 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
     private TextWidget detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
+
+    // VISUALIZER DATA
+    private final List<ExtendedButtonControl> buttons = StringUtils.newArrayList();
+    private final List<ScrollableTextWidget> lines = StringUtils.newArrayList();
+    private ScreenConstants.ColorData largeImageData, smallImageData;
+    private ScrollableTextWidget titleText;
+    private TexturedWidget largeWidget, smallWidget;
+    private CompiledPresence richPresence;
 
     PresenceEditorGui(PresenceData moduleData, PresenceData defaultData,
                       final boolean isDefault,
@@ -110,7 +126,10 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                             calc2, getButtonY(controlIndex),
                             Constants.TRANSLATOR.translate("gui.config.message.editor.presence.use_as_main"),
                             getInstanceData().useAsMain,
-                            () -> getInstanceData().useAsMain = useAsMainCheckbox.isChecked(),
+                            () -> {
+                                getInstanceData().useAsMain = useAsMainCheckbox.isChecked();
+                                reloadUi(); // Reload for Visualizer Setup
+                            },
                             () -> drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
                                             Constants.TRANSLATOR.translate("gui.config.message.hover.presence.use_as_main")
@@ -365,6 +384,204 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         )
                 )
         );
+
+        setupVisualizer(calc1, calc2, controlIndex);
+    }
+
+    private void setupVisualizer(final int calc1, final int calc2, final int controlIndex) {
+        // Ensure all Visualizer Fields are at their default values
+        largeWidget = null;
+        smallWidget = null;
+        lines.clear();
+        buttons.clear();
+        richPresence = null;
+        titleText = null;
+        largeImageData = null;
+        smallImageData = null;
+
+        if (isDefaultModule || getInstanceData().useAsMain) {
+            loadVisualizer(calc1, calc2, controlIndex);
+        }
+    }
+
+    private void loadVisualizer(final int calc1, final int calc2, int controlIndex) {
+        if (CraftPresence.CONFIG.accessibilitySettings.stripExtraGuiElements) {
+            return;
+        }
+
+        // Visualizer Section
+        childFrame.addWidget(new ScrollableTextWidget(
+                calc1, getButtonY(controlIndex),
+                childFrame.getScreenWidth() - 105,
+                Constants.TRANSLATOR.translate("gui.config.message.editor.presence.visualizer")
+        ));
+
+        // Adding Refresh Button
+        final ExtendedButtonControl refreshButton = childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc2 + 85, getButtonY(controlIndex),
+                        95, 20,
+                        Constants.TRANSLATOR.translate("gui.config.message.button.refresh"),
+                        this::refreshVisualizer
+                )
+        );
+
+        controlIndex++;
+
+        // Adding Large Image Visualizer
+        largeWidget = childFrame.addWidget(new TexturedWidget(
+                calc1, getButtonY(controlIndex, 1),
+                45, 45,
+                0.0D, () -> 1.0F,
+                () -> largeImageData, false
+        ));
+        // Adding Small Image Visualizer
+        smallWidget = childFrame.addWidget(new TexturedWidget(
+                largeWidget.getRight() - 13, getButtonY(controlIndex, 32),
+                16, 16,
+                0.0D, () -> 1.0F,
+                () -> smallImageData, false
+        ));
+
+        // Adding Text Elements
+        final int textOffset = largeWidget.getRight() + 8;
+
+        // Adding Title Bar (Client ID Title)
+        titleText = childFrame.addWidget(new ScrollableTextWidget(
+                textOffset, getButtonY(controlIndex, -4),
+                refreshButton.getRight(),
+                ""
+        ));
+        // Adding RPC Lines
+        lines.add(childFrame.addWidget(new ScrollableTextWidget(
+                textOffset, getButtonY(controlIndex, 9),
+                refreshButton.getRight(), ""
+        )));
+        lines.add(childFrame.addWidget(new ScrollableTextWidget(
+                textOffset, getButtonY(controlIndex, 20),
+                refreshButton.getRight(), ""
+        )));
+        lines.add(childFrame.addWidget(new ScrollableTextWidget(
+                textOffset, getButtonY(controlIndex, 31),
+                refreshButton.getRight(), ""
+        )));
+
+        // Adding Additional Buttons
+        buttons.add(childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc2 + 85, getButtonY(controlIndex++),
+                        95, 20, ""
+                )
+        ));
+        buttons.add(childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc2 + 85, getButtonY(controlIndex++),
+                        95, 20, ""
+                )
+        ));
+
+        refreshVisualizer();
+    }
+
+    private void refreshVisualizer() {
+        // Compile the RichPresence data from current instance
+        richPresence = CraftPresence.CLIENT.compilePresence(getInstanceData());
+
+        final String titlePrefix = !CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting ? "§l" : "";
+        titleText.setMessage(titlePrefix + CraftPresence.CLIENT.CURRENT_TITLE);
+
+        // Assign compiled data to the various fields
+        if (richPresence.largeAsset() != null) {
+            largeImageData = new ScreenConstants.ColorData(
+                    richPresence.largeAsset().getUrl()
+            );
+
+            if (richPresence.smallAsset() != null) {
+                smallImageData = new ScreenConstants.ColorData(
+                        richPresence.smallAsset().getUrl()
+                );
+            } else {
+                smallImageData = null;
+            }
+        } else {
+            largeImageData = null;
+            smallImageData = null;
+        }
+
+        updateLineTexts(
+                richPresence.details(),
+                richPresence.state(),
+                richPresence.getTimeString()
+        );
+
+        updateButtonTexts(
+                richPresence.getButtonData()
+        );
+    }
+
+    private void updateButtonTexts(final Map<String, String> validButtons) {
+        final Iterator<Map.Entry<String, String>> iterator = validButtons.entrySet().iterator();
+
+        for (int i = 0; i < buttons.size(); i++) {
+            final ExtendedButtonControl button = buttons.get(i);
+            final boolean hasData = i < validButtons.size();
+            if (hasData) {
+                final Map.Entry<String, String> entry = iterator.next();
+                button.setControlMessage(entry.getKey());
+                button.setOnClick(() -> UrlUtils.openUrl(entry.getValue()));
+            } else {
+                button.setControlMessage("");
+                button.setOnClick(null);
+            }
+
+            button.setControlEnabled(hasData);
+            button.setControlVisible(hasData);
+        }
+    }
+
+    private void updateLineTexts(final String... strings) {
+        final List<String> validStrings = StringUtils.newArrayList();
+        for (String string : strings) {
+            if (!StringUtils.isNullOrEmpty(string)) {
+                validStrings.add(string);
+            }
+        }
+
+        for (int i = 0; i < lines.size(); i++) {
+            final ScrollableTextWidget lineWidget = lines.get(i);
+            if (i < validStrings.size()) {
+                lineWidget.setMessage(validStrings.get(i));
+            } else {
+                lineWidget.setMessage("");
+            }
+        }
+    }
+
+    @Override
+    public void postRender() {
+        super.postRender();
+
+        if (richPresence != null && childFrame.isOverScreen()) {
+            if (smallImageData != null && RenderUtils.isMouseOver(
+                    getMouseX(), getMouseY(),
+                    smallWidget
+            ) && !StringUtils.isNullOrEmpty(richPresence.smallImageText())) {
+                drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                richPresence.smallImageText()
+                        )
+                );
+            } else if (largeImageData != null && RenderUtils.isMouseOver(
+                    getMouseX(), getMouseY(),
+                    largeWidget
+            ) && !StringUtils.isNullOrEmpty(richPresence.largeImageText())) {
+                drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                richPresence.largeImageText()
+                        )
+                );
+            }
+        }
     }
 
     @Override

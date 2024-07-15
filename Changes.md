@@ -28,6 +28,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Improved LAN support for the `server` module
     * Several fixes have been made for "hosting" LAN servers alongside fixes for LAN in general
     * This also effects Essential Mod support, given the similar networking tech involved
+* Added an RPC Visualizer to `PresenceEditor` Screens
+    * Replicates the look and feel of Discord's Visualizer, allowing users an "at-a-glance" preview of their RPC before
+      saving
+    * Only displays if `Use As Main` is enabled or is the Default Module
+    * Can be disabled with the `Strip Extra Gui Elements` setting in `Accessibility`
 * Misc. Optimizations and Performance Improvements across several APIs
     * A large portion of CraftPresence's APIs have now branched off into [UniLib](https://gitlab.com/CDAGaming/UniLib),
       now being served as a required dependency for CraftPresence
