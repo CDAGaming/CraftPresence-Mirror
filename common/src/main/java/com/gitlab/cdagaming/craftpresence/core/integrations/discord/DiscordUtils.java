@@ -1530,8 +1530,8 @@ public class DiscordUtils {
         final boolean formatWords = canFormatWords.get();
 
         // Format Presence based on Arguments available in argumentData
-        String details = StringUtils.formatWord(getResult(configData.details, "details"), formatWords, true, 1);
-        String state = StringUtils.formatWord(getResult(configData.gameState, "gameState"), formatWords, true, 1);
+        String details = StringUtils.formatWord(getResult(configData.details, "details"), !formatWords, true, 1);
+        String state = StringUtils.formatWord(getResult(configData.gameState, "gameState"), !formatWords, true, 1);
 
         final String rawLargeImage = getResult(configData.largeImageKey, "largeImageKey");
         final String rawSmallImage = getResult(configData.smallImageKey, "smallImageKey");
@@ -1544,8 +1544,8 @@ public class DiscordUtils {
         String smallImageKey = smallAsset != null ? (smallAsset.getType().equals(DiscordAsset.AssetType.CUSTOM) ?
                 getResult(smallAsset.getUrl()) : smallAsset.getName()) : rawSmallImage;
 
-        String largeImageText = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), formatWords, true, 1);
-        String smallImageText = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), formatWords, true, 1);
+        String largeImageText = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), !formatWords, true, 1);
+        String smallImageText = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), !formatWords, true, 1);
 
         final Pair<Boolean, Long> startData = StringUtils.getValidLong(
                 getResult(configData.startTimestamp, "startTimestamp")
@@ -1578,7 +1578,7 @@ public class DiscordUtils {
                         !StringUtils.isNullOrEmpty(button.label)) {
                     String label = StringUtils.formatWord(
                             getResult(button.label, overrideId + ".label"),
-                            formatWords, true, 1
+                            !formatWords, true, 1
                     );
                     String url = !StringUtils.isNullOrEmpty(button.url) ? getResult(
                             button.url, overrideId + ".url"
