@@ -26,6 +26,7 @@ package com.gitlab.cdagaming.craftpresence.core.impl.discord;
 
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
 import com.google.gson.JsonArray;
+import io.github.cdagaming.unicore.utils.TimeUtils;
 
 /**
  * A record mapping for compiled Rich Presence Data
@@ -59,4 +60,34 @@ public record CompiledPresence(
         long endTimestamp,
         JsonArray buttons
 ) {
+    /**
+     * Calculate the time string, using the start and end timestamp
+     *
+     * @return the time string, either using "elapsed" or "remaining" time
+     */
+    public String getTimeString() {
+        final boolean isElapsed = endTimestamp <= 0;
+
+        final long seconds = TimeUtils.getDuration(
+                TimeUtils.fromEpochMilli(startTimestamp),
+                isElapsed ? TimeUtils.getCurrentTime() : TimeUtils.fromEpochMilli(endTimestamp)
+        ).getSeconds();
+
+        final long hours = seconds / 3600;
+        final long minutes = (seconds % 3600) / 60;
+        final long remainingSeconds = seconds % 60;
+
+        String timeString;
+        if (hours > 0) {
+            timeString = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+        } else {
+            timeString = String.format("%02d:%02d", minutes, remainingSeconds);
+        }
+
+        if (isElapsed) {
+            return timeString + " elapsed";
+        } else {
+            return timeString + " left";
+        }
+    }
 }
