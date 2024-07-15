@@ -1575,6 +1575,11 @@ public class DiscordUtils {
         )) {
             // Only add Buttons if Discord is not overriding it, or not compiling for main
             for (Map.Entry<String, Button> buttonElement : configData.buttons.entrySet()) {
+                // Discord only allows a maximum of two valid buttons
+                if (buttons.size() >= 2) {
+                    break;
+                }
+
                 final JsonObject buttonObj = new JsonObject();
                 final String overrideId = buttonElement.getKey();
                 final Button button = buttonElement.getValue();
