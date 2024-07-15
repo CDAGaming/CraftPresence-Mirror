@@ -24,9 +24,15 @@
 
 package com.gitlab.cdagaming.craftpresence.core.impl.discord;
 
+import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
+
+import java.util.Map;
 
 /**
  * A record mapping for compiled Rich Presence Data
@@ -89,5 +95,31 @@ public record CompiledPresence(
         } else {
             return timeString + " left";
         }
+    }
+
+    /**
+     * Retrieve a pure-java mapping of the buttons array
+     *
+     * @return A pure-java mapping of the buttons array
+     */
+    public Map<String, String> getButtonData() {
+        final Map<String, String> results = StringUtils.newLinkedHashMap();
+        if (buttons != null) {
+            for (JsonElement button : buttons) {
+                try {
+                    if (button.isJsonObject()) {
+                        final JsonObject buttonObj = button.getAsJsonObject();
+                        if (buttonObj.has("label") && buttonObj.has("url")) {
+                            results.put(buttonObj.get("label").getAsString(),
+                                    buttonObj.get("url").getAsString()
+                            );
+                        }
+                    }
+                } catch (Throwable ex) {
+                    Constants.LOG.debugError(ex);
+                }
+            }
+        }
+        return results;
     }
 }
