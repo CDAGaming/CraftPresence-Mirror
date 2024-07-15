@@ -95,6 +95,10 @@ public class DiscordUtils {
      */
     public User REQUESTER_USER;
     /**
+     * The Current App Title, tied to the Rich Presence
+     */
+    public String CURRENT_TITLE = "";
+    /**
      * The current RPC Status (Ex: ready, errored, disconnected)
      */
     public DiscordStatus STATUS = DiscordStatus.Closed;
@@ -1499,6 +1503,7 @@ public class DiscordUtils {
             STATUS = allowReconnects ? DiscordStatus.Disconnected : DiscordStatus.Closed;
 
             CURRENT_USER = null;
+            CURRENT_TITLE = "";
             cachedImageData.clear();
 
             Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.shutdown"));

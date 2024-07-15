@@ -98,7 +98,18 @@ public class ModIPCListener implements IPCListener {
 
     @Override
     public void onPacketReceived(IPCClient client, Packet packet) {
-        // N/A
+        // Only used for updating the Client App Title
+        try {
+            final JsonObject parsedData = packet.getJson();
+            if (parsedData.has("cmd") && parsedData.getAsJsonPrimitive("cmd").getAsString().equals("SET_ACTIVITY")) {
+                final JsonObject data = parsedData.getAsJsonObject("data");
+                if (data.has("name")) {
+                    CraftPresence.CLIENT.CURRENT_TITLE = data.getAsJsonPrimitive("name").getAsString();
+                }
+            }
+        } catch (Throwable ex) {
+            Constants.LOG.debugError(ex);
+        }
     }
 
     @Override
