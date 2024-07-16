@@ -630,7 +630,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         // Endpoint Section
         childFrame.addWidget(new ScrollableTextWidget(
                 calc1, getButtonY(7),
-                childFrame.getScreenWidth(),
+                childFrame.getScreenWidth() - calc1,
                 Constants.TRANSLATOR.translate("gui.config.message.endpoints")
         ));
 

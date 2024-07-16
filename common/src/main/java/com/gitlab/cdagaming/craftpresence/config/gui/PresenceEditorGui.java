@@ -93,6 +93,8 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
 
+        final int calc1Width = childFrame.getScreenWidth() - calc1;
+
         final String generalFieldsTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.general");
         final String largeImageTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.image.large");
         final String smallImageTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.image.small");
@@ -103,7 +105,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         // General Fields Section
         childFrame.addWidget(new ScrollableTextWidget(
                 calc1, getButtonY(controlIndex++),
-                childFrame.getScreenWidth(),
+                calc1Width,
                 generalFieldsTitle
         ));
 
@@ -178,7 +180,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         // Large Image Section
         childFrame.addWidget(new ScrollableTextWidget(
                 calc1, getButtonY(controlIndex++),
-                childFrame.getScreenWidth(),
+                calc1Width,
                 largeImageTitle
         ));
 
@@ -222,7 +224,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         // Small Image Section
         childFrame.addWidget(new ScrollableTextWidget(
                 calc1, getButtonY(controlIndex++),
-                childFrame.getScreenWidth(),
+                calc1Width,
                 smallImageTitle
         ));
 
@@ -266,7 +268,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         // Extra Fields Section
         childFrame.addWidget(new ScrollableTextWidget(
                 calc1, getButtonY(controlIndex++),
-                childFrame.getScreenWidth(),
+                calc1Width,
                 extraFieldsTitle
         ));
 
@@ -414,7 +416,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         // Visualizer Section
         childFrame.addWidget(new ScrollableTextWidget(
                 calc1, getButtonY(controlIndex),
-                childFrame.getScreenWidth() - 105,
+                rightButtonPos - calc1,
                 Constants.TRANSLATOR.translate("gui.config.message.editor.presence.visualizer")
         ));
 

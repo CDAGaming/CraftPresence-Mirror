@@ -54,6 +54,8 @@ to [UniLib](https://gitlab.com/CDAGaming/UniLib)_
 * Fixed [an issue](https://gitlab.com/CDAGaming/CraftPresence/-/issues/224) where a crash can occur while registering
   Translation Listeners
 * Fixed potential issues where `server.players.current` could be above `server.players.max`
+* (Backend) Fixed issues relating to text going off-screen with some `ScrollableTextWidget` elements
+    * Effected the `Advanced` and `Presence Editor` UIs
 
 ___
 
