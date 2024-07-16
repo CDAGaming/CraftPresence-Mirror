@@ -409,6 +409,8 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
             return;
         }
 
+        final int rightButtonPos = calc2 + 85;
+
         // Visualizer Section
         childFrame.addWidget(new ScrollableTextWidget(
                 calc1, getButtonY(controlIndex),
@@ -417,9 +419,9 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         ));
 
         // Adding Refresh Button
-        final ExtendedButtonControl refreshButton = childFrame.addControl(
+        childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2 + 85, getButtonY(controlIndex),
+                        rightButtonPos, getButtonY(controlIndex),
                         95, 20,
                         Constants.TRANSLATOR.translate("gui.config.message.button.refresh"),
                         this::refreshVisualizer
@@ -445,13 +447,12 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         // Adding Text Elements
         final int textOffset = largeWidget.getRight() + 8;
-        final int textWidth = refreshButton.getLeft() - textOffset;
+        final int textWidth = rightButtonPos - textOffset;
 
         // Adding Title Bar (Client ID Title)
         titleText = childFrame.addWidget(new ScrollableTextWidget(
                 textOffset, getButtonY(controlIndex, -4),
-                textWidth,
-                ""
+                textWidth, ""
         ));
         // Adding RPC Lines
         lines.add(childFrame.addWidget(new ScrollableTextWidget(
@@ -470,13 +471,13 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         // Adding Additional Buttons
         buttons.add(childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2 + 85, getButtonY(controlIndex++),
+                        rightButtonPos, getButtonY(controlIndex++),
                         95, 20, ""
                 )
         ));
         buttons.add(childFrame.addControl(
                 new ExtendedButtonControl(
-                        calc2 + 85, getButtonY(controlIndex++),
+                        rightButtonPos, getButtonY(controlIndex++),
                         95, 20, ""
                 )
         ));
