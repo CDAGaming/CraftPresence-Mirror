@@ -267,49 +267,15 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         // Extra Fields Section
         childFrame.addWidget(new ScrollableTextWidget(
-                calc1, getButtonY(controlIndex++),
-                calc1Width,
+                calc1, getButtonY(controlIndex),
+                calc2 - calc1,
                 extraFieldsTitle
         ));
-
-        startTimeFormat = childFrame.addControl(
-                new TextWidget(
-                        getFontRenderer(),
-                        getButtonY(controlIndex++),
-                        180, 20,
-                        () -> getInstanceData().setStartTime(startTimeFormat.getControlMessage()),
-                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.start_timestamp"),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
-                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
-                                )
-                        )
-                )
-        );
-        endTimeFormat = childFrame.addControl(
-                new TextWidget(
-                        getFontRenderer(),
-                        getButtonY(controlIndex++),
-                        180, 20,
-                        () -> getInstanceData().setEndTime(endTimeFormat.getControlMessage()),
-                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.end_timestamp"),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
-                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
-                                )
-                        )
-                )
-        );
-
-        startTimeFormat.setControlMessage(getInstanceData().startTimestamp);
-        endTimeFormat.setControlMessage(getInstanceData().endTimestamp);
 
         // Adding Button Editor Button
         childFrame.addControl(
                 new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, getButtonY(controlIndex++),
+                        calc2, getButtonY(controlIndex),
                         180, 20,
                         Constants.TRANSLATOR.translate("gui.config.message.editor.presence.button_editor"),
                         () -> openScreen(
@@ -386,6 +352,42 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         )
                 )
         );
+
+        controlIndex++;
+
+        startTimeFormat = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(controlIndex++),
+                        180, 20,
+                        () -> getInstanceData().setStartTime(startTimeFormat.getControlMessage()),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.start_timestamp"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
+                                )
+                        )
+                )
+        );
+        endTimeFormat = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(controlIndex++),
+                        180, 20,
+                        () -> getInstanceData().setEndTime(endTimeFormat.getControlMessage()),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.end_timestamp"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
+                                )
+                        )
+                )
+        );
+
+        startTimeFormat.setControlMessage(getInstanceData().startTimestamp);
+        endTimeFormat.setControlMessage(getInstanceData().endTimestamp);
 
         setupVisualizer(calc1, calc2, controlIndex);
     }
