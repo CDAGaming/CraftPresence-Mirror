@@ -83,18 +83,23 @@ public record CompiledPresence(
         final long minutes = (seconds % 3600) / 60;
         final long remainingSeconds = seconds % 60;
 
-        String timeString;
+        final StringBuilder timeStringBuilder = new StringBuilder();
         if (hours > 0) {
-            timeString = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
-        } else {
-            timeString = String.format("%02d:%02d", minutes, remainingSeconds);
+            if (hours < 10) timeStringBuilder.append('0');
+            timeStringBuilder.append(hours).append(':');
         }
+        if (minutes < 10) timeStringBuilder.append('0');
+        timeStringBuilder.append(minutes).append(':');
+        if (remainingSeconds < 10) timeStringBuilder.append('0');
+        timeStringBuilder.append(remainingSeconds);
 
         if (isElapsed) {
-            return timeString + " elapsed";
+            timeStringBuilder.append(" elapsed");
         } else {
-            return timeString + " left";
+            timeStringBuilder.append(" left");
         }
+
+        return timeStringBuilder.toString();
     }
 
     /**
