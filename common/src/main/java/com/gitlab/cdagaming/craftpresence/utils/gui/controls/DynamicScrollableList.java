@@ -48,6 +48,11 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Gui Widget for a Dynamic Scrollable List
+ *
+ * @author CDAGaming
+ */
 public class DynamicScrollableList extends ScrollableListControl {
     /**
      * The Rendering Type to render the slots in

@@ -41,26 +41,87 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Gui Widget for a Rich Presence Visualizer
+ *
+ * @author CDAGaming
+ */
 public class PresenceVisualizer {
+    /**
+     * The stored button elements for this widget
+     */
     private final List<ExtendedButtonControl> buttons = StringUtils.newArrayList();
+    /**
+     * The stored text line elements for this widget
+     */
     private final List<ScrollableTextWidget> lines = StringUtils.newArrayList();
+    /**
+     * The current screen instance
+     */
     private final ExtendedScreen screen;
+    /**
+     * Whether the visualizer should auto-refresh
+     */
     private final boolean autoRefresh;
-    private ScreenConstants.ColorData largeImageData, smallImageData;
+    /**
+     * The {@link ScreenConstants.ColorData} for the Large Image, if any
+     */
+    private ScreenConstants.ColorData largeImageData;
+    /**
+     * The {@link ScreenConstants.ColorData} for the Small Image, if any
+     */
+    private ScreenConstants.ColorData smallImageData;
+    /**
+     * The Application Title text widget
+     */
     private ScrollableTextWidget titleText;
-    private TexturedWidget largeWidget, smallWidget;
+    /**
+     * The Texture Widget used for the Large Image Data
+     */
+    private TexturedWidget largeWidget;
+    /**
+     * The Texture Widget used for the Small Image Data
+     */
+    private TexturedWidget smallWidget;
+    /**
+     * The Supplier for the compiled rich presence
+     */
     private Supplier<CompiledPresence> presenceSupplier;
+    /**
+     * The last compiled rich presence result
+     */
     private CompiledPresence lastCompiledPresence;
 
+    /**
+     * Initializes this Gui Widget
+     *
+     * @param screen      The current screen instance
+     * @param autoRefresh Whether the visualizer should auto-refresh
+     */
     public PresenceVisualizer(final ExtendedScreen screen, final boolean autoRefresh) {
         this.screen = screen;
         this.autoRefresh = autoRefresh;
     }
 
+    /**
+     * Initializes this Gui Widget
+     *
+     * @param screen The current screen instance
+     */
     public PresenceVisualizer(final ExtendedScreen screen) {
         this(screen, false);
     }
 
+    /**
+     * Set up the visualizer based on specified args
+     *
+     * @param calc1        The left-side render position
+     * @param calc2        The right-side render position
+     * @param controlIndex The row to begin rendering elements at
+     * @param canLoad      Whether the visualizer can fully load
+     * @param childFrame   The screen instance to add elements to
+     * @param richPresence The Supplier for the compiled rich presence
+     */
     public void setupVisualizer(final int calc1, final int calc2,
                                 final int controlIndex,
                                 final boolean canLoad,
@@ -83,6 +144,14 @@ public class PresenceVisualizer {
         }
     }
 
+    /**
+     * Set up the visualizer based on specified args
+     *
+     * @param controlIndex The row to begin rendering elements at
+     * @param canLoad      Whether the visualizer can fully load
+     * @param childFrame   The screen instance to add elements to
+     * @param richPresence The Supplier for the compiled rich presence
+     */
     public void setupVisualizer(final int controlIndex,
                                 final boolean canLoad,
                                 final ExtendedScreen childFrame,
@@ -99,6 +168,15 @@ public class PresenceVisualizer {
         );
     }
 
+    /**
+     * Load visualizer data based on specified args
+     *
+     * @param calc1        The left-side render position
+     * @param calc2        The right-side render position
+     * @param controlIndex The row to begin rendering elements at
+     * @param childFrame   The screen instance to add elements to
+     * @param richPresence The Supplier for the compiled rich presence
+     */
     private void loadVisualizer(final int calc1, final int calc2,
                                 int controlIndex,
                                 final ExtendedScreen childFrame,
@@ -185,6 +263,11 @@ public class PresenceVisualizer {
         refreshVisualizer(richPresence);
     }
 
+    /**
+     * Refresh active visualizer data with the specified data
+     *
+     * @param richPresence The Supplier for the compiled rich presence
+     */
     private void refreshVisualizer(final Supplier<CompiledPresence> richPresence) {
         // Compile the RichPresence data from current instance
         lastCompiledPresence = richPresence.get();
@@ -221,6 +304,11 @@ public class PresenceVisualizer {
         );
     }
 
+    /**
+     * Update the button widgets with the specified data
+     *
+     * @param validButtons The list of valid button data
+     */
     private void updateButtonTexts(final Map<String, String> validButtons) {
         final Iterator<Map.Entry<String, String>> iterator = validButtons.entrySet().iterator();
 
@@ -241,6 +329,11 @@ public class PresenceVisualizer {
         }
     }
 
+    /**
+     * Update the text widgets with the specified data
+     *
+     * @param strings The list of string data to interpret
+     */
     private void updateLineTexts(final String... strings) {
         final List<String> validStrings = StringUtils.newArrayList();
         for (String string : strings) {
@@ -259,6 +352,12 @@ public class PresenceVisualizer {
         }
     }
 
+    /**
+     * The post-render event to occur
+     * <p>Should only be run in {@link ExtendedScreen#postRender()}
+     *
+     * @param childFrame The screen instance to use
+     */
     public void postRender(final ExtendedScreen childFrame) {
         if (autoRefresh && presenceSupplier != null) {
             refreshVisualizer(presenceSupplier);

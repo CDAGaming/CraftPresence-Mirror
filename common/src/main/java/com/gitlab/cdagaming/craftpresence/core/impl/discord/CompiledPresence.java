@@ -48,7 +48,7 @@ import java.util.Map;
  * @param largeImageText The Current Message tied to the Large Image, if any
  * @param smallImageText The Current Message tied to the Small Image, if any
  * @param startTimestamp The Current Starting Unix Timestamp from Epoch, used for Elapsed Time
- * @param endTimestamp   The Current Ending Unix Timestamp from Epoch, used for Time Left (<=0 for null)
+ * @param endTimestamp   The Current Ending Unix Timestamp from Epoch, used for Time Left (Set to 0 or lower for null)
  * @param buttons        The current button array tied to the RPC, if any
  */
 public record CompiledPresence(
