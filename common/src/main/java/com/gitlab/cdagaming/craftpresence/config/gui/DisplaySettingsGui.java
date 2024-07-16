@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.core.config.category.Display;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
+import com.gitlab.cdagaming.craftpresence.utils.gui.controls.PresenceVisualizer;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
@@ -38,6 +39,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 
 public class DisplaySettingsGui extends ConfigurationGui<Display> {
     private final Display INSTANCE, DEFAULTS;
+    private final PresenceVisualizer visualizer;
 
     DisplaySettingsGui() {
         super(
@@ -46,6 +48,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
         );
         DEFAULTS = getCurrentData().getDefaults();
         INSTANCE = getCurrentData().copy();
+        visualizer = new PresenceVisualizer(this, true);
     }
 
     @Override
@@ -241,6 +244,19 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                         )
                 )
         );
+
+        visualizer.setupVisualizer(
+                3,
+                true,
+                childFrame,
+                () -> CraftPresence.CLIENT.PRESENCE
+        );
+    }
+
+    @Override
+    public void postRender() {
+        super.postRender();
+        visualizer.postRender(childFrame);
     }
 
     @Override
