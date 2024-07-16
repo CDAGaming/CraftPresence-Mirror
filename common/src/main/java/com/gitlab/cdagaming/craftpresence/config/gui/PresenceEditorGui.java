@@ -445,25 +445,26 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         // Adding Text Elements
         final int textOffset = largeWidget.getRight() + 8;
+        final int textWidth = refreshButton.getLeft() - textOffset;
 
         // Adding Title Bar (Client ID Title)
         titleText = childFrame.addWidget(new ScrollableTextWidget(
                 textOffset, getButtonY(controlIndex, -4),
-                refreshButton.getRight(),
+                textWidth,
                 ""
         ));
         // Adding RPC Lines
         lines.add(childFrame.addWidget(new ScrollableTextWidget(
                 textOffset, getButtonY(controlIndex, 9),
-                refreshButton.getRight(), ""
+                textWidth, ""
         )));
         lines.add(childFrame.addWidget(new ScrollableTextWidget(
                 textOffset, getButtonY(controlIndex, 20),
-                refreshButton.getRight(), ""
+                textWidth, ""
         )));
         lines.add(childFrame.addWidget(new ScrollableTextWidget(
                 textOffset, getButtonY(controlIndex, 31),
-                refreshButton.getRight(), ""
+                textWidth, ""
         )));
 
         // Adding Additional Buttons
