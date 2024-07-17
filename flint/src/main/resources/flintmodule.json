@@ -1,0 +1,15 @@
+{
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "Completely Customize the way others see you play in Discord!",
+  "authors": [
+    "CDAGaming"
+  ],
+  "license": "MIT",
+  "icon": "logo.png",
+  "entryPoints": {
+    "main": "com.gitlab.cdagaming.craftpresence.flint.CraftPresenceFlint",
+    "modmenu": "com.gitlab.cdagaming.craftpresence.flint.impl.ModMenuImpl"
+  }
+}

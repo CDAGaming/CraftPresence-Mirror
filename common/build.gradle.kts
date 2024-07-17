@@ -1,4 +1,3 @@
-import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 /**
@@ -24,20 +23,6 @@ val fileFormat: String by extra
 
 unimined.minecraft {
     defaultRemapJar = false
-    if (!isJarMod) {
-        val fabricData: FabricLikePatcher.() -> Unit = {
-            if (accessWidenerFile.exists()) {
-                accessWidener(accessWidenerFile)
-            }
-            loader("fabric_loader_version"()!!)
-            customIntermediaries = true
-        }
-        if (isModern) {
-            fabric(fabricData)
-        } else {
-            legacyFabric(fabricData)
-        }
-    }
 }
 
 val shadeOnly: Configuration by configurations.creating
