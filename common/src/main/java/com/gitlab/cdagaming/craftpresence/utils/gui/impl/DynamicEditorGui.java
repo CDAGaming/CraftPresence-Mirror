@@ -103,7 +103,7 @@ public class DynamicEditorGui extends ExtendedScreen {
         final ScrollPane childFrame = addControl(
                 new ScrollPane(
                         0, 32,
-                        getScreenWidth(), getScreenHeight() - 32
+                        getScreenWidth(), getScreenHeight() - 64
                 )
         );
 

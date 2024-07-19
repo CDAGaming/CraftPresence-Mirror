@@ -133,7 +133,7 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         childFrame = addControl(
                 new ScrollPane(
                         0, 32,
-                        getScreenWidth(), getScreenHeight() - 32
+                        getScreenWidth(), getScreenHeight() - 64
                 )
         );
 

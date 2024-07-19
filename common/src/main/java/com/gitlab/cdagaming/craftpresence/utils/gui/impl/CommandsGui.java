@@ -143,7 +143,7 @@ public class CommandsGui extends ExtendedScreen {
         childFrame = addControl(
                 new ScrollPane(
                         0, 32,
-                        getScreenWidth(), getScreenHeight() - 32
+                        getScreenWidth(), getScreenHeight() - 64
                 )
         );
         previewArea = childFrame.addWidget(new TextDisplayWidget(
