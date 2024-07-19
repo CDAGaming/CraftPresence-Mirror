@@ -140,7 +140,7 @@ public class DynamicSelectorGui extends SelectorGui {
         dynamicList = addList(
                 new DynamicScrollableList(
                         getGameInstance(), this,
-                        getScreenWidth(), getScreenHeight() - 64,
+                        getScreenWidth(), getScreenHeight(),
                         32, getScreenHeight() - 32,
                         getItemList(), getOriginalValue(),
                         renderType
