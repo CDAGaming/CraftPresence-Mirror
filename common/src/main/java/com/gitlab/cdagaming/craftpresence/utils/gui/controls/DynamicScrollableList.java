@@ -147,10 +147,16 @@ public class DynamicScrollableList extends ScrollableListControl {
     @Override
     public boolean setList(List<String> itemList) {
         final boolean result = super.setList(itemList);
-        if (result) {
+        if (result && isLoaded()) {
             setupAliasData();
         }
         return result;
+    }
+
+    @Override
+    public void refreshContentHeight() {
+        super.refreshContentHeight();
+        setupAliasData();
     }
 
     /**
@@ -170,6 +176,7 @@ public class DynamicScrollableList extends ScrollableListControl {
      */
     public void setupAliasData() {
         getEntryAliases().clear();
+        clearEntries();
 
         for (String originalName : StringUtils.newArrayList(itemList)) {
             String displayName = originalName;
@@ -184,18 +191,24 @@ public class DynamicScrollableList extends ScrollableListControl {
             if (!originalName.equals(displayName)) {
                 getEntryAliases().put(originalName, displayName);
             }
+
+            final StringEntry dataEntry = new StringEntry(originalName);
+            addEntry(dataEntry);
+            if (originalName.equals(currentValue)) {
+                setSelected(dataEntry);
+            }
+        }
+
+        if (getSelected() != null) {
+            centerScrollOn(getSelected());
         }
     }
 
     @Override
-    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn) {
+    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn, final boolean isHovering, final float partialTicks) {
         final List<String> hoverText = StringUtils.newArrayList();
         String displayName = getEntryAliases().getOrDefault(originalName, originalName);
         int xOffset = xPos;
-
-        final boolean isOverEntry = RenderUtils.isMouseOver(mouseXIn, mouseYIn, xPos, yPos, widthIn, heightIn);
-        final boolean isInBounds = isWithinBounds(mouseXIn, mouseYIn);
-        final boolean isHovering = isInBounds && isOverEntry;
 
         ResourceLocation texture = ResourceUtils.getEmptyResource();
         String assetUrl;
@@ -295,7 +308,7 @@ public class DynamicScrollableList extends ScrollableListControl {
             hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
 
-        super.renderSlotItem(displayName, xOffset, yPos, widthIn, heightIn, mouseXIn, mouseYIn);
+        super.renderSlotItem(displayName, xOffset, yPos, widthIn, heightIn, mouseXIn, mouseYIn, isHovering, partialTicks);
 
         if (isHovering) {
             currentHoverText = hoverText;

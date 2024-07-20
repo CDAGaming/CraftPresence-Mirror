@@ -137,10 +137,10 @@ public class DynamicSelectorGui extends SelectorGui {
 
     @Override
     protected void appendListControl() {
-        dynamicList = addList(
+        dynamicList = addControl(
                 new DynamicScrollableList(
                         getGameInstance(), this,
-                        getScreenWidth(), getScreenHeight(),
+                        getScreenWidth(), getScreenHeight() - 64,
                         32, getScreenHeight() - 32,
                         getItemList(), getOriginalValue(),
                         renderType
