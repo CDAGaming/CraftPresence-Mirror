@@ -9,9 +9,9 @@ import java.util.*
 plugins {
     java
     id("xyz.wagyourtail.unimined") version "1.3.3" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "0.8.3"
+    id("xyz.wagyourtail.jvmdowngrader") version "0.9.0"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
-    id("io.github.goooler.shadow") version "8.1.7" apply false
+    id("io.github.goooler.shadow") version "8.1.8" apply false
     id("com.hypherionmc.modutils.modpublisher") version "2.1.6" apply false
 }
 
