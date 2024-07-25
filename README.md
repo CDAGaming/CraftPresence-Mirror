@@ -16,6 +16,10 @@ by [jagrosh](https://github.com/jagrosh)!
 
 ## General Notes
 
+* Beginning in v2.5.0, [UniLib](https://gitlab.com/CDAGaming/UniLib) is now a **required** dependency
+    * UniLib is a new library mod I have created to abstract common API functions for more usage as well as future
+      project, and can be downloaded [here](https://legacy.curseforge.com/minecraft/mc-mods/unilib/files/all)
+    * This mod **will crash** if UniLib is not found or if using an incompatible version
 * This mod identifies as a **Client Side-only** mod
     * This means it **will not run** on the Server's side.
     * Fabric and Quilt mod loaders will simply ignore the
@@ -26,7 +30,7 @@ by [jagrosh](https://github.com/jagrosh)!
 * Some versions of the mod for Minecraft 1.13.x require
   the [Rift API](https://www.curseforge.com/minecraft/mc-mods/rift)
   and the [Rift mod loader](https://github.com/DimensionalDevelopment/Rift/releases)
-* Versions of the mod for Minecraft 1.1.0 and below
+* Some versions of the mod for Minecraft 1.1.0 and below
   require [Risugami's ModLoader](https://mcarchive.net/mods/modloader)
 
 ## Features
@@ -331,7 +335,7 @@ The following functions are available for use anywhere in CraftPresence:
 
 ### Minecraft Issues + Additional Build Info
 
-Despite best efforts, issues can occur due to the state of Mojang's Codebase.
+Despite best efforts, issues can occur due to the state of the Minecraft Codebase.
 
 These issues can hinder certain portions of the backend in addition to cause certain parts of the mod to not work.
 
@@ -395,16 +399,12 @@ on [the wiki](https://gitlab.com/CDAGaming/CraftPresence/-/wikis/Home)
 
 This Mod is under the MIT License as well as the Apache 2.0 License
 
-This project makes usage of the following dependencies internally:
+This project currently makes usage of the following dependencies internally:
 
 * [Starscript](https://github.com/MeteorDevelopment/starscript)
-  by [MeteorDevelopment](https://github.com/MeteorDevelopment) on v2.0 and above
+  by [MeteorDevelopment](https://github.com/MeteorDevelopment)
 * [DiscordIPC API](https://github.com/jagrosh/DiscordIPC) by [jagrosh](https://github.com/jagrosh)
-    * [JUnixSocket](https://github.com/kohlschutter/junixsocket) by [kohlschutter](https://github.com/kohlschutter)
-* [Classgraph](https://github.com/classgraph/classgraph) by [lukehutch](https://github.com/lukehutch) on v2.0 and above
-* [Lenni Reflect](https://github.com/Lenni0451/Reflect) by [Lenni0451](https://github.com/Lenni0451) on v2.2.3 and above
-* [Google's Guava Api](https://github.com/google/guava) by [Google](https://github.com/google/) on v1.9.x and below
-* [Java Native Access (JNA) API](https://github.com/java-native-access/jna) on v1.5.x and below
+* [UniLib](https://gitlab.com/CDAGaming/UniLib) by [CDAGaming](https://gitlab.com/CDAGaming)
 
 #### Discord Terms of Service
 
