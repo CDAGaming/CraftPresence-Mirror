@@ -17,6 +17,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ModPublisher (`2.1.4` -> `2.1.6`)
     * ModFusioner (`1.0.12` -> `removed`)
     * UniLib (`local` -> `1.0.0`)
+    * DiscordIPC (`0.9.2` -> `0.9.3`)
 * Several packaging changes have been made for ease-of-access and for future development:
     * Added publishing support for [Nightbloom](https://nightbloom.cc/project/craftpresence)
     * Re-Added support for [OG Forge](https://files.minecraftforge.net/) for MC 1.20.2+ Users
