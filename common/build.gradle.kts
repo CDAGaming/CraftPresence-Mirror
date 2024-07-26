@@ -59,12 +59,16 @@ dependencies {
     shade("com.kohlschutter.junixsocket:junixsocket-common:${"junixsocket_version"()!!}")
     shade("com.kohlschutter.junixsocket:junixsocket-native-common:${"junixsocket_version"()!!}")
 
+    // LeniReflect
+    shade("net.lenni0451:Reflect:${"reflect_version"()!!}")
+
     // DiscordIPC (Originally by jagrosh)
     shade("io.github.CDAGaming:DiscordIPC:${"ipc_version"()!!}") {
         isTransitive = false
     }
     // StarScript (Used for Placeholder Expressions)
     shade("io.github.CDAGaming:starscript:${"starscript_version"()!!}")
+    shade("io.github.classgraph:classgraph:${"classgraph_version"()!!}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {
         implementation("org.slf4j:slf4j-api:1.7.36")
