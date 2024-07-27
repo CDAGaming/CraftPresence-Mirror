@@ -436,6 +436,18 @@ subprojects {
             loaders = uploadLoaders
             curseEnvironment = "client"
             artifact = targetFile
+
+            curseDepends {
+                required("unilib")
+            }
+
+            modrinthDepends {
+                required("unilib")
+            }
+
+            nightbloomDepends {
+                required("unilib")
+            }
         }
     }
 }
