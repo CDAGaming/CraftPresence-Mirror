@@ -136,6 +136,13 @@ public record CompiledPresence(
         return results;
     }
 
+    /**
+     * Retrieve the Current Message tied to the Party/ Game Status Field of the RPC
+     *
+     * @param minPlayers The Minimum Player Count, used for party data
+     * @param maxPlayers The Maximum Player Count, used for party data
+     * @return The Current Message tied to the Party/ Game Status Field of the RPC
+     */
     public String state(final int minPlayers, final int maxPlayers) {
         final String original = state();
         return StringUtils.isNullOrEmpty(original) ? original : (original + " (" + minPlayers + " of " + maxPlayers + ")");
