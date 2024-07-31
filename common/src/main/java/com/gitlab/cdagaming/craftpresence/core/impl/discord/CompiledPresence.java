@@ -29,6 +29,8 @@ import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.Disco
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.jagrosh.discordipc.entities.ActivityType;
+import com.jagrosh.discordipc.entities.PartyPrivacy;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 
@@ -37,6 +39,8 @@ import java.util.Map;
 /**
  * A record mapping for compiled Rich Presence Data
  *
+ * @param activityType   The Current Activity Type Setting for the RPC
+ * @param partyPrivacy   The Current Party Privacy Setting for the RPC
  * @param details        The Current Message tied to the current action / Details Field of the RPC
  * @param state          The Current Message tied to the Party/Game Status Field of the RPC
  * @param rawLargeImage  The Current Raw Large Image Icon being displayed in the RPC, if any
@@ -50,8 +54,11 @@ import java.util.Map;
  * @param startTimestamp The Current Starting Unix Timestamp from Epoch, used for Elapsed Time
  * @param endTimestamp   The Current Ending Unix Timestamp from Epoch, used for Time Left (Set to 0 or lower for null)
  * @param buttons        The current button array tied to the RPC, if any
+ * @param isMain         Whether this data should be marked as the current RPC event
  */
 public record CompiledPresence(
+        ActivityType activityType,
+        PartyPrivacy partyPrivacy,
         String details,
         String state,
         String rawLargeImage,
@@ -64,7 +71,8 @@ public record CompiledPresence(
         String smallImageText,
         long startTimestamp,
         long endTimestamp,
-        JsonArray buttons
+        JsonArray buttons,
+        boolean isMain
 ) {
     /**
      * Calculate the time string, using the start and end timestamp
@@ -126,5 +134,10 @@ public record CompiledPresence(
             }
         }
         return results;
+    }
+
+    public String state(final int minPlayers, final int maxPlayers) {
+        final String original = state();
+        return StringUtils.isNullOrEmpty(original) ? original : (original + " (" + minPlayers + " of " + maxPlayers + ")");
     }
 }

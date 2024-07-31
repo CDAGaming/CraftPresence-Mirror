@@ -33,6 +33,7 @@ import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TexturedWidget;
+import com.jagrosh.discordipc.entities.ActivityType;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
 
@@ -60,9 +61,17 @@ public class PresenceVisualizer {
      */
     private final ExtendedScreen screen;
     /**
+     * Whether the visualizer should allow toggling party info
+     */
+    private final boolean showPartyToggle;
+    /**
      * Whether the visualizer should auto-refresh
      */
     private final boolean autoRefresh;
+    /**
+     * Whether to show the visualizer in a "party-style" format
+     */
+    private boolean showPartyData;
     /**
      * The {@link ScreenConstants.ColorData} for the Large Image, if any
      */
@@ -97,6 +106,7 @@ public class PresenceVisualizer {
     public PresenceVisualizer(final ExtendedScreen screen, final boolean autoRefresh) {
         this.screen = screen;
         this.autoRefresh = autoRefresh;
+        this.showPartyToggle = !autoRefresh;
     }
 
     /**
@@ -180,21 +190,38 @@ public class PresenceVisualizer {
             return;
         }
 
-        final int rightButtonPos = calc2 + 85;
+        final int rightButtonPos = calc2 + 110;
 
         // Visualizer Section
         childFrame.addWidget(new ScrollableTextWidget(
                 calc1, screen.getButtonY(controlIndex),
-                rightButtonPos - calc1,
-                Constants.TRANSLATOR.translate("gui.config.message.editor.presence.visualizer")
+                calc2 - calc1,
+                Constants.TRANSLATOR.translate("gui.config.message.visualizer")
         ));
+
+        // Adding Party Toggle
+        if (showPartyToggle) {
+            childFrame.addControl(
+                    new ExtendedButtonControl(
+                            calc2, screen.getButtonY(controlIndex),
+                            95, 20,
+                            Constants.TRANSLATOR.translate("gui.config.message.visualizer.toggle_party"),
+                            () -> showPartyData = !showPartyData,
+                            () -> childFrame.drawMultiLineString(
+                                    StringUtils.splitTextByNewLine(
+                                            Constants.TRANSLATOR.translate("gui.config.message.hover.visualizer.toggle_party")
+                                    )
+                            )
+                    )
+            );
+        }
 
         // Adding Refresh Button
         if (!autoRefresh) {
             childFrame.addControl(
                     new ExtendedButtonControl(
                             rightButtonPos, screen.getButtonY(controlIndex),
-                            95, 20,
+                            70, 20,
                             Constants.TRANSLATOR.translate("gui.config.message.button.refresh"),
                             () -> refreshVisualizer(richPresence)
                     )
@@ -274,12 +301,35 @@ public class PresenceVisualizer {
             smallImageData = null;
         }
 
-        updateLineTexts(
-                CraftPresence.CLIENT.CURRENT_TITLE,
-                lastCompiledPresence.details(),
-                lastCompiledPresence.state(),
-                lastCompiledPresence.getTimeString()
-        );
+        final boolean isMain = lastCompiledPresence.isMain();
+
+        String details = lastCompiledPresence.details();
+        String state = lastCompiledPresence.state();
+        if (showPartyData || isMain) {
+            final int size = isMain ? CraftPresence.CLIENT.PARTY_SIZE : 1;
+            final int max = isMain ? CraftPresence.CLIENT.PARTY_MAX : 5;
+
+            if (size > 0 && max >= size) {
+                state = lastCompiledPresence.state(size, max);
+            }
+        }
+
+        if (lastCompiledPresence.activityType() == ActivityType.Listening ||
+                lastCompiledPresence.activityType() == ActivityType.Watching ||
+                lastCompiledPresence.activityType() == ActivityType.Competing) {
+            updateLineTexts(
+                    details,
+                    state,
+                    lastCompiledPresence.largeImageText()
+            );
+        } else {
+            updateLineTexts(
+                    CraftPresence.CLIENT.CURRENT_TITLE,
+                    details,
+                    state,
+                    lastCompiledPresence.getTimeString()
+            );
+        }
 
         updateButtonTexts(
                 lastCompiledPresence.getButtonData()

@@ -1469,13 +1469,15 @@ public class DiscordUtils {
      */
     public void clearPresenceData() {
         PRESENCE = new CompiledPresence(
+                ActivityType.Playing,
+                PartyPrivacy.Public,
                 "", "",
                 "", "",
                 null, null,
                 "", "",
                 "", "",
                 0L, 0L,
-                new JsonArray()
+                new JsonArray(), true
         );
 
         clearPartyData();
@@ -1532,6 +1534,9 @@ public class DiscordUtils {
         final boolean formatWords = canFormatWords.get();
 
         // Format Presence based on Arguments available in argumentData
+        final ActivityType activityType = ActivityType.from(configData.activityType % ActivityType.values().length);
+        final PartyPrivacy partyPrivacy = PartyPrivacy.from(configData.partyPrivacy % PartyPrivacy.values().length);
+
         String details = StringUtils.formatWord(getResult(configData.details, "details"), !formatWords, true, 1);
         String state = StringUtils.formatWord(getResult(configData.gameState, "gameState"), !formatWords, true, 1);
 
@@ -1603,7 +1608,7 @@ public class DiscordUtils {
         }
 
         final RichPresence.Builder newRPCData = new RichPresence.Builder()
-                .setActivityType(ActivityType.Playing)
+                .setActivityType(activityType)
                 .setState(state = sanitizePlaceholders(state, 128))
                 .setDetails(details = sanitizePlaceholders(details, 128))
                 .setStartTimestamp(startTimestamp)
@@ -1625,13 +1630,14 @@ public class DiscordUtils {
         smallImageText = StringUtils.convertString(smallImageText, "UTF-8", false);
 
         final CompiledPresence data = new CompiledPresence(
+                activityType, partyPrivacy,
                 details, state,
                 rawLargeImage, rawSmallImage,
                 largeAsset, smallAsset,
                 largeImageKey, smallImageKey,
                 largeImageText, smallImageText,
                 startTimestamp, endTimestamp,
-                buttons
+                buttons, useAsMain
         );
 
         if (useAsMain) {
@@ -1643,7 +1649,7 @@ public class DiscordUtils {
                     .setParty(
                             PARTY_ID = sanitizePlaceholders(PARTY_ID, 128),
                             PARTY_SIZE, PARTY_MAX,
-                            PARTY_PRIVACY
+                            PARTY_PRIVACY = partyPrivacy
                     )
                     .setMatchSecret(MATCH_SECRET = sanitizePlaceholders(MATCH_SECRET, 128))
                     .setJoinSecret(JOIN_SECRET = sanitizePlaceholders(JOIN_SECRET, 128))

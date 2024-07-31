@@ -26,7 +26,6 @@ package com.gitlab.cdagaming.craftpresence.core.config.category;
 
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.jagrosh.discordipc.entities.DiscordBuild;
-import com.jagrosh.discordipc.entities.PartyPrivacy;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -48,7 +47,6 @@ public class General extends Module implements Serializable {
     public String clientId = "450485984333660181";
     public String defaultIcon = "grass";
     public boolean enableJoinRequests = false;
-    public int partyPrivacyLevel = PartyPrivacy.Public.ordinal();
     public int preferredClientLevel = DiscordBuild.ANY.ordinal();
     public boolean resetTimeOnInit = false;
     public boolean autoRegister = false;
@@ -86,7 +84,6 @@ public class General extends Module implements Serializable {
             clientId = data.clientId;
             defaultIcon = data.defaultIcon;
             enableJoinRequests = data.enableJoinRequests;
-            partyPrivacyLevel = data.partyPrivacyLevel;
             preferredClientLevel = data.preferredClientLevel;
             resetTimeOnInit = data.resetTimeOnInit;
             autoRegister = data.autoRegister;
@@ -108,7 +105,6 @@ public class General extends Module implements Serializable {
             case "clientId" -> clientId;
             case "defaultIcon" -> defaultIcon;
             case "enableJoinRequests" -> enableJoinRequests;
-            case "partyPrivacyLevel" -> partyPrivacyLevel;
             case "preferredClientLevel" -> preferredClientLevel;
             case "resetTimeOnInit" -> resetTimeOnInit;
             case "autoRegister" -> autoRegister;
@@ -156,9 +152,6 @@ public class General extends Module implements Serializable {
                 case "enableJoinRequests":
                     enableJoinRequests = (Boolean) value;
                     break;
-                case "partyPrivacyLevel":
-                    partyPrivacyLevel = (Integer) value;
-                    break;
                 case "preferredClientLevel":
                     preferredClientLevel = (Integer) value;
                     break;
@@ -198,7 +191,6 @@ public class General extends Module implements Serializable {
                 Objects.equals(other.clientId, clientId) &&
                 Objects.equals(other.defaultIcon, defaultIcon) &&
                 Objects.equals(other.enableJoinRequests, enableJoinRequests) &&
-                Objects.equals(other.partyPrivacyLevel, partyPrivacyLevel) &&
                 Objects.equals(other.preferredClientLevel, preferredClientLevel) &&
                 Objects.equals(other.resetTimeOnInit, resetTimeOnInit) &&
                 Objects.equals(other.autoRegister, autoRegister);
@@ -212,7 +204,7 @@ public class General extends Module implements Serializable {
                 detectTechnicPack, detectModrinthPack,
                 detectBiomeData, detectDimensionData, detectWorldData,
                 clientId, defaultIcon, enableJoinRequests,
-                partyPrivacyLevel, preferredClientLevel,
+                preferredClientLevel,
                 resetTimeOnInit, autoRegister
         );
     }

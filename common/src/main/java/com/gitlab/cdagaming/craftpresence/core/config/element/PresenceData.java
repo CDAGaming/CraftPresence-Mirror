@@ -26,6 +26,8 @@ package com.gitlab.cdagaming.craftpresence.core.config.element;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
+import com.jagrosh.discordipc.entities.ActivityType;
+import com.jagrosh.discordipc.entities.PartyPrivacy;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
 import java.io.Serial;
@@ -40,6 +42,8 @@ public class PresenceData extends Module implements Serializable {
 
     public boolean enabled = true;
     public boolean useAsMain = false;
+    public int activityType = ActivityType.Playing.ordinal();
+    public int partyPrivacy = PartyPrivacy.Public.ordinal();
     public String details = "";
     public String gameState = "";
     public String largeImageKey = "";
@@ -73,6 +77,8 @@ public class PresenceData extends Module implements Serializable {
         if (target instanceof PresenceData data && !equals(target)) {
             enabled = data.enabled;
             useAsMain = data.useAsMain;
+            activityType = data.activityType;
+            partyPrivacy = data.partyPrivacy;
             setDetails(data.details);
             setGameState(data.gameState);
             setLargeImage(data.largeImageKey, data.largeImageText);
@@ -90,6 +96,8 @@ public class PresenceData extends Module implements Serializable {
         return switch (name) {
             case "enabled" -> enabled;
             case "useAsMain" -> useAsMain;
+            case "activityType" -> activityType;
+            case "partyPrivacy" -> partyPrivacy;
             case "details" -> details;
             case "gameState" -> gameState;
             case "largeImageKey" -> largeImageKey;
@@ -112,6 +120,12 @@ public class PresenceData extends Module implements Serializable {
                     break;
                 case "useAsMain":
                     useAsMain = (Boolean) value;
+                    break;
+                case "activityType":
+                    activityType = (Integer) value;
+                    break;
+                case "partyPrivacy":
+                    partyPrivacy = (Integer) value;
                     break;
                 case "details":
                     details = (String) value;
@@ -211,6 +225,8 @@ public class PresenceData extends Module implements Serializable {
 
         return Objects.equals(other.enabled, enabled) &&
                 Objects.equals(other.useAsMain, useAsMain) &&
+                Objects.equals(other.activityType, activityType) &&
+                Objects.equals(other.partyPrivacy, partyPrivacy) &&
                 Objects.equals(other.details, details) &&
                 Objects.equals(other.gameState, gameState) &&
                 Objects.equals(other.largeImageKey, largeImageKey) &&
@@ -225,6 +241,7 @@ public class PresenceData extends Module implements Serializable {
     public int hashCode() {
         return Objects.hash(
                 enabled, useAsMain,
+                activityType, partyPrivacy,
                 details, gameState,
                 largeImageKey, largeImageText,
                 smallImageKey, smallImageText,

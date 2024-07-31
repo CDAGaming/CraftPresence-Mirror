@@ -34,7 +34,6 @@ import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
-import com.jagrosh.discordipc.entities.PartyPrivacy;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 import io.github.cdagaming.unicore.impl.Pair;
@@ -795,9 +794,6 @@ public class ServerUtils implements ExtendedModule {
             if (!isOnRealm && !isOnLAN) {
                 // If join requests are enabled, parse the appropriate data
                 // to form party information.
-                //
-                // Note: The party privacy level is appended by modulus division to prevent
-                // it being anything other than valid privacy levels
                 if (CraftPresence.CONFIG.generalSettings.enableJoinRequests) {
                     if (!StringUtils.isNullOrEmpty(currentServer_Name) && !currentServer_Name.equalsIgnoreCase(CraftPresence.CONFIG.serverSettings.fallbackServerName)) {
                         CraftPresence.CLIENT.PARTY_ID = "Join Server: " + currentServer_Name;
@@ -807,7 +803,6 @@ public class ServerUtils implements ExtendedModule {
                     CraftPresence.CLIENT.JOIN_SECRET = makeSecret();
                     CraftPresence.CLIENT.PARTY_SIZE = currentPlayers;
                     CraftPresence.CLIENT.PARTY_MAX = maxPlayers;
-                    CraftPresence.CLIENT.PARTY_PRIVACY = PartyPrivacy.from(CraftPresence.CONFIG.generalSettings.partyPrivacyLevel % 2);
                 }
             }
         }

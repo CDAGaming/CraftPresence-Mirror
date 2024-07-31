@@ -33,19 +33,17 @@ import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import com.jagrosh.discordipc.entities.DiscordBuild;
-import com.jagrosh.discordipc.entities.PartyPrivacy;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 public class GeneralSettingsGui extends ConfigurationGui<General> {
     private final General INSTANCE, DEFAULTS;
-    private ExtendedButtonControl partyPrivacyLevelButton, preferredClientLevelButton;
+    private ExtendedButtonControl preferredClientLevelButton;
     private CheckBoxControl detectCurseManifestButton, detectMultiMCManifestButton,
             detectMCUpdaterInstanceButton, detectTechnicPackButton,
             detectATLauncherButton, detectModrinthPackButton,
             detectBiomeDataButton, detectDimensionDataButton, detectWorldDataButton,
             enableJoinRequestButton, resetTimeOnInitButton, autoRegisterButton;
     private TextWidget clientId, defaultIcon;
-    private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
     private int currentPreferredClient = DiscordBuild.ANY.ordinal();
 
     GeneralSettingsGui() {
@@ -101,26 +99,6 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
         );
         defaultIcon.setControlMessage(getInstanceData().defaultIcon);
 
-        currentPartyPrivacy = getInstanceData().partyPrivacyLevel;
-        partyPrivacyLevelButton = childFrame.addControl(
-                new ExtendedButtonControl(
-                        calc1, getButtonY(2),
-                        180, 20,
-                        Constants.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name(),
-                        () -> {
-                            currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length;
-                            partyPrivacyLevelButton.setControlMessage(
-                                    Constants.TRANSLATOR.translate("gui.config.name.general.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name()
-                            );
-                            getInstanceData().partyPrivacyLevel = currentPartyPrivacy;
-                        },
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.general.party_privacy")
-                                )
-                        )
-                )
-        );
         currentPreferredClient = getInstanceData().preferredClientLevel;
         preferredClientLevelButton = childFrame.addControl(
                 new ExtendedButtonControl(

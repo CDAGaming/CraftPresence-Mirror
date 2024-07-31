@@ -38,6 +38,8 @@ import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
+import com.jagrosh.discordipc.entities.ActivityType;
+import com.jagrosh.discordipc.entities.PartyPrivacy;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.function.Consumer;
@@ -50,6 +52,9 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
     private TextWidget detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
             smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
+    private ExtendedButtonControl activityTypeButton, partyPrivacyButton;
+    private int currentActivityType = ActivityType.Playing.ordinal();
+    private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
 
     PresenceEditorGui(PresenceData moduleData, PresenceData defaultData,
                       final boolean isDefault,
@@ -375,6 +380,50 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         startTimeFormat.setControlMessage(getInstanceData().startTimestamp);
         endTimeFormat.setControlMessage(getInstanceData().endTimestamp);
+
+        currentActivityType = getInstanceData().activityType;
+        activityTypeButton = childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc1, getButtonY(controlIndex),
+                        180, 20,
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.activity_type") + " => " + ActivityType.from(currentActivityType).name(),
+                        () -> {
+                            currentActivityType = (currentActivityType + 1) % ActivityType.values().length;
+                            activityTypeButton.setControlMessage(
+                                    Constants.TRANSLATOR.translate("gui.config.message.editor.presence.activity_type") + " => " + ActivityType.from(currentActivityType).name()
+                            );
+                            getInstanceData().activityType = currentActivityType;
+                        },
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.hover.presence.activity_type")
+                                )
+                        )
+                )
+        );
+
+        currentPartyPrivacy = getInstanceData().partyPrivacy;
+        partyPrivacyButton = childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc2, getButtonY(controlIndex),
+                        180, 20,
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name(),
+                        () -> {
+                            currentPartyPrivacy = (currentPartyPrivacy + 1) % PartyPrivacy.values().length;
+                            partyPrivacyButton.setControlMessage(
+                                    Constants.TRANSLATOR.translate("gui.config.message.editor.presence.party_privacy") + " => " + PartyPrivacy.from(currentPartyPrivacy).name()
+                            );
+                            getInstanceData().partyPrivacy = currentPartyPrivacy;
+                        },
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.hover.presence.party_privacy")
+                                )
+                        )
+                )
+        );
+
+        controlIndex++;
 
         visualizer.setupVisualizer(
                 calc1, calc2,
