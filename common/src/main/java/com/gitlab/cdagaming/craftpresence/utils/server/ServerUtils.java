@@ -252,7 +252,7 @@ public class ServerUtils implements ExtendedModule {
     private RealmsServer findRealmData(final NetHandlerPlayClient connection) {
         try {
             if (connection.guiScreenServer instanceof GuiScreenRealmsProxy realmsProxy &&
-                    realmsProxy.getProxy() instanceof RealmsMainScreen realmsMainScreen) {
+                    realmsProxy.method_6724() instanceof RealmsMainScreen realmsMainScreen) {
                 return (RealmsServer) StringUtils.executeMethod(
                         RealmsMainScreen.class, realmsMainScreen,
                         new Class[]{long.class},
@@ -272,7 +272,7 @@ public class ServerUtils implements ExtendedModule {
     public void updateData() {
         final IntegratedServer newIntegratedData = CraftPresence.instance.getIntegratedServer();
         final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
-        final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
+        final NetHandlerPlayClient newConnection = CraftPresence.instance.getNetHandler();
 
         if (!joinInProgress) {
             // If connected to a Realm, locate the RealmServer instance
@@ -571,9 +571,9 @@ public class ServerUtils implements ExtendedModule {
      */
     private void joinServer(final ServerData serverData) {
         try {
-            if (!serverData.pinged) {
+            if (!serverData.field_1691) {
                 // Stub Server Data if not pinged
-                serverData.pinged = true;
+                serverData.field_1691 = true;
                 serverData.pingToServer = -2L;
                 serverData.serverMOTD = "";
                 serverData.populationInfo = "";
