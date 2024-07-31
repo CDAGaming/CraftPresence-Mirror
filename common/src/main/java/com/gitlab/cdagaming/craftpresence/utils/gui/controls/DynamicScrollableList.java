@@ -34,7 +34,6 @@ import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
-import unilib.external.io.github.classgraph.ClassInfo;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -42,6 +41,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import unilib.external.io.github.classgraph.ClassInfo;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
