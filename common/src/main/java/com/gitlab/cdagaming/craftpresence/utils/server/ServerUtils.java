@@ -48,7 +48,8 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.server.IntegratedServer;
-import net.minecraft.realms.RealmsScreenProxy;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.realms.RealmsScreen;
 
 import java.util.List;
 import java.util.Map;
@@ -251,8 +252,8 @@ public class ServerUtils implements ExtendedModule {
     @SuppressWarnings("RedundantCast")
     private RealmsServer findRealmData(final ClientPacketListener connection) {
         try {
-            if (connection.callbackScreen instanceof RealmsScreenProxy realmsProxy &&
-                    realmsProxy.getScreen() instanceof RealmsMainScreen realmsMainScreen) {
+            if (connection.callbackScreen instanceof RealmsScreen realmsProxy &&
+                    realmsProxy instanceof RealmsMainScreen realmsMainScreen) {
                 return (RealmsServer) StringUtils.executeMethod(
                         RealmsMainScreen.class, realmsMainScreen,
                         new Class[]{long.class},
@@ -405,7 +406,7 @@ public class ServerUtils implements ExtendedModule {
     private String getServerMotd(final IntegratedServer newIntegratedData, final ServerData newServerData) {
         String result = "";
         if (newServerData != null && newServerData.motd != null) {
-            result = newServerData.motd;
+            result = newServerData.motd.getString();
         } else if (newIntegratedData != null && newIntegratedData.getMotd() != null) {
             result = newIntegratedData.getMotd();
         }
@@ -461,7 +462,7 @@ public class ServerUtils implements ExtendedModule {
             newMaxPlayers = 8;
         } else if (newServerData != null) {
             try {
-                newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status).split("/")[1]).getSecond();
+                newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.status.getString()).split("/")[1]).getSecond();
             } catch (Throwable ignored) {
             }
         }
@@ -578,8 +579,8 @@ public class ServerUtils implements ExtendedModule {
                 // Stub Server Data if not pinged
                 serverData.pinged = true;
                 serverData.ping = -2L;
-                serverData.motd = "";
-                serverData.status = "";
+                serverData.motd = TextComponent.EMPTY;
+                serverData.status = TextComponent.EMPTY;
             }
 
             if (CraftPresence.player != null) {
@@ -625,8 +626,9 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getLevelName() : "";
-            final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.world.getLevelData().getLevelName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
+            final String defaultWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
+            final String primaryWorldName = CraftPresence.instance.getSingleplayerServer() != null ? CraftPresence.instance.getSingleplayerServer().getWorldData().getLevelName() : "";
+            final String secondaryWorldName = CraftPresence.world.getServer() != null ? StringUtils.getOrDefault(CraftPresence.world.getServer().getWorldData().getLevelName(), defaultWorldName) : defaultWorldName;
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         });
