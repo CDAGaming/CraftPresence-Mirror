@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.Mod;
  *
  * @author CDAGaming
  */
-@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json", acceptedMinecraftVersions = "*", dependencies = "required-after:unilib@[1.0.1,]")
+@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json", acceptedMinecraftVersions = "*", dependencies = "@UNILIB_LEGACY_RANGE@")
 public class CraftPresenceForge {
     /**
      * Begins Scheduling Ticks on Class Initialization

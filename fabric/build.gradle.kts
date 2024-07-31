@@ -11,6 +11,8 @@ operator fun String.invoke(): String? {
 val modName: String by extra
 val modId: String by extra
 
+val uniLibMinVersion: String by extra
+
 val isLegacy: Boolean by extra
 val protocol: Int by extra
 val isJarMod: Boolean by extra
@@ -76,7 +78,7 @@ val replaceProperties = mapOf(
     "mcversion" to mcVersionLabel,
     "game_version_range" to "fabric_game_version_range"()!!,
     "loader_version_range" to "fabric_loader_version_range"()!!,
-    "unilib_min_version" to "unilib_minimum_version"()!!
+    "unilib_min_version" to uniLibMinVersion
 )
 
 tasks.processResources {

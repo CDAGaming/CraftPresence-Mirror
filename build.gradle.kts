@@ -86,6 +86,7 @@ subprojects {
     val versionLabel by extra(extVersionLabel)
     val mcVersion by extra("mc_version"()!!)
     val mcMappingsType by extra("mc_mappings_type"())
+    val uniLibMinVersion by extra("unilib_minimum_version"()!!)
 
     val displayLoaderName =
         name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
@@ -366,7 +367,8 @@ subprojects {
                     "MC_PROTOCOL" to protocol.toString(),
                     "IS_LEGACY" to isLegacy.toString(),
                     "UNILIB_NAME" to libPrefix,
-                    "UNILIB_MIN_VERSION" to "unilib_minimum_version"()!!
+                    "UNILIB_MIN_VERSION" to uniLibMinVersion,
+                    "UNILIB_LEGACY_RANGE" to "required-after:unilib@[$uniLibMinVersion,]"
                 )
             )
         }
