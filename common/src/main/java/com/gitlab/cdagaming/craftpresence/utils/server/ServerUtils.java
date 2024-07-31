@@ -40,10 +40,10 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
+import net.minecraft.client.gui.GuiConnecting;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenRealmsProxy;
-import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -459,8 +459,11 @@ public class ServerUtils implements ExtendedModule {
         int newMaxPlayers = 0;
         if (newLANStatus) {
             newMaxPlayers = 8;
-        } else if (newConnection != null) {
-            newMaxPlayers = newConnection.currentServerMaxPlayers;
+        } else if (newServerData != null) {
+            try {
+                newMaxPlayers = StringUtils.getValidInteger(StringUtils.stripColors(newServerData.populationInfo).split("/")[1]).getSecond();
+            } catch (Throwable ignored) {
+            }
         }
 
         if (newMaxPlayers < newCurrentPlayers) {
@@ -611,7 +614,7 @@ public class ServerUtils implements ExtendedModule {
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String newDifficulty = CraftPresence.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
+            final String newDifficulty = CraftPresence.world.getWorldInfo().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
                     StringUtils.formatWord(CraftPresence.world.getDifficulty().name().toLowerCase());
             return StringUtils.getOrDefault(newDifficulty);
@@ -630,22 +633,22 @@ public class ServerUtils implements ExtendedModule {
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()).getFirst()
+                TimeUtils.fromWorldTime(CraftPresence.world.getDayTime()).getFirst()
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.getDayTime()).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.getDayTime()).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime())
+                TimeUtils.fromWorldTime(CraftPresence.world.getDayTime())
         );
 
         // Default Arguments
