@@ -72,10 +72,6 @@ public class PresenceVisualizer {
      */
     private ScreenConstants.ColorData smallImageData;
     /**
-     * The Application Title text widget
-     */
-    private ScrollableTextWidget titleText;
-    /**
      * The Texture Widget used for the Large Image Data
      */
     private TexturedWidget largeWidget;
@@ -133,7 +129,6 @@ public class PresenceVisualizer {
         lines.clear();
         buttons.clear();
         lastCompiledPresence = null;
-        titleText = null;
         largeImageData = null;
         smallImageData = null;
 
@@ -227,24 +222,13 @@ public class PresenceVisualizer {
         final int textOffset = largeWidget.getRight() + 8;
         final int textWidth = rightButtonPos - textOffset;
 
-        // Adding Title Bar (Client ID Title)
-        titleText = childFrame.addWidget(new ScrollableTextWidget(
-                textOffset, screen.getButtonY(controlIndex, -4),
-                textWidth, ""
-        ));
-        // Adding RPC Lines
-        lines.add(childFrame.addWidget(new ScrollableTextWidget(
-                textOffset, screen.getButtonY(controlIndex, 9),
-                textWidth, ""
-        )));
-        lines.add(childFrame.addWidget(new ScrollableTextWidget(
-                textOffset, screen.getButtonY(controlIndex, 20),
-                textWidth, ""
-        )));
-        lines.add(childFrame.addWidget(new ScrollableTextWidget(
-                textOffset, screen.getButtonY(controlIndex, 31),
-                textWidth, ""
-        )));
+        // Adding RPC Lines (First Line = Title Bar)
+        for (int i = 0; i < 4; i++) {
+            lines.add(childFrame.addWidget(new ScrollableTextWidget(
+                    textOffset, screen.getButtonY(controlIndex, -4 + ((screen.getFontHeight() + 2) * i)),
+                    textWidth, ""
+            )));
+        }
 
         // Adding Additional Buttons
         buttons.add(childFrame.addControl(
@@ -272,9 +256,6 @@ public class PresenceVisualizer {
         // Compile the RichPresence data from current instance
         lastCompiledPresence = richPresence.get();
 
-        final String titlePrefix = !CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting ? "§l" : "";
-        titleText.setMessage(titlePrefix + CraftPresence.CLIENT.CURRENT_TITLE);
-
         // Assign compiled data to the various fields
         if (lastCompiledPresence.largeAsset() != null) {
             largeImageData = new ScreenConstants.ColorData(
@@ -294,6 +275,7 @@ public class PresenceVisualizer {
         }
 
         updateLineTexts(
+                CraftPresence.CLIENT.CURRENT_TITLE,
                 lastCompiledPresence.details(),
                 lastCompiledPresence.state(),
                 lastCompiledPresence.getTimeString()
@@ -330,6 +312,15 @@ public class PresenceVisualizer {
     }
 
     /**
+     * Retrieve the prefix normally used for title text
+     *
+     * @return The title string prefix
+     */
+    private String getTitlePrefix() {
+        return !CraftPresence.CONFIG.accessibilitySettings.stripTranslationFormatting ? "§l" : "";
+    }
+
+    /**
      * Update the text widgets with the specified data
      *
      * @param strings The list of string data to interpret
@@ -342,10 +333,13 @@ public class PresenceVisualizer {
             }
         }
 
+        boolean isTitleBar = true;
         for (int i = 0; i < lines.size(); i++) {
             final ScrollableTextWidget lineWidget = lines.get(i);
             if (i < validStrings.size()) {
-                lineWidget.setMessage(validStrings.get(i));
+                final String prefix = isTitleBar ? getTitlePrefix() : "";
+                lineWidget.setMessage(prefix + validStrings.get(i));
+                isTitleBar = false;
             } else {
                 lineWidget.setMessage("");
             }
