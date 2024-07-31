@@ -45,6 +45,7 @@ configurations.compileClasspath.get().extendsFrom(common)
 configurations.runtimeClasspath.get().extendsFrom(common)
 
 dependencies {
+    "modImplementation"("org.quiltmc:qsl:${"quilt_qsl_version"()}")
     "modImplementation"("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${"quilt_fabric_api_version"()}")
 
     // Mod Menu API Implementation

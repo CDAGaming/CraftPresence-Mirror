@@ -566,10 +566,9 @@ public class ServerUtils implements ExtendedModule {
      */
     private void joinServer(final ServerData serverData) {
         try {
-            if (!serverData.pinged) {
+            if (serverData.state() == ServerData.State.INITIAL) {
                 // Stub Server Data if not pinged
-                serverData.pinged = true;
-                serverData.ping = -2L;
+                serverData.setState(ServerData.State.PINGING);
                 serverData.motd = CommonComponents.EMPTY;
                 serverData.status = CommonComponents.EMPTY;
             }
@@ -580,7 +579,8 @@ public class ServerUtils implements ExtendedModule {
                     CraftPresence.instance,
                     ServerAddress.parseString(serverData.ip),
                     serverData,
-                    false
+                    false,
+                    null
             );
         } catch (Throwable ex) {
             printException(ex);
