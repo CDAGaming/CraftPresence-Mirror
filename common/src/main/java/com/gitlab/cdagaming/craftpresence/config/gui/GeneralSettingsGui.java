@@ -27,13 +27,13 @@ package com.gitlab.cdagaming.craftpresence.config.gui;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.category.General;
-import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.ConfigurationGui;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.CheckBoxControl;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import com.jagrosh.discordipc.entities.DiscordBuild;
+import com.jagrosh.discordipc.entities.PartyPrivacy;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 public class GeneralSettingsGui extends ConfigurationGui<General> {

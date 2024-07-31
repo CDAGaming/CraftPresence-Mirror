@@ -30,7 +30,6 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.CompiledPresence;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
-import com.gitlab.cdagaming.craftpresence.core.impl.discord.PartyPrivacy;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAsset;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
@@ -38,9 +37,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.IPCClient;
 import com.jagrosh.discordipc.IPCListener;
-import com.jagrosh.discordipc.entities.DiscordBuild;
-import com.jagrosh.discordipc.entities.RichPresence;
-import com.jagrosh.discordipc.entities.User;
+import com.jagrosh.discordipc.entities.*;
 import com.jagrosh.discordipc.entities.pipe.PipeStatus;
 import com.jagrosh.discordipc.exceptions.NoDiscordClientException;
 import io.github.cdagaming.unicore.impl.Pair;
@@ -1606,6 +1603,7 @@ public class DiscordUtils {
         }
 
         final RichPresence.Builder newRPCData = new RichPresence.Builder()
+                .setActivityType(ActivityType.Playing)
                 .setState(state = sanitizePlaceholders(state, 128))
                 .setDetails(details = sanitizePlaceholders(details, 128))
                 .setStartTimestamp(startTimestamp)
@@ -1645,7 +1643,7 @@ public class DiscordUtils {
                     .setParty(
                             PARTY_ID = sanitizePlaceholders(PARTY_ID, 128),
                             PARTY_SIZE, PARTY_MAX,
-                            PARTY_PRIVACY.ordinal()
+                            PARTY_PRIVACY
                     )
                     .setMatchSecret(MATCH_SECRET = sanitizePlaceholders(MATCH_SECRET, 128))
                     .setJoinSecret(JOIN_SECRET = sanitizePlaceholders(JOIN_SECRET, 128))
