@@ -17,8 +17,9 @@ by [jagrosh](https://github.com/jagrosh)!
 ## General Notes
 
 * Beginning in v2.5.0, [UniLib](https://gitlab.com/CDAGaming/UniLib) is now a **required** dependency
-    * UniLib is a new library mod I have created to abstract common API functions for more usage as well as future
-      project, and can be downloaded [here](https://legacy.curseforge.com/minecraft/mc-mods/unilib/files/all)
+    * UniLib is a new library mod I have created to abstract common API functions for more general use cases as well as
+      future projects
+    * The mod can be downloaded [here](https://legacy.curseforge.com/minecraft/mc-mods/unilib/files/all)
     * This mod **will crash** if UniLib is not found or if using an incompatible version
 * This mod identifies as a **Client Side-only** mod
     * This means it **will not run** on the Server's side.

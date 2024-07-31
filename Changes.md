@@ -17,7 +17,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ModPublisher (`2.1.4` -> `2.1.6`)
     * ModFusioner (`1.0.12` -> `removed`)
     * UniLib (`local` -> `1.0.0`)
-    * DiscordIPC (`0.9.2` -> `0.9.3`)
+    * DiscordIPC (`0.9.2` -> `0.10.0`)
 * Several packaging changes have been made for ease-of-access and for future development:
     * Added publishing support for [Nightbloom](https://nightbloom.cc/project/craftpresence)
     * Re-Added support for [OG Forge](https://files.minecraftforge.net/) for MC 1.20.2+ Users
@@ -27,14 +27,19 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Removed several config options that were not applicable to CraftPresence or were redundant metadata:
     * From `main`: `_README`, `_SOURCE`
     * From `accessibility`: `tooltipBackground`, `tooltipBorder`, `guiBackground`, `altGuiBackground`, `renderTooltips`
+* Moved `Party Privacy` setting from `General` to `Presence Editor (PresenceData)`
+    * This makes this setting an instance property instead of a global setting
+    * Due to the changes behind this method, this property is also reset to its default
 * Improved LAN support for the `server` module
     * Several fixes have been made for "hosting" LAN servers alongside fixes for LAN in general
     * This also effects Essential Mod support, given the similar networking tech involved
-* Added an RPC Visualizer to `PresenceEditor` Screens
+* Added an RPC Visualizer to the `Presence Editor` and `Display Settings` Screens
     * Replicates the look and feel of Discord's Visualizer, allowing users an "at-a-glance" preview of their RPC before
       saving
     * Only displays if `Use As Main` is enabled or is the Default Module
     * Can be disabled with the `Strip Extra Gui Elements` setting in `Accessibility`
+* Added support for Discord Activity Types
+    * Reference: [GitHub](https://github.com/discord/discord-api-docs/pull/7033)
 * Misc. Optimizations and Performance Improvements across several APIs
     * A large portion of CraftPresence's APIs have now branched off into [UniLib](https://gitlab.com/CDAGaming/UniLib),
       now being served as a required dependency for CraftPresence
