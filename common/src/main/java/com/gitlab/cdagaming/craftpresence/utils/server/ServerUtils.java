@@ -33,7 +33,6 @@ import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
-import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 import io.github.cdagaming.unicore.impl.Pair;
@@ -47,6 +46,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
+import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.realms.RealmsScreen;
@@ -583,19 +583,12 @@ public class ServerUtils implements ExtendedModule {
                 serverData.status = TextComponent.EMPTY;
             }
 
-            if (CraftPresence.player != null) {
-                CraftPresence.world.disconnect();
-                CraftPresence.instance.clearLevel(null);
-            }
-
             final Screen currentScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
-            RenderUtils.openScreen(
+            ConnectScreen.startConnecting(
+                    currentScreen != null ? currentScreen : new TitleScreen(),
                     CraftPresence.instance,
-                    new ConnectScreen(
-                            currentScreen != null ? currentScreen : new TitleScreen(),
-                            CraftPresence.instance,
-                            serverData
-                    )
+                    ServerAddress.parseString(serverData.ip),
+                    serverData
             );
         } catch (Throwable ex) {
             printException(ex);
