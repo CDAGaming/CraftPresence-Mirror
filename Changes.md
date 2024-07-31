@@ -16,7 +16,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Gradle (`8.8` -> `8.9`)
     * ModPublisher (`2.1.4` -> `2.1.6`)
     * ModFusioner (`1.0.12` -> `removed`)
-    * UniLib (`local` -> `1.0.0`)
+    * UniLib (`local` -> `1.0.1`)
     * DiscordIPC (`0.9.2` -> `0.10.0`)
 * Several packaging changes have been made for ease-of-access and for future development:
     * Added publishing support for [Nightbloom](https://nightbloom.cc/project/craftpresence)
