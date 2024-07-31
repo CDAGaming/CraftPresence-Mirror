@@ -45,6 +45,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
       now being served as a required dependency for CraftPresence
     * Many fixes and tweaks have been made over the last few months to make these APIs more usable for the public with
       better reliability and stability, especially on older versions of Minecraft
+* (Backend) Adjusted `ShadowJar` relocation paths to avoid mod conflicts
 
 ### Fixes
 

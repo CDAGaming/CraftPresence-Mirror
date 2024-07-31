@@ -102,6 +102,8 @@ tasks.jar {
     from(sourceSets.main.get().output)
 }
 
+val relocatePath = "$modId.external"
+
 tasks.shadowJar {
     configurations = listOf(project.configurations.getByName("shade"), project.configurations.getByName("shadeOnly"))
 
@@ -141,18 +143,18 @@ tasks.shadowJar {
     exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-arm*/**")
 
     // Package Relocations
-    relocate("net.lenni0451", "external.net.lenni0451")
-    relocate("com.jagrosh", "external.com.jagrosh")
-    relocate("org.meteordev", "external.org.meteordev")
-    relocate("io.github.classgraph", "external.io.github.classgraph")
-    relocate("nonapi.io.github.classgraph", "external.nonapi.io.github.classgraph")
+    relocate("net.lenni0451", "$relocatePath.net.lenni0451")
+    relocate("com.jagrosh", "$relocatePath.com.jagrosh")
+    relocate("org.meteordev", "$relocatePath.org.meteordev")
+    relocate("io.github.classgraph", "$relocatePath.io.github.classgraph")
+    relocate("nonapi.io.github.classgraph", "$relocatePath.nonapi.io.github.classgraph")
     if (protocol < 755) {
-        relocate("org.slf4j", "external.org.slf4j")
-        relocate("org.apache.logging.slf4j", "external.org.apache.logging.slf4j")
+        relocate("org.slf4j", "$relocatePath.org.slf4j")
+        relocate("org.apache.logging.slf4j", "$relocatePath.org.apache.logging.slf4j")
     }
     // Integration Relocations
     if (!isLegacy) {
-        relocate("me.hypherionmc", "external.me.hypherionmc")
+        relocate("me.hypherionmc", "$relocatePath.me.hypherionmc")
     }
 
     archiveClassifier.set("dev-shadow")

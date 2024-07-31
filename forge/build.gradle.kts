@@ -90,55 +90,6 @@ tasks.shadowJar {
     from(zipTree(project(":common").tasks.shadowJar.get().archiveFile))
     configurations = listOf(shadowCommon)
     archiveClassifier.set("dev-shadow")
-
-    // Meta Exclusions
-    exclude("**/DEPENDENCIES*")
-    exclude("**/LICENSE*")
-    exclude("**/Log4J*")
-    exclude("META-INF/NOTICE*")
-    exclude("META-INF/versions/**")
-
-    // JUnixSocket exclusions:
-    // libs
-    // discord doesn't support bsd or sun
-    exclude("lib/*BSD*/**")
-    exclude("lib/*Sun*/**")
-    // we don't use junixsocket on windows
-    exclude("lib/*Window*/**")
-    // include only arm on mac
-    exclude("lib/aarch64-Linux*/**")
-    // doesn't support these architectures
-    exclude("lib/ppc*/**")
-    exclude("lib/risc*/**")
-    exclude("lib/s390x*/**")
-    exclude("lib/arm*/**")
-    // metadata
-    // discord doesn't support bsd or sun
-    exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*BSD*/**")
-    exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*Sun*/**")
-    // we don't use junixsocket on windows
-    exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*Window*/**")
-    // include only arm on mac
-    exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-aarch64-Linux*/**")
-    // doesn't support these architectures
-    exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-ppc*/**")
-    exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-risc*/**")
-    exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-s390x*/**")
-    exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-arm*/**")
-
-    // Package Relocations
-    relocate("com.jagrosh", "external.com.jagrosh")
-    relocate("org.meteordev", "external.org.meteordev")
-    relocate("io.github.classgraph", "external.io.github.classgraph")
-    relocate("nonapi.io.github.classgraph", "external.nonapi.io.github.classgraph")
-    if (protocol < 755) {
-        relocate("org.slf4j", "external.org.slf4j")
-        relocate("org.apache.logging.slf4j", "external.org.apache.logging.slf4j")
-    }
-    // Integration Relocations
-    if (!isLegacy) {
-        relocate("me.hypherionmc", "external.me.hypherionmc")
-    }
 }
 
 tasks.named<RemapJarTask>("remapJar") {
