@@ -71,7 +71,6 @@
   "gui.config.name.general.detect_multimc_manifest": "MultiMC Instanz erkennen",
   "gui.config.name.general.detect_world_data": "Welt Daten erkennen",
   "gui.config.name.general.enable_join_request": "Beitrittsanfragen aktivieren",
-  "gui.config.name.general.party_privacy": "Party Privatsphäre",
   "gui.config.name.general.preferred_client": "Bevorzugter Client",
   "gui.config.name.server_messages.server_icon": "Standard Server Icon",
   "gui.config.name.server_messages.server_messages": "Server Nachrichten",

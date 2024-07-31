@@ -42,7 +42,6 @@
   "gui.config.name.general.detect_technic_pack": "Détecter pack Technic",
   "gui.config.name.general.detect_world_data": "Détecter les données du monde",
   "gui.config.name.general.enable_join_request": "Activer les demandes pour rejoindre",
-  "gui.config.name.general.party_privacy": "Confidentialité du groupe",
   "gui.config.name.general.preferred_client": "Client préféré",
   "gui.config.name.general.reset_time_on_init": "Reset le temps à l'initialisation",
   "gui.config.name.server_messages.server_icon": "Icône de serveur par défaut",
