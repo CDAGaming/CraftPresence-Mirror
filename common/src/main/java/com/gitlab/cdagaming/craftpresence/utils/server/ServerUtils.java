@@ -38,12 +38,12 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.client.multiplayer.GuiConnecting;
-import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.src.GuiPlayerInfo;
+import net.minecraft.src.GuiConnecting;
+import net.minecraft.src.NetClientHandler;
+import net.minecraft.src.ServerData;
+import net.minecraft.src.ServerList;
+import net.minecraft.src.IntegratedServer;
 
 import java.util.List;
 import java.util.Map;
@@ -239,7 +239,7 @@ public class ServerUtils implements ExtendedModule {
         final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
-            newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "M");
+            newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "O");
         } catch (Exception ex) {
             newServerData = null;
         }
