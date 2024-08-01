@@ -54,6 +54,7 @@ import java.util.Map;
  * @param startTimestamp The Current Starting Unix Timestamp from Epoch, used for Elapsed Time
  * @param endTimestamp   The Current Ending Unix Timestamp from Epoch, used for Time Left (Set to 0 or lower for null)
  * @param buttons        The current button array tied to the RPC, if any
+ * @param instance       Whether this RPC should be marked as instanced content
  * @param isMain         Whether this data should be marked as the current RPC event
  */
 public record CompiledPresence(
@@ -72,6 +73,7 @@ public record CompiledPresence(
         long startTimestamp,
         long endTimestamp,
         JsonArray buttons,
+        boolean instance,
         boolean isMain
 ) {
     /**

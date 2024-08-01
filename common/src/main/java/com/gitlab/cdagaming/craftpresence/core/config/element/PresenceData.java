@@ -42,6 +42,7 @@ public class PresenceData extends Module implements Serializable {
 
     public boolean enabled = true;
     public boolean useAsMain = false;
+    public boolean isInstance = false;
     public int activityType = ActivityType.Playing.ordinal();
     public int partyPrivacy = PartyPrivacy.Public.ordinal();
     public String details = "";
@@ -77,6 +78,7 @@ public class PresenceData extends Module implements Serializable {
         if (target instanceof PresenceData data && !equals(target)) {
             enabled = data.enabled;
             useAsMain = data.useAsMain;
+            isInstance = data.isInstance;
             activityType = data.activityType;
             partyPrivacy = data.partyPrivacy;
             setDetails(data.details);
@@ -96,6 +98,7 @@ public class PresenceData extends Module implements Serializable {
         return switch (name) {
             case "enabled" -> enabled;
             case "useAsMain" -> useAsMain;
+            case "isInstance" -> isInstance;
             case "activityType" -> activityType;
             case "partyPrivacy" -> partyPrivacy;
             case "details" -> details;
@@ -120,6 +123,9 @@ public class PresenceData extends Module implements Serializable {
                     break;
                 case "useAsMain":
                     useAsMain = (Boolean) value;
+                    break;
+                case "isInstance":
+                    isInstance = (Boolean) value;
                     break;
                 case "activityType":
                     activityType = (Integer) value;
@@ -225,6 +231,7 @@ public class PresenceData extends Module implements Serializable {
 
         return Objects.equals(other.enabled, enabled) &&
                 Objects.equals(other.useAsMain, useAsMain) &&
+                Objects.equals(other.isInstance, isInstance) &&
                 Objects.equals(other.activityType, activityType) &&
                 Objects.equals(other.partyPrivacy, partyPrivacy) &&
                 Objects.equals(other.details, details) &&
@@ -241,6 +248,7 @@ public class PresenceData extends Module implements Serializable {
     public int hashCode() {
         return Objects.hash(
                 enabled, useAsMain,
+                isInstance,
                 activityType, partyPrivacy,
                 details, gameState,
                 largeImageKey, largeImageText,

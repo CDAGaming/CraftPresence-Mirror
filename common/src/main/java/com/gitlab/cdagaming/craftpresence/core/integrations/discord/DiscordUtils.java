@@ -177,10 +177,6 @@ public class DiscordUtils {
      */
     public String SPECTATE_SECRET;
     /**
-     * The Instance Code attached to the RPC, if any
-     */
-    public byte INSTANCE;
-    /**
      * An Instance of the {@link Starscript} engine, responsible for parsing and combining expressions
      */
     public Starscript scriptEngine = new Starscript();
@@ -1477,7 +1473,8 @@ public class DiscordUtils {
                 "", "",
                 "", "",
                 0L, 0L,
-                new JsonArray(), true
+                new JsonArray(), false,
+                true
         );
 
         clearPartyData();
@@ -1536,6 +1533,7 @@ public class DiscordUtils {
         // Format Presence based on Arguments available in argumentData
         final ActivityType activityType = ActivityType.from(configData.activityType % ActivityType.values().length);
         final PartyPrivacy partyPrivacy = PartyPrivacy.from(configData.partyPrivacy % PartyPrivacy.values().length);
+        final boolean isInstance = configData.isInstance;
 
         String details = StringUtils.formatWord(getResult(configData.details, "details"), !formatWords, true, 1);
         String state = StringUtils.formatWord(getResult(configData.gameState, "gameState"), !formatWords, true, 1);
@@ -1617,7 +1615,8 @@ public class DiscordUtils {
                         largeImageText = sanitizePlaceholders(largeImageText, 128))
                 .setSmallImage(smallImageKey = sanitizePlaceholders(smallImageKey, 256),
                         smallImageText = sanitizePlaceholders(smallImageText, 128))
-                .setButtons(buttons);
+                .setButtons(buttons)
+                .setInstance(isInstance);
 
         // Format Data to UTF_8 after Sent to RPC (RPC has its own Encoding)
         state = StringUtils.convertString(state, "UTF-8", false);
@@ -1637,7 +1636,8 @@ public class DiscordUtils {
                 largeImageKey, smallImageKey,
                 largeImageText, smallImageText,
                 startTimestamp, endTimestamp,
-                buttons, useAsMain
+                buttons, isInstance,
+                useAsMain
         );
 
         if (useAsMain) {

@@ -408,6 +408,7 @@ public class CommandsGui extends ExtendedScreen {
                             if (CraftPresence.CLIENT.isAvailable() && CraftPresence.CLIENT.PRESENCE != null) {
                                 executionString = Constants.TRANSLATOR.translate("craftpresence.command.current_data",
                                         CraftPresence.CLIENT.CURRENT_USER.getEffectiveName(),
+                                        CraftPresence.CLIENT.PRESENCE.activityType().name(),
                                         StringUtils.convertString(CraftPresence.CLIENT.PRESENCE.details(), "UTF-8", true),
                                         StringUtils.convertString(CraftPresence.CLIENT.PRESENCE.state(), "UTF-8", true),
                                         CraftPresence.CLIENT.PRESENCE.startTimestamp(),
@@ -424,7 +425,7 @@ public class CommandsGui extends ExtendedScreen {
                                         CraftPresence.CLIENT.PRESENCE.endTimestamp(),
                                         CraftPresence.CLIENT.MATCH_SECRET, CraftPresence.CLIENT.SPECTATE_SECRET,
                                         CraftPresence.CLIENT.PRESENCE.buttons().toString(),
-                                        CraftPresence.CLIENT.INSTANCE
+                                        CraftPresence.CLIENT.PRESENCE.instance()
                                 );
                             } else {
                                 executionString = Constants.TRANSLATOR.translate("craftpresence.command.offline");
