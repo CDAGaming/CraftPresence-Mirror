@@ -207,7 +207,7 @@ public class PresenceVisualizer {
                             95, 20,
                             Constants.TRANSLATOR.translate("gui.config.message.visualizer.toggle_party"),
                             () -> showPartyData = !showPartyData,
-                            () -> childFrame.drawMultiLineString(
+                            () -> screen.drawMultiLineString(
                                     StringUtils.splitTextByNewLine(
                                             Constants.TRANSLATOR.translate("gui.config.message.hover.visualizer.toggle_party")
                                     )
