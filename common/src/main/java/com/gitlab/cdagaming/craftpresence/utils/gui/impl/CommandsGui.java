@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 
 public class CommandsGui extends ExtendedScreen {
     private static final Pattern SURROUNDED_BY_QUOTES = Pattern.compile("\"(.*?)\"");
-    public ExtendedButtonControl proceedButton, copyButton;
+    public ExtendedButtonControl proceedButton, copyButton, enterButton;
     private String[] executionCommandArgs;
     private ExtendedTextControl commandInput;
     private ScrollPane childFrame;
@@ -129,12 +129,24 @@ public class CommandsGui extends ExtendedScreen {
                         () -> copyToClipboard(executionString)
                 )
         );
+        enterButton = addControl(
+                new ExtendedButtonControl(
+                        getScreenWidth() - 26, (getScreenHeight() - 26),
+                        20, 20,
+                        "=>",
+                        () -> {
+                            if (canAcceptCommand()) {
+                                acceptCommand();
+                            }
+                        }
+                )
+        );
 
         commandInput = addControl(
                 new ExtendedTextControl(
                         getFontRenderer(),
                         proceedButton.getRight() + 4, (getScreenHeight() - 26),
-                        (getScreenWidth() - 112), 20,
+                        (getScreenWidth() - 135), 20,
                         () -> commandString = commandInput.getControlMessage()
                 )
         );
@@ -158,6 +170,7 @@ public class CommandsGui extends ExtendedScreen {
     public void preRender() {
         proceedButton.setControlEnabled(!blockInteractions);
         copyButton.setControlEnabled(!blockInteractions);
+        enterButton.setControlEnabled(!blockInteractions);
         commandInput.setControlEnabled(!blockInteractions);
 
         if (!blockInteractions) {
@@ -172,7 +185,7 @@ public class CommandsGui extends ExtendedScreen {
      * Executes Tab-Completion and Primary Command Logic
      */
     private void checkCommands() {
-        if (!StringUtils.isNullOrEmpty(commandString) && commandString.startsWith("/")) {
+        if (isValidCommand()) {
             commandArgs = commandString
                     .replace("/", "")
                     .split(" ");
@@ -474,8 +487,7 @@ public class CommandsGui extends ExtendedScreen {
                 if (isEscapeKey(keyCode)) {
                     commandInput.setControlFocused(false);
                 } else {
-                    if (commandString.startsWith("/") && commandArgs != null && commandArgs.length > 0 &&
-                            (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(Constants.MOD_ID))) {
+                    if (canAcceptCommand()) {
                         if (keyCode == getKeyByVersion(15, 258) && !tabCompletions.isEmpty()) { // Tab Key Event
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
@@ -486,15 +498,41 @@ public class CommandsGui extends ExtendedScreen {
                                 commandInput.setControlMessage(commandString);
                             }
                         } else if (keyCode == getKeyByVersion(28, 257) || keyCode == getKeyByVersion(156, 335)) { // Enter Key Event
-                            executeCommand(filteredCommandArgs);
-                            childFrame.resetMouseScroll();
-                            childFrame.setMouseScroll(0);
+                            acceptCommand();
                         }
                     }
                 }
             }
             super.keyTyped(typedChar, keyCode);
         }
+    }
+
+    /**
+     * Determine if the command string is valid
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    private boolean isValidCommand() {
+        return !StringUtils.isNullOrEmpty(commandString) && commandString.startsWith("/");
+    }
+
+    /**
+     * Determine if the command entry data is valid
+     *
+     * @return {@link Boolean#TRUE} if condition is satisfied
+     */
+    private boolean canAcceptCommand() {
+        return (isValidCommand() && commandArgs != null && commandArgs.length > 0 &&
+                (commandArgs[0].equalsIgnoreCase("cp") || commandArgs[0].equalsIgnoreCase(Constants.MOD_ID)));
+    }
+
+    /**
+     * Accepts the currently entered command
+     */
+    private void acceptCommand() {
+        executeCommand(filteredCommandArgs);
+        childFrame.resetMouseScroll();
+        childFrame.setMouseScroll(0);
     }
 
     /**
