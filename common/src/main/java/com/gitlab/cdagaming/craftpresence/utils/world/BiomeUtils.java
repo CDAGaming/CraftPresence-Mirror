@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.BiomeGenBase;
+import net.minecraft.src.MobSpawnerBase;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import java.util.List;
@@ -91,7 +91,7 @@ public class BiomeUtils implements ExtendedModule {
     /**
      * The Player's Current Biome, if any
      */
-    private BiomeGenBase CURRENT_BIOME;
+    private MobSpawnerBase CURRENT_BIOME;
 
     @Override
     public void clearFieldData() {
@@ -114,7 +114,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final BiomeGenBase newBiome = CraftPresence.world.getWorldChunkManager().func_4073_a((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
+        final MobSpawnerBase newBiome = CraftPresence.world.getWorldChunkManager().func_4073_a((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
         final String newBiomeName = newBiome.biomeName;
 
         final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
@@ -183,17 +183,17 @@ public class BiomeUtils implements ExtendedModule {
      *
      * @return The detected Biome Types found
      */
-    private List<BiomeGenBase> getBiomeTypes() {
-        List<BiomeGenBase> biomeTypes = StringUtils.newArrayList();
+    private List<MobSpawnerBase> getBiomeTypes() {
+        List<MobSpawnerBase> biomeTypes = StringUtils.newArrayList();
 
         if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(BiomeGenBase.class).values()) {
+            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(MobSpawnerBase.class).values()) {
                 if (classInfo != null) {
                     try {
                         Class<?> classObj = FileUtils.loadClass(classInfo.getName());
                         if (classObj != null) {
-                            BiomeGenBase biomeObj = (BiomeGenBase) classObj.getDeclaredConstructor().newInstance();
+                            MobSpawnerBase biomeObj = (MobSpawnerBase) classObj.getDeclaredConstructor().newInstance();
                             if (!biomeTypes.contains(biomeObj)) {
                                 biomeTypes.add(biomeObj);
                             }
@@ -210,7 +210,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        for (BiomeGenBase biome : getBiomeTypes()) {
+        for (MobSpawnerBase biome : getBiomeTypes()) {
             if (biome != null) {
                 String biomeName = StringUtils.getOrDefault(biome.biomeName, MappingUtils.getClassName(biome));
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);

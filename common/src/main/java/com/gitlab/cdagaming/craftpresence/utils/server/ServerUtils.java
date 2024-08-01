@@ -607,7 +607,7 @@ public class ServerUtils implements ExtendedModule {
                 if (false) {
                     return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
                 } else {
-                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "K");
+                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "J");
                     int difficulty = CraftPresence.world.difficultySetting;
                     if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
                         difficulty = 0;
