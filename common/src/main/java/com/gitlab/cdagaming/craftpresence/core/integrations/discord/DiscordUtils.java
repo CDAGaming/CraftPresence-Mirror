@@ -160,11 +160,6 @@ public class DiscordUtils {
      */
     public int PARTY_MAX;
     /**
-     * The Privacy Level of the Party Session
-     * <p>0 == Private; 1 == Public
-     */
-    public PartyPrivacy PARTY_PRIVACY = PartyPrivacy.Public;
-    /**
      * The Current Party Join Secret Key, while applicable
      */
     public String JOIN_SECRET;
@@ -1637,7 +1632,7 @@ public class DiscordUtils {
                     .setParty(
                             PARTY_ID = sanitizePlaceholders(PARTY_ID, 128),
                             PARTY_SIZE, PARTY_MAX,
-                            PARTY_PRIVACY = partyPrivacy
+                            partyPrivacy
                     )
                     .setMatchSecret(MATCH_SECRET = sanitizePlaceholders(MATCH_SECRET, 128))
                     .setJoinSecret(JOIN_SECRET = sanitizePlaceholders(JOIN_SECRET, 128))

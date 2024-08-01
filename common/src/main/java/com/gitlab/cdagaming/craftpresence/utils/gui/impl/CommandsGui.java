@@ -433,7 +433,7 @@ public class CommandsGui extends ExtendedScreen {
                                         CraftPresence.CLIENT.PARTY_ID,
                                         CraftPresence.CLIENT.PARTY_SIZE,
                                         CraftPresence.CLIENT.PARTY_MAX,
-                                        CraftPresence.CLIENT.PARTY_PRIVACY.name(),
+                                        CraftPresence.CLIENT.PRESENCE.partyPrivacy().name(),
                                         CraftPresence.CLIENT.JOIN_SECRET,
                                         CraftPresence.CLIENT.PRESENCE.endTimestamp(),
                                         CraftPresence.CLIENT.MATCH_SECRET, CraftPresence.CLIENT.SPECTATE_SECRET,

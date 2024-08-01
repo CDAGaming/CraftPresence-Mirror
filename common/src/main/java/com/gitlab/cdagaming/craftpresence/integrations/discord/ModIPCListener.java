@@ -64,7 +64,7 @@ public class ModIPCListener implements IPCListener {
     @Override
     public void onActivityJoinRequest(IPCClient client, String secret, User user) {
         // On Receiving a New Join Request (Applies when Party is not Public)
-        if (CraftPresence.CLIENT.PARTY_PRIVACY != PartyPrivacy.Public && (
+        if (CraftPresence.CLIENT.PRESENCE.partyPrivacy() != PartyPrivacy.Public && (
                 CraftPresence.CLIENT.STATUS != DiscordStatus.JoinRequest ||
                         !CraftPresence.CLIENT.REQUESTER_USER.equals(user)
         )) {
