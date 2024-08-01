@@ -1464,19 +1464,7 @@ public class DiscordUtils {
      * Clears all Data from the RPC Presence Fields
      */
     public void clearPresenceData() {
-        PRESENCE = new CompiledPresence(
-                ActivityType.Playing,
-                PartyPrivacy.Public,
-                "", "",
-                "", "",
-                null, null,
-                "", "",
-                "", "",
-                0L, 0L,
-                new JsonArray(), false,
-                true
-        );
-
+        PRESENCE = null;
         clearPartyData();
     }
 

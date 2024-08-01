@@ -258,18 +258,14 @@ public class PresenceVisualizer {
         }
 
         // Adding Additional Buttons
-        buttons.add(childFrame.addControl(
-                new ExtendedButtonControl(
-                        rightButtonPos, screen.getButtonY(controlIndex++),
-                        95, 20, ""
-                )
-        ));
-        buttons.add(childFrame.addControl(
-                new ExtendedButtonControl(
-                        rightButtonPos, screen.getButtonY(controlIndex++),
-                        95, 20, ""
-                )
-        ));
+        for (int i = 0; i < 2; i++) {
+            buttons.add(childFrame.addControl(
+                    new ExtendedButtonControl(
+                            rightButtonPos, screen.getButtonY(controlIndex++),
+                            95, 20, ""
+                    )
+            ));
+        }
 
         refreshVisualizer(richPresence);
     }
@@ -280,8 +276,16 @@ public class PresenceVisualizer {
      * @param richPresence The Supplier for the compiled rich presence
      */
     private void refreshVisualizer(final Supplier<CompiledPresence> richPresence) {
+        if (richPresence == null) {
+            return;
+        }
+
         // Compile the RichPresence data from current instance
         lastCompiledPresence = richPresence.get();
+
+        if (lastCompiledPresence == null) {
+            return;
+        }
 
         // Assign compiled data to the various fields
         if (lastCompiledPresence.largeAsset() != null) {
@@ -403,7 +407,7 @@ public class PresenceVisualizer {
      * @param childFrame The screen instance to use
      */
     public void postRender(final ExtendedScreen childFrame) {
-        if (autoRefresh && presenceSupplier != null) {
+        if (autoRefresh) {
             refreshVisualizer(presenceSupplier);
         }
 
