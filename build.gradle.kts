@@ -385,11 +385,6 @@ subprojects {
         exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-arm*/**")
 
         // Package Relocations
-        if (isLegacy) {
-            if (protocol <= 61) { // MC 1.5.2 and below
-                relocate("com.google.gson", "$relocatePath.com.google.gson")
-            }
-        }
         relocate("net.lenni0451", "$relocatePath.net.lenni0451")
         relocate("com.jagrosh", "$relocatePath.com.jagrosh")
         relocate("org.meteordev", "$relocatePath.org.meteordev")
