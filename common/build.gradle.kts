@@ -1,4 +1,3 @@
-import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import java.util.regex.Pattern
 
 /**
@@ -23,21 +22,7 @@ val mcVersionLabel: String by extra
 val fileFormat: String by extra
 
 unimined.minecraft {
-    defaultRemapJar = false
-    if (!isJarMod) {
-        val fabricData: FabricLikePatcher.() -> Unit = {
-            if (accessWidenerFile.exists()) {
-                accessWidener(accessWidenerFile)
-            }
-            loader("fabric_loader_version"()!!)
-            customIntermediaries = true
-        }
-        if (isModern) {
-            fabric(fabricData)
-        } else {
-            legacyFabric(fabricData)
-        }
-    }
+    // N/A
 }
 
 val shadeOnly: Configuration by configurations.creating
@@ -48,6 +33,8 @@ configurations.implementation.get().extendsFrom(shade)
 configurations.runtimeOnly.get().extendsFrom()
 
 dependencies {
+    "jarMod"("local:nsss:${"forge_version"()}")
+
     // Legacy Dependencies, based on Protocol Version
     if (isLegacy) {
         if (protocol <= 61) { // MC 1.5.2 and below
