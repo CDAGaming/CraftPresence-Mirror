@@ -1,4 +1,5 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.hypherionmc.modpublisher.plugin.ModPublisherGradleExtension
 import xyz.wagyourtail.jvmdg.gradle.task.files.DowngradeFiles
 import xyz.wagyourtail.replace_str.ProcessClasses
@@ -342,6 +343,65 @@ subprojects {
                     "Implementation-Vendor" to "CDAGaming"
                 )
             )
+        }
+    }
+
+    val relocatePath = "$modId.external"
+
+    tasks.named<ShadowJar>("shadowJar").configure {
+        // Meta Exclusions
+        exclude("**/DEPENDENCIES*")
+        exclude("**/LICENSE*")
+        exclude("**/Log4J*")
+        exclude("META-INF/NOTICE*")
+        exclude("META-INF/versions/**")
+
+        // JUnixSocket exclusions:
+        // libs
+        // discord doesn't support bsd or sun
+        exclude("lib/*BSD*/**")
+        exclude("lib/*Sun*/**")
+        // we don't use junixsocket on windows
+        exclude("lib/*Window*/**")
+        // include only arm on mac
+        exclude("lib/aarch64-Linux*/**")
+        // doesn't support these architectures
+        exclude("lib/ppc*/**")
+        exclude("lib/risc*/**")
+        exclude("lib/s390x*/**")
+        exclude("lib/arm*/**")
+        // metadata
+        // discord doesn't support bsd or sun
+        exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*BSD*/**")
+        exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*Sun*/**")
+        // we don't use junixsocket on windows
+        exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-*Window*/**")
+        // include only arm on mac
+        exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-aarch64-Linux*/**")
+        // doesn't support these architectures
+        exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-ppc*/**")
+        exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-risc*/**")
+        exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-s390x*/**")
+        exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-arm*/**")
+
+        // Package Relocations
+        if (isLegacy) {
+            if (protocol <= 61) { // MC 1.5.2 and below
+                relocate("com.google.gson", "$relocatePath.com.google.gson")
+            }
+        }
+        relocate("net.lenni0451", "$relocatePath.net.lenni0451")
+        relocate("com.jagrosh", "$relocatePath.com.jagrosh")
+        relocate("org.meteordev", "$relocatePath.org.meteordev")
+        relocate("io.github.classgraph", "$relocatePath.io.github.classgraph")
+        relocate("nonapi.io.github.classgraph", "$relocatePath.nonapi.io.github.classgraph")
+        if (protocol < 755) {
+            relocate("org.slf4j", "$relocatePath.org.slf4j")
+            relocate("org.apache.logging.slf4j", "$relocatePath.org.apache.logging.slf4j")
+        }
+        // Integration Relocations
+        if (!isLegacy) {
+            relocate("me.hypherionmc", "$relocatePath.me.hypherionmc")
         }
     }
 
