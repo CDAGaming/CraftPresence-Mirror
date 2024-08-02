@@ -86,8 +86,6 @@ tasks.processResources {
     }
 }
 
-val relocatePath = "$modId.external"
-
 tasks.shadowJar {
     mustRunAfter(project(":common").tasks.shadowJar)
     dependsOn(project(":common").tasks.shadowJar)
