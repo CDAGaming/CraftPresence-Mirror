@@ -473,6 +473,8 @@ subprojects {
             }
         }
 
+        val isQuilt = name == "quilt"
+
         extensions.getByName<ModPublisherGradleExtension>("publisher").apply {
             apiKeys {
                 curseforge(System.getenv("CF_APIKEY"))
@@ -496,10 +498,16 @@ subprojects {
 
             curseDepends {
                 required("unilib")
+                if (isQuilt) {
+                    required("qsl")
+                }
             }
 
             modrinthDepends {
                 required("unilib")
+                if (isQuilt) {
+                    required("qsl")
+                }
             }
 
             nightbloomDepends {
