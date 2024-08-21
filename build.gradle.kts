@@ -10,7 +10,7 @@ import java.util.*
 plugins {
     java
     id("xyz.wagyourtail.unimined") version "1.3.7" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "1.1.1"
+    id("xyz.wagyourtail.jvmdowngrader") version "1.1.2"
     id("com.diffplug.gradle.spotless") version "6.25.0" apply false
     id("com.gradleup.shadow") version "8.3.0" apply false
     id("com.hypherionmc.modutils.modpublisher") version "2.1.6" apply false
@@ -473,8 +473,6 @@ subprojects {
             }
         }
 
-        val isQuilt = name == "quilt"
-
         extensions.getByName<ModPublisherGradleExtension>("publisher").apply {
             apiKeys {
                 curseforge(System.getenv("CF_APIKEY"))
@@ -498,16 +496,10 @@ subprojects {
 
             curseDepends {
                 required("unilib")
-                if (isQuilt) {
-                    required("qsl")
-                }
             }
 
             modrinthDepends {
                 required("unilib")
-                if (isQuilt) {
-                    required("qsl")
-                }
             }
 
             nightbloomDepends {
