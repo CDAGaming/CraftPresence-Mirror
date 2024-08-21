@@ -1,0 +1,51 @@
+name: Rebuild Cache
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get all branches
+        run: |
+          git fetch --all
+          # Only create local branches for remote branches that do not already exist locally
+          git branch -r | grep -v '\->' | while read remote; do
+            branch="${remote#origin/}"
+            if [ "$branch" != "$(git branch --show-current)" ] && [ -z "$(git branch --list "$branch")" ]; then
+              git branch --track "$branch" "$remote"
+            fi
+          done
+
+      - name: update cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up Gradle JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build each branch
+        run: |
+          for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
+            echo "Checking out branch: $branch"
+            git checkout $branch
+            echo "Running build on branch: $branch"
+            chmod +x gradlew
+            ./gradlew --build-cache --info --stacktrace clean build
+          done
+
+      - name: stop daemon
+        run: ./gradlew --stop

@@ -168,7 +168,7 @@ subprojects {
     }
 
     // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
-    extensions.getByType<UniminedExtension>().useGlobalCache = false
+    extensions.getByType<UniminedExtension>().useGlobalCache = true
 
     extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
         side(if (isJarMod) "client" else "combined")
