@@ -39,12 +39,30 @@ jobs:
 
       - name: Build each branch
         run: |
+          # Define exclusion patterns
+          exclude_patterns=("l10n_master" "special/*")
+          
           for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
-            echo "Checking out branch: $branch"
-            git checkout $branch
-            echo "Running build on branch: $branch"
-            chmod +x gradlew
-            ./gradlew --build-cache --info --stacktrace clean build
+            # Skip branches that match exclusion patterns
+            skip=false
+            for pattern in "${exclude_patterns[@]}"; do
+              if [[ "$branch" == $pattern ]]; then
+                echo "Skipping branch: $branch"
+                skip=true
+                break
+              fi
+            done
+            
+            if [ "$skip" = false ]; then
+              echo "Checking out branch: $branch"
+              git checkout $branch
+              echo "Ensuring gradlew has permissions before continuing"
+              chmod +x gradlew
+              echo "Running build on branch: $branch"
+              ./gradlew --build-cache --quiet build > /dev/null 2>&1
+              echo "Cleaning directories for next branch"
+              ./gradlew clean --quiet > /dev/null 2>&1
+            fi
           done
 
       - name: stop daemon

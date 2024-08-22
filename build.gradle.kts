@@ -509,6 +509,21 @@ subprojects {
     }
 }
 
+tasks.register<Delete>("cleanUniminedCache") {
+    val uniminedPath = ".gradle/unimined"
+
+    // Delete the .gradle/unimined directory in the root project if it exists
+    delete(rootProject.projectDir.resolve(uniminedPath))
+
+    // Delete the .gradle/unimined directory in each subproject if it exists
+    delete(subprojects.map { it.projectDir.resolve(uniminedPath) })
+}
+
+// Ensure the clean task depends on cleanUniminedCache
+tasks.named("clean") {
+    dependsOn("cleanUniminedCache")
+}
+
 tasks {
     jar {
         enabled = false
