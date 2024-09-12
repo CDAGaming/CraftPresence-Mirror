@@ -16,6 +16,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * ClassGraph (`4.8.174` -> `4.8.175`)
     * UniLib (`1.0.1` -> `1.0.2`)
     * Fabric Loader (`0.15.11` -> `0.16.5`)
+    * Gradle (`8.9` -> `8.10.1`)
 * Added a new `useClassLoader` option in `Advanced` settings
     * This setting only effects the results of `FileUtils#loadClass` when using certain reflection functions while
       creating RPC placeholders
