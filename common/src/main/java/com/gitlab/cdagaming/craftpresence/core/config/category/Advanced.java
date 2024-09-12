@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.core.config.category;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
+import io.github.cdagaming.unicore.utils.OSUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -56,6 +57,7 @@ public class Advanced extends Module implements Serializable {
     public boolean allowDuplicatePackets = false;
     public int maxConnectionAttempts = 10;
     public boolean enableClassGraph = false;
+    public boolean useClassLoader = Constants.USE_CLASS_LOADER;
 
     public Advanced(final Advanced other) {
         transferFrom(other);
@@ -96,6 +98,7 @@ public class Advanced extends Module implements Serializable {
             allowDuplicatePackets = data.allowDuplicatePackets;
             maxConnectionAttempts = data.maxConnectionAttempts;
             enableClassGraph = data.enableClassGraph;
+            useClassLoader = data.useClassLoader;
         }
     }
 
@@ -119,6 +122,7 @@ public class Advanced extends Module implements Serializable {
             case "allowDuplicatePackets" -> allowDuplicatePackets;
             case "maxConnectionAttempts" -> maxConnectionAttempts;
             case "enableClassGraph" -> enableClassGraph;
+            case "useClassLoader" -> useClassLoader;
             default -> null;
         };
     }
@@ -178,6 +182,9 @@ public class Advanced extends Module implements Serializable {
                 case "enableClassGraph":
                     enableClassGraph = (Boolean) value;
                     break;
+                case "useClassLoader":
+                    useClassLoader = (Boolean) value;
+                    break;
                 default:
                     break;
             }
@@ -212,7 +219,8 @@ public class Advanced extends Module implements Serializable {
                 Objects.equals(other.playerSkinEndpoint, playerSkinEndpoint) &&
                 Objects.equals(other.allowDuplicatePackets, allowDuplicatePackets) &&
                 Objects.equals(other.maxConnectionAttempts, maxConnectionAttempts) &&
-                Objects.equals(other.enableClassGraph, enableClassGraph);
+                Objects.equals(other.enableClassGraph, enableClassGraph) &&
+                Objects.equals(other.useClassLoader, useClassLoader);
     }
 
     @Override
@@ -225,7 +233,7 @@ public class Advanced extends Module implements Serializable {
                 allowEndpointIcons,
                 serverIconEndpoint, playerSkinEndpoint,
                 allowDuplicatePackets, maxConnectionAttempts,
-                enableClassGraph
+                enableClassGraph, useClassLoader
         );
     }
 }

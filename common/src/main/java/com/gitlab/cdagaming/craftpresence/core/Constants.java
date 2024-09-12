@@ -105,6 +105,12 @@ public class Constants {
     public static boolean HAS_GAME_LOADED = false;
 
     /**
+     * Whether to use the local classloader in certain operations<p>
+     * This primarily relates to user-created RPC placeholders, and not normal mod operations
+     */
+    public static boolean USE_CLASS_LOADER = OSUtils.JAVA_SPEC < 16.0F;
+
+    /**
      * If the Mod has checked for "Replay Mod" availability
      */
     private static boolean CHECKED_REPLAY_MOD = false;

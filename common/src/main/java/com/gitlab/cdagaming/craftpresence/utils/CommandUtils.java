@@ -317,8 +317,9 @@ public class CommandUtils {
 
         if (current.advancedSettings.debugMode != old.advancedSettings.debugMode ||
                 current.advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
-                current.advancedSettings.refreshRate != old.advancedSettings.refreshRate) {
-            updateModes(); // Debug Mode, Verbose Mode, or Refresh Rate changed
+                current.advancedSettings.refreshRate != old.advancedSettings.refreshRate ||
+                current.advancedSettings.useClassLoader != old.advancedSettings.useClassLoader) {
+            updateModes(); // Debug Mode, Verbose Mode, Refresh Rate, or Use Class Loader changed
         }
 
         if (current.advancedSettings.enableClassGraph != old.advancedSettings.enableClassGraph) {
@@ -516,6 +517,7 @@ public class CommandUtils {
             CraftPresence.CLIENT.ipcInstance.setVerboseLogging(isVerboseMode());
         }
         if (CraftPresence.CONFIG != null) {
+            Constants.USE_CLASS_LOADER = CraftPresence.CONFIG.advancedSettings.useClassLoader;
             CraftPresence.SCHEDULER.setRefreshRate(CraftPresence.CONFIG.advancedSettings.refreshRate);
         }
     }

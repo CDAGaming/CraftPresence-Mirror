@@ -49,7 +49,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     private CheckBoxControl enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             formatWordsButton, debugModeButton, verboseModeButton,
             allowPlaceholderPreviewsButton, allowEndpointIconsButton, allowDuplicatePacketsButton,
-            enableClassGraphButton;
+            enableClassGraphButton, useClassLoaderButton;
     private ExtendedTextControl refreshRate, maxConnectionAttempts,
             playerSkinEndpoint, serverIconEndpoint;
 
@@ -613,6 +613,19 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.comment.advanced.enable_class_graph")
+                                )
+                        )
+                )
+        );
+        useClassLoaderButton = childFrame.addControl(
+                new CheckBoxControl(
+                        calc1, getButtonY(9, -50),
+                        Constants.TRANSLATOR.translate("gui.config.name.advanced.use_class_loader"),
+                        getInstanceData().useClassLoader,
+                        () -> getInstanceData().useClassLoader = useClassLoaderButton.isChecked(),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.use_class_loader")
                                 )
                         )
                 )

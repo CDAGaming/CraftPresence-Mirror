@@ -560,6 +560,9 @@ public final class Config extends Module implements Serializable {
         final int newMCVer = getGameVersion();
         if (oldMCVer != newMCVer) {
             _lastMCVersionId = newMCVer;
+
+            // Reset Options dependent on MC Version
+            advancedSettings.useClassLoader = Constants.USE_CLASS_LOADER;
         }
 
         // Sync Flag Data

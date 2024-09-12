@@ -568,7 +568,7 @@ public class FunctionsLib {
                 instance = temp;
             }
         } else if (target.isString()) {
-            classToAccess = FileUtils.loadClass(target.getString());
+            classToAccess = FileUtils.loadClass(Constants.USE_CLASS_LOADER, target.getString());
         } else {
             ss.error("Second argument to cast(), classToAccess, needs to be either a string, object, or class.");
         }
@@ -723,7 +723,7 @@ public class FunctionsLib {
                 instance = temp;
             }
         } else if (target.isString()) {
-            classToAccess = FileUtils.loadClass(target.getString());
+            classToAccess = FileUtils.loadClass(Constants.USE_CLASS_LOADER, target.getString());
         } else {
             ss.error("First argument to getField(), classToAccess, needs to be either a string, object, or class.");
         }
@@ -768,7 +768,7 @@ public class FunctionsLib {
         if (value.isObject()) {
             result = value.getObject().getClass();
         } else if (value.isString()) {
-            result = FileUtils.loadClass(value.getString());
+            result = FileUtils.loadClass(Constants.USE_CLASS_LOADER, value.getString());
         } else {
             ss.error("First argument to getClass() needs to be a valid class-compatible object.");
         }
@@ -812,7 +812,7 @@ public class FunctionsLib {
                 instance = temp;
             }
         } else if (target.isString()) {
-            classToAccess = FileUtils.loadClass(target.getString());
+            classToAccess = FileUtils.loadClass(Constants.USE_CLASS_LOADER, target.getString());
         } else {
             ss.error("First argument to executeMethod(), classToAccess, needs to be either a string, object, or class.");
         }
@@ -865,7 +865,7 @@ public class FunctionsLib {
                             classObj = paramClass;
                         }
                     } else if (data.isString()) {
-                        classObj = FileUtils.loadClass(data.getString());
+                        classObj = FileUtils.loadClass(Constants.USE_CLASS_LOADER, data.getString());
                     }
 
                     if (classObj == null) {
