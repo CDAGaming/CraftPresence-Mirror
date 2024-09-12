@@ -29,7 +29,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.ItemUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -409,8 +409,8 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getInternalData() {
-        final List<Block> defaultBlocks = StringUtils.newArrayList(Registry.BLOCK.iterator());
-        final List<Item> defaultItems = StringUtils.newArrayList(Registry.ITEM.iterator());
+        final List<Block> defaultBlocks = StringUtils.newArrayList(BuiltInRegistries.BLOCK.iterator());
+        final List<Item> defaultItems = StringUtils.newArrayList(BuiltInRegistries.ITEM.iterator());
 
         for (Block block : defaultBlocks) {
             if (!ItemUtils.isItemEmpty(block)) {
