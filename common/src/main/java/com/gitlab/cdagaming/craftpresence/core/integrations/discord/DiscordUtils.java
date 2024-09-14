@@ -136,7 +136,7 @@ public class DiscordUtils {
      */
     public boolean AUTO_REGISTER;
     /**
-     * Whether to update the Starting Timestamp upon RPC Initialization
+     * Whether to update the Starting Timestamp ("data.general.time")
      */
     public boolean UPDATE_TIMESTAMP;
     /**
@@ -1246,6 +1246,7 @@ public class DiscordUtils {
             final long currentStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
                     lastStartTime : TimeUtils.toEpochMilli();
             lastStartTime = currentStartTime;
+            UPDATE_TIMESTAMP = false;
             return currentStartTime;
         }, "data.general.time");
     }

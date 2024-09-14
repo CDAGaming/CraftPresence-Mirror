@@ -28,6 +28,8 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 * Removed the `quilted_fabric_api` requirement from Quilt Jars
     * Dependencies are now JIJd the same way as Fabric Jars are
+* Fixed an issue where `data.general.time` would constantly update if `resetTimeOnInit` was `true`
+    * Bug originally occurred in v2.4.0 from a commit regression
 
 ___
 
