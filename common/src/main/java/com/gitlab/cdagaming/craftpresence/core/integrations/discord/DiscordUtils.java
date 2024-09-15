@@ -136,7 +136,7 @@ public class DiscordUtils {
      */
     public boolean AUTO_REGISTER;
     /**
-     * Whether to update the Starting Timestamp ("data.general.time")
+     * Whether to update the Starting Timestamp upon RPC Initialization
      */
     public boolean UPDATE_TIMESTAMP;
     /**
@@ -258,7 +258,9 @@ public class DiscordUtils {
      * Synchronizes Initial Rich Presence Data
      */
     public void postInit() {
-        // N/A
+        // Update Start Timestamp, if needed
+        lastStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
+                lastStartTime : TimeUtils.toEpochMilli();
     }
 
     /**
@@ -1242,13 +1244,7 @@ public class DiscordUtils {
         syncArgument("general.mods", CoreUtils::getModCount);
         syncArgument("data.general.version", () -> CoreUtils.MCBuildVersion, true);
         syncArgument("data.general.protocol", () -> CoreUtils.MCBuildProtocol);
-        syncTimestamp(() -> {
-            final long currentStartTime = !UPDATE_TIMESTAMP && lastStartTime > 0 ?
-                    lastStartTime : TimeUtils.toEpochMilli();
-            lastStartTime = currentStartTime;
-            UPDATE_TIMESTAMP = false;
-            return currentStartTime;
-        }, "data.general.time");
+        syncTimestamp(() -> lastStartTime, "data.general.time");
     }
 
     /**
