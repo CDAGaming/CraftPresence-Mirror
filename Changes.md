@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.5.1 (09/19/2024)
+## v2.5.1 (10/08/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.0...release%2Fv2.5.1)_
@@ -13,11 +13,13 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Unimined (`1.3.4` -> `1.3.9`)
     * JVMDowngrader (`1.0.0` -> `1.1.3`)
     * Shadow (`8.1.8` -> `8.3.0`)
-    * ClassGraph (`4.8.174` -> `4.8.175`)
+    * ClassGraph (`4.8.174` -> `4.8.177`)
     * UniLib (`1.0.1` -> `1.0.3`)
     * Fabric Loader (`0.15.11` -> `0.16.5`)
-    * Gradle (`8.9` -> `8.10.1`)
-    * Shadow (`8.3.0` -> `8.3.1`)
+    * Gradle (`8.9` -> `8.10.2`)
+    * Shadow (`8.3.0` -> `8.3.3`)
+    * JUnixSocket (`2.10.0` -> `2.10.1`)
+    * DiscordIPC (`0.10.0` -> `0.10.1`)
 * Added a new `useClassLoader` option in `Advanced` settings
     * This setting only effects the results of `FileUtils#loadClass` when using certain reflection functions while
       creating RPC placeholders
