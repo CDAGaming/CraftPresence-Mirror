@@ -642,7 +642,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
         // Endpoint Section
         childFrame.addWidget(new ScrollableTextWidget(
-                calc1, getButtonY(7),
+                calc1, getButtonY(8),
                 childFrame.getScreenWidth() - calc1,
                 Constants.TRANSLATOR.translate("gui.config.message.endpoints")
         ));
@@ -650,7 +650,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         playerSkinEndpoint = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(8),
+                        getButtonY(9),
                         180, 20,
                         () -> getInstanceData().playerSkinEndpoint = playerSkinEndpoint.getControlMessage(),
                         Constants.TRANSLATOR.translate("gui.config.name.advanced.player_skin_endpoint"),
@@ -666,7 +666,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         serverIconEndpoint = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(9),
+                        getButtonY(10),
                         180, 20,
                         () -> getInstanceData().serverIconEndpoint = serverIconEndpoint.getControlMessage(),
                         Constants.TRANSLATOR.translate("gui.config.name.advanced.server_icon_endpoint"),
