@@ -42,7 +42,8 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 public class ServerSettingsGui extends ConfigurationGui<Server> {
     private final Server INSTANCE, DEFAULTS;
     private ExtendedButtonControl serverMessagesButton;
-    private TextWidget defaultMOTD, defaultName, defaultMessage, defaultIcon;
+    private TextWidget defaultMOTD, defaultName, defaultMessage, defaultIcon,
+            pingRateInterval, pingRateUnit;
 
     ServerSettingsGui() {
         super(
@@ -242,6 +243,38 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                         }
                 )
         );
+
+        pingRateInterval = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(5),
+                        180, 20,
+                        () -> getInstanceData().pingRateInterval = StringUtils.getValidInteger(pingRateInterval.getControlMessage()).getSecond(),
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.ping_rate_interval"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.server_messages.ping_rate_interval")
+                                )
+                        )
+                )
+        );
+        pingRateInterval.setControlMessage(Integer.toString(getInstanceData().pingRateInterval));
+
+        pingRateUnit = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(6),
+                        180, 20,
+                        () -> getInstanceData().pingRateUnit = pingRateUnit.getControlMessage(),
+                        Constants.TRANSLATOR.translate("gui.config.name.server_messages.ping_rate_unit"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.comment.server_messages.ping_rate_unit")
+                                )
+                        )
+                )
+        );
+        pingRateUnit.setControlMessage(getInstanceData().pingRateUnit);
 
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {

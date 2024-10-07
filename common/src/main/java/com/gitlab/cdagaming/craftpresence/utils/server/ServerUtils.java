@@ -34,6 +34,7 @@ import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 import io.github.cdagaming.unicore.impl.Pair;
@@ -48,10 +49,14 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.network.ServerPinger;
 import net.minecraft.server.integrated.IntegratedServer;
 
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.*;
 import java.util.function.Supplier;
 
 /**
@@ -61,6 +66,16 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("DuplicatedCode")
 public class ServerUtils implements ExtendedModule {
+    /**
+     * The Thread Pool Manager used for pinging Minecraft Server Data
+     */
+    private static final ThreadPoolExecutor PING_EXECUTOR = new ScheduledThreadPoolExecutor(
+            5,
+            (new ThreadFactoryBuilder())
+                    .setNameFormat("Server Pinger #%d")
+                    .setDaemon(true)
+                    .build()
+    );
     /**
      * The List of invalid MOTD (Message of the Day) Translations
      */
@@ -77,6 +92,10 @@ public class ServerUtils implements ExtendedModule {
             "selectServer.defaultName"
     );
     /**
+     * The Ping Service to use when polling Minecraft Server Data
+     */
+    private final ServerPinger pinger = new ServerPinger();
+    /**
      * The Current Player Map, if available
      */
     public List<NetworkPlayerInfo> currentPlayerList = StringUtils.newArrayList();
@@ -92,6 +111,10 @@ public class ServerUtils implements ExtendedModule {
      * A List of the detected Server Data from NBT
      */
     public Map<String, ServerData> knownServerData = StringUtils.newHashMap();
+    /**
+     * The Scheduler used for pinging Minecraft Server Data
+     */
+    private ScheduledExecutorService PING_SCHEDULER;
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -222,6 +245,8 @@ public class ServerUtils implements ExtendedModule {
         currentPlayers = 0;
         maxPlayers = 0;
 
+        stopPingTask();
+
         queuedForUpdate = false;
         joinInProgress = false;
         isOnLAN = false;
@@ -324,11 +349,12 @@ public class ServerUtils implements ExtendedModule {
                              final IntegratedServer newIntegratedData, final ServerData newServerData, final NetHandlerPlayClient newConnection,
                              final String newServer_IP, final String newServer_MOTD, final String newServer_Name,
                              final int newCurrentPlayers, final int newMaxPlayers, final List<NetworkPlayerInfo> newPlayerList) {
+        final boolean isNewServer = newServerData != null && !newServerData.equals(currentServerData);
+        final boolean hasLeftServer = newServerData == null && currentServerData != null;
         if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer ||
                 ((newIntegratedData != null && !newIntegratedData.equals(currentIntegratedData)) ||
                         (newIntegratedData == null && currentIntegratedData != null)) ||
-                ((newServerData != null && !newServerData.equals(currentServerData)) ||
-                        (newServerData == null && currentServerData != null)) ||
+                (isNewServer || hasLeftServer) ||
                 (newConnection != null && !newConnection.equals(currentConnection)) || !newServer_IP.equals(currentServer_IP) ||
                 (!StringUtils.isNullOrEmpty(newServer_MOTD) && !newServer_MOTD.equals(currentServer_MOTD)) ||
                 (!StringUtils.isNullOrEmpty(newServer_Name) && !newServer_Name.equals(currentServer_Name))) {
@@ -345,6 +371,15 @@ public class ServerUtils implements ExtendedModule {
             isOnLAN = newLANStatus;
             isOnSinglePlayer = newSinglePlayerStatus;
             queuedForUpdate = true;
+
+            if (isNewServer) {
+                startPingTask(
+                        CraftPresence.CONFIG.serverSettings.pingRateInterval,
+                        CraftPresence.CONFIG.serverSettings.pingRateUnit
+                );
+            } else if (hasLeftServer) {
+                stopPingTask();
+            }
 
             if (!StringUtils.isNullOrEmpty(currentServer_IP)) {
                 formattedServer_IP = currentServer_IP.contains(":") ? StringUtils.formatAddress(currentServer_IP, false) : currentServer_IP;
@@ -565,19 +600,128 @@ public class ServerUtils implements ExtendedModule {
     }
 
     /**
+     * Ping the specified server, followed by callback events
+     *
+     * @param serverData The Server Info to interpret (Input/Output)
+     * @param saver      The callback event to run if icon data has been changed
+     * @param callback   The callback event to run upon operation completion, or if exception occurs
+     */
+    private void pingServer(final ServerData serverData, final Runnable saver, final Runnable callback) {
+        if (serverData == null) return;
+        final Runnable saverEvent = saver != null ? saver : () -> {
+            // N/A
+        };
+        final Runnable callbackEvent = callback != null ? callback : () -> {
+            // N/A
+        };
+        if (!serverData.pinged) {
+            // Stub Server Data if not pinged
+            serverData.pinged = true;
+            serverData.pingToServer = -2L;
+            serverData.serverMOTD = "";
+            serverData.populationInfo = "";
+        }
+        PING_EXECUTOR.submit(() -> {
+            try {
+                final String iconData = serverData.getBase64EncodedIconData();
+                pinger.ping(serverData);
+                if (!Objects.equals(iconData, serverData.getBase64EncodedIconData())) {
+                    saverEvent.run();
+                }
+                callbackEvent.run();
+            } catch (UnknownHostException unknownHostException) {
+                serverData.pingToServer = -1L;
+                serverData.serverMOTD = "§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_resolve");
+                callbackEvent.run();
+            } catch (Exception ex) {
+                serverData.pingToServer = -1L;
+                serverData.serverMOTD = "§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_connect");
+                callbackEvent.run();
+            }
+        });
+    }
+
+    /**
+     * Ping the specified server, followed by callback events
+     *
+     * @param saver    The callback event to run if icon data has been changed
+     * @param callback The callback event to run upon operation completion, or if exception occurs
+     */
+    private void pingServer(final Runnable saver, final Runnable callback) {
+        pingServer(currentServerData, saver, callback);
+    }
+
+    /**
+     * Ping the specified server, followed by callback events
+     *
+     * @param serverData The Server Info to interpret (Input/Output)
+     * @param callback   The callback event to run upon operation completion, or if exception occurs
+     */
+    private void pingServer(final ServerData serverData, final Runnable callback) {
+        pingServer(serverData, null, callback);
+    }
+
+    /**
+     * Ping the specified server, followed by callback events
+     *
+     * @param callback The callback event to run upon operation completion, or if exception occurs
+     */
+    private void pingServer(final Runnable callback) {
+        pingServer(currentServerData, callback);
+    }
+
+    /**
+     * Ping the specified server, followed by callback events
+     *
+     * @param serverData The Server Info to interpret (Input/Output)
+     */
+    private void pingServer(final ServerData serverData) {
+        pingServer(serverData, null);
+    }
+
+    /**
+     * Ping the specified server, followed by callback events
+     */
+    private void pingServer() {
+        pingServer(currentServerData);
+    }
+
+    /**
+     * Start a Ping Scheduler with the specified arguments
+     * <p>Runs {@link ServerUtils#pingServer()} every x TIME_UNIT (Ex: 5 minutes)
+     *
+     * @param interval The interval to run {@link ServerUtils#pingServer()}
+     * @param unit     The time unit to process the interval with
+     */
+    private void startPingTask(final int interval, final String unit) {
+        stopPingTask();
+
+        if (interval <= 0) return;
+        TimeUnit timeUnit;
+        try {
+            timeUnit = TimeUtils.getTimeUnitFrom(unit);
+        } catch (Exception ex) {
+            timeUnit = TimeUnit.MINUTES;
+        }
+        PING_SCHEDULER = Executors.newScheduledThreadPool(1);
+        PING_SCHEDULER.scheduleAtFixedRate(this::pingServer, 0, interval, timeUnit);
+    }
+
+    /**
+     * Stop all Pinging Tasks currently assigned to the Scheduler
+     */
+    private void stopPingTask() {
+        if (PING_SCHEDULER != null && !PING_SCHEDULER.isShutdown()) PING_SCHEDULER.shutdown();
+    }
+
+    /**
      * Joins a Server/World based on Server Data requested
      *
      * @param serverData The Requested Server Data to Join
      */
     private void joinServer(final ServerData serverData) {
         try {
-            if (!serverData.pinged) {
-                // Stub Server Data if not pinged
-                serverData.pinged = true;
-                serverData.pingToServer = -2L;
-                serverData.serverMOTD = "";
-                serverData.populationInfo = "";
-            }
+            pingServer(serverData);
 
             if (CraftPresence.player != null) {
                 CraftPresence.world.sendQuittingDisconnectingPacket();

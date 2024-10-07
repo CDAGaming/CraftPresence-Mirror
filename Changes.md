@@ -25,6 +25,11 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
       creating RPC placeholders
     * This option will reset to its default when transferring a config to a new Minecraft Version
     * This option defaults to `true` if below Java 16, and `false` otherwise
+* Added `ServerData` refresh support to `Server` module
+    * This allows the module's current server data to be pinged every once in a while, depending on the new config
+      settings `pingRateInterval` and `pingRateUnit`
+    * The Defaults allow for one ping every 5 minutes while in a server, allowing `ServerData` to remain up-to-date
+    * This additionally improves the `ServerData` behaviors of Direct Connections and Join Requests
 
 ### Fixes
 

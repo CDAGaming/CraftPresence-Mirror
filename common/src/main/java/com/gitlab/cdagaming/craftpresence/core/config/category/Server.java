@@ -47,6 +47,8 @@ public class Server extends Module implements Serializable {
                     null // Defaults to the Server Name if nothing is supplied
             ))
             .build();
+    public int pingRateInterval = 5;
+    public String pingRateUnit = "minutes";
 
     public Server(final Server other) {
         transferFrom(other);
@@ -76,6 +78,8 @@ public class Server extends Module implements Serializable {
             for (Map.Entry<String, ModuleData> entry : data.serverData.entrySet()) {
                 serverData.put(entry.getKey(), new ModuleData(entry.getValue()));
             }
+            pingRateInterval = data.pingRateInterval;
+            pingRateUnit = data.pingRateUnit;
         }
     }
 
@@ -86,6 +90,8 @@ public class Server extends Module implements Serializable {
             case "fallbackServerName" -> fallbackServerName;
             case "fallbackServerMotd" -> fallbackServerMotd;
             case "serverData" -> serverData;
+            case "pingRateInterval" -> pingRateInterval;
+            case "pingRateUnit" -> pingRateUnit;
             default -> null;
         };
     }
@@ -105,6 +111,12 @@ public class Server extends Module implements Serializable {
                     break;
                 case "serverData":
                     serverData = (Map<String, ModuleData>) value;
+                    break;
+                case "pingRateInterval":
+                    pingRateInterval = (int) value;
+                    break;
+                case "pingRateUnit":
+                    pingRateUnit = (String) value;
                     break;
                 default:
                     break;
@@ -127,13 +139,16 @@ public class Server extends Module implements Serializable {
         return Objects.equals(other.fallbackServerIcon, fallbackServerIcon) &&
                 Objects.equals(other.fallbackServerName, fallbackServerName) &&
                 Objects.equals(other.fallbackServerMotd, fallbackServerMotd) &&
-                Objects.equals(other.serverData, serverData);
+                Objects.equals(other.serverData, serverData) &&
+                Objects.equals(other.pingRateInterval, pingRateInterval) &&
+                Objects.equals(other.pingRateUnit, pingRateUnit);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                fallbackServerIcon, fallbackServerName, fallbackServerMotd, serverData
+                fallbackServerIcon, fallbackServerName, fallbackServerMotd, serverData,
+                pingRateInterval, pingRateUnit
         );
     }
 }
