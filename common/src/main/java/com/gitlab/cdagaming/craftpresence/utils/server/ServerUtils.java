@@ -39,13 +39,7 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMultiplayer;
-import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.client.multiplayer.GuiConnecting;
-import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.src.*;
 
 import java.net.UnknownHostException;
 import java.util.List;
@@ -259,7 +253,7 @@ public class ServerUtils implements ExtendedModule {
         final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
-            newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "M");
+            newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "O");
         } catch (Exception ex) {
             newServerData = null;
         }
@@ -565,7 +559,7 @@ public class ServerUtils implements ExtendedModule {
         }
         PING_EXECUTOR.submit(() -> {
             try {
-                StringUtils.executeMethod(GuiMultiplayer.class, null, new Class[]{ServerData.class}, new Object[]{serverData}, "func_74017_b", "method_1007", "c");
+                ServerPinger.pingServer(serverData);
                 callbackEvent.run();
             } catch (Exception ex) {
                 serverData.pingToServer = -1L;
