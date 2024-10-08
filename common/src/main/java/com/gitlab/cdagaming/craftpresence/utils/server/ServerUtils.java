@@ -69,7 +69,7 @@ public class ServerUtils implements ExtendedModule {
     /**
      * The Current Player Map, if available
      */
-    public List<GuiPlayerInfo> currentPlayerList = StringUtils.newArrayList();
+    public List<String> currentPlayerList = StringUtils.newArrayList();
     /**
      * A List of the detected Server Addresses
      */
@@ -271,7 +271,7 @@ public class ServerUtils implements ExtendedModule {
     private void processData(final boolean newLANStatus, final boolean newSinglePlayerStatus,
                              final ServerData newServerData, final NetClientHandler newConnection,
                              final String newServer_IP, final String newServer_MOTD, final String newServer_Name,
-                             final int newCurrentPlayers, final int newMaxPlayers, final List<GuiPlayerInfo> newPlayerList) {
+                             final int newCurrentPlayers, final int newMaxPlayers, final List<String> newPlayerList) {
         final boolean isNewServer = newServerData != null && !newServerData.equals(currentServerData);
         final boolean hasLeftServer = newServerData == null && currentServerData != null;
         if (newLANStatus != isOnLAN || newSinglePlayerStatus != isOnSinglePlayer ||
@@ -374,7 +374,7 @@ public class ServerUtils implements ExtendedModule {
      * @param newConnection The Player's Current Connection Data
      */
     private void processServerData(final ServerData newServerData, final NetClientHandler newConnection) {
-        final List<GuiPlayerInfo> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerNames) : StringUtils.newArrayList();
+        final List<String> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerNames) : StringUtils.newArrayList();
         final int newCurrentPlayers = newConnection != null ? newConnection.playerNames.size() : 1;
 
         final boolean newLANStatus = false;
@@ -598,7 +598,7 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
 
         // Player Health Arguments
-        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
+        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getEntityHealth(), 0));
         syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
 
         // World Data Arguments
