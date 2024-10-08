@@ -33,12 +33,14 @@ import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
+import com.mojang.minecraft.Minecraft;
+import com.mojang.minecraft.gui.GuiConnecting;
+import com.mojang.minecraft.level.WorldClient;
+import com.mojang.minecraft.networknew.NetClientHandler;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
 
 import java.util.List;
 import java.util.Map;
@@ -385,7 +387,7 @@ public class ServerUtils implements ExtendedModule {
         final int newCurrentPlayers = 1;
 
         final boolean newLANStatus = false;
-        final boolean newSinglePlayerStatus = !newLANStatus && !CraftPresence.instance.isMultiplayerWorld();
+        final boolean newSinglePlayerStatus = !newLANStatus && !CraftPresence.instance.isServer();
 
         // Setup Player Maximum (Hardcoded for LAN)
         final int newMaxPlayers = newCurrentPlayers + 1;
@@ -603,7 +605,7 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("world.difficulty", () -> {
             final String newDifficulty = false ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    Integer.toString(CraftPresence.world.difficultySetting);
+                    Integer.toString(CraftPresence.world.difficulty);
             return StringUtils.getOrDefault(newDifficulty);
         });
         syncArgument("world.weather.name", () -> {

@@ -24,30 +24,24 @@
 
 package com.gitlab.cdagaming.craftpresence.fabric;
 
-import com.gitlab.cdagaming.craftpresence.CraftPresence;
-import io.github.cdagaming.unicore.utils.OSUtils;
+import io.github.cdagaming.unicore.utils.StringUtils;
+import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
+import net.fabricmc.loader.impl.FabricLoaderImpl;
+import net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider;
 
-/**
- * The Primary Application Class and Utilities
- *
- * @author CDAGaming
- */
-public class CraftPresenceFabric {
-    public void onInitialize() {
+public class NSSSBootstrap implements PreLaunchEntrypoint {
+    @Override
+    public void onPreLaunch() {
         try {
-            if (OSUtils.JAVA_SPEC < 1.8f) {
-                throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
-            }
-            new CraftPresence(this::setupIntegrations);
-        } catch (NoClassDefFoundError ex) {
-            throw new UnsupportedOperationException("Unable to initialize @MOD_NAME@! @UNILIB_NAME@ (unilib) is required to run this mod (Requires @UNILIB_MIN_VERSION@ or above)", ex);
+            StringUtils.updateField(
+                    MinecraftGameProvider.class,
+                    FabricLoaderImpl.INSTANCE.getGameProvider(),
+                    "com.mojang.minecraft.Minecraft",
+                    "entrypoint"
+            );
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
-    }
-
-    /**
-     * Setup external integrations and attachments to the primary application
-     */
-    public void setupIntegrations() {
-        // N/A
+        new CraftPresenceFabric().onInitialize();
     }
 }
