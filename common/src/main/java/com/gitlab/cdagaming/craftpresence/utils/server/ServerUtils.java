@@ -216,8 +216,15 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
+        NetClientHandler newConnection = null;
         ServerData newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
+        try {
+            if (CraftPresence.world instanceof WorldClient clientWorld) {
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, clientWorld, "sendQueue", "field_1052_A", "B");
+            }
+        } catch (Exception ex) {
+            newConnection = null;
+        }
 
         try {
             String retrievedIP = (String) StringUtils.getField(Minecraft.class, CraftPresence.instance, "serverName", "field_9234_V", "V");
