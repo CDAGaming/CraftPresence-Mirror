@@ -217,7 +217,7 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void updateData() {
         ServerNBTStorage newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
+        final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
 
         try {
             if (newConnection != null) {
