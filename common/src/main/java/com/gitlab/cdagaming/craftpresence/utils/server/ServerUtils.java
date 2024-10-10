@@ -403,8 +403,8 @@ public class ServerUtils implements ExtendedModule {
      */
     private String getServerMotd(final ServerNBTStorage newServerData) {
         String result = "";
-        if (newServerData != null && newServerData.motd != null) {
-            result = newServerData.motd;
+        if (newServerData != null && newServerData.field_35791_d != null) {
+            result = newServerData.field_35791_d;
         }
         return !isInvalidMotd(result) ? StringUtils.stripAllFormatting(result) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
     }
@@ -445,7 +445,7 @@ public class ServerUtils implements ExtendedModule {
         }
 
         final String newServer_IP = getServerAddress(newServerData);
-        final String newServer_Name = newServerData != null && !isInvalidName(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
+        final String newServer_Name = newServerData != null && !isInvalidName(newServerData.field_35795_a) ? newServerData.field_35795_a : CraftPresence.CONFIG.serverSettings.fallbackServerName;
         final String newServer_MOTD = getServerMotd(newServerData);
 
         processData(newLANStatus, newSinglePlayerStatus,
@@ -556,23 +556,23 @@ public class ServerUtils implements ExtendedModule {
         final Runnable callbackEvent = callback != null ? callback : () -> {
             // N/A
         };
-        if (!serverData.polled) {
+        if (!serverData.field_35790_f) {
             // Stub Server Data if not pinged
-            serverData.polled = true;
-            serverData.lag = -2L;
-            serverData.motd = "";
-            serverData.playerCount = "";
+            serverData.field_35790_f = true;
+            serverData.field_35792_e = -2L;
+            serverData.field_35791_d = "";
+            serverData.field_35794_c = "";
         }
         PING_EXECUTOR.submit(() -> {
             try {
                 ServerPinger.pingServer(serverData);
                 callbackEvent.run();
             } catch (Exception ex) {
-                serverData.lag = -1L;
+                serverData.field_35792_e = -1L;
                 if (ex instanceof UnknownHostException) {
-                    serverData.motd = "§4Can't resolve hostname";
+                    serverData.field_35791_d = "§4Can't resolve hostname";
                 } else {
-                    serverData.motd = "§4Can't connect to server.";
+                    serverData.field_35791_d = "§4Can't connect to server.";
                 }
                 callbackEvent.run();
             }
@@ -689,12 +689,12 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
 
         // Player Health Arguments
-        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getEntityHealth(), 0));
-        syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
+        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.health, 0));
+        syncArgument("player.health.max", () -> MathUtils.roundDouble(20.0D, 0));
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String newDifficulty = CraftPresence.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
+            final String newDifficulty = false ?
                     ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
                     Integer.toString(CraftPresence.world.difficultySetting);
             return StringUtils.getOrDefault(newDifficulty);
