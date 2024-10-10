@@ -46,7 +46,7 @@ public class ServerList {
 
     public void loadServerList() {
         try {
-            NBTTagCompound var1 = CompressedStreamTools.read(new File(this.mc.mcDataDir, "servers.dat"));
+            NBTTagCompound var1 = CompressedStreamTools.writeMapToFileUncompressed(new File(this.mc.mcDataDir, "servers.dat"));
             NBTTagList var2 = var1.getTagList("servers");
             this.servers.clear();
 
@@ -63,12 +63,12 @@ public class ServerList {
             NBTTagList var1 = new NBTTagList();
 
             for(ServerNBTStorage var3 : this.servers) {
-                var1.appendTag(var3.getCompoundTag());
+                var1.setTag(var3.getCompoundTag());
             }
 
             NBTTagCompound var5 = new NBTTagCompound();
             var5.setTag("servers", var1);
-            CompressedStreamTools.safeWrite(var5, new File(this.mc.mcDataDir, "servers.dat"));
+            CompressedStreamTools.saveMapToFileWithBackup(var5, new File(this.mc.mcDataDir, "servers.dat"));
         } catch (Exception var4) {
             var4.printStackTrace();
         }
