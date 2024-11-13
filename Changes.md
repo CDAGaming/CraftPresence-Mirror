@@ -1,42 +1,33 @@
 # CraftPresence Changes
 
-## v2.5.1 (10/08/2024)
+## v2.5.2 (11/19/2024)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.0...release%2Fv2.5.1)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.1...release%2Fv2.5.2)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Unimined (`1.3.4` -> `1.3.9`)
-    * JVMDowngrader (`1.0.0` -> `1.1.3`)
-    * Shadow (`8.1.8` -> `8.3.0`)
-    * ClassGraph (`4.8.174` -> `4.8.177`)
-    * UniLib (`1.0.1` -> `1.0.3`)
-    * Fabric Loader (`0.15.11` -> `0.16.5`)
-    * Gradle (`8.9` -> `8.10.2`)
-    * Shadow (`8.3.0` -> `8.3.3`)
-    * JUnixSocket (`2.10.0` -> `2.10.1`)
-    * DiscordIPC (`0.10.0` -> `0.10.1`)
-* Added a new `useClassLoader` option in `Advanced` settings
-    * This setting only effects the results of `FileUtils#loadClass` when using certain reflection functions while
-      creating RPC placeholders
-    * This option will reset to its default when transferring a config to a new Minecraft Version
-    * This option defaults to `true` if below Java 16, and `false` otherwise
-* Added `ServerData` refresh support to `Server` module
-    * This allows the module's current server data to be pinged every once in a while, depending on the new config
-      settings `pingRateInterval` and `pingRateUnit`
-    * The Defaults allow for one ping every 5 minutes while in a server, allowing `ServerData` to remain up-to-date
-    * This additionally improves the `ServerData` behaviors of Direct Connections and Join Requests
+    * Lenni Reflect (`1.3.4` -> `1.4.0`)
+    * JVMDowngrader (`1.1.3` -> `1.2.1`)
+    * ClassGraph (`4.8.177` -> `4.8.179`)
+    * UniLib (`1.0.3` -> `1.0.4`)
+    * ASM (`9.7` -> `9.7.1`)
+    * Fabric Loader (`0.16.5` -> `0.16.9`)
+    * Commons Compress (`1.26.1` -> `1.27.1`)
+    * Gradle (`8.10.2` -> `8.11`)
+    * Shadow (`8.3.3` -> `8.3.5`)
+    * DiscordIPC (`0.10.1` -> `0.10.2`)
 
 ### Fixes
 
-* Removed the `quilted_fabric_api` requirement from Quilt Jars
-    * Dependencies are now JIJd the same way as Fabric Jars are
-* Fixed an issue where `data.general.time` would constantly update if `resetTimeOnInit` was `true`
-    * Bug originally occurred in v2.4.0 from a commit regression
+* Stability Fixes for `Server` Module for MC 1.2.5 Clients and below
+    * Server IP and Port are now retrieved from the correct location
+    * `ServerList` and `ServerData` behaviors corrected down to MC b1.7.3
+    * In General, users from MC b1.8.1 to 1.2.5 should have their `Server` module be fully functional
+    * Users below b1.7.3 will still have fixes for proper IP and Port reading, so the module is usable
 
 ___
 
