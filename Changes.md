@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.5.2 (11/19/2024)
+## v2.5.2 (11/26/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.1...release%2Fv2.5.2)_
@@ -23,6 +23,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Fixes
 
+* (Backend) Fixed a misc. build config issue preventing some branches from compiling
 * Stability Fixes for `Server` Module for MC 1.2.5 Clients and below
     * Server IP and Port are now retrieved from the correct location
     * `ServerList` and `ServerData` behaviors corrected down to MC b1.7.3
