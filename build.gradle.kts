@@ -127,15 +127,15 @@ subprojects {
         mavenLocal()
         mavenCentral()
         // ModLoader Mavens
-        maven("https://maven.neoforged.net/releases") {
-            name = "NeoForged"
-        }
         maven("https://maven.minecraftforge.net/") {
             name = "Forge"
             metadataSources {
                 mavenPom()
                 artifact()
             }
+        }
+        maven("https://maven.neoforged.net/releases") {
+            name = "NeoForged"
         }
         maven("https://maven.fabricmc.net/") {
             name = "Fabric"

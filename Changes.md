@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.5.2 (11/26/2024)
+## v2.5.2 (11/28/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.1...release%2Fv2.5.2)_
@@ -16,7 +16,6 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * UniLib (`1.0.3` -> `1.0.4`)
     * ASM (`9.7` -> `9.7.1`)
     * Fabric Loader (`0.16.5` -> `0.16.9`)
-    * Commons Compress (`1.26.1` -> `1.27.1`)
     * Gradle (`8.10.2` -> `8.11`)
     * Shadow (`8.3.3` -> `8.3.5`)
     * DiscordIPC (`0.10.1` -> `0.10.2`)

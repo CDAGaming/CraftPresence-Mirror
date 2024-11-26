@@ -3,8 +3,8 @@ pluginManagement {
         mavenLocal()
         mavenCentral()
         // ModLoader Mavens
-        maven { url "https://maven.neoforged.net/releases" }
         maven { url "https://maven.minecraftforge.net/" }
+        maven { url "https://maven.neoforged.net/releases" }
         maven { url "https://maven.fabricmc.net/" }
         maven { url "https://maven.legacyfabric.net/" }
         // WagYourTail Mavens
