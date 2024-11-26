@@ -44,9 +44,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Session;
-import net.minecraft.world.World;
+import net.minecraft.client.User;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 /**
  * The Primary Application Class and Utilities
@@ -103,15 +103,15 @@ public class CraftPresence {
     /**
      * The Minecraft Instance Session attached to this Mod
      */
-    public static Session session;
+    public static User session;
     /**
      * The Current Player detected from the Minecraft Instance
      */
-    public static EntityPlayer player;
+    public static Player player;
     /**
      * The Current World detected from the Minecraft Instance
      */
-    public static World world;
+    public static Level world;
     /**
      * The current player username
      */
