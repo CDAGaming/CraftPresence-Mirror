@@ -28,10 +28,11 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.ItemUtils;
+import com.mojang.minecraft.entity.item.Item;
+import com.mojang.minecraft.entity.item.ItemStack;
+import com.mojang.minecraft.level.tile.Block;
+import com.mojang.minecraft.util.Session;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.Block;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
 
 import java.util.List;
 import java.util.Map;
@@ -365,7 +366,7 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getInternalData() {
-        for (Block block : Block.blocksList) {
+        for (Block block : Session.creativeInventory) {
             if (!ItemUtils.isItemEmpty(block)) {
                 final ItemStack stack = ItemUtils.getStackFrom(block);
                 final String blockName = ItemUtils.getItemName(stack);
@@ -381,7 +382,7 @@ public class TileEntityUtils implements Module {
             }
         }
 
-        for (Item item : Item.itemsList) {
+        for (Item item : Session.creativeInventoryItems) {
             if (!ItemUtils.isItemEmpty(item)) {
                 final ItemStack stack = ItemUtils.getStackFrom(item);
                 final String itemName = ItemUtils.getItemName(stack);
