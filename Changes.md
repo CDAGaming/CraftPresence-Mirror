@@ -1,33 +1,21 @@
 # CraftPresence Changes
 
-## v2.5.2 (11/28/2024)
+## v2.5.3 (??/??/2024)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.1...release%2Fv2.5.2)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.2...release%2Fv2.5.3)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Lenni Reflect (`1.3.4` -> `1.4.0`)
-    * JVMDowngrader (`1.1.3` -> `1.2.1`)
-    * ClassGraph (`4.8.177` -> `4.8.179`)
-    * UniLib (`1.0.3` -> `1.0.4`)
-    * ASM (`9.7` -> `9.7.1`)
-    * Fabric Loader (`0.16.5` -> `0.16.9`)
-    * Gradle (`8.10.2` -> `8.11`)
-    * Shadow (`8.3.3` -> `8.3.5`)
-    * DiscordIPC (`0.10.1` -> `0.10.2`)
+    * UniLib (`1.0.4` -> `1.0.5`)
+    * Gradle (`8.11` -> `8.11.1`)
 
 ### Fixes
 
-* (Backend) Fixed a misc. build config issue preventing some branches from compiling
-* Stability Fixes for `Server` Module for MC 1.2.5 Clients and below
-    * Server IP and Port are now retrieved from the correct location
-    * `ServerList` and `ServerData` behaviors corrected down to MC b1.7.3
-    * In General, users from MC b1.8.1 to 1.2.5 should have their `Server` module be fully functional
-    * Users below b1.7.3 will still have fixes for proper IP and Port reading, so the module is usable
+* TBD
 
 ___
 
