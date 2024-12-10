@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.Screen;
 
 public class MainGui extends ConfigurationGui<Config> {
     private final Config INSTANCE, DEFAULTS;
@@ -41,7 +41,7 @@ public class MainGui extends ConfigurationGui<Config> {
             dimensionSet,
             serverSet;
 
-    public MainGui(GuiScreen parentScreen) {
+    public MainGui(Screen parentScreen) {
         super(
                 Constants.TRANSLATOR.translate("gui.config.title")
         );
@@ -232,11 +232,11 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode, int mouseX, int mouseY) {
+    public void keyPressed(char typedChar, int keyCode, int mouseX, int mouseY) {
         if (isEscapeKey(keyCode) && getCurrentData().hasChanged()) {
             syncData();
         }
-        super.keyTyped(typedChar, keyCode, mouseX, mouseY);
+        super.keyPressed(typedChar, keyCode, mouseX, mouseY);
     }
 
     @Override
