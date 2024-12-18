@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.5.3 (??/??/2024)
+## v2.5.3 (12/23/2024)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.2...release%2Fv2.5.3)_
@@ -15,7 +15,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Fixes
 
-* TBD
+* Fixed an issue where the config was not marked as changed, if only a `PresenceData#smallImageText` element was changed
 
 ___
 

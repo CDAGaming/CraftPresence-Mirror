@@ -239,6 +239,7 @@ public class PresenceData extends Module implements Serializable {
                 Objects.equals(other.largeImageKey, largeImageKey) &&
                 Objects.equals(other.largeImageText, largeImageText) &&
                 Objects.equals(other.smallImageKey, smallImageKey) &&
+                Objects.equals(other.smallImageText, smallImageText) &&
                 Objects.equals(other.startTimestamp, startTimestamp) &&
                 Objects.equals(other.endTimestamp, endTimestamp) &&
                 Objects.equals(other.buttons, buttons);
