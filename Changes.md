@@ -12,6 +12,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * UniLib (`1.0.4` -> `1.0.5`)
     * Gradle (`8.11` -> `8.11.1`)
+    * Unimined (`1.3.9` -> `1.3.11`)
 
 ### Fixes
 

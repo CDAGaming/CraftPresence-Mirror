@@ -95,9 +95,11 @@ tasks.shadowJar {
 }
 
 tasks.named<RemapJarTask>("remapJar") {
-    inputFile.set(tasks.shadowJar.get().archiveFile)
     dependsOn(tasks.shadowJar.get())
-    archiveClassifier.set(project.name)
+    asJar {
+        inputFile.set(tasks.shadowJar.get().archiveFile)
+        archiveClassifier.set(project.name)
+    }
 }
 
 tasks.jar {
