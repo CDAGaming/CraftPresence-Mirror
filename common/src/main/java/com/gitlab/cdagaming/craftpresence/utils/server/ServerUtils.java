@@ -37,7 +37,9 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.src.*;
+import net.minecraft.src.client.gui.GuiConnecting;
+import net.minecraft.src.client.packets.NetClientHandler;
+import net.minecraft.src.client.packets.NetworkManager;
 
 import java.net.Socket;
 import java.util.List;
@@ -578,8 +580,7 @@ public class ServerUtils implements ExtendedModule {
                     CraftPresence.instance,
                     new GuiConnecting(
                             CraftPresence.instance,
-                            serverData.serverIP,
-                            serverData.serverPort
+                            serverData.serverIP + ":" + serverData.serverPort
                     )
             );
         } catch (Throwable ex) {

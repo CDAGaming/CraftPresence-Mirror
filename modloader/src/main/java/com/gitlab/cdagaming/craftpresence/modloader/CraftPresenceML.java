@@ -24,11 +24,11 @@
 
 package com.gitlab.cdagaming.craftpresence.modloader;
 
+import com.fox2code.foxloader.loader.ModLoader;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.minecraft.src.ModLoader;
 
 /**
  * The Primary Application Class and Utilities
