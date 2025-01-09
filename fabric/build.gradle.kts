@@ -30,16 +30,11 @@ unimined.minecraft {
             accessWidener(accessWidenerFile)
         }
         loader("fabric_loader_version"()!!)
-        if (isJarMod) {
-            prodNamespace("official")
-            devMappings = null
-        }
-        customIntermediaries = true
     }
     if (isModern) {
         fabric(fabricData)
     } else {
-        legacyFabric(fabricData)
+        babric(fabricData)
     }
 }
 
@@ -98,9 +93,6 @@ tasks.shadowJar {
 }
 
 tasks.named<RemapJarTask>("remapJar") {
-    if (isJarMod) {
-        prodNamespace("official")
-    }
     dependsOn(tasks.shadowJar.get())
     asJar {
         inputFile.set(tasks.shadowJar.get().archiveFile)

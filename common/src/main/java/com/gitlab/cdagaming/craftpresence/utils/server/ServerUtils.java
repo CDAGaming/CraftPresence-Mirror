@@ -221,8 +221,8 @@ public class ServerUtils implements ExtendedModule {
 
         try {
             if (newConnection != null) {
-                final NetworkManager netManager = (NetworkManager) StringUtils.getField(NetClientHandler.class, newConnection, "netManager", "field_1213_d", "e");
-                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_12258_e", "h");
+                final NetworkManager netManager = (NetworkManager) StringUtils.getField(NetClientHandler.class, newConnection, "netManager", "field_1971", "e");
+                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_1281", "h");
                 final String retrievedIP = socket.getInetAddress().getHostAddress();
                 final int retrievedPort = socket.getPort();
                 newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerNBTStorage(retrievedIP, retrievedPort) : null;
