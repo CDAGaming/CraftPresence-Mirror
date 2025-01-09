@@ -37,7 +37,9 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.src.*;
+import net.minecraft.client.gui.GuiConnecting;
+import net.minecraft.client.net.handler.NetClientHandler;
+import net.minecraft.core.net.NetworkManager;
 
 import java.net.Socket;
 import java.util.List;
@@ -590,9 +592,9 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void initPresence() {
         // Player Position Arguments
-        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3));
-        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3));
-        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
+        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.x, 3));
+        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.y, 3));
+        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.z, 3));
 
         // Player Health Arguments
         syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.health, 0));
@@ -611,7 +613,7 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         });
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.world.getWorldInfo().getWorldName();
+            final String primaryWorldName = CraftPresence.world.getLevelData().getWorldName();
             final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
