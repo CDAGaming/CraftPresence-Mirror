@@ -29,11 +29,11 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
+import com.mojang.minecraft.gui.GuiContainer;
+import com.mojang.minecraft.gui.GuiScreen;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiContainer;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import java.util.List;

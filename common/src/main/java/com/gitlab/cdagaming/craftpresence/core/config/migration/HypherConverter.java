@@ -30,6 +30,8 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.google.gson.JsonElement;
+import com.mojang.minecraft.gui.GuiDownloadTerrain;
+import com.mojang.minecraft.gui.GuiMultiplayer;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 import io.github.cdagaming.unicore.utils.MathUtils;
