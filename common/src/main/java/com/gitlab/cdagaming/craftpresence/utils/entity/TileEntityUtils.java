@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.ItemUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -207,10 +208,10 @@ public class TileEntityUtils implements Module {
     public void updateData() {
         final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getMainHandItem();
         final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getOffhandItem();
-        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.getInventory().armor.get(3);
-        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.getInventory().armor.get(2);
-        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.getInventory().armor.get(1);
-        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.getInventory().armor.get(0);
+        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.getItemBySlot(EquipmentSlot.HEAD);
+        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.getItemBySlot(EquipmentSlot.CHEST);
+        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.getItemBySlot(EquipmentSlot.LEGS);
+        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.getItemBySlot(EquipmentSlot.FEET);
 
         final boolean hasMainHandChanged = NEW_CURRENT_MAIN_HAND_ITEM != CURRENT_MAIN_HAND_ITEM;
         final boolean hasOffHandChanged = NEW_CURRENT_OFFHAND_ITEM != CURRENT_OFFHAND_ITEM;
