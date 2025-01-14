@@ -221,8 +221,8 @@ public class ServerUtils implements ExtendedModule {
 
         try {
             if (newConnection != null) {
-                final NetworkManager netManager = (NetworkManager) StringUtils.getField(NetClientHandler.class, newConnection, "netManager", "field_1213_d", "e");
-                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_12258_e", "h");
+                final NetworkManager netManager = (NetworkManager) StringUtils.getField(NetClientHandler.class, newConnection, "netManager", "field_1213_d", "d");
+                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_12258_e", "f");
                 final String retrievedIP = socket.getInetAddress().getHostAddress();
                 final int retrievedPort = socket.getPort();
                 newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerNBTStorage(retrievedIP, retrievedPort) : null;
@@ -623,7 +623,7 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         }, true);
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.world.getWorldInfo().getWorldName();
+            final String primaryWorldName = CraftPresence.world.func_22144_v().getWorldName();
             final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
