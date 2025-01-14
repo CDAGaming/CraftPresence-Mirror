@@ -436,8 +436,8 @@ public class ServerUtils implements ExtendedModule {
      * @param newConnection The Player's Current Connection Data
      */
     private void processServerData(final ServerNBTStorage newServerData, final NetClientHandler newConnection) {
-        final List<String> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.playerNames) : StringUtils.newArrayList();
-        final int newCurrentPlayers = newConnection != null ? newConnection.playerNames.size() : 1;
+        final List<String> newPlayerList = newConnection != null ? StringUtils.newArrayList(newConnection.field_35786_c) : StringUtils.newArrayList();
+        final int newCurrentPlayers = newConnection != null ? newConnection.field_35786_c.size() : 1;
 
         final boolean newLANStatus = false;
         final boolean newSinglePlayerStatus = !newLANStatus && !CraftPresence.instance.isMultiplayerWorld();
@@ -447,7 +447,7 @@ public class ServerUtils implements ExtendedModule {
         if (newLANStatus) {
             newMaxPlayers = 8;
         } else if (newConnection != null) {
-            newMaxPlayers = newConnection.currentServerMaxPlayers;
+            newMaxPlayers = newConnection.field_35785_d;
         }
 
         if (newMaxPlayers < newCurrentPlayers) {
@@ -721,7 +721,7 @@ public class ServerUtils implements ExtendedModule {
                 if (CraftPresence.world.getWorldInfo().isHardcoreModeEnabled()) {
                     return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
                 } else {
-                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "S");
+                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "R");
                     int difficulty = CraftPresence.world.difficultySetting;
                     if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
                         difficulty = 0;
@@ -742,14 +742,7 @@ public class ServerUtils implements ExtendedModule {
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         }, true);
-        syncArgument("world.type", () -> {
-            if (ModUtils.RAW_TRANSLATOR != null) {
-                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.world.getWorldInfo().func_46133_t().func_46136_a());
-            } else {
-                final String rawName = (String) StringUtils.getField(EnumWorldType.class, CraftPresence.world.getWorldInfo().func_46133_t(), "field_46139_c", "c");
-                return StringUtils.formatWord(rawName.toLowerCase());
-            }
-        }, true);
+        syncArgument("world.type", () -> "Default", true);
 
         // World Time Arguments
         syncArgument("world.time.day", () ->

@@ -46,7 +46,7 @@ public class ServerList {
 
     public void loadServerList() {
         try {
-            NBTTagCompound var1 = CompressedStreamTools.writeMapToFileUncompressed(new File(this.mc.mcDataDir, "servers.dat"));
+            NBTTagCompound var1 = CompressedStreamTools.func_35622_a(new File(this.mc.mcDataDir, "servers.dat"));
             NBTTagList var2 = var1.getTagList("servers");
             this.servers.clear();
 
@@ -68,7 +68,7 @@ public class ServerList {
 
             NBTTagCompound var5 = new NBTTagCompound();
             var5.setTag("servers", var1);
-            CompressedStreamTools.saveMapToFileWithBackup(var5, new File(this.mc.mcDataDir, "servers.dat"));
+            CompressedStreamTools.func_35621_a(var5, new File(this.mc.mcDataDir, "servers.dat"));
         } catch (Exception var4) {
             var4.printStackTrace();
         }
