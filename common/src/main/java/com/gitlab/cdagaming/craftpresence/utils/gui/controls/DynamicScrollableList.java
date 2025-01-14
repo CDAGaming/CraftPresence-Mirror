@@ -39,7 +39,6 @@ import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import javax.annotation.Nonnull;
@@ -194,7 +193,7 @@ public class DynamicScrollableList extends ScrollableListControl {
         String displayName = getEntryAliases().getOrDefault(originalName, originalName);
         int xOffset = xPos;
 
-        ResourceLocation texture = ResourceUtils.getEmptyResource();
+        String texture = ResourceUtils.getEmptyResource();
         String assetUrl;
 
         if (renderType == RenderType.ServerData) {
