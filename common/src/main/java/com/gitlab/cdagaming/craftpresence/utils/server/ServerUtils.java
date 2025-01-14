@@ -48,7 +48,8 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.*;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.server.IntegratedServer;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.realms.RealmsScreen;
 
 import java.net.UnknownHostException;
@@ -611,8 +612,8 @@ public class ServerUtils implements ExtendedModule {
             // Stub Server Data if not pinged
             serverData.pinged = true;
             serverData.ping = -2L;
-            serverData.motd = TextComponent.EMPTY;
-            serverData.status = TextComponent.EMPTY;
+            serverData.motd = CommonComponents.EMPTY;
+            serverData.status = CommonComponents.EMPTY;
         }
         PING_EXECUTOR.submit(() -> {
             try {
@@ -620,11 +621,11 @@ public class ServerUtils implements ExtendedModule {
                 callbackEvent.run();
             } catch (UnknownHostException unknownHostException) {
                 serverData.ping = -1L;
-                serverData.motd = new TextComponent("§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_resolve"));
+                serverData.motd = Component.literal("§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_resolve"));
                 callbackEvent.run();
             } catch (Exception ex) {
                 serverData.ping = -1L;
-                serverData.motd = new TextComponent("§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_connect"));
+                serverData.motd = Component.literal("§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_connect"));
                 callbackEvent.run();
             }
         });
