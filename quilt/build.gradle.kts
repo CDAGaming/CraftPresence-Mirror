@@ -50,7 +50,7 @@ dependencies {
     "include"(quiltBase)
 
     // Required for loading translation data
-    val resourceLoader = "org.quiltmc.qsl.core:resource_loader:${"quilt_api_version"()!!}"
+    val resourceLoader = fabricApi.quiltFabricModule("fabric-resource-loader-v0", "quilt_fabric_api_version"()!!)
     "modImplementation"(resourceLoader)
     "include"(resourceLoader)
 
@@ -61,10 +61,7 @@ dependencies {
     }
 
     // Quilt: Replace Fabric APIs with Quilt Equivalents
-    "modImplementation"("org.quiltmc.qsl.core:lifecycle_events:${"quilt_api_version"()!!}")
-    "modImplementation"("org.quiltmc.qsl.gui:screen:${"quilt_api_version"()!!}")
     "modImplementation"(fabricApi.quiltFabricModule("fabric-api-base", "quilt_fabric_api_version"()!!))
-    "modImplementation"(fabricApi.quiltFabricModule("fabric-resource-loader-v0", "quilt_fabric_api_version"()!!))
     "modImplementation"(fabricApi.quiltFabricModule("fabric-screen-api-v1", "quilt_fabric_api_version"()!!))
     "modImplementation"(fabricApi.quiltFabricModule("fabric-key-binding-api-v1", "quilt_fabric_api_version"()!!))
     "modImplementation"(fabricApi.quiltFabricModule("fabric-lifecycle-events-v1", "quilt_fabric_api_version"()!!))
