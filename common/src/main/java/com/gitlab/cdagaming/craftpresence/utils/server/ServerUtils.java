@@ -787,7 +787,7 @@ public class ServerUtils implements ExtendedModule {
         }, true);
         syncArgument("world.type", () -> {
             if (ModUtils.RAW_TRANSLATOR != null) {
-                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.world.getWorldType().getTranslationKey());
+                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.world.getWorldType().getTranslateName());
             } else {
                 return StringUtils.formatWord(CraftPresence.world.getWorldType().getName().toLowerCase());
             }
