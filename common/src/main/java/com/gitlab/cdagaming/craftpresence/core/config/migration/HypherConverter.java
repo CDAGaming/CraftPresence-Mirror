@@ -162,13 +162,13 @@ public class HypherConverter implements DataMigrator {
 
             // Per-GUI Events
             instance.advancedSettings.enablePerGui = true;
-            instance.advancedSettings.guiSettings.guiData.put("GuiScreenRealmsProxy", new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("RealmsScreen", new ModuleData()
                     .setData(convertPresenceData(conf.get("realms_list"))));
-            instance.advancedSettings.guiSettings.guiData.put("GuiMultiplayer", new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("JoinMultiplayerScreen", new ModuleData()
                     .setData(convertPresenceData(conf.get("server_list"))));
-            instance.advancedSettings.guiSettings.guiData.put("GuiScreenWorking", new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("LevelLoadingScreen", new ModuleData()
                     .setData(convertPresenceData(conf.get("join_game"))));
-            instance.advancedSettings.guiSettings.guiData.put("GuiDownloadTerrain", new ModuleData()
+            instance.advancedSettings.guiSettings.guiData.put("ReceivingLevelScreen", new ModuleData()
                     .setData(convertPresenceData(conf.get("join_game"))));
 
             instance.statusMessages.loadingData.setData(convertPresenceData(conf.get("init")));
