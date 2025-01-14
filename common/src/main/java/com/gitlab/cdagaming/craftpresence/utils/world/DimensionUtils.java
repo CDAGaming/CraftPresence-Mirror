@@ -115,10 +115,10 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final WorldProvider newProvider = CraftPresence.world.provider;
-        final String newDimensionName = newProvider.getDimensionName();
+        final WorldProvider newProvider = CraftPresence.world.worldProvider;
+        final String newDimensionName = MappingUtils.getClassName(newProvider);
 
-        final String newDimensionIdentifier = StringUtils.getOrDefault(newDimensionName, MappingUtils.getClassName(newProvider));
+        final String newDimensionIdentifier = newDimensionName;
 
         if (!newProvider.equals(CURRENT_DIMENSION) || !newDimensionName.equals(RAW_DIMENSION_NAME) || !newDimensionIdentifier.equals(RAW_DIMENSION_IDENTIFIER)) {
             CURRENT_DIMENSION = newProvider;
@@ -189,11 +189,11 @@ public class DimensionUtils implements ExtendedModule {
 
         if (dimensionTypes.isEmpty()) {
             // Fallback 1: Use Reflected Dimension Types
-            Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(FileUtils.loadClass("net.minecraftforge.common.DimensionManager"), null, "providers");
+            Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(FileUtils.loadClass("forge.DimensionManager"), null, "providers");
             if (reflectedDimensionTypes != null) {
                 for (Object objectType : reflectedDimensionTypes.values()) {
                     try {
-                        WorldProvider type = (objectType instanceof Class<?>) ? (WorldProvider) ((Class<? extends WorldProvider>) objectType).getDeclaredConstructor().newInstance() : null;
+                        WorldProvider type = (objectType instanceof WorldProvider) ? (WorldProvider) objectType : null;
 
                         if (type != null && !dimensionTypes.contains(type)) {
                             dimensionTypes.add(type);
@@ -229,7 +229,7 @@ public class DimensionUtils implements ExtendedModule {
     public void getInternalData() {
         for (WorldProvider TYPE : getDimensionTypes()) {
             if (TYPE != null) {
-                String dimensionName = StringUtils.getOrDefault(TYPE.getDimensionName(), MappingUtils.getClassName(TYPE));
+                String dimensionName = MappingUtils.getClassName(TYPE);
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {
                     DEFAULT_NAMES.add(name);

@@ -258,7 +258,7 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_75626_c", "field_3269", "c");
+        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_1610_b", "c");
         if (!mappings.values().isEmpty()) {
             for (Object entityLocationObj : mappings.values()) {
                 final String entityLocation = (String) entityLocationObj;
