@@ -216,13 +216,20 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
+        NetClientHandler newConnection = null;
         ServerNBTStorage newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
+        try {
+            if (CraftPresence.world instanceof WorldClient clientWorld) {
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, clientWorld, "sendQueue", "field_1052_A", "B");
+            }
+        } catch (Exception ex) {
+            newConnection = null;
+        }
 
         try {
             if (newConnection != null) {
                 final NetworkManager netManager = (NetworkManager) StringUtils.getField(NetClientHandler.class, newConnection, "netManager", "field_1213_d", "d");
-                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_12258_e", "f");
+                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_12258_e", "e");
                 final String retrievedIP = socket.getInetAddress().getHostAddress();
                 final int retrievedPort = socket.getPort();
                 newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerNBTStorage(retrievedIP, retrievedPort) : null;
