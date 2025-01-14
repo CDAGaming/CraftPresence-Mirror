@@ -1,0 +1,82 @@
+name: Deploy All Branches
+
+on:
+  workflow_dispatch
+
+env:
+  CF_APIKEY: ${{ secrets.CF_APIKEY }}
+  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+  NIGHTBLOOM_TOKEN: ${{ secrets.NIGHTBLOOM_TOKEN }}
+
+jobs:
+  deploy-all:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch all branches
+        run: |
+          git fetch --all
+
+      - name: Get list of branches
+        id: branches
+        run: |
+          git branch -r | grep -v "origin/HEAD" | grep -v "origin/l10n_master" | grep -v "origin/snapshot" | grep -v "origin/legacy" | sed 's/origin\///' > branches.txt
+
+      - name: Display branches to process
+        run: cat branches.txt
+
+      - name: update cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up Gradle JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Deploy each branch
+        run: |
+          while IFS= read -r branch; do
+            echo "Processing branch: $branch"
+            git checkout $branch
+            chmod +x gradlew
+
+            if ! ./gradlew clean --quiet; then
+              echo "$branch: clean failed" >> deployment_failures.txt
+              continue
+            fi
+
+            if ! ./gradlew --build-cache --quiet build; then
+              echo "$branch: build failed" >> deployment_failures.txt
+              continue
+            fi
+
+            if ! ./gradlew --build-cache --quiet publishCurseforge; then
+              echo "$branch: CurseForge deployment failed" >> deployment_failures.txt
+            fi
+
+            if ! ./gradlew --build-cache --quiet publishModrinth; then
+              echo "$branch: Modrinth deployment failed" >> deployment_failures.txt
+            fi
+
+            if ! ./gradlew --build-cache --quiet publishNightbloom; then
+              echo "$branch: NightBloom deployment failed" >> deployment_failures.txt
+            fi
+          done < branches.txt
+
+      - name: Upload deployment failure log (if any)
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment_failures
+          path: deployment_failures.txt
+
+      - name: Stop Gradle Daemon
+        run: ./gradlew --stop
