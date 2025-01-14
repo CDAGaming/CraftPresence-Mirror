@@ -25,8 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.fabric.impl;
 
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
-import io.github.prospector.modmenu.api.ConfigScreenFactory;
-import io.github.prospector.modmenu.api.ModMenuApi;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 
 /**
  * Hook to provide Integration with ProspectorDev's ModMenu
