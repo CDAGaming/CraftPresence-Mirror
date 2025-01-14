@@ -186,15 +186,7 @@ public class BiomeUtils implements ExtendedModule {
     private List<BiomeGenBase> getBiomeTypes() {
         List<BiomeGenBase> biomeTypes = StringUtils.newArrayList();
 
-        if (BiomeGenBase.field_35486_a != null) {
-            for (BiomeGenBase biome : BiomeGenBase.field_35486_a) {
-                if (biome != null && !biomeTypes.contains(biome)) {
-                    biomeTypes.add(biome);
-                }
-            }
-        }
-
-        if (biomeTypes.isEmpty() && FileUtils.isClassGraphEnabled()) {
+        if (biomeTypes.isEmpty()) {
             // Fallback: Use Manual Class Lookup
             for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(BiomeGenBase.class).values()) {
                 if (classInfo != null) {
@@ -261,7 +253,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
+        return MappingUtils.areMappingsLoaded() && FileUtils.isClassGraphEnabled() && FileUtils.canScanClasses();
     }
 
     @Override
