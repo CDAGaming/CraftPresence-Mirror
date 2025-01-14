@@ -30,9 +30,9 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
+import net.minecraft.src.GuiPlayerInfo;
+import net.minecraft.src.Entity;
+import net.minecraft.src.EntityList;
 
 import java.util.List;
 import java.util.Map;
