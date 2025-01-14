@@ -28,16 +28,16 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Registry;
-import net.minecraft.world.level.dimension.Dimension;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
-import unilib.external.io.github.classgraph.ClassInfo;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -94,12 +94,23 @@ public class DimensionUtils implements ExtendedModule {
     /**
      * The Player's Current Dimension, if any
      */
-    private Dimension CURRENT_DIMENSION;
+    private Level CURRENT_DIMENSION;
 
     @Override
     public void clearFieldData() {
         DEFAULT_NAMES.clear();
         DIMENSION_NAMES.clear();
+    }
+
+    @Override
+    public void clearActiveData() {
+        // Reset World-Specific Registry Data
+        queueInternalScan();
+        DIMENSION_NAMES.removeIf(entry ->
+                DEFAULT_NAMES.contains(entry) && !CraftPresence.CONFIG.dimensionSettings.dimensionData.containsKey(entry)
+        );
+        DEFAULT_NAMES.clear();
+        ExtendedModule.super.clearActiveData();
     }
 
     @Override
@@ -117,8 +128,8 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Dimension newProvider = CraftPresence.world.dimension;
-        final DimensionType newDimensionType = newProvider.getType();
+        final Level newProvider = CraftPresence.world;
+        final ResourceLocation newDimensionType = newProvider.dimension().location();
         final String newDimensionName = newDimensionType.toString();
 
         final String newDimensionIdentifier = StringUtils.getOrDefault(newDimensionName, MappingUtils.getClassName(newDimensionType));
@@ -187,44 +198,17 @@ public class DimensionUtils implements ExtendedModule {
      *
      * @return The detected Dimension Types found
      */
-    private List<DimensionType> getDimensionTypes() {
-        List<DimensionType> dimensionTypes = StringUtils.newArrayList();
-        List<DimensionType> defaultDimensionTypes = StringUtils.newArrayList(Registry.DIMENSION_TYPE.iterator());
+    private List<ResourceLocation> getDimensionTypes() {
+        List<ResourceLocation> dimensionTypes = StringUtils.newArrayList();
+        Optional<? extends Registry<DimensionType>> dimensionRegistry = ((LocalPlayer) CraftPresence.player).connection.registryAccess().registry(Registry.DIMENSION_TYPE_REGISTRY);
 
-        if (!defaultDimensionTypes.isEmpty()) {
-            for (DimensionType type : defaultDimensionTypes) {
-                if (type != null) {
-                    dimensionTypes.add(type);
-                }
-            }
-        }
+        if (dimensionRegistry.isPresent()) {
+            List<ResourceLocation> defaultDimensionTypes = StringUtils.newArrayList(dimensionRegistry.get().keySet());
 
-        if (dimensionTypes.isEmpty()) {
-            // Fallback 1: Use Reflected Dimension Types
-            Map<?, ?> reflectedDimensionTypes = (Map<?, ?>) StringUtils.getField(DimensionType.class, null, "dimensionTypes");
-            if (reflectedDimensionTypes != null) {
-                for (Object objectType : reflectedDimensionTypes.values()) {
-                    DimensionType type = (objectType instanceof DimensionType) ? (DimensionType) objectType : null;
-
-                    if (type != null && !dimensionTypes.contains(type)) {
+            if (!defaultDimensionTypes.isEmpty()) {
+                for (ResourceLocation type : defaultDimensionTypes) {
+                    if (type != null) {
                         dimensionTypes.add(type);
-                    }
-                }
-            } else if (FileUtils.isClassGraphEnabled()) {
-                // Fallback 2: Use Manual Class Lookup
-                for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(Dimension.class).values()) {
-                    if (classInfo != null) {
-                        try {
-                            Class<?> classObj = FileUtils.loadClass(classInfo.getName());
-                            if (classObj != null) {
-                                Dimension providerObj = (Dimension) classObj.getDeclaredConstructor().newInstance();
-                                if (!dimensionTypes.contains(providerObj.getType())) {
-                                    dimensionTypes.add(providerObj.getType());
-                                }
-                            }
-                        } catch (Throwable ex) {
-                            printException(ex);
-                        }
                     }
                 }
             }
@@ -235,7 +219,7 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        for (DimensionType TYPE : getDimensionTypes()) {
+        for (ResourceLocation TYPE : getDimensionTypes()) {
             if (TYPE != null) {
                 String dimensionName = StringUtils.getOrDefault(TYPE.toString(), MappingUtils.getClassName(TYPE));
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
@@ -278,7 +262,7 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && (!FileUtils.isClassGraphEnabled() || FileUtils.canScanClasses());
+        return MappingUtils.areMappingsLoaded() && CraftPresence.player != null;
     }
 
     @Override
