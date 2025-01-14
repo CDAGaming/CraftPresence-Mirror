@@ -31,13 +31,13 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.unilib.ModUtils;
-import com.gitlab.cdagaming.unilib.core.integrations.logging.ApacheLogger;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
 import io.github.cdagaming.unicore.impl.Pair;
+import io.github.cdagaming.unicore.integrations.logging.SLF4JLogger;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
@@ -72,7 +72,7 @@ public class ServerUtils implements ExtendedModule {
             (new ThreadFactoryBuilder())
                     .setNameFormat("Server Pinger #%d")
                     .setDaemon(true)
-                    .setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler(((ApacheLogger) Constants.LOG).getLogInstance()))
+                    .setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler(((SLF4JLogger) Constants.LOG).getLogInstance()))
                     .build()
     );
     /**
