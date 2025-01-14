@@ -206,10 +206,10 @@ public class TileEntityUtils implements Module {
     public void updateData() {
         final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItemMainhand();
         final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getHeldItemOffhand();
-        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory.get(3);
-        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory.get(2);
-        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory.get(1);
-        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory.get(0);
+        final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory[3];
+        final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory[2];
+        final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory[1];
+        final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory[0];
 
         final boolean hasMainHandChanged = NEW_CURRENT_MAIN_HAND_ITEM != CURRENT_MAIN_HAND_ITEM;
         final boolean hasOffHandChanged = NEW_CURRENT_OFFHAND_ITEM != CURRENT_OFFHAND_ITEM;
