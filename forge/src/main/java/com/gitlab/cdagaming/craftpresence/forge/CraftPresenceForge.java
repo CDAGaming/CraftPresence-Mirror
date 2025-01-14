@@ -28,13 +28,13 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.network.FMLNetworkConstants;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
+import net.minecraftforge.fmllegacy.network.FMLNetworkConstants;
 
 /**
  * The Primary Application Class and Utilities
@@ -55,14 +55,14 @@ public class CraftPresenceForge {
             try {
                 // Workaround: Client-side only fix for Forge Clients
                 // - Reference => https://gitlab.com/CDAGaming/CraftPresence/-/issues/99
-                ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+                ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
             } catch (Throwable ignored) {
                 // before forge-1.13.2-25.0.103
             }
 
             try {
                 // Register The Config GUI Factory, used in Forge for Mod Menu integration
-                ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, parentScreen) -> new MainGui(parentScreen));
+                ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((mc, parentScreen) -> new MainGui(parentScreen)));
             } catch (Throwable ex) {
                 CoreUtils.LOG.error("Failed to register Config GUI Factory for @MOD_NAME@.", ex);
             }
