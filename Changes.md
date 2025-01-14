@@ -17,6 +17,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 ### Fixes
 
 * Fixed an issue where the config was not marked as changed, if only a `PresenceData#smallImageText` element was changed
+* (Backend) Fixed an incorrect `fabric_loader_range`, causing `0.12.x` Fabric Loader issues even when compatible
 
 ___
 
