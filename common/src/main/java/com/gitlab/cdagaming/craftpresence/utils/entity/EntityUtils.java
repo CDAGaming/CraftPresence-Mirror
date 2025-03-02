@@ -119,7 +119,7 @@ public class EntityUtils implements ExtendedModule {
         CURRENT_RIDING_NAME = null;
 
         CraftPresence.CLIENT.removeArguments("entity", "data.entity");
-        CraftPresence.CLIENT.removeForcedData(
+        CraftPresence.CLIENT.clearForcedData(
                 "entity.target", "entity.riding"
         );
         hasInitialized = false;
@@ -216,7 +216,7 @@ public class EntityUtils implements ExtendedModule {
             }
         } else if (hasInitializedTarget) {
             CraftPresence.CLIENT.removeArguments("entity.target", "data.entity.target");
-            CraftPresence.CLIENT.removeForcedData("entity.target");
+            CraftPresence.CLIENT.clearForcedData("entity.target");
             hasInitializedTarget = false;
         }
 
@@ -252,7 +252,7 @@ public class EntityUtils implements ExtendedModule {
             }
         } else if (hasInitializedRiding) {
             CraftPresence.CLIENT.removeArguments("entity.riding", "data.entity.riding");
-            CraftPresence.CLIENT.removeForcedData("entity.riding");
+            CraftPresence.CLIENT.clearForcedData("entity.riding");
             hasInitializedRiding = false;
         }
     }

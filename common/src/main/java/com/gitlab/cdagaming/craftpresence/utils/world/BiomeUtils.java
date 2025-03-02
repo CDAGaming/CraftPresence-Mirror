@@ -108,7 +108,7 @@ public class BiomeUtils implements ExtendedModule {
         CURRENT_BIOME_IDENTIFIER = null;
 
         CraftPresence.CLIENT.removeArguments("biome", "data.biome");
-        CraftPresence.CLIENT.removeForcedData("biome");
+        CraftPresence.CLIENT.clearForcedData("biome");
         hasInitialized = false;
     }
 

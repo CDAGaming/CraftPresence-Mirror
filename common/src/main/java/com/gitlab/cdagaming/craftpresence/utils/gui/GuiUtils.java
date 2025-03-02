@@ -101,7 +101,7 @@ public class GuiUtils implements ExtendedModule {
         CURRENT_SCREEN = null;
 
         CraftPresence.CLIENT.removeArguments("screen", "data.screen");
-        CraftPresence.CLIENT.removeForcedData("screen");
+        CraftPresence.CLIENT.clearForcedData("screen");
         hasInitialized = false;
     }
 

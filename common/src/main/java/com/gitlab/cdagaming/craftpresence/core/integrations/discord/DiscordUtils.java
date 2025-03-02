@@ -80,7 +80,13 @@ public class DiscordUtils {
      */
     private final Map<String, String> cachedImageData = StringUtils.newHashMap();
     /**
-     * When this is not empty, {@link DiscordUtils#buildRichPresence(PresenceData)} will use the first applicable data entry instead of the generic data
+     * The step-through order for forced RPC data, used in determining event priority
+     */
+    private final List<String> forcedDataOrder = StringUtils.newArrayList(
+            "biome", "dimension", "item", "entity.riding", "entity.target", "server", "menu", "screen"
+    );
+    /**
+     * When this is not empty, {@link DiscordUtils#buildRichPresence(PresenceData)} will use the last applicable data entry instead of the generic data
      */
     private final Map<String, Supplier<PresenceData>> forcedData = StringUtils.newConcurrentMap();
     /**
@@ -211,6 +217,13 @@ public class DiscordUtils {
 
         // Setup Default / Static Placeholders
         syncPlaceholders();
+
+        // Setup Forced RPC Priority Order
+        forcedData.clear();
+
+        for (String key : forcedDataOrder) {
+            forcedData.put(key, () -> null);
+        }
     }
 
     /**
@@ -634,7 +647,21 @@ public class DiscordUtils {
      * @param newData The {@link PresenceData} to interpret
      */
     public void addForcedData(final String key, final Supplier<PresenceData> newData) {
+        if (!forcedData.containsKey(key)) {
+            forcedDataOrder.add(key);
+        }
         forcedData.put(key, newData);
+    }
+
+    /**
+     * Clears the specified elements from the forced data list
+     *
+     * @param args The elements to clear, if present
+     */
+    public void clearForcedData(final String... args) {
+        for (String argumentName : args) {
+            addForcedData(argumentName, () -> null);
+        }
     }
 
     /**
@@ -644,6 +671,7 @@ public class DiscordUtils {
      */
     public void removeForcedData(final String... args) {
         for (String argumentName : args) {
+            forcedDataOrder.remove(argumentName);
             forcedData.remove(argumentName);
         }
     }
@@ -1685,12 +1713,18 @@ public class DiscordUtils {
      * @return the currently used instance of {@link PresenceData}
      */
     public PresenceData getPresenceData() {
-        if (!forcedData.isEmpty()) {
-            for (Supplier<PresenceData> data : forcedData.values()) {
-                final PresenceData presenceInfo = data.get();
-                if (presenceInfo != null && presenceInfo.enabled && presenceInfo.useAsMain) {
-                    return presenceInfo;
+        if (!forcedDataOrder.isEmpty() && !forcedData.isEmpty()) {
+            PresenceData forcedPresence = null;
+            for (String key : forcedDataOrder) {
+                if (forcedData.containsKey(key)) {
+                    final PresenceData presenceInfo = forcedData.get(key).get();
+                    if (presenceInfo != null && presenceInfo.enabled && presenceInfo.useAsMain) {
+                        forcedPresence = presenceInfo;
+                    }
                 }
+            }
+            if (forcedPresence != null) {
+                return forcedPresence;
             }
         }
         return defaultPresence != null ? defaultPresence.get() : null;

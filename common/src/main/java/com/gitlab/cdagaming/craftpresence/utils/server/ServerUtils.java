@@ -254,7 +254,7 @@ public class ServerUtils implements ExtendedModule {
         isOnRealm = false;
 
         CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
-        CraftPresence.CLIENT.removeForcedData("server");
+        CraftPresence.CLIENT.clearForcedData("server");
         CraftPresence.CLIENT.clearPartyData();
         hasInitialized = false;
         hasInitializedServer = false;
@@ -770,6 +770,13 @@ public class ServerUtils implements ExtendedModule {
             final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
+        });
+        syncArgument("world.type", () -> {
+            if (isOnRealm) {
+                return StringUtils.getOrDefault(currentRealmData.worldType.name().toLowerCase());
+            } else {
+                return StringUtils.getOrDefault(CraftPresence.world.getWorldType().getName().toLowerCase());
+            }
         });
 
         // World Time Arguments

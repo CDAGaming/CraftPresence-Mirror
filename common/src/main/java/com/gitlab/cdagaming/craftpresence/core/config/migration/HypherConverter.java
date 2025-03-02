@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.Button;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.config.element.PresenceData;
 import com.google.gson.JsonElement;
+import com.jagrosh.discordipc.entities.ActivityType;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 import io.github.cdagaming.unicore.utils.MathUtils;
@@ -51,16 +52,16 @@ import java.util.regex.Pattern;
 public class HypherConverter implements DataMigrator {
     private static final Pattern EXPR_PATTERN = Pattern.compile("\\{(.*?)}");
     private static final int LOWEST_SUPPORTED = 13;
-    private static final int HIGHEST_SUPPORTED = 18;
+    private static final int HIGHEST_SUPPORTED = 25;
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
-    // oldName -> newName
+    // oldName -> newName (v18 and below)
     private final Map<String, String> placeholderMappings = new HashMapBuilder<String, String>()
             .put("%player%", "{player.name}")
             .put("%world%", "{dimension.name}")
             .put("%mods%", "{general.mods}")
             .put("%difficulty%", "{world.difficulty}")
-            .put("%position%", "{custom.player_info_coordinate}")
+            .put("%position%", "{'x: ' + player.position.x + ', y: ' + player.position.y + ', z: ' + player.position.z}")
             .put("%biome%", "{biome.name}")
             .put("%mcver%", "{general.version}")
             .put("%instance%", "{pack.name}")
@@ -91,6 +92,49 @@ public class HypherConverter implements DataMigrator {
             .put("%realmgame%", "{server.minigame}")
             .put("%realmicon%", "{server.icon}")
             .build();
+    // oldName -> newName (v19 and above)
+    private final Map<String, String> placeholderMappingsV2 = new HashMapBuilder<String, String>()
+            .put("{{game.version}}", "{general.version}")
+            .put("{{game.mods}}", "{general.mods}")
+            .put("{{player.name}}", "{player.name}")
+            .put("{{world.name}}", "{dimension.name}")
+            .put("{{world.difficulty}}", "{world.difficulty}")
+            .put("{{world.savename}}", "{world.name}")
+            .put("{{world.time.12}}", "{world.time.format_12}")
+            .put("{{world.time.24}}", "{world.time.format_24}")
+            .put("{{world.time.day}}", "{world.day}")
+            .put("{{world.weather}}", "{world.weather.name}")
+            .put("{{world.biome}}", "{biome.name}")
+            .put("{{player.position}}", "{'x: ' + player.position.x + ', y: ' + player.position.y + ', z: ' + player.position.z}")
+            .put("{{player.health.current}}", "{player.health.current}")
+            .put("{{player.health.max}}", "{player.health.max}")
+            .put("{{player.health.percent}}", "{(player.health.current / player.health.max) * 100}")
+            .put("{{player.item.off_hand}}", "{item.off_hand.name}")
+            .put("{{player.item.main_hand}}", "{item.main_hand.name}")
+            .put("{{images.player}}", "{player.icon}")
+            .put("{{images.realm}}", "{server.icon}")
+            .put("{{images.server}}", "{server.icon}")
+            .put("{{server.ip}}", "{server.address.short}")
+            .put("{{server.ip_underscore}}", "{replace(server.address.short, '.', '_')}")
+            .put("{{server.name}}", "{server.name}")
+            .put("{{server.motd}}", "{server.motd.raw}")
+            .put("{{server.players.count}}", "{server.players.current}")
+            .put("{{server.players.countexcl}}", "{server.players.current - 1}")
+            .put("{{server.players.max}}", "{server.players.max}")
+            .put("{{realm.name}}", "{server.name}")
+            .put("{{realm.description}}", "{server.motd.raw}")
+            .put("{{realm.world}}", "{world.type}")
+            .put("{{realm.game}}", "{server.minigame}")
+            .put("{{realm.players.count}}", "{server.players.count}")
+            .put("{{realm.players.max}}", "{server.players.max}")
+            .put("{{replaymod.time.elapsed}}", "{replaymod.time.current}")
+            .put("{{replaymod.time.left}}", "{replaymod.time.remaining}")
+            .put("{{replaymod.frames.current}}", "{replaymod.frames.current}")
+            .put("{{replaymod.frames.total}}", "{replaymod.frames.total}")
+            .put("{{launcher.name}}", "{general.brand}")
+            .put("{{launcher.pack}}", "{pack.name}")
+            .put("{{launcher.icon}}", "{pack.icon}")
+            .build();
     private int configVersion = -1, serverEntryVersion = -1, replayModVersion = -1;
 
     /**
@@ -118,6 +162,11 @@ public class HypherConverter implements DataMigrator {
                 return instance;
             }
 
+            if (MathUtils.isWithinValue(configVersion, 18, 24, false, false)) {
+                Constants.LOG.error("You are using a Simple RPC config file from an unsupported mod release, please update your config using a newer mod version and try again...");
+                return instance;
+            }
+
             // Main Conversion
             final Object clientId = getProperty(conf, "general.applicationID", "general.clientID");
             if (clientId != null) {
@@ -141,9 +190,12 @@ public class HypherConverter implements DataMigrator {
                         if (isBiome) {
                             name = name.replaceFirst("biome:", "");
                         }
-                        final ModuleData data = new ModuleData()
-                                .setData(convertPresenceData(entry, areOverridesEnabled, true));
-                        (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
+                        final AbstractConfig target = getPresenceEntry(entry);
+                        if (target != null) {
+                            final ModuleData data = new ModuleData()
+                                    .setData(convertPresenceData(target, areOverridesEnabled, true));
+                            (isBiome ? instance.biomeSettings.biomeData : instance.dimensionSettings.dimensionData).put(name, data);
+                        }
                     }
                 }
             }
@@ -162,21 +214,66 @@ public class HypherConverter implements DataMigrator {
 
             // Per-GUI Events
             instance.advancedSettings.enablePerGui = true;
-            instance.advancedSettings.guiSettings.guiData.put("GuiScreenRealmsProxy", new ModuleData()
-                    .setData(convertPresenceData(conf.get("realms_list"))));
-            instance.advancedSettings.guiSettings.guiData.put("GuiMultiplayer", new ModuleData()
-                    .setData(convertPresenceData(conf.get("server_list"))));
-            instance.advancedSettings.guiSettings.guiData.put("GuiScreenWorking", new ModuleData()
-                    .setData(convertPresenceData(conf.get("join_game"))));
-            instance.advancedSettings.guiSettings.guiData.put("GuiDownloadTerrain", new ModuleData()
-                    .setData(convertPresenceData(conf.get("join_game"))));
 
-            instance.statusMessages.loadingData.setData(convertPresenceData(conf.get("init")));
-            instance.statusMessages.mainMenuData.setData(convertPresenceData(conf.get("main_menu")));
-            instance.statusMessages.realmData.setData(convertPresenceData(conf.get("realms")));
-            instance.statusMessages.singleplayerData.setData(convertPresenceData(conf.get("single_player")));
-            instance.serverSettings.serverData.get("default").setData(convertPresenceData(conf.get("multi_player")));
-            instance.displaySettings.presenceData = convertPresenceData(conf.get("generic"));
+            final AbstractConfig realmsListEvent = getPresenceEntry(conf.get("realms_list"));
+            if (realmsListEvent != null) {
+                instance.advancedSettings.guiSettings.guiData.put("GuiScreenRealmsProxy", new ModuleData()
+                        .setData(convertPresenceData(realmsListEvent)));
+            }
+
+            final AbstractConfig serverListEvent = getPresenceEntry(conf.get("server_list"));
+            if (serverListEvent != null) {
+                instance.advancedSettings.guiSettings.guiData.put("GuiMultiplayer", new ModuleData()
+                        .setData(convertPresenceData(serverListEvent)));
+                instance.advancedSettings.guiSettings.guiData.put("GuiDisconnected", new ModuleData()
+                        .setData(convertPresenceData(serverListEvent)));
+            }
+
+            final AbstractConfig joinGameEvent = getPresenceEntry(conf.get("join_game"));
+            if (joinGameEvent != null) {
+                instance.advancedSettings.guiSettings.guiData.put("GuiScreenWorking", new ModuleData()
+                        .setData(convertPresenceData(joinGameEvent)));
+                instance.advancedSettings.guiSettings.guiData.put("GuiDownloadTerrain", new ModuleData()
+                        .setData(convertPresenceData(joinGameEvent)));
+            }
+
+            if (isActive(ConfigFlag.USE_PAUSE_EVENT)) {
+                final AbstractConfig pauseEvent = getPresenceEntry(conf.get("paused"));
+                if (pauseEvent != null) {
+                    instance.advancedSettings.guiSettings.guiData.put("GuiIngameMenu", new ModuleData()
+                            .setData(convertPresenceData(pauseEvent)));
+                }
+            }
+
+            final AbstractConfig initEvent = getPresenceEntry(conf.get("init"));
+            if (initEvent != null) {
+                instance.statusMessages.loadingData.setData(convertPresenceData(initEvent));
+            }
+
+            final AbstractConfig mainMenuEvent = getPresenceEntry(conf.get("main_menu"));
+            if (mainMenuEvent != null) {
+                instance.statusMessages.mainMenuData.setData(convertPresenceData(mainMenuEvent));
+            }
+
+            final AbstractConfig realmsEvent = getPresenceEntry(conf.get("realms"));
+            if (realmsEvent != null) {
+                instance.statusMessages.realmData.setData(convertPresenceData(realmsEvent));
+            }
+
+            final AbstractConfig singlePlayerEvent = getPresenceEntry(conf.get("single_player"));
+            if (singlePlayerEvent != null) {
+                instance.statusMessages.singleplayerData.setData(convertPresenceData(singlePlayerEvent));
+            }
+
+            final AbstractConfig multiPlayerEvent = getPresenceEntry(conf.get("multi_player"));
+            if (multiPlayerEvent != null) {
+                instance.serverSettings.serverData.get("default").setData(convertPresenceData(multiPlayerEvent));
+            }
+
+            final AbstractConfig genericEvent = getPresenceEntry(conf.get("generic"));
+            if (genericEvent != null) {
+                instance.displaySettings.presenceData = convertPresenceData(genericEvent);
+            }
 
             instance.save();
         }
@@ -193,8 +290,11 @@ public class HypherConverter implements DataMigrator {
                 if (conf.get("entry") instanceof List<?> entries) {
                     for (Object entryObj : entries) {
                         if (entryObj instanceof AbstractConfig entry) {
-                            instance.serverSettings.serverData.put(entry.get("ip"), new ModuleData()
-                                    .setData(convertPresenceData(entry, areOverridesEnabled, true)));
+                            final AbstractConfig target = getPresenceEntry(entry);
+                            if (target != null) {
+                                instance.serverSettings.serverData.put(entry.get("ip"), new ModuleData()
+                                        .setData(convertPresenceData(target, areOverridesEnabled, true)));
+                            }
                         }
                     }
                 }
@@ -211,12 +311,24 @@ public class HypherConverter implements DataMigrator {
                 Constants.LOG.debugInfo("Replay Mod Integration file found (Version: %d, File Version: %d), interpreting data...", replayModVersion, fileVersion);
 
                 instance.advancedSettings.enablePerGui = true;
-                instance.advancedSettings.guiSettings.guiData.put("GuiReplayViewer", new ModuleData()
-                        .setData(convertPresenceData(conf.get("replay_viewer"))));
-                instance.advancedSettings.guiSettings.guiData.put("GuiReplayOverlay", new ModuleData()
-                        .setData(convertPresenceData(conf.get("replay_editor"))));
-                instance.advancedSettings.guiSettings.guiData.put("GuiVideoRenderer", new ModuleData()
-                        .setData(convertPresenceData(conf.get("replay_render"))));
+
+                final AbstractConfig replayViewerEvent = getPresenceEntry(conf.get("replay_viewer"));
+                if (replayViewerEvent != null) {
+                    instance.advancedSettings.guiSettings.guiData.put("GuiReplayViewer", new ModuleData()
+                            .setData(convertPresenceData(replayViewerEvent)));
+                }
+
+                final AbstractConfig replayEditorEvent = getPresenceEntry(conf.get("replay_editor"));
+                if (replayEditorEvent != null) {
+                    instance.advancedSettings.guiSettings.guiData.put("GuiReplayOverlay", new ModuleData()
+                            .setData(convertPresenceData(replayEditorEvent)));
+                }
+
+                final AbstractConfig replayRenderEvent = getPresenceEntry(conf.get("replay_render"));
+                if (replayRenderEvent != null) {
+                    instance.advancedSettings.guiSettings.guiData.put("GuiVideoRenderer", new ModuleData()
+                            .setData(convertPresenceData(replayRenderEvent)));
+                }
 
                 instance.save();
             }
@@ -232,7 +344,7 @@ public class HypherConverter implements DataMigrator {
             result = "'" + original + "'";
         }
         if (!StringUtils.isNullOrEmpty(result)) {
-            for (Map.Entry<String, String> entry : placeholderMappings.entrySet()) {
+            for (Map.Entry<String, String> entry : (isActive(ConfigFlag.USE_MULTI_RPC) ? placeholderMappingsV2 : placeholderMappings).entrySet()) {
                 result = result.replace(entry.getKey(), entry.getValue());
             }
         }
@@ -243,10 +355,25 @@ public class HypherConverter implements DataMigrator {
         return processPlaceholder(original, false);
     }
 
+    private ActivityType processActivityType(final String original) {
+        if (StringUtils.isNullOrEmpty(original)) return ActivityType.Playing;
+        return switch (original.toLowerCase()) {
+            case "streaming" -> ActivityType.Streaming;
+            case "listening" -> ActivityType.Listening;
+            case "watching" -> ActivityType.Watching;
+            case "custom" -> ActivityType.Custom;
+            case "competing" -> ActivityType.Competing;
+            default -> ActivityType.Playing;
+        };
+    }
+
     private PresenceData convertPresenceData(final AbstractConfig entry, final boolean isEnabled, final boolean useAsMain) {
         final PresenceData data = new PresenceData();
         data.enabled = isEnabled;
         data.useAsMain = useAsMain;
+        if (isActive(ConfigFlag.USE_MULTI_RPC)) {
+            data.activityType = processActivityType(entry.get("type")).ordinal();
+        }
         data.details = processPlaceholder(entry.get("description"));
         data.gameState = processPlaceholder(entry.get("state"));
         if (isActive(ConfigFlag.USE_IMAGE_POOLS)) {
@@ -312,6 +439,21 @@ public class HypherConverter implements DataMigrator {
         return convertPresenceData(entry, true);
     }
 
+    private AbstractConfig getPresenceEntry(final AbstractConfig entry) {
+        AbstractConfig target = null;
+        if (isActive(ConfigFlag.USE_MULTI_RPC)) {
+            final Object presenceList = entry.get("presence");
+            if (presenceList instanceof List<?> presences) {
+                if (presences.getFirst() instanceof AbstractConfig presenceEntry) {
+                    target = presenceEntry;
+                }
+            }
+        } else {
+            target = entry;
+        }
+        return target;
+    }
+
     private boolean isActive(final ConfigFlag flag) {
         return (configVersion < 0 || configVersion >= flag.configVersion) &&
                 (serverEntryVersion < 0 || serverEntryVersion >= flag.serverEntryVersion) &&
@@ -328,7 +470,9 @@ public class HypherConverter implements DataMigrator {
     }
 
     private enum ConfigFlag {
-        USE_IMAGE_POOLS(17, 2, 1);
+        USE_IMAGE_POOLS(17, 2, 1),
+        USE_MULTI_RPC(24, 3, 1),
+        USE_PAUSE_EVENT(25, 3, 1);
 
         private final int configVersion;
         private final int serverEntryVersion;

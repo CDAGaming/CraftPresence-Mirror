@@ -110,7 +110,7 @@ public class DimensionUtils implements ExtendedModule {
         CURRENT_DIMENSION_IDENTIFIER = null;
 
         CraftPresence.CLIENT.removeArguments("dimension", "data.dimension");
-        CraftPresence.CLIENT.removeForcedData("dimension");
+        CraftPresence.CLIENT.clearForcedData("dimension");
         hasInitialized = false;
     }
 
