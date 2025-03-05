@@ -1,23 +1,37 @@
 # CraftPresence Changes
 
-## v2.5.3 (01/14/2025)
+## v2.5.4 (03/??/2025)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.2...release%2Fv2.5.3)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.3...release%2Fv2.5.4)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
-* (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * UniLib (`1.0.4` -> `1.0.5`)
-    * Gradle (`8.11` -> `8.12`)
-    * Unimined (`1.3.9` -> `1.3.12`)
-
-### Fixes
-
-* Fixed an issue where the config was not marked as changed, if only a `PresenceData#smallImageText` element was changed
-* (Backend) Fixed an incorrect `fabric_loader_range`, causing `0.12.x` Fabric Loader issues even when compatible
+* Updated the SimpleRPC Config Migration Layer for V4 users
+    * Schema Versions 24 (`USE_MULTI_RPC`) and 25 (`PAUSE_EVENT`) are now marked as supported
+    * Schemas between version 18 and 24 are marked as unsupported and will print a warning to update your config before
+      retrying migration
+    * Effecting all schemas, conversion for the `%position% / {{player.position}}` placeholder has been adjusted to no
+      longer use `custom.player_info_coordinate`
+    * In the event that multiple `presence` elements are present for an RPC event, CraftPresence will only convert the
+      first one found (This might change in a future update)
+    * Effecting all schemas, conversion for the `server_list` event now also applies for the `GuiDisconnected` screen
+* Added a new placeholder to the `server` module: `world.type`
+    * This placeholder retrieves the world type for either a realm or the world, depending on what is present
+    * Results may be inaccurate if the server your on does not make that info known to the user
+    * The available world types also differ between playing on a realm and on a normal world
+* Adjusted forced/event-based RPC functionality (`PresenceData#useAsMain`)
+    * When multiple event-based RPC modules are active, the active data will now use the *last* applicable data entry
+      instead of the *first*
+    * Additionally, an event priority order has been made to ensure proper ordering of events, rather than a randomly
+      sorted list that could result in the wrong event
+        * Event Order (First->Last):
+          `"biome", "dimension", "item", "entity.riding", "entity.target", "server", "menu", "screen"`
+        * (Backend) This list is automatically appended with `DiscordUtils#addForcedData`
+        * (Backend, Breaking) Usages of `DiscordUtils#removeForcedData` have changed to `clearForcedData`, the
+          difference being the latter preserves the event ordering
 
 ___
 

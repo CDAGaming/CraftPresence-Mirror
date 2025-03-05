@@ -593,7 +593,7 @@ public class CommandUtils {
      */
     public static void clearMenuPresence() {
         if (loadedMenu != null) {
-            CraftPresence.CLIENT.removeForcedData("menu");
+            CraftPresence.CLIENT.clearForcedData("menu");
             CraftPresence.CLIENT.removeArguments("menu");
             loadedMenu = null;
         }
