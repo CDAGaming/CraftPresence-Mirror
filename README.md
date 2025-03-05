@@ -161,6 +161,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `player.position.z` - Your current in-game Z position
     * `player.health.current` - Your current in-game health
     * `player.health.max` - Your current in-game maximum health
+    * `player.mode` - Your current game mode
 * Gui Placeholders:
     * `screen.message` - The current Gui Screen's display data, while applicable
     * `screen.name` - The current Gui Screen name

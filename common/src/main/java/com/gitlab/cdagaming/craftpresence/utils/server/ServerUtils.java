@@ -753,12 +753,20 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
         syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
 
+        // Player Game Mode Arguments
+        syncArgument("player.mode", () -> StringUtils.formatWord(CraftPresence.instance.playerController.getCurrentGameType().getName().toLowerCase()));
+
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String newDifficulty = CraftPresence.world.getWorldInfo().isHardcoreModeEnabled() && ModUtils.RAW_TRANSLATOR != null ?
-                    ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.world.getDifficulty().name().toLowerCase());
-            return StringUtils.getOrDefault(newDifficulty);
+            if (ModUtils.RAW_TRANSLATOR != null) {
+                if (CraftPresence.world.getWorldInfo().isHardcoreModeEnabled()) {
+                    return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
+                } else {
+                    return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.world.getDifficulty().getTranslationKey());
+                }
+            } else {
+                return StringUtils.formatWord(CraftPresence.world.getDifficulty().name().toLowerCase());
+            }
         });
         syncArgument("world.weather.name", () -> {
             final String newWeatherData = WorldUtils.getWeather(CraftPresence.player);
