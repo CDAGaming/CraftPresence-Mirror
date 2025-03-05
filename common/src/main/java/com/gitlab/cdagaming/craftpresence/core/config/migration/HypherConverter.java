@@ -123,7 +123,7 @@ public class HypherConverter implements DataMigrator {
             .put("{{server.players.max}}", "{server.players.max}")
             .put("{{realm.name}}", "{server.name}")
             .put("{{realm.description}}", "{server.motd.raw}")
-            .put("{{realm.world}}", "{world.type}")
+            .put("{{realm.world}}", "{server.type}")
             .put("{{realm.game}}", "{server.minigame}")
             .put("{{realm.players.count}}", "{server.players.count}")
             .put("{{realm.players.max}}", "{server.players.max}")

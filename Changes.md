@@ -18,9 +18,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * In the event that multiple `presence` elements are present for an RPC event, CraftPresence will only convert the
       first one found (This might change in a future update)
     * Effecting all schemas, conversion for the `server_list` event now also applies for the `GuiDisconnected` screen
-* Added a new placeholder to the `server` module: `world.type`
-    * This placeholder retrieves the world type for either a realm or the world, depending on what is present
-    * Results may be inaccurate if the server your on does not make that info known to the user
+* Added new placeholders to the `server` module: `world.type` and `server.type`
+    * These placeholders retrieve the world type for either a realm or the world, depending on what is used
+    * Results may be inaccurate or absent if the server your on does not make that info known to the user
     * The available world types also differ between playing on a realm and on a normal world
 * Adjusted forced/event-based RPC functionality (`PresenceData#useAsMain`)
     * When multiple event-based RPC modules are active, the active data will now use the *last* applicable data entry

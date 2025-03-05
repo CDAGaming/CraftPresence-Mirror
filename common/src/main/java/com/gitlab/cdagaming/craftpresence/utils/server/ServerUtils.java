@@ -771,13 +771,7 @@ public class ServerUtils implements ExtendedModule {
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         });
-        syncArgument("world.type", () -> {
-            if (isOnRealm) {
-                return StringUtils.getOrDefault(currentRealmData.worldType.name().toLowerCase());
-            } else {
-                return StringUtils.getOrDefault(CraftPresence.world.getWorldType().getName().toLowerCase());
-            }
-        });
+        syncArgument("world.type", () -> StringUtils.getOrDefault(CraftPresence.world.getWorldType().getName().toLowerCase()));
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
@@ -927,6 +921,7 @@ public class ServerUtils implements ExtendedModule {
     private void initRealmArgs() {
         // Setup Realm Exclusive Data
         syncArgument("server.minigame", () -> currentRealmData.getMinigameName());
+        syncArgument("server.type", () -> StringUtils.getOrDefault(currentRealmData.worldType.name().toLowerCase()));
     }
 
     @Override
