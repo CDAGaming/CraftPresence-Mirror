@@ -254,7 +254,7 @@ public class ServerUtils implements ExtendedModule {
         isOnRealm = false;
 
         CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
-        CraftPresence.CLIENT.removeForcedData("server");
+        CraftPresence.CLIENT.clearForcedData("server");
         CraftPresence.CLIENT.clearPartyData();
         hasInitialized = false;
         hasInitializedServer = false;
@@ -736,12 +736,17 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
         syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
 
+        // Player Game Mode Arguments
+        syncArgument("player.mode", () -> CraftPresence.instance.gameMode.getPlayerMode().getShortDisplayName().getString());
+
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String newDifficulty = CraftPresence.world.getLevelData().isHardcore() && ModUtils.RAW_TRANSLATOR != null ?
-                    ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore") :
-                    StringUtils.formatWord(CraftPresence.world.getDifficulty().name().toLowerCase());
-            return StringUtils.getOrDefault(newDifficulty);
+            if (ModUtils.RAW_TRANSLATOR != null) {
+                if (CraftPresence.world.getLevelData().isHardcore()) {
+                    return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
+                }
+            }
+            return CraftPresence.world.getDifficulty().getDisplayName().getString();
         });
         syncArgument("world.weather.name", () -> {
             final String newWeatherData = WorldUtils.getWeather(CraftPresence.player);
@@ -755,6 +760,7 @@ public class ServerUtils implements ExtendedModule {
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         });
+        syncArgument("world.type", () -> "");
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
@@ -904,6 +910,7 @@ public class ServerUtils implements ExtendedModule {
     private void initRealmArgs() {
         // Setup Realm Exclusive Data
         syncArgument("server.minigame", () -> currentRealmData.getMinigameName());
+        syncArgument("server.type", () -> StringUtils.getOrDefault(currentRealmData.worldType.name().toLowerCase()));
     }
 
     @Override

@@ -161,6 +161,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `player.position.z` - Your current in-game Z position
     * `player.health.current` - Your current in-game health
     * `player.health.max` - Your current in-game maximum health
+    * `player.mode` - Your current game mode
 * Gui Placeholders:
     * `screen.message` - The current Gui Screen's display data, while applicable
     * `screen.name` - The current Gui Screen name
@@ -190,6 +191,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `world.difficulty` - The current world's difficulty
     * `world.weather.name` - The current world's weather name
     * `world.name` - The name of the current world
+    * `world.type` - The current world type
     * `world.time.format_24` - The current world's in-game time (24-hour format)
     * `world.time.format_12` - The current world's in-game time (12-hour format)
     * `world.time.day` - The current world's in-game day count
@@ -204,6 +206,7 @@ The following placeholders are available for use anywhere in CraftPresence:
     * `server.name` - (MP) The current server name
     * `server.motd.raw` - (MP) The current raw server motd
     * `server.minigame` - (Realm) The current realm minigame name
+    * `server.type` - (Realm) The current realm world type
 * Item Placeholders:
     * `item.message.default` - The default item display data, while applicable
     * `item.message.holding` - The held item(s) display data, while applicable
