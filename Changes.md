@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.5.4 (03/??/2025)
+## v2.5.4 (03/27/2025)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.3...release%2Fv2.5.4)_
@@ -22,6 +22,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * These placeholders retrieve the world type for either a realm or the world, depending on what is used
     * Results may be inaccurate or absent if the server your on does not make that info known to the user
     * The available world types also differ between playing on a realm and on a normal world
+* Adjusted the `world.difficulty` placeholder with better formatting and localization support
+* Added new placeholder, `player.mode`, to the `server` module
+    * Simply retrieves the name of the current game mode
 * Adjusted forced/event-based RPC functionality (`PresenceData#useAsMain`)
     * When multiple event-based RPC modules are active, the active data will now use the *last* applicable data entry
       instead of the *first*
