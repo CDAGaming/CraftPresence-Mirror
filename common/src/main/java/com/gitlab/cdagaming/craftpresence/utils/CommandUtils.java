@@ -178,7 +178,7 @@ public class CommandUtils {
     public static void syncModuleArguments() {
         for (String key : modules.keySet()) {
             final String name = (key.startsWith("_") ? "" : "_") + key;
-            CraftPresence.CLIENT.syncArgument(name + ".instance", () -> modules.get(key));
+            CraftPresence.CLIENT.syncArgument(name + ".instance", () -> modules.get(key), true);
         }
     }
 
@@ -370,15 +370,15 @@ public class CommandUtils {
     public static void syncPlaceholders() {
         ModFunctionsLib.init(CraftPresence.CLIENT);
 
-        CraftPresence.CLIENT.syncArgument("general.title", () -> Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion));
+        CraftPresence.CLIENT.syncArgument("general.title", () -> Constants.TRANSLATOR.translate("craftpresence.defaults.state.mc.version", ModUtils.MCVersion), true);
         CraftPresence.CLIENT.syncArgument("general.version", () -> ModUtils.MCVersion, true);
-        CraftPresence.CLIENT.syncArgument("general.protocol", () -> ModUtils.MCProtocolID);
+        CraftPresence.CLIENT.syncArgument("general.protocol", () -> ModUtils.MCProtocolID, true);
         CraftPresence.CLIENT.syncArgument("general.brand", () -> ModUtils.BRAND, true);
 
-        CraftPresence.CLIENT.syncArgument("_general.instance", () -> CraftPresence.instance);
-        CraftPresence.CLIENT.syncArgument("_general.player", () -> CraftPresence.player);
-        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.world);
-        CraftPresence.CLIENT.syncArgument("_config.instance", () -> CraftPresence.CONFIG);
+        CraftPresence.CLIENT.syncArgument("_general.instance", () -> CraftPresence.instance, true);
+        CraftPresence.CLIENT.syncArgument("_general.player", () -> CraftPresence.player, true);
+        CraftPresence.CLIENT.syncArgument("_general.world", () -> CraftPresence.world, true);
+        CraftPresence.CLIENT.syncArgument("_config.instance", () -> CraftPresence.CONFIG, true);
 
         // Sync Custom Variables
         syncDynamicVariables();
@@ -409,7 +409,7 @@ public class CommandUtils {
         }, true);
 
         // Sync the Default Icon Argument
-        CraftPresence.CLIENT.syncArgument("general.icon", () -> CraftPresence.CONFIG.generalSettings.defaultIcon, true);
+        CraftPresence.CLIENT.syncArgument("general.icon", () -> CraftPresence.CONFIG.generalSettings.defaultIcon);
 
         syncModuleArguments();
         syncPackArguments();

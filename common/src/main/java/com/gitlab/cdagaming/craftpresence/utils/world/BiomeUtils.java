@@ -146,8 +146,8 @@ public class BiomeUtils implements ExtendedModule {
     public void initPresence() {
         syncArgument("biome.default.icon", () -> CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
 
-        syncArgument("data.biome.instance", () -> CURRENT_BIOME);
-        syncArgument("data.biome.class", () -> CURRENT_BIOME.getClass());
+        syncArgument("data.biome.instance", () -> CURRENT_BIOME, true);
+        syncArgument("data.biome.class", () -> CURRENT_BIOME.getClass(), true);
         syncArgument("data.biome.name", () -> RAW_BIOME_NAME, true);
         syncArgument("data.biome.identifier", () -> RAW_BIOME_IDENTIFIER, true);
 

@@ -149,8 +149,8 @@ public class DimensionUtils implements ExtendedModule {
     public void initPresence() {
         syncArgument("dimension.default.icon", () -> CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
 
-        syncArgument("data.dimension.instance", () -> CURRENT_DIMENSION);
-        syncArgument("data.dimension.class", () -> CURRENT_DIMENSION.getClass());
+        syncArgument("data.dimension.instance", () -> CURRENT_DIMENSION, true);
+        syncArgument("data.dimension.class", () -> CURRENT_DIMENSION.getClass(), true);
         syncArgument("data.dimension.name", () -> RAW_DIMENSION_NAME, true);
         syncArgument("data.dimension.identifier", () -> RAW_DIMENSION_IDENTIFIER, true);
 

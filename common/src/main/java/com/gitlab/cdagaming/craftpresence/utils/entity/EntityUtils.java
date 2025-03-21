@@ -186,8 +186,8 @@ public class EntityUtils implements ExtendedModule {
         // NOTE: Only Apply if Entities are not Empty, otherwise Clear Argument
         if (CURRENT_TARGET != null) {
             if (!hasInitializedTarget) {
-                syncArgument("data.entity.target.instance", () -> CURRENT_TARGET != null, () -> CURRENT_TARGET);
-                syncArgument("data.entity.target.class", () -> CURRENT_TARGET != null, () -> CURRENT_TARGET.getClass());
+                syncArgument("data.entity.target.instance", () -> CURRENT_TARGET != null, () -> CURRENT_TARGET, true);
+                syncArgument("data.entity.target.class", () -> CURRENT_TARGET != null, () -> CURRENT_TARGET.getClass(), true);
                 syncArgument("entity.target.name", () -> CURRENT_TARGET != null, () -> CURRENT_TARGET_NAME, true);
 
                 syncArgument("entity.target.message", () -> CURRENT_TARGET != null, () -> {
@@ -222,8 +222,8 @@ public class EntityUtils implements ExtendedModule {
 
         if (CURRENT_RIDING != null) {
             if (!hasInitializedRiding) {
-                syncArgument("data.entity.riding.instance", () -> CURRENT_RIDING != null, () -> CURRENT_RIDING);
-                syncArgument("data.entity.riding.class", () -> CURRENT_RIDING != null, () -> CURRENT_RIDING.getClass());
+                syncArgument("data.entity.riding.instance", () -> CURRENT_RIDING != null, () -> CURRENT_RIDING, true);
+                syncArgument("data.entity.riding.class", () -> CURRENT_RIDING != null, () -> CURRENT_RIDING.getClass(), true);
                 syncArgument("entity.riding.name", () -> CURRENT_RIDING != null, () -> CURRENT_RIDING_NAME, true);
 
                 syncArgument("entity.riding.message", () -> CURRENT_RIDING != null, () -> {

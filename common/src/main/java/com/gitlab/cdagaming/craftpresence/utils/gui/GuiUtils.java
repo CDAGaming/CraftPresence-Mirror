@@ -243,7 +243,7 @@ public class GuiUtils implements ExtendedModule {
     public void initPresence() {
         syncArgument("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
-        syncArgument("data.screen.instance", () -> CURRENT_SCREEN);
+        syncArgument("data.screen.instance", () -> CURRENT_SCREEN, true);
         syncArgument("screen.name", () -> CURRENT_GUI_NAME, true);
 
         syncArgument("screen.message", () -> {

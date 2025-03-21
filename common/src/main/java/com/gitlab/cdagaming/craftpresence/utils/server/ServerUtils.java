@@ -745,16 +745,16 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void initPresence() {
         // Player Position Arguments
-        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3));
-        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3));
-        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3));
+        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3), true);
+        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3), true);
+        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3), true);
 
         // Player Health Arguments
-        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0));
-        syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0));
+        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0), true);
+        syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0), true);
 
         // Player Game Mode Arguments
-        syncArgument("player.mode", () -> StringUtils.formatWord(CraftPresence.instance.playerController.getCurrentGameType().getName().toLowerCase()));
+        syncArgument("player.mode", () -> StringUtils.formatWord(CraftPresence.instance.playerController.getCurrentGameType().getName().toLowerCase()), true);
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
@@ -767,23 +767,23 @@ public class ServerUtils implements ExtendedModule {
             } else {
                 return StringUtils.formatWord(CraftPresence.world.getDifficulty().name().toLowerCase());
             }
-        });
+        }, true);
         syncArgument("world.weather.name", () -> {
             final String newWeatherData = WorldUtils.getWeather(CraftPresence.player);
             final String newWeatherName = Constants.TRANSLATOR.translate("craftpresence.defaults.weather." + newWeatherData);
             return StringUtils.getOrDefault(newWeatherName);
-        });
+        }, true);
         syncArgument("world.name", () -> {
             final String primaryWorldName = CraftPresence.instance.getIntegratedServer() != null ? CraftPresence.instance.getIntegratedServer().getWorldName() : "";
             final String secondaryWorldName = StringUtils.getOrDefault(CraftPresence.world.getWorldInfo().getWorldName(), Constants.TRANSLATOR.translate("craftpresence.defaults.world_name"));
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
-        });
-        syncArgument("world.type", () -> StringUtils.getOrDefault(CraftPresence.world.getWorldType().getName().toLowerCase()));
+        }, true);
+        syncArgument("world.type", () -> StringUtils.getOrDefault(CraftPresence.world.getWorldType().getName().toLowerCase()), true);
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()).getFirst()
+                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()).getFirst(), true
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
@@ -798,7 +798,7 @@ public class ServerUtils implements ExtendedModule {
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime())
+                TimeUtils.fromWorldTime(CraftPresence.world.getWorldTime()), true
         );
 
         // Default Arguments
@@ -910,26 +910,26 @@ public class ServerUtils implements ExtendedModule {
 
     private void initServerArgs() {
         // Player Amount Arguments
-        syncArgument("server.players.current", () -> currentPlayers);
-        syncArgument("server.players.max", () -> maxPlayers);
+        syncArgument("server.players.current", () -> currentPlayers, true);
+        syncArgument("server.players.max", () -> maxPlayers, true);
 
         // Server Data Arguments (Multiplayer)
-        syncArgument("server.address.full", () -> currentServer_IP);
-        syncArgument("server.address.short", () -> formattedServer_IP);
-        syncArgument("server.name", () -> currentServer_Name);
-        syncArgument("server.motd.raw", () -> currentServer_MOTD);
+        syncArgument("server.address.full", () -> currentServer_IP, true);
+        syncArgument("server.address.short", () -> formattedServer_IP, true);
+        syncArgument("server.name", () -> currentServer_Name, true);
+        syncArgument("server.motd.raw", () -> currentServer_MOTD, true);
         if (!currentServer_MOTD_Lines.isEmpty()) {
             for (int i = 0; i < currentServer_MOTD_Lines.size(); i++) {
                 final int index = i + 1;
-                syncArgument("data.server.motd.line_" + index, () -> currentServer_MOTD_Lines.get(index));
+                syncArgument("data.server.motd.line_" + index, () -> currentServer_MOTD_Lines.get(index), true);
             }
         }
     }
 
     private void initRealmArgs() {
         // Setup Realm Exclusive Data
-        syncArgument("server.minigame", () -> currentRealmData.getMinigameName());
-        syncArgument("server.type", () -> StringUtils.getOrDefault(currentRealmData.worldType.name().toLowerCase()));
+        syncArgument("server.minigame", () -> currentRealmData.getMinigameName(), true);
+        syncArgument("server.type", () -> StringUtils.getOrDefault(currentRealmData.worldType.name().toLowerCase()), true);
     }
 
     @Override

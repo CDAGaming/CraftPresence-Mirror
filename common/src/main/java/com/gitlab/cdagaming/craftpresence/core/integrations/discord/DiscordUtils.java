@@ -1269,9 +1269,9 @@ public class DiscordUtils {
      */
     public void syncPlaceholders() {
         FunctionsLib.init(this);
-        syncArgument("general.mods", CoreUtils::getModCount);
+        syncArgument("general.mods", CoreUtils::getModCount, true);
         syncArgument("data.general.version", () -> CoreUtils.MCBuildVersion, true);
-        syncArgument("data.general.protocol", () -> CoreUtils.MCBuildProtocol);
+        syncArgument("data.general.protocol", () -> CoreUtils.MCBuildProtocol, true);
         syncTimestamp(() -> lastStartTime, "data.general.time");
     }
 

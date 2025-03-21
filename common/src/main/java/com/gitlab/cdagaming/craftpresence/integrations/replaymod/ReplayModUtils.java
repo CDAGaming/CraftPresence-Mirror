@@ -214,7 +214,7 @@ public class ReplayModUtils implements ExtendedModule {
     public void initPresence() {
         syncArgument("screen.default.icon", () -> CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon);
 
-        syncArgument("data.screen.instance", () -> CURRENT_SCREEN);
+        syncArgument("data.screen.instance", () -> CURRENT_SCREEN, true);
         syncArgument("screen.name", () -> CURRENT_GUI_NAME, true);
 
         syncArgument("screen.message", () -> {
@@ -274,9 +274,9 @@ public class ReplayModUtils implements ExtendedModule {
             if (rendererObj != null && rendererObj.getClass() == videoRendererInfo) {
                 if (!hasInitializedSub) {
                     syncArgument("replaymod.frames.current",
-                            () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getFramesDone"));
+                            () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getFramesDone"), true);
                     syncArgument("replaymod.frames.total",
-                            () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getTotalFrames"));
+                            () -> StringUtils.executeMethod(videoRendererInfo, rendererObj, null, null, "getTotalFrames"), true);
                     hasInitializedSub = true;
                 }
             } else if (hasInitializedSub) {
