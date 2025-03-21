@@ -747,9 +747,9 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void initPresence() {
         // Player Position Arguments
-        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.x, 3), true);
-        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.y, 3), true);
-        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.z, 3), true);
+        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.getX(), 3), true);
+        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.getY(), 3), true);
+        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.getZ(), 3), true);
 
         // Player Health Arguments
         syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0), true);
