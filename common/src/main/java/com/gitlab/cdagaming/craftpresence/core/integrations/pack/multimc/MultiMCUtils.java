@@ -57,11 +57,7 @@ public class MultiMCUtils extends Pack {
 
     @Override
     public boolean load() {
-        final boolean result = findWithSystem() || findWithLegacy();
-        if (result) {
-            setPackType(getLauncherType());
-        }
-        return result;
+        return findWithSystem() || findWithLegacy();
     }
 
     @Override
@@ -102,13 +98,23 @@ public class MultiMCUtils extends Pack {
      * @return {@link Boolean#TRUE} if data was found
      */
     private boolean findWithSystem() {
-        // 2023-03-10: Utilize the System Properties `multimc.instance.title` and `multimc.instance.icon` if available
-        // Ref: https://github.com/MultiMC/Launcher/commit/c1ed09e74765e7e362c644685b49b77529b748af
+        // 2023-03-10: Utilize the Launcher's System Properties if available
+        // Original Ref: https://github.com/MultiMC/Launcher/commit/c1ed09e74765e7e362c644685b49b77529b748af
         try {
-            setPackData(
-                    System.getProperty("multimc.instance.title"),
-                    System.getProperty("multimc.instance.icon")
-            );
+            final Properties props = System.getProperties();
+            if (props.containsKey("org.prismlauncher.instance.name")) {
+                setPackData(
+                        System.getProperty("org.prismlauncher.instance.name"),
+                        System.getProperty("org.prismlauncher.instance.icon.id")
+                );
+                setPackType("prism");
+            } else {
+                setPackData(
+                        System.getProperty("multimc.instance.title"),
+                        System.getProperty("multimc.instance.icon")
+                );
+                setPackType("multimc");
+            }
         } catch (Exception ex) {
             printException(ex);
         }
@@ -132,6 +138,7 @@ public class MultiMCUtils extends Pack {
                         configFile.getProperty("name"),
                         configFile.getProperty("iconKey")
                 );
+                setPackType(getLauncherType());
             } catch (Exception ex) {
                 printException(ex);
             }
