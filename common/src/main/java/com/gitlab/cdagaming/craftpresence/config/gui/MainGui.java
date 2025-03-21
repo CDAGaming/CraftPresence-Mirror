@@ -232,11 +232,11 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) {
+    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
         if (isEscapeKey(keyCode) && getCurrentData().hasChanged()) {
             syncData();
         }
-        super.keyTyped(typedChar, keyCode);
+        return super.keyPressed(keyCode, mouseX, mouseY);
     }
 
     @Override

@@ -31,6 +31,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.biome.Biome;
 import unilib.external.io.github.classgraph.ClassInfo;
 
@@ -115,7 +116,7 @@ public class BiomeUtils implements ExtendedModule {
     @Override
     public void updateData() {
         final Biome newBiome = CraftPresence.world.getBiome(CraftPresence.player.getPosition());
-        final String newBiomeName = newBiome.getBiomeName();
+        final String newBiomeName = newBiome.getDisplayName().getFormattedText();
 
         final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
 
@@ -185,9 +186,10 @@ public class BiomeUtils implements ExtendedModule {
      */
     private List<Biome> getBiomeTypes() {
         List<Biome> biomeTypes = StringUtils.newArrayList();
+        List<Biome> defaultBiomeTypes = StringUtils.newArrayList(IRegistry.BIOME.iterator());
 
-        if (Biome.REGISTRY != null) {
-            for (Biome biome : Biome.REGISTRY) {
+        if (!defaultBiomeTypes.isEmpty()) {
+            for (Biome biome : defaultBiomeTypes) {
                 if (biome != null && !biomeTypes.contains(biome)) {
                     biomeTypes.add(biome);
                 }
@@ -220,7 +222,7 @@ public class BiomeUtils implements ExtendedModule {
     public void getInternalData() {
         for (Biome biome : getBiomeTypes()) {
             if (biome != null) {
-                String biomeName = StringUtils.getOrDefault(biome.getBiomeName(), MappingUtils.getClassName(biome));
+                String biomeName = StringUtils.getOrDefault(biome.getDisplayName().getFormattedText(), MappingUtils.getClassName(biome));
                 String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {
                     DEFAULT_NAMES.add(name);

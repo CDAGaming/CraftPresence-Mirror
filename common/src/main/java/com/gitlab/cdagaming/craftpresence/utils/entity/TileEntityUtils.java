@@ -32,6 +32,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.registry.IRegistry;
 
 import java.util.List;
 import java.util.Map;
@@ -408,7 +409,10 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getInternalData() {
-        for (Block block : Block.REGISTRY) {
+        final List<Block> defaultBlocks = StringUtils.newArrayList(IRegistry.BLOCK.iterator());
+        final List<Item> defaultItems = StringUtils.newArrayList(IRegistry.ITEM.iterator());
+
+        for (Block block : defaultBlocks) {
             if (!ItemUtils.isItemEmpty(block)) {
                 final ItemStack stack = ItemUtils.getStackFrom(block);
                 final String blockName = ItemUtils.getItemName(stack);
@@ -424,7 +428,7 @@ public class TileEntityUtils implements Module {
             }
         }
 
-        for (Item item : Item.REGISTRY) {
+        for (Item item : defaultItems) {
             if (!ItemUtils.isItemEmpty(item)) {
                 final ItemStack stack = ItemUtils.getStackFrom(item);
                 final String itemName = ItemUtils.getItemName(stack);
