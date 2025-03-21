@@ -32,8 +32,8 @@ import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.registry.IRegistry;
 
 import java.util.List;
 import java.util.Map;
@@ -129,7 +129,7 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entity != null ? CraftPresence.instance.objectMouseOver.entity : null;
         final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
 
         final boolean hasTargetChanged = !Objects.equals(NEW_CURRENT_TARGET, CURRENT_TARGET);
@@ -259,10 +259,12 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        if (!EntityList.getEntityNameList().isEmpty()) {
-            for (ResourceLocation entityLocation : EntityList.getEntityNameList()) {
+        final List<EntityType<?>> defaultEntityTypes = StringUtils.newArrayList(IRegistry.ENTITY_TYPE.iterator());
+
+        if (!defaultEntityTypes.isEmpty()) {
+            for (EntityType<?> entityLocation : defaultEntityTypes) {
                 if (entityLocation != null) {
-                    final String entityName = StringUtils.getOrDefault(EntityList.getTranslationName(entityLocation), "generic");
+                    final String entityName = entityLocation.getName().getFormattedText();
                     if (!DEFAULT_NAMES.contains(entityName)) {
                         DEFAULT_NAMES.add(entityName);
                     }

@@ -504,18 +504,20 @@ public class PresenceVisualizer {
         }
     }
 
-    public void onClick(final ExtendedScreen childFrame, final int mouseX, final int mouseY, final int mouseButton) {
+    public boolean onClick(final ExtendedScreen childFrame, final double mouseX, final double mouseY, final int mouseButton) {
         if (lastCompiledPresence != null && childFrame.isOverScreen()) {
             if (smallImageData != null && RenderUtils.isMouseOver(
                     mouseX, mouseY,
                     smallWidget
             ) && !StringUtils.isNullOrEmpty(lastCompiledPresence.smallImageUrl())) {
                 UrlUtils.openUrl(lastCompiledPresence.smallImageUrl());
+                return true;
             } else if (largeImageData != null && RenderUtils.isMouseOver(
                     mouseX, mouseY,
                     largeWidget
             ) && !StringUtils.isNullOrEmpty(lastCompiledPresence.largeImageUrl())) {
                 UrlUtils.openUrl(lastCompiledPresence.largeImageUrl());
+                return true;
             } else {
                 for (int i = 0; i < lines.size(); i++) {
                     final ScrollableTextWidget lineWidget = lines.get(i);
@@ -524,11 +526,12 @@ public class PresenceVisualizer {
                         final String url = urls[i];
                         if (!StringUtils.isNullOrEmpty(url)) {
                             UrlUtils.openUrl(url);
-                            break;
+                            return true;
                         }
                     }
                 }
             }
         }
+        return false;
     }
 }
