@@ -1,4 +1,12 @@
 {
+  "craftpresence.command.reboot.post": "§2§lCraftPresence yeniden başlatıldı!",
+  "craftpresence.command.reboot.pre": "§6§lCraftPresence yeniden başlatılıyor...",
+  "craftpresence.command.reload": "§6§lAyarlara bağlı kalarak, CraftPresence verileri yeniden yükleniyor!",
+  "craftpresence.command.reload.complete": "§2§lCraftPresence verileri yeniden yüklendi!",
+  "craftpresence.command.request.accept": "§6§lKatılma isteği kabul edildi! %1$s'a bir davet gönderildi!",
+  "craftpresence.command.request.denied": "§6§lKatılma isteği %1$s tarafından reddedildi!",
+  "craftpresence.command.request.info": "§6§lİstek Bilgisi:§r\\n §6§lİstek Sahibinin Kullanıcı Adı: %1$s\\n\\n §6§l /cp request <accept|deny>'i kullanın veya yoksaymak için %2$s saniye bekleyin",
+  "craftpresence.command.request.none": "§6§lHiçbir katılma isteğiniz yok!",
   "gui.config.comment.title": "Şimdiki Sürüm -> %1$s (Şema v%2$s)",
   "gui.config.comment.title.general": "Görüntü bilgileri için genel ayarlar",
   "gui.config.title": "CraftPresence - Yapılandırma Ayarları",
