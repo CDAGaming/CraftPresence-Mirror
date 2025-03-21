@@ -38,6 +38,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Improved MultiMC and PrismMC Pack Integration support for non-standard directories
     * Only applies if using versions of MultiMC on or after 2023-03-10, or any version of Prism Launcher
 * Updated community translations for Turkish, Russian, Persian, French, and Chinese Simplified
+* Removed several instances of excess formatting on placeholders
+    * Related to static/non-function arguments using excess formatting when not needed
+    * Credits to Crosby and Shrecknt for the findings related to this change
 
 ___
 
