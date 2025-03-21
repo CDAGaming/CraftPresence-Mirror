@@ -35,6 +35,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
         * (Backend) This list is automatically appended with `DiscordUtils#addForcedData`
         * (Backend, Breaking) Usages of `DiscordUtils#removeForcedData` have changed to `clearForcedData`, the
           difference being the latter preserves the event ordering
+* Improved MultiMC and PrismMC Pack Integration support for non-standard directories
+    * Only applies if using versions of MultiMC on or after 2023-03-10, or any version of Prism Launcher
+* Updated community translations for Turkish, Russian, Persian, French, and Chinese Simplified
 
 ___
 
