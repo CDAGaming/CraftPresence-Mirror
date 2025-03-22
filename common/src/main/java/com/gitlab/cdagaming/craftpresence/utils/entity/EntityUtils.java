@@ -129,7 +129,7 @@ public class EntityUtils implements ExtendedModule {
     @Override
     public void updateData() {
         final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
-        final Entity NEW_CURRENT_RIDING = CraftPresence.player.getRidingEntity();
+        final Entity NEW_CURRENT_RIDING = CraftPresence.player.ridingEntity;
 
         final boolean hasTargetChanged = !Objects.equals(NEW_CURRENT_TARGET, CURRENT_TARGET);
         final boolean hasRidingChanged = !Objects.equals(NEW_CURRENT_RIDING, CURRENT_RIDING);

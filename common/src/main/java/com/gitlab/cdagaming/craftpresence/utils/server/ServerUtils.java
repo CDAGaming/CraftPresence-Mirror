@@ -49,7 +49,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.network.ServerPinger;
+import net.minecraft.client.network.OldServerPinger;
 import net.minecraft.server.integrated.IntegratedServer;
 
 import java.net.UnknownHostException;
@@ -94,7 +94,7 @@ public class ServerUtils implements ExtendedModule {
     /**
      * The Ping Service to use when polling Minecraft Server Data
      */
-    private final ServerPinger pinger = new ServerPinger();
+    private final OldServerPinger pinger = new OldServerPinger();
     /**
      * The Current Player Map, if available
      */
@@ -277,7 +277,7 @@ public class ServerUtils implements ExtendedModule {
     private RealmsServer findRealmData(final NetHandlerPlayClient connection) {
         try {
             if (connection.guiScreenServer instanceof GuiScreenRealmsProxy realmsProxy &&
-                    realmsProxy.getProxy() instanceof RealmsMainScreen realmsMainScreen) {
+                    realmsProxy.method_6724() instanceof RealmsMainScreen realmsMainScreen) {
                 return (RealmsServer) StringUtils.executeMethod(
                         RealmsMainScreen.class, realmsMainScreen,
                         new Class[]{long.class},
@@ -297,7 +297,7 @@ public class ServerUtils implements ExtendedModule {
     public void updateData() {
         final IntegratedServer newIntegratedData = CraftPresence.instance.getIntegratedServer();
         final ServerData newServerData = CraftPresence.instance.getCurrentServerData();
-        final NetHandlerPlayClient newConnection = CraftPresence.instance.getConnection();
+        final NetHandlerPlayClient newConnection = CraftPresence.instance.getNetHandler();
 
         if (!joinInProgress) {
             // If connected to a Realm, locate the RealmServer instance
@@ -614,9 +614,9 @@ public class ServerUtils implements ExtendedModule {
         final Runnable callbackEvent = callback != null ? callback : () -> {
             // N/A
         };
-        if (!serverData.pinged) {
+        if (!serverData.field_1691) {
             // Stub Server Data if not pinged
-            serverData.pinged = true;
+            serverData.field_1691 = true;
             serverData.pingToServer = -2L;
             serverData.serverMOTD = "";
             serverData.populationInfo = "";

@@ -97,10 +97,6 @@ public class TileEntityUtils implements Module {
      */
     private boolean hasInitializedMainHand = false;
     /**
-     * Whether placeholders for the off-hand have been initialized
-     */
-    private boolean hasInitializedOffHand = false;
-    /**
      * Whether placeholders for the helmet have been initialized
      */
     private boolean hasInitializedHelmet = false;
@@ -121,10 +117,6 @@ public class TileEntityUtils implements Module {
      */
     private ItemStack CURRENT_MAIN_HAND_ITEM;
     /**
-     * The Player's Current Offhand Item, if any
-     */
-    private ItemStack CURRENT_OFFHAND_ITEM;
-    /**
      * The Player's Currently Equipped Helmet, if any
      */
     private ItemStack CURRENT_HELMET;
@@ -144,10 +136,6 @@ public class TileEntityUtils implements Module {
      * The Player's Current Main Hand Item Name, if any
      */
     private String CURRENT_MAIN_HAND_ITEM_NAME;
-    /**
-     * The Player's Current Offhand Item Name, if any
-     */
-    private String CURRENT_OFFHAND_ITEM_NAME;
     /**
      * The Player's Currently Equipped Helmet Name, if any
      */
@@ -179,9 +167,7 @@ public class TileEntityUtils implements Module {
     @Override
     public void clearAttributes() {
         CURRENT_MAIN_HAND_ITEM = ItemUtils.EMPTY_STACK;
-        CURRENT_OFFHAND_ITEM = ItemUtils.EMPTY_STACK;
         CURRENT_MAIN_HAND_ITEM_NAME = null;
-        CURRENT_OFFHAND_ITEM_NAME = null;
 
         CURRENT_HELMET = ItemUtils.EMPTY_STACK;
         CURRENT_CHEST = ItemUtils.EMPTY_STACK;
@@ -195,7 +181,6 @@ public class TileEntityUtils implements Module {
         CraftPresence.CLIENT.removeArguments("item", "data.item");
         hasInitialized = false;
         hasInitializedMainHand = false;
-        hasInitializedOffHand = false;
         hasInitializedHelmet = false;
         hasInitializedChest = false;
         hasInitializedLegs = false;
@@ -204,15 +189,13 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void updateData() {
-        final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItemMainhand();
-        final ItemStack NEW_CURRENT_OFFHAND_ITEM = CraftPresence.player.getHeldItemOffhand();
+        final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItem();
         final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory[3];
         final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory[2];
         final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory[1];
         final ItemStack NEW_CURRENT_BOOTS = CraftPresence.player.inventory.armorInventory[0];
 
         final boolean hasMainHandChanged = NEW_CURRENT_MAIN_HAND_ITEM != CURRENT_MAIN_HAND_ITEM;
-        final boolean hasOffHandChanged = NEW_CURRENT_OFFHAND_ITEM != CURRENT_OFFHAND_ITEM;
         final boolean hasHelmetChanged = NEW_CURRENT_HELMET != CURRENT_HELMET;
         final boolean hasChestChanged = NEW_CURRENT_CHEST != CURRENT_CHEST;
         final boolean hasLegsChanged = NEW_CURRENT_LEGS != CURRENT_LEGS;
@@ -224,15 +207,6 @@ public class TileEntityUtils implements Module {
 
             if (!ItemUtils.isItemEmpty(CURRENT_MAIN_HAND_ITEM)) {
                 CraftPresence.CLIENT.syncTimestamp("data.item.main_hand.time");
-            }
-        }
-
-        if (hasOffHandChanged) {
-            CURRENT_OFFHAND_ITEM = NEW_CURRENT_OFFHAND_ITEM;
-            CURRENT_OFFHAND_ITEM_NAME = ItemUtils.getItemName(CURRENT_OFFHAND_ITEM);
-
-            if (!ItemUtils.isItemEmpty(CURRENT_OFFHAND_ITEM)) {
-                CraftPresence.CLIENT.syncTimestamp("data.item.off_hand.time");
             }
         }
 
@@ -272,7 +246,7 @@ public class TileEntityUtils implements Module {
             }
         }
 
-        if (hasMainHandChanged || hasOffHandChanged ||
+        if (hasMainHandChanged ||
                 hasHelmetChanged || hasChestChanged ||
                 hasLegsChanged || hasBootsChanged) {
             if (!hasInitialized) {
@@ -290,7 +264,7 @@ public class TileEntityUtils implements Module {
         );
         syncArgument("item.message.holding", () -> String.format("[%s, %s]",
                 StringUtils.getOrDefault(CURRENT_MAIN_HAND_ITEM_NAME, "N/A"),
-                StringUtils.getOrDefault(CURRENT_OFFHAND_ITEM_NAME, "N/A")
+                "N/A"
         ), true);
         syncArgument("item.message.equipped", () -> String.format("[%s, %s, %s, %s]",
                 StringUtils.getOrDefault(CURRENT_HELMET_NAME, "N/A"),
@@ -318,23 +292,6 @@ public class TileEntityUtils implements Module {
         } else if (hasInitializedMainHand) {
             CraftPresence.CLIENT.removeArguments("item.main_hand", "data.item.main_hand");
             hasInitializedMainHand = false;
-        }
-
-        if (!ItemUtils.isItemEmpty(CURRENT_OFFHAND_ITEM)) {
-            if (!hasInitializedOffHand) {
-                syncArgument("data.item.off_hand.instance", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM, true);
-                syncArgument("data.item.off_hand.class", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM.getClass(), true);
-                syncArgument("item.off_hand.name", () -> CURRENT_OFFHAND_ITEM != null, () -> CURRENT_OFFHAND_ITEM_NAME, true);
-                syncArgument("item.off_hand.message", () -> CURRENT_OFFHAND_ITEM != null, () ->
-                        CraftPresence.CONFIG.advancedSettings.itemMessages.getOrDefault(
-                                CURRENT_OFFHAND_ITEM_NAME, CURRENT_OFFHAND_ITEM_NAME
-                        )
-                );
-                hasInitializedOffHand = true;
-            }
-        } else if (hasInitializedOffHand) {
-            CraftPresence.CLIENT.removeArguments("item.off_hand", "data.item.off_hand");
-            hasInitializedOffHand = false;
         }
 
         if (!ItemUtils.isItemEmpty(CURRENT_HELMET)) {
@@ -408,7 +365,7 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getInternalData() {
-        for (Block block : Block.REGISTRY) {
+        for (Block block : Block.blockRegistry) {
             if (!ItemUtils.isItemEmpty(block)) {
                 final ItemStack stack = ItemUtils.getStackFrom(block);
                 final String blockName = ItemUtils.getItemName(stack);
@@ -424,7 +381,7 @@ public class TileEntityUtils implements Module {
             }
         }
 
-        for (Item item : Item.REGISTRY) {
+        for (Item item : Item.itemRegistry) {
             if (!ItemUtils.isItemEmpty(item)) {
                 final ItemStack stack = ItemUtils.getStackFrom(item);
                 final String itemName = ItemUtils.getItemName(stack);
