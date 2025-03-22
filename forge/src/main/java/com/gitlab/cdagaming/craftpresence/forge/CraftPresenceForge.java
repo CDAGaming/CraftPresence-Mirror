@@ -25,15 +25,17 @@
 package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import cpw.mods.fml.common.FMLCommonHandler;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.minecraftforge.fml.common.Mod;
+import cpw.mods.fml.common.Mod;
 
 /**
  * The Primary Application Class and Utilities
  *
  * @author CDAGaming
  */
-@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", clientSideOnly = true, guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, updateJSON = "https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json", acceptedMinecraftVersions = "*", dependencies = "@UNILIB_LEGACY_RANGE@")
+@Mod(modid = "@MOD_ID@", name = "@MOD_NAME@", version = "@VERSION_ID@", guiFactory = "com.gitlab.cdagaming.craftpresence.forge.config.ConfigGuiDataFactory", canBeDeactivated = true, acceptedMinecraftVersions = "*", dependencies = "@UNILIB_LEGACY_RANGE@")
 public class CraftPresenceForge {
     /**
      * Begins Scheduling Ticks on Class Initialization
@@ -43,7 +45,12 @@ public class CraftPresenceForge {
             if (OSUtils.JAVA_SPEC < 1.8f) {
                 throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
             }
-            new CraftPresence(this::setupIntegrations);
+
+            if (FMLCommonHandler.instance().getSide().isClient()) {
+                new CraftPresence(this::setupIntegrations);
+            } else {
+                CoreUtils.LOG.info("Disabling @MOD_NAME@, as it is client side only.");
+            }
         } catch (NoClassDefFoundError ex) {
             throw new UnsupportedOperationException("Unable to initialize @MOD_NAME@! @UNILIB_NAME@ (unilib) is required to run this mod (Requires @UNILIB_MIN_VERSION@ or above)", ex);
         }

@@ -365,7 +365,8 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getInternalData() {
-        for (Block block : Block.blockRegistry) {
+        for (Object blockObj : Block.blockRegistry) {
+            final Block block = Block.getBlockById(Block.blockRegistry.getIDForObject(blockObj));
             if (!ItemUtils.isItemEmpty(block)) {
                 final ItemStack stack = ItemUtils.getStackFrom(block);
                 final String blockName = ItemUtils.getItemName(stack);
@@ -381,7 +382,8 @@ public class TileEntityUtils implements Module {
             }
         }
 
-        for (Item item : Item.itemRegistry) {
+        for (Object itemObj : Item.itemRegistry) {
+            final Item item = Item.getItemById(Item.itemRegistry.getIDForObject(itemObj));
             if (!ItemUtils.isItemEmpty(item)) {
                 final ItemStack stack = ItemUtils.getStackFrom(item);
                 final String itemName = ItemUtils.getItemName(stack);
