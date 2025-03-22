@@ -754,7 +754,13 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0), true);
 
         // Player Game Mode Arguments
-        syncArgument("player.mode", () -> StringUtils.formatWord(CraftPresence.instance.playerController.getCurrentGameType().getName().toLowerCase()), true);
+        syncArgument("player.mode", () -> {
+            if (ModUtils.RAW_TRANSLATOR != null) {
+                return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode." + CraftPresence.instance.playerController.getCurrentGameType().getName());
+            } else {
+                return StringUtils.formatWord(CraftPresence.instance.playerController.getCurrentGameType().getName().toLowerCase());
+            }
+        }, true);
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
@@ -779,7 +785,13 @@ public class ServerUtils implements ExtendedModule {
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         }, true);
-        syncArgument("world.type", () -> StringUtils.getOrDefault(CraftPresence.world.getWorldType().getName().toLowerCase()), true);
+        syncArgument("world.type", () -> {
+            if (ModUtils.RAW_TRANSLATOR != null) {
+                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.world.getWorldType().getTranslationKey());
+            } else {
+                return StringUtils.formatWord(CraftPresence.world.getWorldType().getName().toLowerCase());
+            }
+        }, true);
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
