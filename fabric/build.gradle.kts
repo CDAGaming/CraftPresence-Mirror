@@ -1,6 +1,3 @@
-import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
-import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
-
 /**
  * Retrieve a Project Property
  */
@@ -25,22 +22,7 @@ val mcVersionLabel: String by extra
 val baseVersionLabel: String by extra
 
 unimined.minecraft {
-    val fabricData: FabricLikePatcher.() -> Unit = {
-        if (accessWidenerFile.exists()) {
-            accessWidener(accessWidenerFile)
-        }
-        loader("fabric_loader_version"()!!)
-        if (isJarMod) {
-            prodNamespace("official")
-            devMappings = null
-        }
-        customIntermediaries = true
-    }
-    if (isModern) {
-        fabric(fabricData)
-    } else {
-        legacyFabric(fabricData)
-    }
+    // N/A
 }
 
 val common: Configuration by configurations.creating
@@ -50,6 +32,8 @@ configurations.compileClasspath.get().extendsFrom(common)
 configurations.runtimeClasspath.get().extendsFrom(common)
 
 dependencies {
+    "jarMod"("local:nsss:${"forge_version"()}")
+
     // Fabric Integrations (1.14+)
     if (isModern) {
         // Required for loading translation data
@@ -94,19 +78,9 @@ tasks.shadowJar {
     dependsOn(project(":common").tasks.shadowJar)
     from(zipTree(project(":common").tasks.shadowJar.get().archiveFile))
     configurations = listOf(shadowCommon)
-    archiveClassifier.set("dev-shadow")
+    archiveClassifier.set(project.name)
 }
-
-tasks.named<RemapJarTask>("remapJar") {
-    if (isJarMod) {
-        prodNamespace("official")
-    }
-    dependsOn(tasks.shadowJar.get())
-    asJar {
-        inputFile.set(tasks.shadowJar.get().archiveFile)
-        archiveClassifier.set(project.name)
-    }
-}
+tasks.build.get().dependsOn(tasks.shadowJar.get())
 
 tasks.jar {
     archiveClassifier.set("dev")
