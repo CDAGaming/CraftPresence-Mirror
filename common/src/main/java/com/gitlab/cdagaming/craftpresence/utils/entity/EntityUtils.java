@@ -128,7 +128,7 @@ public class EntityUtils implements ExtendedModule {
     @Override
     public void updateData() {
         final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entity != null ? CraftPresence.instance.objectMouseOver.entity : null;
-        final Entity NEW_CURRENT_RIDING = CraftPresence.player.vehicle;
+        final Entity NEW_CURRENT_RIDING = (Entity) CraftPresence.player.vehicle;
 
         final boolean hasTargetChanged = !Objects.equals(NEW_CURRENT_TARGET, CURRENT_TARGET);
         final boolean hasRidingChanged = !Objects.equals(NEW_CURRENT_RIDING, CURRENT_RIDING);
@@ -257,7 +257,7 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        final Map mappings = (Map) StringUtils.getField(EntityDispatcher.class, null, "classToStringMapping", "field_1610_b", "b");
+        final Map mappings = (Map) StringUtils.getField(EntityDispatcher.class, null, "classToKeyMap", "field_1610_b", "b");
         if (!mappings.values().isEmpty()) {
             for (Object entityLocationObj : mappings.values()) {
                 final String entityLocation = (String) entityLocationObj;
