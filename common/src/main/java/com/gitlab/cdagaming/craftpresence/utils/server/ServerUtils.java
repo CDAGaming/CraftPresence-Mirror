@@ -607,7 +607,7 @@ public class ServerUtils implements ExtendedModule {
                 if (false) {
                     return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
                 } else {
-                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "I");
+                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "A");
                     int difficulty = CraftPresence.world.difficultySetting;
                     if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
                         difficulty = 0;
@@ -623,31 +623,29 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         }, true);
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.world.func_22144_v().getWorldName();
-            final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
-            final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
+            final String newWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             return StringUtils.getOrDefault(newWorldName);
         }, true);
         syncArgument("world.type", () -> "Default", true);
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.func_22139_r()).getFirst(), true
+                TimeUtils.fromWorldTime(CraftPresence.world.worldTime).getFirst(), true
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.world.func_22139_r()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.worldTime).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.world.func_22139_r()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.worldTime).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.func_22139_r()), true
+                TimeUtils.fromWorldTime(CraftPresence.world.worldTime), true
         );
 
         // Default Arguments
