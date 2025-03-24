@@ -20,9 +20,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Effecting all schemas, conversion for the `server_list` event now also applies for the `GuiDisconnected` screen
 * Added new placeholders to the `server` module: `world.type` and `server.type`
     * These placeholders retrieve the world type for either a realm or the world, depending on what is used
-    * Results may be inaccurate or absent if the server your on does not make that info known to the user
+    * Results may be inaccurate or absent if the server you are on does not make that info known to the user
     * The available world types also differ between playing on a realm and on a normal world
 * Adjusted the `world.difficulty` placeholder with better formatting and localization support
+    * Also improved parity for this placeholder with MC 1.6.4 and below (Including the BTA ports!)
 * Added new placeholder, `player.mode`, to the `server` module
     * Simply retrieves the name of the current game mode
 * Adjusted forced/event-based RPC functionality (`PresenceData#useAsMain`)
@@ -36,7 +37,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
         * (Backend, Breaking) Usages of `DiscordUtils#removeForcedData` have changed to `clearForcedData`, the
           difference being the latter preserves the event ordering
 * Improved MultiMC and PrismMC Pack Integration support for non-standard directories
-    * Only applies if using versions of MultiMC on or after 2023-03-10, or any version of Prism Launcher
+    * Only applies if using versions of MultiMC on or after `2023-03-10`, or any version of Prism Launcher
 * Updated community translations for Turkish, Russian, Persian, French, and Chinese Simplified
 * Removed several instances of excess formatting on placeholders
     * Related to static/non-function arguments using excess formatting when not needed
