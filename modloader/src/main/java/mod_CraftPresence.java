@@ -22,23 +22,18 @@
  * SOFTWARE.
  */
 
+import com.fox2code.foxloader.loader.Mod;
 import com.gitlab.cdagaming.craftpresence.modloader.CraftPresenceML;
-import net.minecraft.src.BaseMod;
 
 /**
  * The Base Mod Class to begin Triggering Events
  *
  * @author CDAGaming
  */
-public class mod_CraftPresence extends BaseMod {
+public class mod_CraftPresence extends Mod {
 
     @Override
-    public String Version() {
-        return "v@VERSION_ID@";
-    }
-
-    @Override
-    public void ModsLoaded() {
+    public void onInit() {
         // Initialize a New Instance of the Mod, triggering Ticking
         new CraftPresenceML();
     }
