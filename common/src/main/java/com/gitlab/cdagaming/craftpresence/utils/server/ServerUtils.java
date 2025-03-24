@@ -574,7 +574,7 @@ public class ServerUtils implements ExtendedModule {
 
             if (CraftPresence.player != null) {
                 CraftPresence.world.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.changeWorld1(null);
+                CraftPresence.instance.changeWorld(null);
             }
 
             RenderUtils.openScreen(
@@ -598,15 +598,15 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.z, 3), true);
 
         // Player Health Arguments
-        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.health, 0), true);
-        syncArgument("player.health.max", () -> 20.0D, true);
+        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getHealth(), 0), true);
+        syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0), true);
 
         // Player Game Mode Arguments
         syncArgument("player.mode", () -> {
             if (ModUtils.RAW_TRANSLATOR != null) {
-                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.player.getGamemode().languageKey + ".name");
+                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.player.getGamemode().getLanguageKey() + ".name");
             }
-            return CraftPresence.player.getGamemode().languageKey;
+            return CraftPresence.player.getGamemode().getLanguageKey();
         }, true);
 
         // World Data Arguments
