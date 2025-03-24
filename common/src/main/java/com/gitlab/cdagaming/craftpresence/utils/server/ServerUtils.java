@@ -220,7 +220,7 @@ public class ServerUtils implements ExtendedModule {
         ServerNBTStorage newServerData;
         try {
             if (CraftPresence.world instanceof WorldClient clientWorld) {
-                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, clientWorld, "sendQueue", "field_1052_A", "B");
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, clientWorld, "sendQueue", "field_1052_A", "A");
             }
         } catch (Exception ex) {
             newConnection = null;
@@ -578,7 +578,7 @@ public class ServerUtils implements ExtendedModule {
 
             if (CraftPresence.player != null) {
                 CraftPresence.world.sendQuittingDisconnectingPacket();
-                CraftPresence.instance.func_6261_a(null);
+                CraftPresence.instance.changeWorld1(null);
             }
 
             RenderUtils.openScreen(
@@ -610,7 +610,7 @@ public class ServerUtils implements ExtendedModule {
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTY_LEVELS", "field_1558_z", "B");
+            final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTY_LEVELS", "field_1558_z", "z");
             int difficulty = CraftPresence.world.difficultySetting;
             if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
                 difficulty = 0;
