@@ -51,7 +51,7 @@ public class ServerList {
             this.servers.clear();
 
             for(int var3 = 0; var3 < var2.tagCount(); ++var3) {
-                this.servers.add(ServerNBTStorage.createServerNBTStorage((NBTTagCompound)var2.tagAt(var3)));
+                this.servers.add(ServerNBTStorage.func_35788_a((NBTTagCompound)var2.tagAt(var3)));
             }
         } catch (Exception var4) {
             var4.printStackTrace();
@@ -63,7 +63,7 @@ public class ServerList {
             NBTTagList var1 = new NBTTagList();
 
             for(ServerNBTStorage var3 : this.servers) {
-                var1.setTag(var3.getCompoundTag());
+                var1.setTag(var3.func_35789_a());
             }
 
             NBTTagCompound var5 = new NBTTagCompound();
@@ -107,7 +107,7 @@ public class ServerList {
 
         for(int var2 = 0; var2 < var1.countServers(); ++var2) {
             ServerNBTStorage var3 = var1.getServerData(var2);
-            if (var3.name.equals(serverData.name) && var3.host.equals(serverData.host)) {
+            if (var3.field_35795_a.equals(serverData.field_35795_a) && var3.field_35793_b.equals(serverData.field_35793_b)) {
                 var1.setServer(var2, serverData);
                 break;
             }

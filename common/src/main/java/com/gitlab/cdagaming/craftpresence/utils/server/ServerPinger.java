@@ -79,11 +79,11 @@ public class ServerPinger {
             } catch (Exception var27) {
             }
 
-            par1ServerNBTStorage.motd = "§7" + var9;
+            par1ServerNBTStorage.field_35791_d = "§7" + var9;
             if (var11 >= 0 && var12 > 0) {
-                par1ServerNBTStorage.playerCount = "§7" + var11 + "§8/§7" + var12;
+                par1ServerNBTStorage.field_35794_c = "§7" + var11 + "§8/§7" + var12;
             } else {
-                par1ServerNBTStorage.playerCount = "§8???";
+                par1ServerNBTStorage.field_35794_c = "§8???";
             }
         } finally {
             try {
@@ -120,7 +120,7 @@ public class ServerPinger {
     }
 
     public static String[] getServerAddressInfo(final ServerNBTStorage storage) {
-        String var2 = storage.host;
+        String var2 = storage.field_35793_b;
         String[] var3 = var2.split(":");
         if (var2.startsWith("[")) {
             int var4 = var2.indexOf("]");

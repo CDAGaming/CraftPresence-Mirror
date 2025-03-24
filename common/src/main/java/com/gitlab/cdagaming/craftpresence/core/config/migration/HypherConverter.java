@@ -225,7 +225,7 @@ public class HypherConverter implements DataMigrator {
             if (serverListEvent != null) {
                 instance.advancedSettings.guiSettings.guiData.put("GuiMultiplayer", new ModuleData()
                         .setData(convertPresenceData(serverListEvent)));
-                instance.advancedSettings.guiSettings.guiData.put("GuiDisconnected", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("GuiConnectFailed", new ModuleData()
                         .setData(convertPresenceData(serverListEvent)));
             }
 

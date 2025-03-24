@@ -413,8 +413,8 @@ public class ServerUtils implements ExtendedModule {
      */
     private String getServerMotd(final ServerNBTStorage newServerData) {
         String result = "";
-        if (newServerData != null && newServerData.motd != null) {
-            result = newServerData.motd;
+        if (newServerData != null && newServerData.field_35791_d != null) {
+            result = newServerData.field_35791_d;
         }
         return !isInvalidMotd(result) ? StringUtils.stripAllFormatting(result) : CraftPresence.CONFIG.serverSettings.fallbackServerMotd;
     }
@@ -455,7 +455,7 @@ public class ServerUtils implements ExtendedModule {
         }
 
         final String newServer_IP = getServerAddress(newServerData);
-        final String newServer_Name = newServerData != null && !isInvalidName(newServerData.name) ? newServerData.name : CraftPresence.CONFIG.serverSettings.fallbackServerName;
+        final String newServer_Name = newServerData != null && !isInvalidName(newServerData.field_35795_a) ? newServerData.field_35795_a : CraftPresence.CONFIG.serverSettings.fallbackServerName;
         final String newServer_MOTD = getServerMotd(newServerData);
 
         processData(newLANStatus, newSinglePlayerStatus,
@@ -566,23 +566,23 @@ public class ServerUtils implements ExtendedModule {
         final Runnable callbackEvent = callback != null ? callback : () -> {
             // N/A
         };
-        if (!serverData.polled) {
+        if (!serverData.field_35790_f) {
             // Stub Server Data if not pinged
-            serverData.polled = true;
-            serverData.lag = -2L;
-            serverData.motd = "";
-            serverData.playerCount = "";
+            serverData.field_35790_f = true;
+            serverData.field_35792_e = -2L;
+            serverData.field_35791_d = "";
+            serverData.field_35794_c = "";
         }
         PING_EXECUTOR.submit(() -> {
             try {
                 ServerPinger.pingServer(serverData);
                 callbackEvent.run();
             } catch (Exception ex) {
-                serverData.lag = -1L;
+                serverData.field_35792_e = -1L;
                 if (ex instanceof UnknownHostException) {
-                    serverData.motd = "§4Can't resolve hostname";
+                    serverData.field_35791_d = "§4Can't resolve hostname";
                 } else {
-                    serverData.motd = "§4Can't connect to server.";
+                    serverData.field_35791_d = "§4Can't connect to server.";
                 }
                 callbackEvent.run();
             }
@@ -699,29 +699,29 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3), true);
 
         // Player Health Arguments
-        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.getEntityHealth(), 0), true);
-        syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0), true);
+        syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.health, 0), true);
+        syncArgument("player.health.max", () -> 20.0D, true);
 
         // Player Game Mode Arguments
         syncArgument("player.mode", () -> {
             if (ModUtils.RAW_TRANSLATOR != null) {
-                int gameMode = CraftPresence.world.getWorldInfo().getGameType();
+                int gameMode = CraftPresence.world.getWorldInfo().func_35918_q();
                 if (gameMode < 0 || gameMode >= gameModes.size()) {
                     gameMode = 0;
                 }
                 return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode." + gameModes.get(gameMode));
             } else {
-                return Integer.toString(CraftPresence.world.getWorldInfo().getGameType());
+                return Integer.toString(CraftPresence.world.getWorldInfo().func_35918_q());
             }
         }, true);
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
             if (ModUtils.RAW_TRANSLATOR != null) {
-                if (CraftPresence.world.getWorldInfo().isHardcoreModeEnabled()) {
+                if (false) {
                     return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
                 } else {
-                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "R");
+                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "P");
                     int difficulty = CraftPresence.world.difficultySetting;
                     if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
                         difficulty = 0;
