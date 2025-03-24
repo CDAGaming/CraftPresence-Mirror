@@ -29,9 +29,9 @@ import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.ItemUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.Block;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
 
 import java.util.List;
 import java.util.Map;
@@ -189,7 +189,7 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void updateData() {
-        final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.getHeldItem();
+        final ItemStack NEW_CURRENT_MAIN_HAND_ITEM = CraftPresence.player.inventory.getCurrentItem();
         final ItemStack NEW_CURRENT_HELMET = CraftPresence.player.inventory.armorInventory[3];
         final ItemStack NEW_CURRENT_CHEST = CraftPresence.player.inventory.armorInventory[2];
         final ItemStack NEW_CURRENT_LEGS = CraftPresence.player.inventory.armorInventory[1];

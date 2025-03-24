@@ -39,16 +39,7 @@ import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMultiplayer;
-import net.minecraft.client.gui.GuiPlayerInfo;
-import net.minecraft.client.multiplayer.GuiConnecting;
-import net.minecraft.client.multiplayer.NetClientHandler;
-import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.world.EnumGameType;
+import net.minecraft.src.*;
 
 import java.net.UnknownHostException;
 import java.util.List;
@@ -262,7 +253,7 @@ public class ServerUtils implements ExtendedModule {
         final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
 
         try {
-            newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "M");
+            newServerData = (ServerData) StringUtils.getField(Minecraft.class, CraftPresence.instance, "currentServerData", "field_71422_O", "field_3773", "O");
         } catch (Exception ex) {
             newServerData = null;
         }
@@ -568,7 +559,7 @@ public class ServerUtils implements ExtendedModule {
         }
         PING_EXECUTOR.submit(() -> {
             try {
-                StringUtils.executeMethod(GuiMultiplayer.class, null, new Class[]{ServerData.class}, new Object[]{serverData}, "func_74017_b", "method_1007", "c");
+                ServerPinger.pingServer(serverData);
                 callbackEvent.run();
             } catch (Exception ex) {
                 serverData.pingToServer = -1L;
@@ -694,7 +685,7 @@ public class ServerUtils implements ExtendedModule {
 
         // Player Game Mode Arguments
         syncArgument("player.mode", () -> {
-            final EnumGameType gameMode = (EnumGameType) StringUtils.getField(PlayerControllerMP.class, CraftPresence.instance.playerController, "currentGameType", "field_78779_k", "field_1656", "l");
+            final EnumGameType gameMode = (EnumGameType) StringUtils.getField(PlayerControllerMP.class, CraftPresence.instance.playerController, "currentGameType", "field_78779_k", "field_1656", "k");
             if (ModUtils.RAW_TRANSLATOR != null) {
                 return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode." + gameMode.getName());
             } else {
@@ -708,7 +699,7 @@ public class ServerUtils implements ExtendedModule {
                 if (CraftPresence.world.getWorldInfo().isHardcoreModeEnabled()) {
                     return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
                 } else {
-                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_74361_ad", "field_965", "al");
+                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_74361_ad", "field_965", "ae");
                     int difficulty = CraftPresence.world.difficultySetting;
                     if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
                         difficulty = 0;
