@@ -253,7 +253,7 @@ public class ServerUtils implements ExtendedModule {
         isOnSinglePlayer = false;
         isOnRealm = false;
 
-        CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player");
+        CraftPresence.CLIENT.removeArguments("server", "data.server", "world", "data.world", "player.position", "player.health", "player.mode");
         CraftPresence.CLIENT.clearForcedData("server");
         CraftPresence.CLIENT.clearPartyData();
         hasInitialized = false;

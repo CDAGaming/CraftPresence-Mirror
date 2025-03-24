@@ -42,6 +42,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Related to static/non-function arguments using excess formatting when not needed
     * Credits to Crosby and Shrecknt for the findings related to this change
 
+### Fixes
+
+* Fixed an issue where non-server `player` placeholders were removed after exiting a world while using `server` module
+
 ___
 
 ### More Information
