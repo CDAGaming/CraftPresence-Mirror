@@ -46,6 +46,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 ### Fixes
 
 * Fixed an issue where non-server `player` placeholders were removed after exiting a world while using `server` module
+* Fixed the `dimension` module using incorrect data in BTA ports
 
 ___
 
