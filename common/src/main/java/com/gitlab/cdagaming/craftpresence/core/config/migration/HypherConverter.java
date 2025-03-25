@@ -223,22 +223,22 @@ public class HypherConverter implements DataMigrator {
 
             final AbstractConfig serverListEvent = getPresenceEntry(conf.get("server_list"));
             if (serverListEvent != null) {
-                instance.advancedSettings.guiSettings.guiData.put("GuiSelectServer", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("ScreenSelectServer", new ModuleData()
                         .setData(convertPresenceData(serverListEvent)));
-                instance.advancedSettings.guiSettings.guiData.put("GuiConnectFailed", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("ScreenConnectFailed", new ModuleData()
                         .setData(convertPresenceData(serverListEvent)));
             }
 
             final AbstractConfig joinGameEvent = getPresenceEntry(conf.get("join_game"));
             if (joinGameEvent != null) {
-                instance.advancedSettings.guiSettings.guiData.put("GuiDownloadTerrain", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("ScreenDownloadTerrain", new ModuleData()
                         .setData(convertPresenceData(joinGameEvent)));
             }
 
             if (isActive(ConfigFlag.USE_PAUSE_EVENT)) {
                 final AbstractConfig pauseEvent = getPresenceEntry(conf.get("paused"));
                 if (pauseEvent != null) {
-                    instance.advancedSettings.guiSettings.guiData.put("GuiIngameMenu", new ModuleData()
+                    instance.advancedSettings.guiSettings.guiData.put("ScreenPause", new ModuleData()
                             .setData(convertPresenceData(pauseEvent)));
                 }
             }
