@@ -30,6 +30,7 @@ import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.ItemUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 
@@ -365,7 +366,7 @@ public class TileEntityUtils implements Module {
 
     @Override
     public void getInternalData() {
-        for (Block block : Block.blocksList) {
+        for (Block block : Blocks.blocksList) {
             if (!ItemUtils.isItemEmpty(block)) {
                 final ItemStack stack = ItemUtils.getStackFrom(block);
                 final String blockName = ItemUtils.getItemName(stack);

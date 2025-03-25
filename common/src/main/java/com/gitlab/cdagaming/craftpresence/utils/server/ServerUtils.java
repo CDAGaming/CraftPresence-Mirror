@@ -37,9 +37,8 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.client.gui.GuiConnecting;
-import net.minecraft.client.net.handler.NetClientHandler;
-import net.minecraft.client.option.enums.Difficulty;
+import net.minecraft.client.gui.ScreenConnecting;
+import net.minecraft.client.net.handler.PacketHandlerClient;
 import net.minecraft.core.net.NetworkManager;
 
 import java.net.Socket;
@@ -152,7 +151,7 @@ public class ServerUtils implements ExtendedModule {
     /**
      * The Player's Current Connection Data
      */
-    private NetClientHandler currentConnection;
+    private PacketHandlerClient currentConnection;
     /**
      * If the RPC needs to be Updated or Re-Synchronized<p>
      * Needed here for Multiple-Condition RPC Triggers
@@ -220,12 +219,12 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void updateData() {
         ServerNBTStorage newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.getSendQueue();
+        final PacketHandlerClient newConnection = CraftPresence.instance.getSendQueue();
 
         try {
             if (newConnection != null) {
-                final NetworkManager netManager = (NetworkManager) StringUtils.getField(NetClientHandler.class, newConnection, "netManager", "field_1213_d", "e");
-                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_12258_e", "h");
+                final NetworkManager netManager = (NetworkManager) StringUtils.getField(PacketHandlerClient.class, newConnection, "netManager", "field_1213_d", "e");
+                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "socket", "field_12258_e", "h");
                 final String retrievedIP = socket.getInetAddress().getHostAddress();
                 final int retrievedPort = socket.getPort();
                 newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerNBTStorage(retrievedIP, retrievedPort) : null;
@@ -278,7 +277,7 @@ public class ServerUtils implements ExtendedModule {
      * @param newPlayerList         The Current Player Map, if available
      */
     private void processData(final boolean newLANStatus, final boolean newSinglePlayerStatus,
-                             final ServerNBTStorage newServerData, final NetClientHandler newConnection,
+                             final ServerNBTStorage newServerData, final PacketHandlerClient newConnection,
                              final String newServer_IP, final String newServer_MOTD, final String newServer_Name,
                              final int newCurrentPlayers, final int newMaxPlayers, final List<String> newPlayerList) {
         final boolean isNewServer = newServerData != null && !newServerData.equals(currentServerData);
@@ -372,7 +371,7 @@ public class ServerUtils implements ExtendedModule {
      * @param newServerData The Current Server Connection Data and Info
      * @param newConnection The Player's Current Connection Data
      */
-    private void processRealmData(final ServerNBTStorage newServerData, final NetClientHandler newConnection) {
+    private void processRealmData(final ServerNBTStorage newServerData, final PacketHandlerClient newConnection) {
         processServerData(newServerData, newConnection);
     }
 
@@ -382,7 +381,7 @@ public class ServerUtils implements ExtendedModule {
      * @param newServerData The Current Server Connection Data and Info
      * @param newConnection The Player's Current Connection Data
      */
-    private void processServerData(final ServerNBTStorage newServerData, final NetClientHandler newConnection) {
+    private void processServerData(final ServerNBTStorage newServerData, final PacketHandlerClient newConnection) {
         final List<String> newPlayerList = StringUtils.newArrayList();
         final int newCurrentPlayers = 1;
 
@@ -579,7 +578,7 @@ public class ServerUtils implements ExtendedModule {
 
             RenderUtils.openScreen(
                     CraftPresence.instance,
-                    new GuiConnecting(
+                    new ScreenConnecting(
                             CraftPresence.instance,
                             serverData.serverIP,
                             serverData.serverPort
@@ -612,23 +611,9 @@ public class ServerUtils implements ExtendedModule {
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
             if (ModUtils.RAW_TRANSLATOR != null) {
-                if (false) {
-                    return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
-                } else {
-                    final Difficulty[] DIFFICULTIES = Difficulty.values();
-                    int difficulty = CraftPresence.world.difficultySetting;
-                    if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
-                        difficulty = 0;
-                    }
-                    for (Difficulty entry : DIFFICULTIES) {
-                        if (entry.id() == difficulty) {
-                            return ModUtils.RAW_TRANSLATOR.translate("options.difficulty." + entry.name().toLowerCase());
-                        }
-                    }
-                    return ModUtils.RAW_TRANSLATOR.translate("options.difficulty." + DIFFICULTIES[difficulty].name().toLowerCase());
-                }
+                return ModUtils.RAW_TRANSLATOR.translate("options." + CraftPresence.world.getDifficulty().getTranslationKey());
             }
-            return Integer.toString(CraftPresence.world.difficultySetting);
+            return StringUtils.formatWord(CraftPresence.world.getDifficulty().name().toLowerCase());
         }, true);
         syncArgument("world.weather.name", () -> {
             final String newWeatherData = WorldUtils.getWeather(CraftPresence.player);

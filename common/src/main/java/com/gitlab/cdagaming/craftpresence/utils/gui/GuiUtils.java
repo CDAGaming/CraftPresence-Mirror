@@ -32,8 +32,8 @@ import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiContainer;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import java.util.List;
@@ -62,7 +62,7 @@ public class GuiUtils implements ExtendedModule {
     /**
      * The Current Instance of the Gui the player is in
      */
-    public GuiScreen CURRENT_SCREEN;
+    public Screen CURRENT_SCREEN;
     /**
      * Whether this module is allowed to start and enabled
      */
@@ -107,14 +107,14 @@ public class GuiUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final GuiScreen newScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
+        final Screen newScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
 
         if (newScreen == null) {
             clearClientData();
         } else {
             final String newScreenName = StringUtils.getOrDefault(
                     MappingUtils.getClassName(newScreen),
-                    MappingUtils.getClassName(GuiScreen.class)
+                    MappingUtils.getClassName(Screen.class)
             );
 
             if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
@@ -139,7 +139,7 @@ public class GuiUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        final List<Class<?>> searchClasses = StringUtils.newArrayList(GuiScreen.class, GuiContainer.class);
+        final List<Class<?>> searchClasses = StringUtils.newArrayList(Screen.class, ScreenContainerAbstract.class);
 
         for (ClassInfo classObj : FileUtils.getClassNamesMatchingSuperType(searchClasses).values()) {
             final String screenName = MappingUtils.getClassName(classObj);
