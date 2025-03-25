@@ -44,7 +44,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.entity.player.EntityPlayer;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.player.Session;
 import net.minecraft.core.world.World;
 
@@ -107,7 +107,7 @@ public class CraftPresence {
     /**
      * The Current Player detected from the Minecraft Instance
      */
-    public static EntityPlayer player;
+    public static Player player;
     /**
      * The Current World detected from the Minecraft Instance
      */
