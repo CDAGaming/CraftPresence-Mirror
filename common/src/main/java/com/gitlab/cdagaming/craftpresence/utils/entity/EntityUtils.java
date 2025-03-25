@@ -32,6 +32,7 @@ import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityDispatcher;
+import net.minecraft.core.util.collection.NamespaceID;
 
 import java.util.List;
 import java.util.Map;
@@ -257,10 +258,10 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        final Map mappings = (Map) StringUtils.getField(EntityDispatcher.class, null, "classToKeyMap", "field_1610_b", "b");
+        final Map<Class<? extends Entity>, NamespaceID> mappings = EntityDispatcher.classToIdMap;
         if (!mappings.values().isEmpty()) {
-            for (Object entityLocationObj : mappings.values()) {
-                final String entityLocation = (String) entityLocationObj;
+            for (NamespaceID entityLocationObj : mappings.values()) {
+                final String entityLocation = entityLocationObj.value();
                 if (entityLocation != null) {
                     final String entityName = StringUtils.getOrDefault(entityLocation, "generic");
                     if (!DEFAULT_NAMES.contains(entityName)) {

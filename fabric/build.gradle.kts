@@ -32,7 +32,7 @@ configurations.compileClasspath.get().extendsFrom(common)
 configurations.runtimeClasspath.get().extendsFrom(common)
 
 dependencies {
-    "jarMod"("local:nsss:${"forge_version"()}")
+    //"jarMod"("local:nsss:${"forge_version"()}")
 
     // Fabric Integrations (1.14+)
     if (isModern) {

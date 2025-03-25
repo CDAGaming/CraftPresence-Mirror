@@ -27,7 +27,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.unilib.utils.gui.impl.SelectorGui;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.Screen;
 
 import java.util.List;
 import java.util.Set;
@@ -51,7 +51,7 @@ public class DynamicSelectorGui extends SelectorGui {
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public DynamicSelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, DynamicScrollableList.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public DynamicSelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, DynamicScrollableList.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, Screen> onAdjustDynamicEntry) {
         super(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, onUpdatedCallback, onAdjustDynamicEntry);
         this.renderType = renderType;
     }
@@ -69,7 +69,7 @@ public class DynamicSelectorGui extends SelectorGui {
      * @param onUpdatedCallback    The callback to trigger when continuing following selection
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public DynamicSelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, DynamicScrollableList.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public DynamicSelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, DynamicScrollableList.RenderType renderType, BiConsumer<String, String> onUpdatedCallback, BiConsumer<String, Screen> onAdjustDynamicEntry) {
         this(mainTitle, StringUtils.newArrayList(list), currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, onUpdatedCallback, onAdjustDynamicEntry);
     }
 
@@ -85,7 +85,7 @@ public class DynamicSelectorGui extends SelectorGui {
      * @param renderType           The {@link DynamicScrollableList.RenderType} for the list, adjusting its look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public DynamicSelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, DynamicScrollableList.RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public DynamicSelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, DynamicScrollableList.RenderType renderType, BiConsumer<String, Screen> onAdjustDynamicEntry) {
         this(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
@@ -101,7 +101,7 @@ public class DynamicSelectorGui extends SelectorGui {
      * @param renderType           The {@link DynamicScrollableList.RenderType} for the list, adjusting its look and feel
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public DynamicSelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, DynamicScrollableList.RenderType renderType, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public DynamicSelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, DynamicScrollableList.RenderType renderType, BiConsumer<String, Screen> onAdjustDynamicEntry) {
         this(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, renderType, null, onAdjustDynamicEntry);
     }
 
@@ -116,7 +116,7 @@ public class DynamicSelectorGui extends SelectorGui {
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public DynamicSelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public DynamicSelectorGui(String mainTitle, List<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, Screen> onAdjustDynamicEntry) {
         this(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, DynamicScrollableList.RenderType.None, onAdjustDynamicEntry);
     }
 
@@ -131,7 +131,7 @@ public class DynamicSelectorGui extends SelectorGui {
      * @param allowDynamicEditing  Whether to allow adding new entries to the list
      * @param onAdjustDynamicEntry The callback to trigger when adjusting a dynamic entry
      */
-    public DynamicSelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, GuiScreen> onAdjustDynamicEntry) {
+    public DynamicSelectorGui(String mainTitle, Set<String> list, String currentValue, String attributeName, boolean allowContinuing, boolean allowDynamicEditing, BiConsumer<String, Screen> onAdjustDynamicEntry) {
         this(mainTitle, list, currentValue, attributeName, allowContinuing, allowDynamicEditing, DynamicScrollableList.RenderType.None, onAdjustDynamicEntry);
     }
 

@@ -171,9 +171,9 @@ subprojects {
     // debug, puts some things in build/unimined instead of ~/.gradle/caches/unimined
     extensions.getByType<UniminedExtension>().useGlobalCache = true
 
-    extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
-        side(if (isJarMod) "client" else "combined")
-        version("empty-$mcVersion")
+    extensions.getByType<UniminedExtension>().bta(sourceSets.getByName("main"), true) {
+        //side(if (isJarMod) "client" else "combined")
+        version("${"forge_version"()}")
 
         defaultRemapJar = false
         val fabricData: FabricLikePatcher.() -> Unit = {

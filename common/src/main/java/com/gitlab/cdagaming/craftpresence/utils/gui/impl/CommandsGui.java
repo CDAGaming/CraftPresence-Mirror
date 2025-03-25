@@ -488,7 +488,7 @@ public class CommandsGui extends ExtendedScreen {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode, int mouseX, int mouseY) {
+    public void keyPressed(char typedChar, int keyCode, int mouseX, int mouseY) {
         if (!blockInteractions) {
             if (commandInput.isControlFocused()) {
                 if (isEscapeKey(keyCode)) {
@@ -510,7 +510,7 @@ public class CommandsGui extends ExtendedScreen {
                     }
                 }
             }
-            super.keyTyped(typedChar, keyCode, mouseX, mouseY);
+            super.keyPressed(typedChar, keyCode, mouseX, mouseY);
         }
     }
 

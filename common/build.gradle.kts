@@ -33,7 +33,7 @@ configurations.implementation.get().extendsFrom(shade)
 configurations.runtimeOnly.get().extendsFrom()
 
 dependencies {
-    "jarMod"("local:nsss:${"forge_version"()}")
+    //"jarMod"("local:nsss:${"forge_version"()}")
 
     // Legacy Dependencies, based on Protocol Version
     if (isLegacy) {
