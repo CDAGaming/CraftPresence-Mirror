@@ -377,8 +377,8 @@ public class HypherConverter implements DataMigrator {
         data.details = processPlaceholder(entry.get("description"));
         data.gameState = processPlaceholder(entry.get("state"));
         if (isActive(ConfigFlag.USE_IMAGE_POOLS)) {
-            data.largeImageKey = combineData(entry.get("largeImageKey"));
-            data.smallImageKey = combineData(entry.get("smallImageKey"));
+            data.largeImageKey = tryCombineData(entry.get("largeImageKey"));
+            data.smallImageKey = tryCombineData(entry.get("smallImageKey"));
         } else {
             data.largeImageKey = processPlaceholder(entry.get("largeImageKey"));
             data.smallImageKey = processPlaceholder(entry.get("smallImageKey"));
@@ -404,6 +404,29 @@ public class HypherConverter implements DataMigrator {
         }
 
         return data;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String tryCombineData(final Object data) {
+        switch (data) {
+            case null -> {
+                return "";
+            }
+            case String item -> {
+                return combineData(item);
+            }
+            default -> {
+                try {
+                    return combineData((List<String>) data);
+                } catch (Throwable ignored) {
+                    return "";
+                }
+            }
+        }
+    }
+
+    private String combineData(final String item) {
+        return processPlaceholder(item);
     }
 
     private String combineData(final List<String> items) {

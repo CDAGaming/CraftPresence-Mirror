@@ -1,52 +1,19 @@
 # CraftPresence Changes
 
-## v2.5.4 (03/27/2025)
+## v2.5.5 (04/??/2025)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.3...release%2Fv2.5.4)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.4...release%2Fv2.5.5)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
-* Updated the SimpleRPC Config Migration Layer for V4 users
-    * Schema Versions 24 (`USE_MULTI_RPC`) and 25 (`PAUSE_EVENT`) are now marked as supported
-    * Schemas between version 18 and 24 are marked as unsupported and will print a warning to update your config before
-      retrying migration
-    * Effecting all schemas, conversion for the `%position% / {{player.position}}` placeholder has been adjusted to no
-      longer use `custom.player_info_coordinate`
-    * In the event that multiple `presence` elements are present for an RPC event, CraftPresence will only convert the
-      first one found (This might change in a future update)
-    * Effecting all schemas, conversion for the `server_list` event now also applies for the `GuiDisconnected` screen
-* Added new placeholders to the `server` module: `world.type` and `server.type`
-    * These placeholders retrieve the world type for either a realm or the world, depending on what is used
-    * Results may be inaccurate or absent if the server you are on does not make that info known to the user
-    * The available world types also differ between playing on a realm and on a normal world
-* Adjusted the `world.difficulty` placeholder with better formatting and localization support
-    * Also improved parity for this placeholder with MC 1.6.4 and below (Including the BTA ports!)
-* Added new placeholder, `player.mode`, to the `server` module
-    * Simply retrieves the name of the current game mode
-* Adjusted forced/event-based RPC functionality (`PresenceData#useAsMain`)
-    * When multiple event-based RPC modules are active, the active data will now use the *last* applicable data entry
-      instead of the *first*
-    * Additionally, an event priority order has been made to ensure proper ordering of events, rather than a randomly
-      sorted list that could result in the wrong event
-        * Event Order (First->Last):
-          `"biome", "dimension", "item", "entity.riding", "entity.target", "server", "menu", "screen"`
-        * (Backend) This list is automatically appended with `DiscordUtils#addForcedData`
-        * (Backend, Breaking) Usages of `DiscordUtils#removeForcedData` have changed to `clearForcedData`, the
-          difference being the latter preserves the event ordering
-* Improved MultiMC and PrismMC Pack Integration support for non-standard directories
-    * Only applies if using versions of MultiMC on or after `2023-03-10`, or any version of Prism Launcher
-* Updated community translations for Turkish, Russian, Persian, French, and Chinese Simplified
-* Removed several instances of excess formatting on placeholders
-    * Related to static/non-function arguments using excess formatting when not needed
-    * Credits to Crosby and Shrecknt for the findings related to this change
+* Updated Translations
 
 ### Fixes
 
-* Fixed an issue where non-server `player` placeholders were removed after exiting a world while using `server` module
-* Fixed the `dimension` module using incorrect data in BTA ports
+* Fixed an issue with SimpleRPC config conversions, if the SimpleRPC config has single-element array entries
 
 ___
 
