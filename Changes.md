@@ -16,10 +16,15 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Spotless (`6.25.0` -> `7.0.2`)
     * Shadow (`8.3.5` -> `8.3.6`)
 * Updated Translations
+* Added support for direct-input image URLs in `PresenceData` config sections
+    * Allows for using url's directly in the config, without needing to add an icon to Discord OR to the `Dynamic Icons`
+      section
 
 ### Fixes
 
 * Fixed an issue with SimpleRPC config conversions, if the SimpleRPC config has single-element array entries
+* Fixed a broken endpoint url for the template button url config sections
+    * There is not a migration layer for this, as the template section is not used in any active RPC data
 
 ___
 
