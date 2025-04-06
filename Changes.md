@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.5.5 (04/??/2025)
+## v2.5.5 (04/21/2025)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.4...release%2Fv2.5.5)_
@@ -9,6 +9,12 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Changes
 
+* (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
+    * Gradle (`8.12` -> `8.13`)
+    * Unimined (`1.3.12` -> `1.3.14`)
+    * JVMDowngrader (`1.2.1` -> `1.2.2`)
+    * Spotless (`6.25.0` -> `7.0.2`)
+    * Shadow (`8.3.5` -> `8.3.6`)
 * Updated Translations
 
 ### Fixes
