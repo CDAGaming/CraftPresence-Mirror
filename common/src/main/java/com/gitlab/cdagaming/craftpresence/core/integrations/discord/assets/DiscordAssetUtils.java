@@ -25,6 +25,7 @@
 package com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets;
 
 import com.gitlab.cdagaming.craftpresence.core.Constants;
+import com.gitlab.cdagaming.unilib.impl.ImageFrame;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -46,9 +47,13 @@ public class DiscordAssetUtils {
      */
     public static final Map<String, DiscordAsset> ASSET_LIST = StringUtils.newHashMap();
     /**
-     * Mapping storing the Icon Keys and Asset Data attached from dynamic data
+     * Mapping storing the Icon Keys and Asset Data attached from dynamic (non-realtime) data
      */
     public static final Map<String, DiscordAsset> CUSTOM_ASSET_LIST = StringUtils.newHashMap();
+    /**
+     * Mapping storing the Icon Keys and Asset Data attached from dynamic (realtime) data
+     */
+    public static final Map<String, DiscordAsset> REALTIME_ASSET_LIST = StringUtils.newHashMap();
     /**
      * The endpoint url for the Discord Applications backend
      */
@@ -98,7 +103,7 @@ public class DiscordAssetUtils {
      * @return {@link Boolean#TRUE} if the Icon Key is present and able to be used
      */
     public static boolean isCustom(final String key) {
-        return contains(CUSTOM_ASSET_LIST, key);
+        return contains(CUSTOM_ASSET_LIST, key) || ImageFrame.isExternalImage(key);
     }
 
     /**
@@ -118,6 +123,16 @@ public class DiscordAssetUtils {
 
             if (contains(list, formattedKey)) {
                 return list.get(formattedKey);
+            }
+            if (ImageFrame.isExternalImage(formattedKey)) {
+                if (!REALTIME_ASSET_LIST.containsKey(formattedKey)) {
+                    final DiscordAsset asset = new DiscordAsset()
+                            .setName(formattedKey)
+                            .setUrl(formattedKey)
+                            .setType(DiscordAsset.AssetType.CUSTOM);
+                    REALTIME_ASSET_LIST.put(formattedKey, asset);
+                }
+                return REALTIME_ASSET_LIST.get(formattedKey);
             }
         }
         return null;
