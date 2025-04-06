@@ -31,7 +31,6 @@
   "craftpresence.defaults.dimension_messages.dimension_messages": "在{dimension.name}",
   "craftpresence.defaults.display.button.label": "示例文本",
   "craftpresence.defaults.display.button.url": "https://baidu.com",
-  "craftpresence.defaults.display.image.url": "https://via.placeholder.com/256.png",
   "craftpresence.defaults.integrations.replaymod.editor": "{player.name}正在编辑回放",
   "craftpresence.defaults.integrations.replaymod.renderer": "{player.name}正在导出回放（{replaymod.frames.current}/{replaymod.frames.total}帧）",
   "craftpresence.defaults.integrations.replaymod.viewer": "{player.name}正在浏览回放",
