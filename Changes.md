@@ -15,6 +15,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * JVMDowngrader (`1.2.1` -> `1.2.2`)
     * Spotless (`6.25.0` -> `7.0.2`)
     * Shadow (`8.3.5` -> `8.3.6`)
+    * UniLib (`1.0.5` -> `1.0.6`)
 * Updated Translations
 * Added support for direct-input image URLs in `PresenceData` config sections
     * Allows for using url's directly in the config, without needing to add an icon to Discord OR to the `Dynamic Icons`
