@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.assets.DiscordAssetUtils;
 import com.gitlab.cdagaming.craftpresence.utils.CommandUtils;
+import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.utils.ImageUtils;
 import com.gitlab.cdagaming.unilib.utils.ItemUtils;
 import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
@@ -35,6 +36,7 @@ import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import io.github.cdagaming.unicore.impl.Pair;
+import io.github.cdagaming.unicore.integrations.versioning.VersionComparator;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
@@ -70,6 +72,9 @@ public class DynamicScrollableList extends ScrollableListControl {
      * The Identifier Type, normally related to the Render Type
      */
     private IdentifierType identifierType = IdentifierType.None;
+
+    // UNILIB COMPATIBILITY -- Remove in UniLib v1.1.x
+    private static boolean checkedUniLib = false, useOlderAlias = false;
 
     /**
      * Initialization Event for this Control, assigning defined arguments
@@ -146,17 +151,23 @@ public class DynamicScrollableList extends ScrollableListControl {
 
     @Override
     public boolean setList(List<String> itemList) {
+        assertCompatibility();
+
         final boolean result = super.setList(itemList);
-        if (result && isLoaded()) {
-            setupAliasData();
+        if (useOlderAlias && result && isLoaded()) {
+            syncEntries();
         }
         return result;
     }
 
     @Override
     public void refreshContentHeight() {
+        assertCompatibility();
+
         super.refreshContentHeight();
-        setupAliasData();
+        if (useOlderAlias) {
+            syncEntries();
+        }
     }
 
     /**
@@ -172,9 +183,9 @@ public class DynamicScrollableList extends ScrollableListControl {
     }
 
     /**
-     * Setup Mappings between the entries original name, and it's display name
+     * Setup Mappings between the entries original name, and it's entry variant
      */
-    public void setupAliasData() {
+    public void syncEntries() {
         getEntryAliases().clear();
         clearEntries();
 
@@ -201,6 +212,19 @@ public class DynamicScrollableList extends ScrollableListControl {
 
         if (getSelected() != null) {
             centerScrollOn(getSelected());
+        }
+    }
+
+    /**
+     * Performs compatibility checks for certain functions
+     * <p>Remove in UniLib v1.1.x
+     */
+    private void assertCompatibility() {
+        if (!checkedUniLib) {
+            final VersionComparator cmp = new VersionComparator();
+            useOlderAlias = cmp.compare(CoreUtils.VERSION_ID, "v1.0.6") < 0;
+
+            checkedUniLib = true;
         }
     }
 
