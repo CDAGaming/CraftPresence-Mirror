@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -129,7 +129,7 @@ public class BiomeUtils implements ExtendedModule {
     @Override
     public void updateData() {
         final Biome newBiome = CraftPresence.world.getBiome(CraftPresence.player.blockPosition()).value();
-        final ResourceLocation newIdentifier = CraftPresence.world.registryAccess().registryOrThrow(Registries.BIOME).getKey(newBiome);
+        final ResourceLocation newIdentifier = CraftPresence.world.registryAccess().lookupOrThrow(Registries.BIOME).getKey(newBiome);
         final String newBiomeName = newIdentifier != null ? newIdentifier.toString() : "Plains";
 
         final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
@@ -200,7 +200,7 @@ public class BiomeUtils implements ExtendedModule {
      */
     private List<ResourceLocation> getBiomeTypes() {
         List<ResourceLocation> biomeTypes = StringUtils.newArrayList();
-        Optional<HolderLookup.RegistryLookup<Biome>> biomeRegistry = CraftPresence.world.registryAccess().lookup(Registries.BIOME);
+        Optional<Registry<Biome>> biomeRegistry = CraftPresence.world.registryAccess().lookup(Registries.BIOME);
 
         if (biomeRegistry.isPresent()) {
             List<Holder.Reference<Biome>> defaultBiomeTypes = StringUtils.newArrayList(biomeRegistry.get().listElements().toList());

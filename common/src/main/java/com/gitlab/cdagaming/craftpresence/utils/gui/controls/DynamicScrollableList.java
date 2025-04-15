@@ -314,7 +314,7 @@ public class DynamicScrollableList extends ScrollableListControl {
         if (renderType.canRenderImage() && !ImageUtils.isTextureNull(texture)) {
             final double yOffset = yPos + 4.5;
             final double size = 32;
-            RenderUtils.drawTexture(getGameInstance(),
+            RenderUtils.drawTexture(getGameInstance(), getCurrentMatrix(),
                     xOffset, xOffset + size, yOffset, yOffset + size,
                     0.0D,
                     0.0D, 1.0D,
