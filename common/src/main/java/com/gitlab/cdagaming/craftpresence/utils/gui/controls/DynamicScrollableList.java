@@ -39,8 +39,8 @@ import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import javax.annotation.Nonnull;
@@ -201,8 +201,8 @@ public class DynamicScrollableList extends ScrollableListControl {
         if (renderType == RenderType.ServerData) {
             final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
 
-            if (data != null && !StringUtils.isNullOrEmpty(data.getBase64EncodedIconData())) {
-                assetUrl = "data:image/png;base64," + data.getBase64EncodedIconData();
+            if (data != null && !StringUtils.isNullOrEmpty(data.getIconB64())) {
+                assetUrl = "data:image/png;base64," + data.getIconB64();
                 texture = ImageUtils.getTextureFromUrl(getGameInstance(), originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
             } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
