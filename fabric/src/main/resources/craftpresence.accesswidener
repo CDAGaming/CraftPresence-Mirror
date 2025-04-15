@@ -1,3 +1,3 @@
 accessWidener   v2  named
 
-accessible field net/minecraft/client/network/NetHandlerPlayClient guiScreenServer Lnet/minecraft/client/gui/GuiScreen;
+accessible field net/minecraft/client/multiplayer/ClientPacketListener callbackScreen Lnet/minecraft/client/gui/screens/Screen;
