@@ -27,6 +27,6 @@
     "fabricloader": "${loader_version_range}",
     "minecraft": "${game_version_range}",
     "unilib": ">=${unilib_min_version}",
-    "java": ">=17"
+    "java": ">=21"
   }
 }
