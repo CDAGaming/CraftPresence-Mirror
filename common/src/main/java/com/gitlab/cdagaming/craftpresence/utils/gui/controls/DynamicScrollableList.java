@@ -46,6 +46,7 @@ import unilib.external.io.github.classgraph.ClassInfo;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -202,8 +203,8 @@ public class DynamicScrollableList extends ScrollableListControl {
         if (renderType == RenderType.ServerData) {
             final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
 
-            if (data != null && !StringUtils.isNullOrEmpty(data.getIconB64())) {
-                assetUrl = "data:image/png;base64," + data.getIconB64();
+            if (data != null && data.getIconBytes() != null) {
+                assetUrl = "data:image/png;base64," + Base64.getEncoder().encodeToString(data.getIconBytes());
                 texture = ImageUtils.getTextureFromUrl(getGameInstance(), originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
             } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
@@ -254,7 +255,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                 final ItemStack stack = data.get(originalName);
                 if (!ItemUtils.isItemEmpty(stack)) {
                     RenderUtils.drawItemStack(
-                            getGameInstance(), getFontRenderer(), xOffset, yPos + 4, stack,
+                            getGameInstance(), matrices, getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f
                     );
                     xOffset += 35;
