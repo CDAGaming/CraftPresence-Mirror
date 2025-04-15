@@ -34,11 +34,11 @@ import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
-import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -192,7 +192,7 @@ public class DynamicScrollableList extends ScrollableListControl {
     }
 
     @Override
-    public void renderSlotItem(@Nonnull final PoseStack matrices, final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn, final boolean isHovering, final float partialTicks) {
+    public void renderSlotItem(@Nonnull final GuiGraphics matrices, final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn, final boolean isHovering, final float partialTicks) {
         final List<String> hoverText = StringUtils.newArrayList();
         String displayName = getEntryAliases().getOrDefault(originalName, originalName);
         int xOffset = xPos;
@@ -255,7 +255,7 @@ public class DynamicScrollableList extends ScrollableListControl {
                 final ItemStack stack = data.get(originalName);
                 if (!ItemUtils.isItemEmpty(stack)) {
                     RenderUtils.drawItemStack(
-                            getGameInstance(), matrices, getFontRenderer(), xOffset, yPos + 4, stack,
+                            matrices, getFontRenderer(), xOffset, yPos + 4, stack,
                             2.0f
                     );
                     xOffset += 35;
