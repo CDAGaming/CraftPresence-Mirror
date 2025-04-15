@@ -34,6 +34,7 @@ import io.github.prospector.modmenu.api.ModMenuApi;
  * @author CDAGaming
  */
 public class ModMenuImpl implements ModMenuApi {
+    @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return MainGui::new;
     }

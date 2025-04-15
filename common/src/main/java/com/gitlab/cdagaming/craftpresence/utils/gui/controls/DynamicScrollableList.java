@@ -34,6 +34,7 @@ import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
@@ -190,7 +191,7 @@ public class DynamicScrollableList extends ScrollableListControl {
     }
 
     @Override
-    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn, final boolean isHovering, final float partialTicks) {
+    public void renderSlotItem(@Nonnull final PoseStack matrices, final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn, final boolean isHovering, final float partialTicks) {
         final List<String> hoverText = StringUtils.newArrayList();
         String displayName = getEntryAliases().getOrDefault(originalName, originalName);
         int xOffset = xPos;
@@ -293,7 +294,7 @@ public class DynamicScrollableList extends ScrollableListControl {
             hoverText.add(Constants.TRANSLATOR.translate("gui.config.message.editor.original") + " " + identifierName);
         }
 
-        super.renderSlotItem(displayName, xOffset, yPos, widthIn, heightIn, mouseXIn, mouseYIn, isHovering, partialTicks);
+        super.renderSlotItem(matrices, displayName, xOffset, yPos, widthIn, heightIn, mouseXIn, mouseYIn, isHovering, partialTicks);
 
         if (isHovering) {
             currentHoverText = hoverText;
