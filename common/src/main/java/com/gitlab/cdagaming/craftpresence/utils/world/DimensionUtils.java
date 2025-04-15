@@ -31,7 +31,7 @@ import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -201,7 +201,7 @@ public class DimensionUtils implements ExtendedModule {
      */
     private List<ResourceLocation> getDimensionTypes() {
         List<ResourceLocation> dimensionTypes = StringUtils.newArrayList();
-        Optional<HolderLookup.RegistryLookup<DimensionType>> dimensionRegistry = CraftPresence.world.registryAccess().lookup(Registries.DIMENSION_TYPE);
+        Optional<Registry<DimensionType>> dimensionRegistry = CraftPresence.world.registryAccess().lookup(Registries.DIMENSION_TYPE);
 
         if (dimensionRegistry.isPresent()) {
             List<Holder.Reference<DimensionType>> defaultDimensionTypes = StringUtils.newArrayList(dimensionRegistry.get().listElements().toList());
