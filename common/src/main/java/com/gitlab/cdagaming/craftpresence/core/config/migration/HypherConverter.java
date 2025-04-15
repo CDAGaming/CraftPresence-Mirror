@@ -223,30 +223,30 @@ public class HypherConverter implements DataMigrator {
 
             final AbstractConfig realmsListEvent = getPresenceEntry(conf.get("realms_list"));
             if (realmsListEvent != null) {
-                instance.advancedSettings.guiSettings.guiData.put("GuiScreenRealmsProxy", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("RealmsScreen", new ModuleData()
                         .setData(convertPresenceData(realmsListEvent)));
             }
 
             final AbstractConfig serverListEvent = getPresenceEntry(conf.get("server_list"));
             if (serverListEvent != null) {
-                instance.advancedSettings.guiSettings.guiData.put("GuiMultiplayer", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("JoinMultiplayerScreen", new ModuleData()
                         .setData(convertPresenceData(serverListEvent)));
-                instance.advancedSettings.guiSettings.guiData.put("GuiDisconnected", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("DisconnectedScreen", new ModuleData()
                         .setData(convertPresenceData(serverListEvent)));
             }
 
             final AbstractConfig joinGameEvent = getPresenceEntry(conf.get("join_game"));
             if (joinGameEvent != null) {
-                instance.advancedSettings.guiSettings.guiData.put("GuiScreenWorking", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("LevelLoadingScreen", new ModuleData()
                         .setData(convertPresenceData(joinGameEvent)));
-                instance.advancedSettings.guiSettings.guiData.put("GuiDownloadTerrain", new ModuleData()
+                instance.advancedSettings.guiSettings.guiData.put("ReceivingLevelScreen", new ModuleData()
                         .setData(convertPresenceData(joinGameEvent)));
             }
 
             if (isActive(ConfigFlag.USE_PAUSE_EVENT)) {
                 final AbstractConfig pauseEvent = getPresenceEntry(conf.get("paused"));
                 if (pauseEvent != null) {
-                    instance.advancedSettings.guiSettings.guiData.put("GuiIngameMenu", new ModuleData()
+                    instance.advancedSettings.guiSettings.guiData.put("PauseScreen", new ModuleData()
                             .setData(convertPresenceData(pauseEvent)));
                 }
             }

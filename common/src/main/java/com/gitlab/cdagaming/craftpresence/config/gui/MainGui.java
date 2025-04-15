@@ -33,7 +33,7 @@ import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 public class MainGui extends ConfigurationGui<Config> {
     private final Config INSTANCE, DEFAULTS;
@@ -41,7 +41,7 @@ public class MainGui extends ConfigurationGui<Config> {
             dimensionSet,
             serverSet;
 
-    public MainGui(GuiScreen parentScreen) {
+    public MainGui(Screen parentScreen) {
         super(
                 Constants.TRANSLATOR.translate("gui.config.title")
         );

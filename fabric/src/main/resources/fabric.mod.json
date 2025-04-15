@@ -18,6 +18,9 @@
   "entrypoints": {
     "client": [
       "com.gitlab.cdagaming.craftpresence.fabric.CraftPresenceFabric"
+    ],
+    "modmenu": [
+      "com.gitlab.cdagaming.craftpresence.fabric.impl.ModMenuImpl"
     ]
   },
   "custom": {
