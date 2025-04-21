@@ -21,6 +21,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Added support for direct-input image URLs in `PresenceData` config sections
     * Allows for using url's directly in the config, without needing to add an icon to Discord OR to the `Dynamic Icons`
       section
+* Added support for schema version `26` for SimpleRPC configs
+  * `images.player` now uses direct-input URLs to match the same endpoint as SimpleRPC
+  * Added conversion for `images.player.head` placeholder
 
 ### Fixes
 

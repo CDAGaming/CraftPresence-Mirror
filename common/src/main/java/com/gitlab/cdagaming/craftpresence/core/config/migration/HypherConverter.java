@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 public class HypherConverter implements DataMigrator {
     private static final Pattern EXPR_PATTERN = Pattern.compile("\\{(.*?)}");
     private static final int LOWEST_SUPPORTED = 13;
-    private static final int HIGHEST_SUPPORTED = 25;
+    private static final int HIGHEST_SUPPORTED = 26;
     private final int fileVersion;
     private final String configPath, serverEntriesPath, replayModPath;
     // oldName -> newName (v18 and below)
@@ -111,7 +111,8 @@ public class HypherConverter implements DataMigrator {
             .put("{{player.health.percent}}", "{(player.health.current / player.health.max) * 100}")
             .put("{{player.item.off_hand}}", "{item.off_hand.name}")
             .put("{{player.item.main_hand}}", "{item.main_hand.name}")
-            .put("{{images.player}}", "{player.icon}")
+            .put("{{images.player}}", "https://skinatar.firstdark.dev/avatar/{getOrDefault(player.uuid.short, player.name)}")
+            .put("{{images.player.head}}", "https://skinatar.firstdark.dev/head/{getOrDefault(player.uuid.short, player.name)}")
             .put("{{images.realm}}", "{server.icon}")
             .put("{{images.server}}", "{server.icon}")
             .put("{{server.ip}}", "{server.address.short}")
