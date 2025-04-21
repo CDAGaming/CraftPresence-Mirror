@@ -26,15 +26,11 @@ package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
-import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.List;
 
 /**
  * The Primary Application Class and Utilities
@@ -55,29 +51,10 @@ public class ClientExtensions {
         }
 
         try {
-            // Workaround: Modify "ModInfo#hasConfigUI" for certain Forge Clients
-            // - Reference => https://github.com/MinecraftForge/MinecraftForge/pull/6208
-            final ModList modList = ModList.get();
-            final List<ModInfo> sortedList = (List<ModInfo>) StringUtils.getField(ModList.class, modList, "sortedList");
-            final ModInfo modInfo = sortedList.stream().filter(info -> info.getModId().equals("craftpresence")).findFirst().get();
-            sortedList.set(sortedList.indexOf(modInfo), new CraftPresenceModInfo(modInfo));
-            StringUtils.updateField(ModList.class, modList, sortedList, "sortedList");
-
             // Register The Config GUI Factory, used in Forge for Mod Menu integration
             ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, parentScreen) -> new MainGui(parentScreen));
         } catch (Throwable ex) {
             CoreUtils.LOG.error("Failed to register Config GUI Factory for @MOD_NAME@.", ex);
-        }
-    }
-
-    private static class CraftPresenceModInfo extends ModInfo {
-        public CraftPresenceModInfo(ModInfo modInfo) {
-            super(modInfo.getOwningFile(), modInfo.getModConfig());
-        }
-
-        @Override
-        public boolean hasConfigUI() {
-            return true;
         }
     }
 }

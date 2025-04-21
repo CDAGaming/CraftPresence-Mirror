@@ -25,11 +25,8 @@
 package com.gitlab.cdagaming.craftpresence.fabric.impl;
 
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
-import com.gitlab.cdagaming.craftpresence.core.Constants;
+import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
-import net.minecraft.client.gui.screens.Screen;
-
-import java.util.function.Function;
 
 /**
  * Hook to provide Integration with ProspectorDev's ModMenu
@@ -37,13 +34,7 @@ import java.util.function.Function;
  * @author CDAGaming
  */
 public class ModMenuImpl implements ModMenuApi {
-    @Override
-    public String getModId() {
-        return Constants.MOD_ID;
-    }
-
-    @Override
-    public Function<Screen, ? extends Screen> getConfigScreenFactory() {
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return MainGui::new;
     }
 }
