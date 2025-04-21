@@ -30,6 +30,9 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed an issue with SimpleRPC config conversions, if the SimpleRPC config has single-element array entries
 * Fixed a broken endpoint url for the template button url config sections
     * There is not a migration layer for this, as the template section is not used in any active RPC data
+* Fixed a crash when attempting to use the mod on servers in certain MC versions
+    * Note that CraftPresence is a client-side-only mod, and using it on servers will just print a warning and disable
+      the mod (Same for UniLib)
 
 ___
 
