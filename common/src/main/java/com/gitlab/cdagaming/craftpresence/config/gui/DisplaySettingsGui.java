@@ -100,7 +100,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = getInstanceData().dynamicIcons.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -109,7 +109,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.maxSecondaryLength = 32;
                                                                 screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_icon", attributeName));
-                                                                screenInstance.originalPrimaryMessage = getInstanceData().dynamicIcons.getOrDefault("default", "");
+                                                                screenInstance.originalPrimaryMessage = "";
                                                                 screenInstance.primaryMessage = getInstanceData().dynamicIcons.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance) -> {
@@ -126,10 +126,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                     DiscordAssetUtils.CUSTOM_ASSET_LIST.put(asset.getName(), asset);
                                                                 }
                                                                 // If a Discord Icon exists with the same name, give priority to the custom one
-                                                                // Unless the icon is the default template, in which we don't add it at all
-                                                                if (!asset.getName().equalsIgnoreCase("default")) {
-                                                                    DiscordAssetUtils.ASSET_LIST.put(asset.getName(), asset);
-                                                                }
+                                                                DiscordAssetUtils.ASSET_LIST.put(asset.getName(), asset);
                                                             },
                                                             (screenInstance) -> {
                                                                 // Event to occur when removing set data
@@ -138,9 +135,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 getInstanceData().dynamicIcons.remove(attributeName);
                                                                 if (DiscordAssetUtils.CUSTOM_ASSET_LIST.containsKey(attributeName)) {
                                                                     DiscordAssetUtils.CUSTOM_ASSET_LIST.remove(attributeName);
-                                                                    if (!attributeName.equalsIgnoreCase("default")) {
-                                                                        DiscordAssetUtils.ASSET_LIST.remove(attributeName);
-                                                                    }
+                                                                    DiscordAssetUtils.ASSET_LIST.remove(attributeName);
                                                                 }
                                                             }, null,
                                                             (attributeName, screenInstance) -> {
@@ -193,14 +188,14 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
                                                                 // Event to occur when initializing new data
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.maxSecondaryLength = 32;
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = getInstanceData().dynamicVariables.getOrDefault("default", "");
+                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
                                                                 screenInstance.maxPrimaryLength = 32767;
                                                                 screenInstance.maxSecondaryLength = 32;
                                                                 screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName));
-                                                                screenInstance.originalPrimaryMessage = getInstanceData().dynamicVariables.getOrDefault("default", "");
+                                                                screenInstance.originalPrimaryMessage = "";
                                                                 screenInstance.primaryMessage = getInstanceData().dynamicVariables.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
                                                             },
                                                             (screenInstance) -> {

@@ -287,9 +287,8 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                                 screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.editor.add.new.prefilled", screenInstance.attributeName));
                                                                 screenInstance.primaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.label");
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
-                                                                final Button defaultData = getInstanceData().buttons.get("default");
-                                                                screenInstance.primaryMessage = screenInstance.originalPrimaryMessage = Config.getProperty(defaultData, "label") != null ? defaultData.label : "";
-                                                                screenInstance.secondaryMessage = screenInstance.originalSecondaryMessage = Config.getProperty(defaultData, "url") != null ? defaultData.url : "";
+                                                                screenInstance.primaryMessage = "";
+                                                                screenInstance.secondaryMessage = "";
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
@@ -297,11 +296,10 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                                                                 screenInstance.secondaryText = Constants.TRANSLATOR.translate("gui.config.message.editor.url");
                                                                 screenInstance.overrideSecondaryRender = true;
                                                                 screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.display.edit_specific_button", attributeName));
-                                                                final Button defaultData = getInstanceData().buttons.get("default");
                                                                 final Button currentData = getInstanceData().buttons.get(attributeName);
                                                                 screenInstance.isPreliminaryData = currentData == null;
-                                                                screenInstance.originalPrimaryMessage = Config.getProperty(defaultData, "label") != null ? defaultData.label : "";
-                                                                screenInstance.originalSecondaryMessage = Config.getProperty(defaultData, "url") != null ? defaultData.url : "";
+                                                                screenInstance.originalPrimaryMessage = "";
+                                                                screenInstance.originalSecondaryMessage = "";
                                                                 screenInstance.primaryMessage = Config.getProperty(currentData, "label") != null ? currentData.label : screenInstance.originalPrimaryMessage;
                                                                 screenInstance.secondaryMessage = Config.getProperty(currentData, "url") != null ? currentData.url : screenInstance.originalSecondaryMessage;
                                                             },

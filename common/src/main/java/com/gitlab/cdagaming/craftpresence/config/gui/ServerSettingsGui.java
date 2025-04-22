@@ -167,6 +167,7 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.isDefaultValue = "default".equals(attributeName);
                                                                 screenInstance.defaultData = getInstanceData().serverData.get("default");
                                                                 screenInstance.currentData = getInstanceData().serverData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;

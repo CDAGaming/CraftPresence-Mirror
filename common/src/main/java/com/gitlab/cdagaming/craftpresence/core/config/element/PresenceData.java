@@ -53,12 +53,7 @@ public class PresenceData extends Module implements Serializable {
     public String smallImageText = "";
     public String startTimestamp = "";
     public String endTimestamp = "";
-    public Map<String, Button> buttons = new HashMapBuilder<String, Button>()
-            .put("default", new Button(
-                    Constants.TRANSLATOR.translate("craftpresence.defaults.display.button.label"),
-                    Constants.TRANSLATOR.translate("craftpresence.defaults.display.button.url")
-            ))
-            .build();
+    public Map<String, Button> buttons = new HashMapBuilder<String, Button>().build();
 
     public PresenceData(final PresenceData other) {
         transferFrom(other);

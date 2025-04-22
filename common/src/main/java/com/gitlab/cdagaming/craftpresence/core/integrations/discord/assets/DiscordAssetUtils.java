@@ -391,10 +391,7 @@ public class DiscordAssetUtils {
                     CUSTOM_ASSET_LIST.put(asset.getName(), asset);
                 }
                 // If a Discord Icon exists with the same name, give priority to the custom one
-                // Unless the icon is the default template, in which we don't add it at all
-                if (!asset.getName().equalsIgnoreCase("default")) {
-                    ASSET_LIST.put(asset.getName(), asset);
-                }
+                ASSET_LIST.put(asset.getName(), asset);
             }
         }
     }

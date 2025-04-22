@@ -41,7 +41,7 @@ public class DynamicEditorGui extends ExtendedScreen {
     private final Consumer<DynamicEditorGui> onAdjustEntry, onRemoveEntry;
     private final BiConsumer<String, DynamicEditorGui> onAdjustInit, onNewInit, onHoverPrimaryCallback, onHoverSecondaryCallback, onSpecificCallback;
     public String attributeName, primaryMessage, secondaryMessage, originalPrimaryMessage, originalSecondaryMessage, primaryText, secondaryText;
-    public boolean initialized = false, isNewValue, isDefaultValue, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false, isPresenceButton = false;
+    public boolean initialized = false, isNewValue, isDefaultValue = false, willRenderSecondaryInput, isModuleMode = false, hasChanged = false, overrideSecondaryRender = false, isPreliminaryData = false, isPresenceButton = false;
     public int maxPrimaryLength = -1, maxSecondaryLength = -1;
     public String resetText;
     public ModuleData defaultData, originalData, currentData;
@@ -53,7 +53,6 @@ public class DynamicEditorGui extends ExtendedScreen {
         super();
         this.attributeName = attributeName;
         this.isNewValue = StringUtils.isNullOrEmpty(attributeName);
-        this.isDefaultValue = !StringUtils.isNullOrEmpty(attributeName) && "default".equals(attributeName);
 
         this.onNewInit = onNewInit;
         this.onAdjustInit = onAdjustInit;

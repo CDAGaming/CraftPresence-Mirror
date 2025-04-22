@@ -124,6 +124,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.isDefaultValue = "default".equals(attributeName);
                                                                 screenInstance.defaultData = getInstanceData().guiSettings.guiData.get("default");
                                                                 screenInstance.currentData = getInstanceData().guiSettings.guiData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
@@ -221,6 +222,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.isDefaultValue = "default".equals(attributeName);
                                                                 screenInstance.setScreenTitle(Constants.TRANSLATOR.translate("gui.config.title.item.edit_specific_item", attributeName));
                                                                 screenInstance.originalPrimaryMessage = getInstanceData().itemMessages.getOrDefault("default", "");
                                                                 screenInstance.primaryMessage = getInstanceData().itemMessages.getOrDefault(attributeName, screenInstance.originalPrimaryMessage);
@@ -307,6 +309,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.isDefaultValue = "default".equals(attributeName);
                                                                 screenInstance.defaultData = getInstanceData().entitySettings.targetData.get("default");
                                                                 screenInstance.currentData = getInstanceData().entitySettings.targetData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;
@@ -408,6 +411,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.isDefaultValue = "default".equals(attributeName);
                                                                 screenInstance.defaultData = getInstanceData().entitySettings.ridingData.get("default");
                                                                 screenInstance.currentData = getInstanceData().entitySettings.ridingData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;

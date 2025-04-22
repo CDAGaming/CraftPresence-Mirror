@@ -932,14 +932,14 @@ public class DiscordUtils {
         final boolean hasOldData = oldData != null && !oldData.isEmpty();
         if (hasOldData) {
             for (String entry : oldData.keySet()) {
-                if (!entry.equals("default") && !newData.containsKey(entry)) {
+                if (!newData.containsKey(entry)) {
                     removeArguments("custom." + entry);
                 }
             }
         }
 
         for (String entry : newData.keySet()) {
-            if (!entry.equals("default") && (!hasOldData || !oldData.containsKey(entry))) {
+            if (!hasOldData || !oldData.containsKey(entry)) {
                 syncArgument(
                         "custom." + entry,
                         newRetriever.apply(entry)
@@ -1591,9 +1591,7 @@ public class DiscordUtils {
                 final JsonObject buttonObj = new JsonObject();
                 final String overrideId = buttonElement.getKey();
                 final Button button = buttonElement.getValue();
-                if (!StringUtils.isNullOrEmpty(overrideId) &&
-                        !overrideId.equalsIgnoreCase("default") &&
-                        !StringUtils.isNullOrEmpty(button.label)) {
+                if (!StringUtils.isNullOrEmpty(overrideId) && !StringUtils.isNullOrEmpty(button.label)) {
                     String label = StringUtils.formatWord(
                             getResult(button.label, overrideId + ".label"),
                             !formatWords, true, 1

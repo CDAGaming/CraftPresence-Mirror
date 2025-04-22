@@ -136,6 +136,7 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.isDefaultValue = "default".equals(attributeName);
                                                                 screenInstance.defaultData = getInstanceData().dimensionData.get("default");
                                                                 screenInstance.currentData = getInstanceData().dimensionData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;

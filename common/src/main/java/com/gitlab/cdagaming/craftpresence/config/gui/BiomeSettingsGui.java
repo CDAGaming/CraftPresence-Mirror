@@ -136,6 +136,7 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                                                             },
                                                             (attributeName, screenInstance) -> {
                                                                 // Event to occur when initializing existing data
+                                                                screenInstance.isDefaultValue = "default".equals(attributeName);
                                                                 screenInstance.defaultData = getInstanceData().biomeData.get("default");
                                                                 screenInstance.currentData = getInstanceData().biomeData.get(attributeName);
                                                                 screenInstance.isPreliminaryData = screenInstance.currentData == null;

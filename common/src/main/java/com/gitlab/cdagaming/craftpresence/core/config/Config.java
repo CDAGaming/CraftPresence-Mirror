@@ -63,7 +63,7 @@ public final class Config extends Module implements Serializable {
 
     // Constants
     private static final int MC_VERSION = CoreUtils.MCBuildProtocol;
-    private static final int VERSION = 6;
+    private static final int VERSION = 7;
     private static final List<String> keyCodeTriggers = StringUtils.newArrayList("keycode", "keybinding");
     private static final List<String> languageTriggers = StringUtils.newArrayList("language", "lang", "langId", "languageId");
     private static final Config DEFAULT = new Config().applyDefaults();
@@ -427,6 +427,42 @@ public final class Config extends Module implements Serializable {
 //                            .getAsJsonPrimitive("renderTooltips").getAsBoolean();
                     currentVer = 6;
                 }
+                if (MathUtils.isWithinValue(currentVer, 6, 7, true, false)) {
+                    // Schema Changes (v6 -> v7)
+                    //  - Removed `PresenceData#buttons#default`
+                    //  - Removed `displaySettings.dynamicIcons#default`
+                    //  - Removed `displaySettings.dynamicVariables#default`
+                    displaySettings.dynamicIcons.remove("default");
+                    displaySettings.dynamicVariables.remove("default");
+                    displaySettings.presenceData.removeButton("default");
+
+                    for (ModuleData entry : biomeSettings.biomeData.values()) {
+                        v6Tov7_BtnFixer(entry);
+                    }
+                    for (ModuleData entry : dimensionSettings.dimensionData.values()) {
+                        v6Tov7_BtnFixer(entry);
+                    }
+                    for (ModuleData entry : advancedSettings.entitySettings.targetData.values()) {
+                        v6Tov7_BtnFixer(entry);
+                    }
+                    for (ModuleData entry : advancedSettings.entitySettings.ridingData.values()) {
+                        v6Tov7_BtnFixer(entry);
+                    }
+                    for (ModuleData entry : advancedSettings.guiSettings.guiData.values()) {
+                        v6Tov7_BtnFixer(entry);
+                    }
+                    for (ModuleData entry : serverSettings.serverData.values()) {
+                        v6Tov7_BtnFixer(entry);
+                    }
+
+                    v6Tov7_BtnFixer(statusMessages.mainMenuData);
+                    v6Tov7_BtnFixer(statusMessages.loadingData);
+                    v6Tov7_BtnFixer(statusMessages.lanData);
+                    v6Tov7_BtnFixer(statusMessages.singleplayerData);
+                    v6Tov7_BtnFixer(statusMessages.realmData);
+
+                    currentVer = 7;
+                }
 
                 save();
             }
@@ -435,6 +471,15 @@ public final class Config extends Module implements Serializable {
             rawJson = read().getSecond();
         }
         return rawJson;
+    }
+
+    private void v6Tov7_BtnFixer(final ModuleData entry) {
+        if (entry != null) {
+            final Object prop = entry.getProperty("data");
+            if (prop instanceof PresenceData data) {
+                data.buttons.remove("default");
+            }
+        }
     }
 
     public JsonElement handleVerification(final JsonElement rawJson, final KeyConverter.ConversionMode keyCodeMigrationId, final TranslationConverter.ConversionMode languageMigrationId, final String... path) {
@@ -504,7 +549,7 @@ public final class Config extends Module implements Serializable {
                             } else if (currentValue instanceof Map<?, ?>) {
                                 final Map<Object, Object> newData = StringUtils.newHashMap((Map<?, ?>) currentValue);
                                 final Map<Object, Object> defaultData = StringUtils.newHashMap((Map<?, ?>) defaultValue);
-                                if (!newData.containsKey("default")) {
+                                if (!newData.containsKey("default") && defaultData.containsKey("default")) {
                                     Constants.LOG.error(Constants.TRANSLATOR.translate("craftpresence.logger.error.config.missing.default", rawName));
                                     newData.putAll(defaultData);
                                     setProperty(newData, pathData);

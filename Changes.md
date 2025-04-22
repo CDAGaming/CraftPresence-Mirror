@@ -15,6 +15,10 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * UniLib Base Requirement increased from `1.0.1` to `1.1.0`
     * Adjusting `Use Class Loader` now purges the Class Cache as well as refreshes Class Graph Data
     * `DynamicSelectorGui` no longer requires any entries in the entry list
+* Removed template data from the config settings, and related limitations
+    * `PresenceData#buttons#default`
+    * `displaySettings.dynamicIcons#default`
+    * `displaySettings.dynamicVariables#default`
 
 ___
 

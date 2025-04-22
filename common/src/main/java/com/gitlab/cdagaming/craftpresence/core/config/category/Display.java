@@ -46,11 +46,8 @@ public class Display extends Module implements Serializable {
             .setSmallImage("{getFirst(server.icon, pack.icon)}",
                     "{getOrDefault(server.message)} {getOrDefault(pack.name)}")
             .setStartTime("{data.general.time}");
-    public Map<String, String> dynamicIcons = new HashMapBuilder<String, String>()
-            .put("default", Constants.TRANSLATOR.translate("craftpresence.defaults.display.image.url"))
-            .build();
+    public Map<String, String> dynamicIcons = new HashMapBuilder<String, String>().build();
     public Map<String, String> dynamicVariables = new HashMapBuilder<String, String>()
-            .put("default", Constants.TRANSLATOR.translate("craftpresence.defaults.display.button.label"))
             .put("pack", Constants.TRANSLATOR.translate("craftpresence.defaults.placeholder.pack"))
             .put("players", Constants.TRANSLATOR.translate("craftpresence.defaults.placeholder.players"))
             .put("player_info_out", Constants.TRANSLATOR.translate("craftpresence.defaults.placeholder.player_info.out"))
