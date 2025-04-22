@@ -317,13 +317,13 @@ public class CommandUtils {
 
         if (current.advancedSettings.debugMode != old.advancedSettings.debugMode ||
                 current.advancedSettings.verboseMode != old.advancedSettings.verboseMode ||
-                current.advancedSettings.refreshRate != old.advancedSettings.refreshRate ||
-                current.advancedSettings.useClassLoader != old.advancedSettings.useClassLoader) {
-            updateModes(); // Debug Mode, Verbose Mode, Refresh Rate, or Use Class Loader changed
+                current.advancedSettings.refreshRate != old.advancedSettings.refreshRate) {
+            updateModes(); // Debug Mode, Verbose Mode, Refresh Rate changed
         }
 
-        if (current.advancedSettings.enableClassGraph != old.advancedSettings.enableClassGraph) {
-            setupClassScan(true); // Enable Class Graph changed
+        if (current.advancedSettings.enableClassGraph != old.advancedSettings.enableClassGraph ||
+                current.advancedSettings.useClassLoader != old.advancedSettings.useClassLoader) {
+            setupClassScan(true); // Enable Class Graph or Use Class Loader changed
         }
 
         if (current.displaySettings.dynamicVariables != old.displaySettings.dynamicVariables) {
@@ -517,7 +517,6 @@ public class CommandUtils {
             CraftPresence.CLIENT.ipcInstance.setVerboseLogging(isVerboseMode());
         }
         if (CraftPresence.CONFIG != null) {
-            Constants.USE_CLASS_LOADER = CraftPresence.CONFIG.advancedSettings.useClassLoader;
             CraftPresence.SCHEDULER.setRefreshRate(CraftPresence.CONFIG.advancedSettings.refreshRate);
         }
     }
@@ -549,8 +548,19 @@ public class CommandUtils {
     public static void setupClassScan(final boolean postLaunch) {
         final boolean oldState = FileUtils.isClassGraphEnabled();
         final boolean newState = CraftPresence.CONFIG.advancedSettings.enableClassGraph;
+        final boolean hasStateChanged = oldState != newState;
+
+        final boolean oldClassState = FileUtils.isUsingClassloader();
+        final boolean newClassState = CraftPresence.CONFIG.advancedSettings.useClassLoader;
+        final boolean hasClassStateChanged = oldClassState != newClassState;
+
         FileUtils.setClassGraphEnabled(newState);
-        if (oldState != newState) {
+        FileUtils.setUsingClassloader(newClassState);
+        if (hasStateChanged || hasClassStateChanged) {
+            if (hasClassStateChanged) {
+                FileUtils.clearClassCache();
+            }
+
             if (newState) {
                 FileUtils.detectClasses();
                 if (postLaunch) {
