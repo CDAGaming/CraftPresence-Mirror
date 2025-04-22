@@ -314,6 +314,17 @@ public class Legacy2Modern implements DataMigrator {
             .put("extraButtonMessages", "displaySettings.presenceData.buttons")
             .put("dynamicIcons", "displaySettings.dynamicIcons")
             .build();
+    // newName -> valueType
+    private final Map<String, Class<?>> configNameToTypeMappings = new HashMapBuilder<String, Class<?>>()
+            .put("biomeSettings.biomeData", ModuleData.class)
+            .put("dimensionSettings.dimensionData", ModuleData.class)
+            .put("serverSettings.serverData", ModuleData.class)
+            .put("advancedSettings.guiSettings.guiData", ModuleData.class)
+            .put("advancedSettings.itemMessages", String.class)
+            .put("advancedSettings.entitySettings.targetData", ModuleData.class)
+            .put("advancedSettings.entitySettings.ridingData", ModuleData.class)
+            .put("displaySettings.dynamicIcons", String.class)
+            .build();
     private final List<String> excludedOptions = StringUtils.newArrayList(
             "schemaVersion", "splitCharacter", "renderTooltips",
             "guiBackgroundColor", "tooltipBackgroundColor", "tooltipBorderColor"
@@ -366,7 +377,7 @@ public class Legacy2Modern implements DataMigrator {
                             final String[] oldArray;
 
                             final Map<Object, Object> newData = StringUtils.newHashMap(map);
-                            final Class<?> expectedSecondaryClass = newData.get("default").getClass();
+                            final Class<?> expectedSecondaryClass = configNameToTypeMappings.get(newName);
 
                             if (!StringUtils.isNullOrEmpty(convertedString) &&
                                     (convertedString.startsWith("[") && convertedString.endsWith("]"))) {
