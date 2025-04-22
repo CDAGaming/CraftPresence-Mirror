@@ -11,7 +11,7 @@ plugins {
     java
     id("xyz.wagyourtail.unimined") version "1.3.14" apply false
     id("xyz.wagyourtail.jvmdowngrader") version "1.2.2"
-    id("com.diffplug.gradle.spotless") version "7.0.2" apply false
+    id("com.diffplug.gradle.spotless") version "7.0.3" apply false
     id("com.gradleup.shadow") version "8.3.6" apply false
     id("com.hypherionmc.modutils.modpublisher") version "2.1.6" apply false
 }

@@ -1,38 +1,18 @@
 # CraftPresence Changes
 
-## v2.5.5 (04/24/2025)
+## v2.6.0 (05/??/2025)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.4...release%2Fv2.5.5)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.5...release%2Fv2.6.0)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
-    * Gradle (`8.12` -> `8.13`)
-    * Unimined (`1.3.12` -> `1.3.14`)
-    * JVMDowngrader (`1.2.1` -> `1.2.2`)
-    * Spotless (`6.25.0` -> `7.0.2`)
-    * Shadow (`8.3.5` -> `8.3.6`)
-    * UniLib (`1.0.5` -> `1.0.6`)
-    * Fabric Loader (`0.16.9` -> `0.16.13`)
-* Updated Translations
-* Added support for direct-input image URLs in `PresenceData` config sections
-    * Allows for using url's directly in the config, without needing to add an icon to Discord OR to the `Dynamic Icons`
-      section
-* Added support for schema version `26` for SimpleRPC configs
-  * `images.player` now uses direct-input URLs to match the same endpoint as SimpleRPC
-  * Added conversion for `images.player.head` placeholder
-
-### Fixes
-
-* Fixed an issue with SimpleRPC config conversions, if the SimpleRPC config has single-element array entries
-* Fixed a broken endpoint url for the template button url config sections
-    * There is not a migration layer for this, as the template section is not used in any active RPC data
-* Fixed a crash when attempting to use the mod on servers in certain MC versions
-    * Note that CraftPresence is a client-side-only mod, and using it on servers will just print a warning and disable
-      the mod (Same for UniLib)
+    * Spotless (`7.0.2` -> `7.0.3`)
+    * UniLib (`1.0.6` -> `1.1.0`)
+* UniLib Base Requirement increased from `1.0.1` to `1.1.0`
 
 ___
 
