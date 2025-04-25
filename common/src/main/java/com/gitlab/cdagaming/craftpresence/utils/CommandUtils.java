@@ -321,9 +321,8 @@ public class CommandUtils {
             updateModes(); // Debug Mode, Verbose Mode, Refresh Rate changed
         }
 
-        if (current.advancedSettings.enableClassGraph != old.advancedSettings.enableClassGraph ||
-                current.advancedSettings.useClassLoader != old.advancedSettings.useClassLoader) {
-            setupClassScan(true); // Enable Class Graph or Use Class Loader changed
+        if (current.advancedSettings.enableClassGraph != old.advancedSettings.enableClassGraph) {
+            setupClassScan(true); // Enable Class Graph changed
         }
 
         if (current.displaySettings.dynamicVariables != old.displaySettings.dynamicVariables) {
@@ -416,11 +415,22 @@ public class CommandUtils {
     }
 
     /**
+     * Pre-Initializes Essential Module Data, run during post config setup
+     */
+    public static Config preInit(final Config config) {
+        setupClassScan(config, false);
+        if (config.isNewFile()) {
+            config.advancedSettings.guiSettings.appendReplayData();
+        }
+
+        return config;
+    }
+
+    /**
      * Initializes Essential Module Data
      */
     public static void init() {
         updateModes();
-        setupClassScan(false);
 
         addModule(Constants.MOD_ID, new TranslationManager(
                 CraftPresence.instance,
@@ -543,24 +553,16 @@ public class CommandUtils {
     /**
      * Synchronize Data for Setting up ClassGraph functions in {@link FileUtils}
      *
+     * @param config     The current Config Data
      * @param postLaunch Whether this function is being run after initial launch
      */
-    public static void setupClassScan(final boolean postLaunch) {
+    public static void setupClassScan(final Config config, final boolean postLaunch) {
         final boolean oldState = FileUtils.isClassGraphEnabled();
-        final boolean newState = CraftPresence.CONFIG.advancedSettings.enableClassGraph;
+        final boolean newState = config.advancedSettings.enableClassGraph;
         final boolean hasStateChanged = oldState != newState;
 
-        final boolean oldClassState = FileUtils.isUsingClassloader();
-        final boolean newClassState = CraftPresence.CONFIG.advancedSettings.useClassLoader;
-        final boolean hasClassStateChanged = oldClassState != newClassState;
-
         FileUtils.setClassGraphEnabled(newState);
-        FileUtils.setUsingClassloader(newClassState);
-        if (hasStateChanged || hasClassStateChanged) {
-            if (hasClassStateChanged) {
-                FileUtils.clearClassCache();
-            }
-
+        if (!postLaunch || hasStateChanged) {
             if (newState) {
                 FileUtils.detectClasses();
                 if (postLaunch) {
@@ -575,6 +577,15 @@ public class CommandUtils {
                 FileUtils.clearClassMap(true);
             }
         }
+    }
+
+    /**
+     * Synchronize Data for Setting up ClassGraph functions in {@link FileUtils}
+     *
+     * @param postLaunch Whether this function is being run after initial launch
+     */
+    public static void setupClassScan(final boolean postLaunch) {
+        setupClassScan(CraftPresence.CONFIG, postLaunch);
     }
 
     /**

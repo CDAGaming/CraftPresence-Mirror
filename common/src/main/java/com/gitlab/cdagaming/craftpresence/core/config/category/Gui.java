@@ -51,6 +51,10 @@ public class Gui extends Module implements Serializable {
     }
 
     public Gui() {
+        // N/A
+    }
+
+    public void appendReplayData() {
         if (Constants.hasReplayMod()) {
             guiData.put("GuiReplayViewer", new ModuleData(
                     Constants.TRANSLATOR.translate("craftpresence.defaults.integrations.replaymod.viewer"),

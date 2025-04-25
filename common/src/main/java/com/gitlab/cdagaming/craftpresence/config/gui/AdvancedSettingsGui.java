@@ -49,7 +49,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     private CheckBoxControl enablePerGuiButton, enablePerItemButton, enablePerEntityButton,
             formatWordsButton, debugModeButton, verboseModeButton,
             allowPlaceholderPreviewsButton, allowEndpointIconsButton, allowDuplicatePacketsButton,
-            enableClassGraphButton, useClassLoaderButton;
+            enableClassGraphButton;
     private ExtendedTextControl refreshRate, maxConnectionAttempts,
             playerSkinEndpoint, serverIconEndpoint;
 
@@ -621,19 +621,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
-        useClassLoaderButton = childFrame.addControl(
-                new CheckBoxControl(
-                        calc1, getButtonY(9, -50),
-                        Constants.TRANSLATOR.translate("gui.config.name.advanced.use_class_loader"),
-                        getInstanceData().useClassLoader,
-                        () -> getInstanceData().useClassLoader = useClassLoaderButton.isChecked(),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.comment.advanced.use_class_loader")
-                                )
-                        )
-                )
-        );
         proceedButton.setOnHover(() -> {
             if (!proceedButton.isControlEnabled()) {
                 drawMultiLineString(
@@ -646,7 +633,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
 
         // Endpoint Section
         childFrame.addWidget(new ScrollableTextWidget(
-                calc1, getButtonY(8),
+                calc1, getButtonY(7),
                 childFrame.getScreenWidth() - calc1,
                 Constants.TRANSLATOR.translate("gui.config.message.endpoints")
         ));
@@ -654,7 +641,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         playerSkinEndpoint = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(9),
+                        getButtonY(8),
                         180, 20,
                         () -> getInstanceData().playerSkinEndpoint = playerSkinEndpoint.getControlMessage(),
                         Constants.TRANSLATOR.translate("gui.config.name.advanced.player_skin_endpoint"),
@@ -670,7 +657,7 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
         serverIconEndpoint = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
-                        getButtonY(10),
+                        getButtonY(9),
                         180, 20,
                         () -> getInstanceData().serverIconEndpoint = serverIconEndpoint.getControlMessage(),
                         Constants.TRANSLATOR.translate("gui.config.name.advanced.server_icon_endpoint"),

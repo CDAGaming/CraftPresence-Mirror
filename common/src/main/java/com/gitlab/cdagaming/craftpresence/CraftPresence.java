@@ -170,7 +170,8 @@ public class CraftPresence {
                 config -> config.applyEvents(
                         (instance -> CommandUtils.reloadData(true)),
                         CommandUtils::applyData
-                ).setGameVersion(ModUtils.MCProtocolID)
+                ).setGameVersion(ModUtils.MCProtocolID),
+                CommandUtils::preInit
         );
 
         CommandUtils.init();

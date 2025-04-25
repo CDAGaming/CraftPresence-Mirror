@@ -12,13 +12,21 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Spotless (`7.0.2` -> `7.0.3`)
     * UniLib (`1.0.6` -> `1.1.0`)
+    * Lenni Reflect (`1.4.0` -> `1.4.1`)
 * UniLib Base Requirement increased from `1.0.1` to `1.1.0`
-    * Adjusting `Use Class Loader` now purges the Class Cache as well as refreshes Class Graph Data
     * `DynamicSelectorGui` no longer requires any entries in the entry list
+    * Several API fixes for `FileUtils` (`findClass` and `loadClass`)
 * Removed template data from the config settings, and related limitations
     * `PresenceData#buttons#default`
     * `displaySettings.dynamicIcons#default`
     * `displaySettings.dynamicVariables#default`
+* Removed the `useClassLoader` setting from `Advanced` options in the config
+    * This has been replaced with a revised implementation in `UniLib` and `UniCore`
+
+### Fixes
+
+* Fixed ReplayMod not adding new defaults to the `GUI` config, when creating a new config file
+* Fixed ClassGraph functions not working on initial launch if config settings matched internal settings
 
 ___
 

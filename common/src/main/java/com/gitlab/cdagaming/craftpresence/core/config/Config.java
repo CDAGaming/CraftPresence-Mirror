@@ -126,7 +126,7 @@ public final class Config extends Module implements Serializable {
         return new Pair<>(config, rawJson);
     }
 
-    public static Config loadOrCreate(final Function<Config, Config> onPreInit, final boolean forceCreate) {
+    public static Config loadOrCreate(final Function<Config, Config> onPreInit, final Function<Config, Config> onPostInit, final boolean forceCreate) {
         final Pair<Config, JsonElement> data = read();
         Config config = data.getFirst();
         JsonElement rawJson = data.getSecond();
@@ -145,6 +145,11 @@ public final class Config extends Module implements Serializable {
 
         final boolean wasNewFile = config.isNewFile;
         config.handleSync(rawJson);
+
+        if (onPostInit != null) {
+            config = onPostInit.apply(config);
+        }
+
         if (!forceCreate) {
             config.save();
         }
@@ -156,12 +161,12 @@ public final class Config extends Module implements Serializable {
         return config;
     }
 
-    public static Config loadOrCreate(final Function<Config, Config> onPreInit) {
-        return loadOrCreate(onPreInit, false);
+    public static Config loadOrCreate(final Function<Config, Config> onPreInit, final Function<Config, Config> onPostInit) {
+        return loadOrCreate(onPreInit, onPostInit, false);
     }
 
     public static Config loadOrCreate() {
-        return loadOrCreate(null);
+        return loadOrCreate(null, null);
     }
 
     public static Object getProperty(final Config instance, final String... path) {
@@ -192,6 +197,10 @@ public final class Config extends Module implements Serializable {
         return property != null && !StringUtils.isNullOrEmpty(property.toString());
     }
 
+    public static boolean isNewFile(final Config config) {
+        return config != null && config.isNewFile;
+    }
+
     public static int getGameVersion(final Config config) {
         return config != null ? config.gameVersion : MC_VERSION;
     }
@@ -219,6 +228,10 @@ public final class Config extends Module implements Serializable {
     public static Config setGameVersion(final Config config, final int version) {
         config.gameVersion = version;
         return config;
+    }
+
+    public boolean isNewFile() {
+        return isNewFile(this);
     }
 
     public int getGameVersion() {
@@ -605,9 +618,6 @@ public final class Config extends Module implements Serializable {
         final int newMCVer = getGameVersion();
         if (oldMCVer != newMCVer) {
             _lastMCVersionId = newMCVer;
-
-            // Reset Options dependent on MC Version
-            advancedSettings.useClassLoader = Constants.USE_CLASS_LOADER;
         }
 
         // Sync Flag Data
