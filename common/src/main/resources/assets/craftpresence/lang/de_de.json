@@ -1,6 +1,4 @@
 {
-  "craftpresence.defaults.display.button.label": "Beispieltext",
-  "craftpresence.defaults.display.button.url": "https://google.com",
   "craftpresence.defaults.server_messages.server_motd": "Ein Minecraft Server",
   "craftpresence.defaults.server_messages.server_name": "Minecraft Server",
   "craftpresence.defaults.state.lan": "Spielt auf einem LAN Server",
