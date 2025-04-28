@@ -26,8 +26,6 @@
   "craftpresence.defaults.advanced.item_messages": "Держит {item.message.holding}",
   "craftpresence.defaults.biome_messages.biome_messages": "Находится в {biome.name}",
   "craftpresence.defaults.dimension_messages.dimension_messages": "Находится в {dimension.name}",
-  "craftpresence.defaults.display.button.label": "Пример текста",
-  "craftpresence.defaults.display.button.url": "https://google.com",
   "craftpresence.defaults.integrations.replaymod.editor": "{player.name} редактирует повтор",
   "craftpresence.defaults.integrations.replaymod.renderer": "{player.name} экспортирует повтор ({replaymod.frames.current}/{replaymod.frames.total} кадров)",
   "craftpresence.defaults.integrations.replaymod.viewer": "{player.name} просматривает повторы",

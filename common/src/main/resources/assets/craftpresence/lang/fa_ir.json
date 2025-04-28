@@ -1,7 +1,6 @@
 {
   "craftpresence.defaults.advanced.entity_riding_messages": "در حال {entity.riding.name} سواری",
   "craftpresence.defaults.dimension_messages.dimension_messages": "در {dimension.name}",
-  "craftpresence.defaults.display.button.label": "متن نمونه",
   "craftpresence.defaults.placeholder.player_info.out": "به عنوان {player.name}",
   "craftpresence.defaults.placeholder.players": "بازیکن {server.players.max} / {server.players.current}",
   "craftpresence.defaults.server_messages.server_motd": "یک سرور ماینکرفت",
