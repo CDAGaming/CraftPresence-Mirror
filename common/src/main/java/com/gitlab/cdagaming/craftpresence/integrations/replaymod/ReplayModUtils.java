@@ -71,6 +71,10 @@ public class ReplayModUtils implements ExtendedModule {
      */
     private boolean hasInitializedSub = false;
     /**
+     * The current "inUse" state of the inherited module
+     */
+    private boolean otherModuleState = false;
+    /**
      * The name of the Current Gui the player is in
      */
     private String CURRENT_GUI_NAME;
@@ -89,6 +93,7 @@ public class ReplayModUtils implements ExtendedModule {
         hasInitialized = false;
         hasInitializedMain = false;
         hasInitializedSub = false;
+        otherModuleState = false;
     }
 
     @Override
@@ -122,15 +127,19 @@ public class ReplayModUtils implements ExtendedModule {
     private void processScreen(final Object newScreen) {
         final String newScreenName = MappingUtils.getClassName(newScreen);
 
-        if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
+        final boolean newModuleState = CraftPresence.GUIS.isInUse();
+        final boolean moduleStateChanged = newModuleState != otherModuleState;
+
+        if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME) || moduleStateChanged) {
             CURRENT_SCREEN = newScreen;
             CURRENT_GUI_NAME = newScreenName;
+            otherModuleState = newModuleState;
 
             if (!CraftPresence.GUIS.GUI_NAMES.contains(newScreenName)) {
                 CraftPresence.GUIS.GUI_NAMES.add(newScreenName);
             }
 
-            if (!hasInitialized) {
+            if (!hasInitialized || moduleStateChanged) {
                 initPresence();
                 hasInitialized = true;
             }
