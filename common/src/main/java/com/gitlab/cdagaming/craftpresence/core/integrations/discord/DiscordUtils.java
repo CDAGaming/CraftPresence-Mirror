@@ -618,10 +618,13 @@ public class DiscordUtils {
     public String getOverrideText(final PresenceData presenceData) {
         if (presenceData != null && presenceData.enabled && !presenceData.useAsMain) {
             final String field = getOverrideTarget();
+            if (StringUtils.isNullOrEmpty(field)) return null;
+
             final boolean isButton = field.startsWith("button_");
             Object result;
             if (isButton) {
                 final String[] buttonInfo = field.split("\\.");
+                if (!presenceData.buttons.containsKey(buttonInfo[0])) return null;
                 result = presenceData.buttons.get(buttonInfo[0]).getProperty(buttonInfo[1]);
             } else {
                 result = presenceData.getProperty(field);
