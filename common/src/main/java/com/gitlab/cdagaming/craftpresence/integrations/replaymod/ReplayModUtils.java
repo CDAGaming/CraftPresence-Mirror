@@ -264,7 +264,7 @@ public class ReplayModUtils implements ExtendedModule {
     }
 
     private void clearMainPlaceholders() {
-        CraftPresence.CLIENT.removeArguments("replaymod.time");
+        CraftPresence.CLIENT.removeArguments("replaymod.time", "data.replaymod.time");
     }
 
     private void clearSubPlaceholders() {
@@ -277,11 +277,20 @@ public class ReplayModUtils implements ExtendedModule {
         // Additional Data for Replay Mod
         if (CURRENT_SCREEN != null && CURRENT_SCREEN.getClass() == videoRendererScreen) {
             if (!hasInitializedMain) {
+                syncArgument("data.replaymod.time.current", () ->
+                        StringUtils.getValidInteger(StringUtils.getField(
+                                videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
+                        )).getSecond() / 1000, true);
                 syncArgument("replaymod.time.current", () -> secToString(
                         StringUtils.getValidInteger(StringUtils.getField(
                                 videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
                         )).getSecond() / 1000
                 ), true);
+
+                syncArgument("data.replaymod.time.remaining", () ->
+                        StringUtils.getValidInteger(StringUtils.getField(
+                                videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
+                        )).getSecond(), true);
                 syncArgument("replaymod.time.remaining", () -> secToString(
                         StringUtils.getValidInteger(StringUtils.getField(
                                 videoRendererScreen, CURRENT_SCREEN, "renderTimeLeft"
