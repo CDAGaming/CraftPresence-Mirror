@@ -98,8 +98,8 @@ public class ReplayModUtils implements ExtendedModule {
             final Class<?> replayHandlerClass = FileUtils.loadClass("com.replaymod.replay.ReplayHandler");
 
             final Object replayInstance = StringUtils.getField(replayClass, null, "instance");
-            final Object replayHandler = StringUtils.executeMethod(replayClass, replayInstance, null, null, "getReplayHandler");
-            final Object replayOverlay = StringUtils.executeMethod(replayHandlerClass, replayHandler, null, null, "getOverlay");
+            final Object replayHandler = replayInstance != null ? StringUtils.executeMethod(replayClass, replayInstance, null, null, "getReplayHandler") : null;
+            final Object replayOverlay = replayHandler != null ? StringUtils.executeMethod(replayHandlerClass, replayHandler, null, null, "getOverlay") : null;
             if (replayOverlay == null) {
                 clearClientData();
             } else {
@@ -246,6 +246,7 @@ public class ReplayModUtils implements ExtendedModule {
             return getResult(CraftPresence.CLIENT.imageOf(true, currentIcon, CraftPresence.CONFIG.advancedSettings.guiSettings.fallbackGuiIcon), CURRENT_GUI_NAME);
         });
         CraftPresence.CLIENT.addForcedData("screen", () -> isInUse() ? getPresenceData(CURRENT_GUI_NAME) : null);
+        CraftPresence.CLIENT.syncTimestamp("data.screen.time");
     }
 
     @Override
@@ -275,7 +276,7 @@ public class ReplayModUtils implements ExtendedModule {
                 syncArgument("replaymod.time.remaining", () -> secToString(
                         StringUtils.getValidInteger(StringUtils.getField(
                                 videoRendererScreen, CURRENT_SCREEN, "renderTimeLeft"
-                        )).getSecond() / 1000
+                        )).getSecond()
                 ), true);
                 hasInitializedMain = true;
             }
