@@ -94,7 +94,17 @@ public class ReplayModUtils implements ExtendedModule {
     @Override
     public void updateData() {
         if (CraftPresence.GUIS.CURRENT_SCREEN == null) {
-            clearClientData();
+            final Class<?> replayClass = FileUtils.loadClass("com.replaymod.replay.ReplayModReplay");
+            final Class<?> replayHandlerClass = FileUtils.loadClass("com.replaymod.replay.ReplayHandler");
+
+            final Object replayInstance = StringUtils.getField(replayClass, null, "instance");
+            final Object replayHandler = StringUtils.executeMethod(replayClass, replayInstance, null, null, "getReplayHandler");
+            final Object replayOverlay = StringUtils.executeMethod(replayHandlerClass, replayHandler, null, null, "getOverlay");
+            if (replayOverlay == null) {
+                clearClientData();
+            } else {
+                processScreen(replayOverlay);
+            }
         } else {
             final Class<?> screenClass = FileUtils.loadClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiScreen");
             final Class<?> overlayClass = FileUtils.loadClass("com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiOverlay");
@@ -104,26 +114,29 @@ public class ReplayModUtils implements ExtendedModule {
             if (possibleScreen == null && possibleOverlay == null) {
                 clearClientData();
             } else {
-                final Object newScreen = possibleOverlay != null ? possibleOverlay : possibleScreen;
-                final String newScreenName = MappingUtils.getClassName(newScreen);
-
-                if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
-                    CURRENT_SCREEN = newScreen;
-                    CURRENT_GUI_NAME = newScreenName;
-
-                    if (!CraftPresence.GUIS.GUI_NAMES.contains(newScreenName)) {
-                        CraftPresence.GUIS.GUI_NAMES.add(newScreenName);
-                    }
-
-                    if (!hasInitialized) {
-                        initPresence();
-                        hasInitialized = true;
-                    }
-                    updatePresence();
-                }
-                syncPlaceholders();
+                processScreen(possibleOverlay != null ? possibleOverlay : possibleScreen);
             }
         }
+    }
+
+    private void processScreen(final Object newScreen) {
+        final String newScreenName = MappingUtils.getClassName(newScreen);
+
+        if (!newScreen.equals(CURRENT_SCREEN) || !newScreenName.equals(CURRENT_GUI_NAME)) {
+            CURRENT_SCREEN = newScreen;
+            CURRENT_GUI_NAME = newScreenName;
+
+            if (!CraftPresence.GUIS.GUI_NAMES.contains(newScreenName)) {
+                CraftPresence.GUIS.GUI_NAMES.add(newScreenName);
+            }
+
+            if (!hasInitialized) {
+                initPresence();
+                hasInitialized = true;
+            }
+            updatePresence();
+        }
+        syncPlaceholders();
     }
 
     @Override
@@ -197,7 +210,7 @@ public class ReplayModUtils implements ExtendedModule {
 
     @Override
     public boolean canBeUsed() {
-        return CraftPresence.GUIS.canBeUsed();
+        return CraftPresence.GUIS.canBeUsed() || CraftPresence.player != null;
     }
 
     @Override
