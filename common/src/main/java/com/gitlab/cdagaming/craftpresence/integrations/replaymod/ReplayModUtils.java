@@ -289,7 +289,7 @@ public class ReplayModUtils implements ExtendedModule {
 
                 syncArgument("data.replaymod.time.remaining", () ->
                         StringUtils.getValidInteger(StringUtils.getField(
-                                videoRendererScreen, CURRENT_SCREEN, "renderTimeTaken"
+                                videoRendererScreen, CURRENT_SCREEN, "renderTimeLeft"
                         )).getSecond(), true);
                 syncArgument("replaymod.time.remaining", () -> secToString(
                         StringUtils.getValidInteger(StringUtils.getField(
