@@ -459,7 +459,7 @@ public class DiscordUtils {
                 Constants.LOG.printStackTrace(ex, showLogging, messagePrefix, verbosePrefix, output);
                 return Value.null_();
             }
-            return !StringUtils.isNullOrEmpty(sect.toString()) ? Value.string(sect.toString()) : Value.null_();
+            return Value.string(sect.toString());
         };
     }
 
