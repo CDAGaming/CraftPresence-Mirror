@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.6.0 (05/??/2025)
+## v2.6.0 (05/08/2025)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.5.5...release%2Fv2.6.0)_
@@ -12,7 +12,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
     * Spotless (`7.0.2` -> `7.0.3`)
     * UniLib (`1.0.6` -> `1.1.0`)
-    * Lenni Reflect (`1.4.0` -> `1.4.1`)
+    * Lenni Reflect (`1.4.0` -> `1.5.0`)
 * UniLib Base Requirement increased from `1.0.1` to `1.1.0`
     * `DynamicSelectorGui` no longer requires any entries in the entry list
     * Several API fixes for `FileUtils` (`findClass` and `loadClass`)
@@ -22,11 +22,15 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * `displaySettings.dynamicVariables#default`
 * Removed the `useClassLoader` setting from `Advanced` options in the config
     * This has been replaced with a revised implementation in `UniLib` and `UniCore`
+* Significantly Improved `ReplayMod` integration reliability
+    * Also added `data.` variants of `replaymod.time.current` and `replaymod.time.remaining`
+* Updated Translations
 
 ### Fixes
 
 * Fixed ReplayMod not adding new defaults to the `GUI` config, when creating a new config file
 * Fixed ClassGraph functions not working on initial launch if config settings matched internal settings
+* (Backend) Fixed some NPEs related to `DiscordUtils#getOverrideText`
 
 ___
 
