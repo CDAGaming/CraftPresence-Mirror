@@ -122,7 +122,7 @@ public class DimensionUtils implements ExtendedModule {
 
         final String newDimensionIdentifier = StringUtils.getOrDefault(newDimensionName, MappingUtils.getClassName(newProvider));
 
-        if (!newDimensionName.equals(RAW_DIMENSION_NAME) || !newDimensionIdentifier.equals(RAW_DIMENSION_IDENTIFIER)) {
+        if (!newProvider.equals(CURRENT_DIMENSION) || !newDimensionName.equals(RAW_DIMENSION_NAME) || !newDimensionIdentifier.equals(RAW_DIMENSION_IDENTIFIER)) {
             CURRENT_DIMENSION = newProvider;
 
             RAW_DIMENSION_NAME = StringUtils.getOrDefault(newDimensionName, newDimensionIdentifier);

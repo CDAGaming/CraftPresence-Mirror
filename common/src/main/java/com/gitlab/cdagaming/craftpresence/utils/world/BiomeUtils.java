@@ -119,7 +119,7 @@ public class BiomeUtils implements ExtendedModule {
 
         final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
 
-        if (!newBiomeName.equals(RAW_BIOME_NAME) || !newBiomeIdentifier.equals(RAW_BIOME_IDENTIFIER)) {
+        if (!newBiome.equals(CURRENT_BIOME) || !newBiomeName.equals(RAW_BIOME_NAME) || !newBiomeIdentifier.equals(RAW_BIOME_IDENTIFIER)) {
             CURRENT_BIOME = newBiome;
 
             RAW_BIOME_NAME = StringUtils.getOrDefault(newBiomeName, newBiomeIdentifier);
