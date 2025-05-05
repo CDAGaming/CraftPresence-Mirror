@@ -24,12 +24,14 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * This has been replaced with a revised implementation in `UniLib` and `UniCore`
 * Significantly Improved `ReplayMod` integration reliability
     * Also added `data.` variants of `replaymod.time.current` and `replaymod.time.remaining`
+* Added support for placeholder parsing for module icons (`.icon` placeholders in modules)
 * Updated Translations
 
 ### Fixes
 
 * Fixed ReplayMod not adding new defaults to the `GUI` config, when creating a new config file
 * Fixed ClassGraph functions not working on initial launch if config settings matched internal settings
+* Fixed potential inaccuracies in Dimension and Biome module updates
 * (Backend) Fixed some NPEs related to `DiscordUtils#getOverrideText`
 
 ___
