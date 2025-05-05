@@ -1410,6 +1410,11 @@ public class DiscordUtils {
                 for (int i = 0; i < evalStrings.length; ) {
                     final String currentString = evalStrings[i];
                     final boolean isPrimaryEntry = currentString.equals(primaryKey);
+                    if (!StringUtils.isNullOrEmpty(currentString) &&
+                            (currentString.startsWith("{") && currentString.endsWith("}"))) {
+                        finalKey = currentString;
+                        break;
+                    }
                     final DiscordAsset foundAsset = DiscordAssetUtils.get(currentString);
                     if (foundAsset != null) {
                         finalKey = foundAsset.getName();
