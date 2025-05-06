@@ -13,6 +13,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Spotless (`7.0.2` -> `7.0.3`)
     * UniLib (`1.0.6` -> `1.1.0`)
     * Lenni Reflect (`1.4.0` -> `1.5.0`)
+    * Fabric Loader (`0.16.13` -> `0.16.14`)
 * UniLib Base Requirement increased from `1.0.1` to `1.1.0`
     * `DynamicSelectorGui` no longer requires any entries in the entry list
     * Several API fixes for `FileUtils` (`findClass` and `loadClass`)
