@@ -32,6 +32,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 * Fixed ReplayMod not adding new defaults to the `GUI` config, when creating a new config file
 * Fixed ClassGraph functions not working on initial launch if config settings matched internal settings
 * Fixed potential inaccuracies in Dimension and Biome module updates
+* Fixed missing SimpleRPC migration for `{{player.uuid}}` migration
 * (Backend) Fixed some NPEs related to `DiscordUtils#getOverrideText`
 
 ___

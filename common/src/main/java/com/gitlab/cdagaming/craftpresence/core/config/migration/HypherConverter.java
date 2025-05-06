@@ -97,6 +97,7 @@ public class HypherConverter implements DataMigrator {
             .put("{{game.version}}", "{general.version}")
             .put("{{game.mods}}", "{general.mods}")
             .put("{{player.name}}", "{player.name}")
+            .put("{{player.uuid}}", "{player.uuid.full}")
             .put("{{world.name}}", "{dimension.name}")
             .put("{{world.difficulty}}", "{world.difficulty}")
             .put("{{world.savename}}", "{world.name}")
