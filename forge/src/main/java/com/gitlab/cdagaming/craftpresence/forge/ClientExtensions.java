@@ -26,11 +26,11 @@ package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fmlclient.ConfigGuiHandler;
-import net.minecraftforge.fmllegacy.network.FMLNetworkConstants;
+import net.minecraftforge.network.NetworkConstants;
 
 /**
  * The Primary Application Class and Utilities
@@ -45,7 +45,7 @@ public class ClientExtensions {
         try {
             // Workaround: Client-side only fix for Forge Clients
             // - Reference => https://gitlab.com/CDAGaming/CraftPresence/-/issues/99
-            ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+            ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         } catch (Throwable ignored) {
             // before forge-1.13.2-25.0.103
         }
