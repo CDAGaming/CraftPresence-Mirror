@@ -28,11 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
-import io.github.cdagaming.unicore.utils.FileUtils;
-import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.MobSpawnerBase;
-import unilib.external.io.github.classgraph.ClassInfo;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -67,7 +63,7 @@ public class BiomeUtils implements ExtendedModule {
     /**
      * Whether this module has performed an initial retrieval of internal items
      */
-    private boolean hasScannedInternals = false;
+    private boolean hasScannedInternals = true;
     /**
      * Whether this module has performed an initial event sync
      */
@@ -88,10 +84,6 @@ public class BiomeUtils implements ExtendedModule {
      * The alternative display name for the Current Biome the Player is in, if any
      */
     private String CURRENT_BIOME_IDENTIFIER;
-    /**
-     * The Player's Current Biome, if any
-     */
-    private MobSpawnerBase CURRENT_BIOME;
 
     @Override
     public void clearFieldData() {
@@ -101,7 +93,6 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void clearAttributes() {
-        CURRENT_BIOME = null;
         RAW_BIOME_NAME = null;
         RAW_BIOME_IDENTIFIER = null;
         CURRENT_BIOME_NAME = null;
@@ -114,16 +105,11 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final MobSpawnerBase newBiome = CraftPresence.world.func_4075_a().func_4073_a((int) CraftPresence.player.posX, (int) CraftPresence.player.posZ);
-        final String newBiomeName = newBiome.biomeName;
+        final String newBiomeName = "Plains"; // Stub
 
-        final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
-
-        if (!newBiome.equals(CURRENT_BIOME) || !newBiomeName.equals(RAW_BIOME_NAME) || !newBiomeIdentifier.equals(RAW_BIOME_IDENTIFIER)) {
-            CURRENT_BIOME = newBiome;
-
-            RAW_BIOME_NAME = StringUtils.getOrDefault(newBiomeName, newBiomeIdentifier);
-            RAW_BIOME_IDENTIFIER = newBiomeIdentifier;
+        if (!newBiomeName.equals(RAW_BIOME_NAME) || !newBiomeName.equals(RAW_BIOME_IDENTIFIER)) {
+            RAW_BIOME_NAME = newBiomeName;
+            RAW_BIOME_IDENTIFIER = newBiomeName;
             CURRENT_BIOME_NAME = StringUtils.formatIdentifier(RAW_BIOME_NAME, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
             CURRENT_BIOME_IDENTIFIER = StringUtils.formatIdentifier(RAW_BIOME_IDENTIFIER, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
@@ -146,8 +132,6 @@ public class BiomeUtils implements ExtendedModule {
     public void initPresence() {
         syncArgument("biome.default.icon", () -> CraftPresence.CONFIG.biomeSettings.fallbackBiomeIcon);
 
-        syncArgument("data.biome.instance", () -> CURRENT_BIOME, true);
-        syncArgument("data.biome.class", () -> CURRENT_BIOME.getClass(), true);
         syncArgument("data.biome.name", () -> RAW_BIOME_NAME, true);
         syncArgument("data.biome.identifier", () -> RAW_BIOME_IDENTIFIER, true);
 
@@ -178,50 +162,9 @@ public class BiomeUtils implements ExtendedModule {
         // N/A
     }
 
-    /**
-     * Retrieves a List of detected Biome Types
-     *
-     * @return The detected Biome Types found
-     */
-    private List<MobSpawnerBase> getBiomeTypes() {
-        List<MobSpawnerBase> biomeTypes = StringUtils.newArrayList();
-
-        if (biomeTypes.isEmpty()) {
-            // Fallback: Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(MobSpawnerBase.class).values()) {
-                if (classInfo != null) {
-                    try {
-                        Class<?> classObj = FileUtils.loadClass(classInfo.getName());
-                        if (classObj != null) {
-                            MobSpawnerBase biomeObj = (MobSpawnerBase) classObj.getDeclaredConstructor().newInstance();
-                            if (!biomeTypes.contains(biomeObj)) {
-                                biomeTypes.add(biomeObj);
-                            }
-                        }
-                    } catch (Throwable ex) {
-                        printException(ex);
-                    }
-                }
-            }
-        }
-
-        return biomeTypes;
-    }
-
     @Override
     public void getInternalData() {
-        for (MobSpawnerBase biome : getBiomeTypes()) {
-            if (biome != null) {
-                String biomeName = StringUtils.getOrDefault(biome.biomeName, MappingUtils.getClassName(biome));
-                String name = StringUtils.formatIdentifier(biomeName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-                if (!DEFAULT_NAMES.contains(name)) {
-                    DEFAULT_NAMES.add(name);
-                }
-                if (!BIOME_NAMES.contains(name)) {
-                    BIOME_NAMES.add(name);
-                }
-            }
-        }
+        // N/A
     }
 
     @Override
@@ -252,18 +195,8 @@ public class BiomeUtils implements ExtendedModule {
     }
 
     @Override
-    public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && FileUtils.isClassGraphEnabled() && FileUtils.canScanClasses();
-    }
-
-    @Override
     public boolean hasScannedInternals() {
         return hasScannedInternals;
-    }
-
-    @Override
-    public void setScannedInternals(final boolean state) {
-        hasScannedInternals = state;
     }
 
     @Override
