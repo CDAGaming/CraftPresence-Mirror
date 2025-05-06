@@ -28,11 +28,7 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
-import io.github.cdagaming.unicore.utils.FileUtils;
-import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.WorldProvider;
-import unilib.external.io.github.classgraph.ClassInfo;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -67,7 +63,7 @@ public class DimensionUtils implements ExtendedModule {
     /**
      * Whether this module has performed an initial retrieval of internal items
      */
-    private boolean hasScannedInternals = false;
+    private boolean hasScannedInternals = true;
     /**
      * Whether this module has performed an initial event sync
      */
@@ -88,10 +84,6 @@ public class DimensionUtils implements ExtendedModule {
      * The alternative display name for the Current Dimension the Player is in, if any
      */
     private String CURRENT_DIMENSION_IDENTIFIER;
-    /**
-     * The Player's Current Dimension, if any
-     */
-    private WorldProvider CURRENT_DIMENSION;
 
     @Override
     public void clearFieldData() {
@@ -101,7 +93,6 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void clearAttributes() {
-        CURRENT_DIMENSION = null;
         RAW_DIMENSION_NAME = null;
         RAW_DIMENSION_IDENTIFIER = null;
         CURRENT_DIMENSION_NAME = null;
@@ -114,16 +105,11 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final WorldProvider newProvider = CraftPresence.world.worldProvider;
-        final String newDimensionName = MappingUtils.getClassName(newProvider);
+        final String newDimensionName = "WorldProvider"; // Stub
 
-        final String newDimensionIdentifier = newDimensionName;
-
-        if (!newProvider.equals(CURRENT_DIMENSION) || !newDimensionName.equals(RAW_DIMENSION_NAME) || !newDimensionIdentifier.equals(RAW_DIMENSION_IDENTIFIER)) {
-            CURRENT_DIMENSION = newProvider;
-
-            RAW_DIMENSION_NAME = StringUtils.getOrDefault(newDimensionName, newDimensionIdentifier);
-            RAW_DIMENSION_IDENTIFIER = newDimensionIdentifier;
+        if (!newDimensionName.equals(RAW_DIMENSION_NAME) || !newDimensionName.equals(RAW_DIMENSION_IDENTIFIER)) {
+            RAW_DIMENSION_NAME = newDimensionName;
+            RAW_DIMENSION_IDENTIFIER = newDimensionName;
             CURRENT_DIMENSION_NAME = StringUtils.formatIdentifier(RAW_DIMENSION_NAME, false, !CraftPresence.CONFIG.advancedSettings.formatWords);
             CURRENT_DIMENSION_IDENTIFIER = StringUtils.formatIdentifier(RAW_DIMENSION_IDENTIFIER, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
 
@@ -146,8 +132,6 @@ public class DimensionUtils implements ExtendedModule {
     public void initPresence() {
         syncArgument("dimension.default.icon", () -> CraftPresence.CONFIG.dimensionSettings.fallbackDimensionIcon);
 
-        syncArgument("data.dimension.instance", () -> CURRENT_DIMENSION, true);
-        syncArgument("data.dimension.class", () -> CURRENT_DIMENSION.getClass(), true);
         syncArgument("data.dimension.name", () -> RAW_DIMENSION_NAME, true);
         syncArgument("data.dimension.identifier", () -> RAW_DIMENSION_IDENTIFIER, true);
 
@@ -178,50 +162,9 @@ public class DimensionUtils implements ExtendedModule {
         // N/A
     }
 
-    /**
-     * Retrieves a List of detected Dimension Types
-     *
-     * @return The detected Dimension Types found
-     */
-    private List<WorldProvider> getDimensionTypes() {
-        List<WorldProvider> dimensionTypes = StringUtils.newArrayList();
-
-        if (dimensionTypes.isEmpty()) {
-            // Use Manual Class Lookup
-            for (ClassInfo classInfo : FileUtils.getClassNamesMatchingSuperType(WorldProvider.class).values()) {
-                if (classInfo != null) {
-                    try {
-                        Class<?> classObj = FileUtils.loadClass(classInfo.getName());
-                        if (classObj != null) {
-                            WorldProvider providerObj = (WorldProvider) classObj.getDeclaredConstructor().newInstance();
-                            if (!dimensionTypes.contains(providerObj)) {
-                                dimensionTypes.add(providerObj);
-                            }
-                        }
-                    } catch (Throwable ex) {
-                        printException(ex);
-                    }
-                }
-            }
-        }
-
-        return dimensionTypes;
-    }
-
     @Override
     public void getInternalData() {
-        for (WorldProvider TYPE : getDimensionTypes()) {
-            if (TYPE != null) {
-                String dimensionName = MappingUtils.getClassName(TYPE);
-                String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
-                if (!DEFAULT_NAMES.contains(name)) {
-                    DEFAULT_NAMES.add(name);
-                }
-                if (!DIMENSION_NAMES.contains(name)) {
-                    DIMENSION_NAMES.add(name);
-                }
-            }
-        }
+        // N/A
     }
 
     @Override
@@ -252,18 +195,8 @@ public class DimensionUtils implements ExtendedModule {
     }
 
     @Override
-    public boolean canFetchInternals() {
-        return MappingUtils.areMappingsLoaded() && FileUtils.isClassGraphEnabled() && FileUtils.canScanClasses();
-    }
-
-    @Override
     public boolean hasScannedInternals() {
         return hasScannedInternals;
-    }
-
-    @Override
-    public void setScannedInternals(final boolean state) {
-        hasScannedInternals = state;
     }
 
     @Override
