@@ -270,7 +270,7 @@ public class DynamicScrollableList extends ScrollableListControl {
             }
         }
 
-        if (renderType.canRenderImage() && !ResourceUtils.isValidResource(texture)) {
+        if (renderType.canRenderImage() && ResourceUtils.isValidResource(texture)) {
             final double yOffset = yPos + 4.5;
             final double size = 32;
             RenderUtils.drawTexture(getGameInstance(),
