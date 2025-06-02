@@ -32,8 +32,8 @@ import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.client.gui.GuiContainer;
-import net.minecraft.src.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiContainer;
+import net.minecraft.client.gui.GuiScreen;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import java.util.List;
