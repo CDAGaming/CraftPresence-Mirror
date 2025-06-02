@@ -31,16 +31,19 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.craftpresence.core.impl.discord.DiscordStatus;
 import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.src.client.GameSettings;
-import net.minecraft.src.client.gui.GuiConnecting;
-import net.minecraft.src.client.packets.NetClientHandler;
-import net.minecraft.src.client.packets.NetworkManager;
+import net.minecraft.client.gui.GuiConnecting;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.networking.NetClientHandler;
+import net.minecraft.client.util.GameSettings;
+import net.minecraft.common.networking.NetworkManager;
 
 import java.net.Socket;
 import java.util.List;
@@ -74,12 +77,6 @@ public class ServerUtils implements ExtendedModule {
      */
     private static final List<String> gameModes = StringUtils.newArrayList(
             "survival", "creative"
-    );
-    /**
-     * The List of available World Types
-     */
-    private static final List<String> worldTypes = StringUtils.newArrayList(
-            "normal", "flat", "legacy"
     );
     /**
      * The Current Player Map, if available
@@ -589,9 +586,11 @@ public class ServerUtils implements ExtendedModule {
                 CraftPresence.instance.changeWorld1(null);
             }
 
+            final GuiScreen currentScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
             RenderUtils.openScreen(
                     CraftPresence.instance,
                     new GuiConnecting(
+                            currentScreen != null ? currentScreen : new GuiMainMenu(),
                             CraftPresence.instance,
                             serverData.serverIP + ":" + serverData.serverPort
                     )
@@ -654,13 +653,9 @@ public class ServerUtils implements ExtendedModule {
         }, true);
         syncArgument("world.type", () -> {
             if (ModUtils.RAW_TRANSLATOR != null) {
-                int worldType = CraftPresence.world.getWorldInfo().getGenType();
-                if (worldType < 0 || worldType >= worldTypes.size()) {
-                    worldType = 0;
-                }
-                return ModUtils.RAW_TRANSLATOR.translate("selectWorld.mapType." + worldTypes.get(worldType));
+                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.world.getWorldInfo().getGenType().getTranslateKey());
             } else {
-                return Integer.toString(CraftPresence.world.getWorldInfo().getGenType());
+                return Integer.toString(CraftPresence.world.getWorldInfo().getGenType().getId());
             }
         }, true);
 
