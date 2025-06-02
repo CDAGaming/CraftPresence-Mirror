@@ -38,7 +38,7 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.game.item.ItemStack;
+import net.minecraft.common.item.ItemStack;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import javax.annotation.Nonnull;
@@ -188,7 +188,7 @@ public class DynamicScrollableList extends ScrollableListControl {
     }
 
     @Override
-    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final int mouseXIn, final int mouseYIn, final boolean isHovering, final float partialTicks) {
+    public void renderSlotItem(final String originalName, final int xPos, final int yPos, final int widthIn, final int heightIn, final float mouseXIn, final float mouseYIn, final boolean isHovering, final float partialTicks) {
         final List<String> hoverText = StringUtils.newArrayList();
         String displayName = getEntryAliases().getOrDefault(originalName, originalName);
         int xOffset = xPos;

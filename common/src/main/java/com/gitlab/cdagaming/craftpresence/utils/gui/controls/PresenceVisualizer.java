@@ -445,8 +445,8 @@ public class PresenceVisualizer {
         }
 
         if (lastCompiledPresence != null && childFrame.isOverScreen()) {
-            final int mouseX = screen.getMouseX();
-            final int mouseY = screen.getMouseY();
+            final float mouseX = screen.getMouseX();
+            final float mouseY = screen.getMouseY();
 
             if (smallImageData != null && RenderUtils.isMouseOver(
                     mouseX, mouseY,
@@ -504,7 +504,7 @@ public class PresenceVisualizer {
         }
     }
 
-    public void onClick(final ExtendedScreen childFrame, final int mouseX, final int mouseY, final int mouseButton) {
+    public void onClick(final ExtendedScreen childFrame, final float mouseX, final float mouseY, final int mouseButton) {
         if (lastCompiledPresence != null && childFrame.isOverScreen()) {
             if (smallImageData != null && RenderUtils.isMouseOver(
                     mouseX, mouseY,

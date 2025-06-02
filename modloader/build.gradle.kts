@@ -35,9 +35,11 @@ val shadowCommon: Configuration by configurations.creating
 configurations.compileClasspath.get().extendsFrom(common)
 configurations.runtimeClasspath.get().extendsFrom(common)
 
+val foxVersion = "2.0-alpha38"
+
 dependencies {
     "jarMod"("local:nsss:$forgeVersion")
-    "jarMod"("local:foxloader:1.3.3")
+    "jarMod"("local:foxloader:$foxVersion")
 
     common(project(path = ":common")) { isTransitive = false }
     common(project(path = ":common", configuration = "shade"))
@@ -86,11 +88,16 @@ tasks.jar {
     manifest {
         attributes(
             mapOf(
+                "For-FoxLoader-Version" to foxVersion,
+                "For-ReIndev-Version" to forgeVersion,
                 "ModDesc" to "Completely Customize the way others see you play in Discord!",
-                "ClientMod" to "mod_CraftPresence",
+                "ModMain" to "mod_CraftPresence",
                 "ModName" to modName,
                 "ModVersion" to archiveVersion.get(),
-                "ModId" to modId
+                "ModId" to modId,
+                "ModAuthors" to "CDAGaming",
+                "ModIcon" to "assets/$modId/logo.png",
+                "ModWebsite" to "https://www.curseforge.com/minecraft/mc-mods/craftpresence"
             )
         )
     }
