@@ -63,11 +63,11 @@ dependencies {
     shade("net.lenni0451:Reflect:${"reflect_version"()!!}")
 
     // DiscordIPC (Originally by jagrosh)
-    shade("io.github.CDAGaming:DiscordIPC:${"ipc_version"()!!}") {
+    shade("io.github.cdagaming:DiscordIPC:${"ipc_version"()!!}") {
         isTransitive = false
     }
     // StarScript (Used for Placeholder Expressions)
-    shade("io.github.CDAGaming:starscript:${"starscript_version"()!!}")
+    shade("io.github.cdagaming:starscript:${"starscript_version"()!!}")
     shade("io.github.classgraph:classgraph:${"classgraph_version"()!!}")
     // SLF4J Dependencies (If below 1.17)
     if (isLegacy || protocol < 755) {

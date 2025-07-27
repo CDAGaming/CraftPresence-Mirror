@@ -1,15 +1,31 @@
 # CraftPresence Changes
 
-## v2.6.1 (05/09/2025)
+## v2.6.2 (07/29/2025)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.6.0...release%2Fv2.6.1)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.6.1...release%2Fv2.6.2)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
+### Changes
+
+* (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
+    * Spotless (`7.0.3` -> `7.2.1`)
+    * UniLib (`1.1.0` -> `1.1.1`)
+    * Shadow (`8.3.6` -> `8.3.8`)
+    * Gradle (`8.13` -> `8.14.3`)
+    * Classgraph (`4.8.179` -> `4.8.181`)
+    * Unimined (`1.3.14` -> `1.3.15`)
+    * JVMDowngrader (`1.2.2` -> `1.3.3`)
+    * ASM (`9.7.1` -> `9.8`)
+    * Starscript (`0.3.4` -> `0.3.7`)
+    * DiscordIPC (`0.10.2` -> `0.10.6`)
+* Removed Quilt and FlintMC Support due to end-of-life conditions
+    * Quilt users can continue to be supported via the existing Fabric Port
+
 ### Fixes
 
-* Fixed an issue that resulted in most Image Icons failing to render
+* TBD
 
 ___
 

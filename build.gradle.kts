@@ -9,10 +9,10 @@ import java.util.*
 
 plugins {
     java
-    id("xyz.wagyourtail.unimined") version "1.3.14" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "1.2.2"
-    id("com.diffplug.gradle.spotless") version "7.0.3" apply false
-    id("com.gradleup.shadow") version "8.3.6" apply false
+    id("xyz.wagyourtail.unimined") version "1.3.15" apply false
+    id("xyz.wagyourtail.jvmdowngrader") version "1.3.3"
+    id("com.diffplug.gradle.spotless") version "7.2.1" apply false
+    id("com.gradleup.shadow") version "8.3.8" apply false
     id("com.hypherionmc.modutils.modpublisher") version "2.1.6" apply false
 }
 
@@ -150,8 +150,7 @@ subprojects {
         maven("https://maven.lenni0451.net/releases/")
         maven("https://maven.lenni0451.net/snapshots/")
         // OSS Mavens
-        maven("https://s01.oss.sonatype.org/content/repositories/releases")
-        maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
+        maven("https://central.sonatype.com/repository/maven-snapshots/")
         // HypherionMC Mavens
         maven("https://maven.firstdark.dev/releases")
         maven("https://maven.firstdark.dev/snapshots")
