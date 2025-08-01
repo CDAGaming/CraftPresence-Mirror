@@ -1,6 +1,6 @@
 # CraftPresence Changes
 
-## v2.6.2 (07/29/2025)
+## v2.6.2 (08/07/2025)
 
 _A Detailed Changelog from the last release is
 available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.6.1...release%2Fv2.6.2)_
@@ -16,7 +16,6 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
     * Gradle (`8.13` -> `8.14.3`)
     * Classgraph (`4.8.179` -> `4.8.181`)
     * Unimined (`1.3.14` -> `1.3.15`)
-    * JVMDowngrader (`1.2.2` -> `1.3.3`)
     * ASM (`9.7.1` -> `9.8`)
     * Starscript (`0.3.4` -> `0.3.7`)
     * DiscordIPC (`0.10.2` -> `0.10.6`)
