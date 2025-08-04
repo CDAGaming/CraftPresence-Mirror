@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.forge;
 
 import com.gitlab.cdagaming.craftpresence.config.gui.MainGui;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
-import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -52,7 +52,7 @@ public class ClientExtensions {
 
         try {
             // Register The Config GUI Factory, used in Forge for Mod Menu integration
-            ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((mc, parentScreen) -> new MainGui(parentScreen)));
+            ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parentScreen) -> new MainGui(parentScreen)));
         } catch (Throwable ex) {
             CoreUtils.LOG.error("Failed to register Config GUI Factory for @MOD_NAME@.", ex);
         }
