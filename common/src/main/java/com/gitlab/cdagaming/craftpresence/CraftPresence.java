@@ -44,9 +44,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Session;
-import net.minecraft.src.World;
+import net.minecraft.src.client.Session;
+import net.minecraft.src.game.entity.player.EntityPlayer;
+import net.minecraft.src.game.level.World;
 
 /**
  * The Primary Application Class and Utilities

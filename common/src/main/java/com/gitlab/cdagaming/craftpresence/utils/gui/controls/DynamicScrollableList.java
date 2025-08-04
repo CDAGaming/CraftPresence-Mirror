@@ -38,7 +38,7 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.ItemStack;
+import net.minecraft.src.game.item.ItemStack;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import javax.annotation.Nonnull;
