@@ -24,18 +24,17 @@ val fileFormat: String by extra
 
 unimined.minecraft {
     defaultRemapJar = false
-    if (!isJarMod) {
+    if (true) {
         val fabricData: FabricLikePatcher.() -> Unit = {
             if (accessWidenerFile.exists()) {
                 accessWidener(accessWidenerFile)
             }
             loader("fabric_loader_version"()!!)
-            customIntermediaries = true
         }
         if (isModern) {
             fabric(fabricData)
         } else {
-            legacyFabric(fabricData)
+            babric(fabricData)
         }
     }
 }
