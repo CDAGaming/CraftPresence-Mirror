@@ -718,7 +718,8 @@ public class ServerUtils implements ExtendedModule {
                     currentScreen != null ? currentScreen : new TitleScreen(),
                     CraftPresence.instance,
                     ServerAddress.parseString(serverData.ip),
-                    serverData
+                    serverData,
+                    false
             );
         } catch (Throwable ex) {
             printException(ex);
