@@ -122,7 +122,7 @@ public class MultiMCUtils extends Pack {
     }
 
     /**
-     * Attempt to retrieve instance data via config properties
+     * Attempt to retrieve instance data via file properties
      *
      * @return {@link Boolean#TRUE} if data was found
      */
