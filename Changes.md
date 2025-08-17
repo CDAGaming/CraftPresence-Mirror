@@ -13,7 +13,7 @@ See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) 
 
 ### Fixes
 
-* TBD
+* Fixed `custom.enabled` not being used in the SimpleRPC config migration layer
 
 ___
 

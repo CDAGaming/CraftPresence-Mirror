@@ -155,6 +155,7 @@ public class HypherConverter implements DataMigrator {
     @Override
     public Config apply(Config instance, JsonElement rawJson, Object... args) {
         Constants.LOG.info("Simple RPC (By: HypherionSA) config data found, attempting to migrate settings to CraftPresence...");
+        Constants.LOG.info("Note: If CraftPresence fails to load after this point, please verify your SimpleRPC config settings or file a ticket.");
         try (FileConfig conf = FileConfig.of(configPath)) {
             conf.load();
             configVersion = conf.getOrElse("general.version", -1);
@@ -202,14 +203,17 @@ public class HypherConverter implements DataMigrator {
                 }
             }
 
-            // Custom Variables (Enabled state is ignored)
-            if (conf.get("custom.variables") instanceof List<?> customVars) {
-                for (Object entryObj : customVars) {
-                    if (entryObj instanceof AbstractConfig entry) {
-                        String name = entry.get("name").toString();
-                        String value = entry.get("value").toString();
+            // Custom Variables
+            final boolean areCustomsEnabled = conf.get("custom.enabled");
+            if (areCustomsEnabled) {
+                if (conf.get("custom.variables") instanceof List<?> customVars) {
+                    for (Object entryObj : customVars) {
+                        if (entryObj instanceof AbstractConfig entry) {
+                            String name = entry.get("name").toString();
+                            String value = entry.get("value").toString();
 
-                        instance.displaySettings.dynamicVariables.put(name, processPlaceholder(value));
+                            instance.displaySettings.dynamicVariables.put(name, processPlaceholder(value));
+                        }
                     }
                 }
             }
