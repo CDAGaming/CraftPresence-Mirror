@@ -270,7 +270,7 @@
   "gui.config.title.server.edit_specific_server": "CraftPresence - Редактирование сервера (%1$s)",
   "gui.config.title.server_messages": "Сообщения сервера",
   "gui.config.title.status_messages": "Сообщения статуса",
-  "key.craftpresence.category": "CraftPresence - Управление",
+  "key.category.craftpresence.controls": "CraftPresence - Управление",
   "key.craftpresence.config_keycode.description": "Привязка клавиши для получения доступа к экрану конфигурации",
   "key.craftpresence.config_keycode.name": "Настройки конфигурации"
 }
