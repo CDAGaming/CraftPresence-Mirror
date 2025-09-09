@@ -479,7 +479,7 @@ public class CommandUtils {
                 "configKeyCode",
                 "key.craftpresence.config_keycode.name",
                 Constants.TRANSLATOR::translate,
-                "key.craftpresence.category",
+                "key.category.craftpresence.controls",
                 Constants.TRANSLATOR::translate,
                 CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
                 CraftPresence.CONFIG.accessibilitySettings.configKeyCode,
