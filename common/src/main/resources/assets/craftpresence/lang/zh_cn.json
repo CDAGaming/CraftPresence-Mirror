@@ -546,7 +546,6 @@
   "gui.config.title.server_messages": "自定义服务器消息",
   "gui.config.title.status.edit_specific_status": "CraftPresence - 编辑状态（%1$s）",
   "gui.config.title.status_messages": "自定义状态消息",
-  "key.craftpresence.category": "CraftPresence - 控制",
   "key.craftpresence.config_keycode.description": "访问配置屏幕的按键绑定",
   "key.craftpresence.config_keycode.name": "配置GUI按键绑定"
 }
