@@ -112,7 +112,9 @@ public class CommandsGui extends ExtendedScreen {
     }
 
     @Override
-    public void initializeUi() {
+    public void constructElements() {
+        super.constructElements();
+
         proceedButton = addControl(
                 new ExtendedButtonControl(
                         6, (getScreenHeight() - 26),
@@ -158,12 +160,17 @@ public class CommandsGui extends ExtendedScreen {
                         getScreenWidth(), getScreenHeight() - 64
                 )
         );
+    }
+
+    @Override
+    public void appendElements() {
+        super.appendElements();
+
         previewArea = childFrame.addWidget(new TextDisplayWidget(
                 0, 0,
                 childFrame.getScreenWidth(),
                 executionString
         ));
-        super.initializeUi();
     }
 
     @Override

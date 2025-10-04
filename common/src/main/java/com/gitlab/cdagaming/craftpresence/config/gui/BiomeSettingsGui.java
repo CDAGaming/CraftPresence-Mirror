@@ -54,8 +54,23 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
     }
 
     @Override
-    protected void appendControls() {
-        super.appendControls();
+    public void constructElements() {
+        super.constructElements();
+
+        proceedButton.setOnHover(() -> {
+            if (!proceedButton.isControlEnabled()) {
+                drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                        )
+                );
+            }
+        });
+    }
+
+    @Override
+    public void appendElements() {
+        super.appendElements();
 
         final ModuleData defaultData = getInstanceData().biomeData.get("default");
         final String defaultBiomeMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
@@ -213,16 +228,6 @@ public class BiomeSettingsGui extends ConfigurationGui<Biome> {
                         }
                 )
         );
-
-        proceedButton.setOnHover(() -> {
-            if (!proceedButton.isControlEnabled()) {
-                drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        )
-                );
-            }
-        });
     }
 
     @Override

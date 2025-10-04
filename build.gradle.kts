@@ -11,9 +11,9 @@ plugins {
     java
     id("xyz.wagyourtail.unimined") version "1.3.14" apply false
     id("xyz.wagyourtail.jvmdowngrader") version "1.2.2"
-    id("com.diffplug.gradle.spotless") version "7.2.1" apply false
-    id("com.gradleup.shadow") version "8.3.8" apply false
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.6" apply false
+    id("com.diffplug.gradle.spotless") version "8.0.0" apply false
+    id("com.gradleup.shadow") version "9.2.2" apply false
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.8" apply false
 }
 
 /**
@@ -302,7 +302,7 @@ subprojects {
     dependencies {
         // Annotations
         "compileOnly"("com.google.code.findbugs:jsr305:3.0.2")
-        "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.8.6")
+        "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.9.6")
 
         // Attach UniLib dependency
         "modImplementation"(

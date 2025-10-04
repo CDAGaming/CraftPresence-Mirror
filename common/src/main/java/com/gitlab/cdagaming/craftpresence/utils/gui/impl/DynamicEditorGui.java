@@ -48,6 +48,8 @@ public class DynamicEditorGui extends ExtendedScreen {
     private ExtendedButtonControl proceedButton;
     private ExtendedTextControl primaryInput, secondaryInput;
     private TextWidget defaultIcon;
+    private int controlIndex;
+    private ScrollPane childFrame;
 
     public DynamicEditorGui(String attributeName, BiConsumer<String, DynamicEditorGui> onNewInit, BiConsumer<String, DynamicEditorGui> onAdjustInit, Consumer<DynamicEditorGui> onAdjustEntry, Consumer<DynamicEditorGui> onRemoveEntry, BiConsumer<String, DynamicEditorGui> onSpecificCallback, BiConsumer<String, DynamicEditorGui> onHoverPrimaryCallback, BiConsumer<String, DynamicEditorGui> onHoverSecondaryCallback) {
         super();
@@ -82,8 +84,10 @@ public class DynamicEditorGui extends ExtendedScreen {
     }
 
     @Override
-    public void initializeUi() {
-        int controlIndex = 0;
+    public void constructElements() {
+        super.constructElements();
+
+        controlIndex = 0;
         if (!isLoaded() && !initialized) {
             resetText = Constants.TRANSLATOR.translate("gui.config.message.button.remove");
             if (isNewValue) {
@@ -99,7 +103,7 @@ public class DynamicEditorGui extends ExtendedScreen {
             initialized = true;
         }
 
-        final ScrollPane childFrame = addControl(
+        childFrame = addControl(
                 new ScrollPane(
                         0, 32,
                         getScreenWidth(), getScreenHeight() - 64
@@ -143,6 +147,37 @@ public class DynamicEditorGui extends ExtendedScreen {
         if (isModuleMode && originalData == null) {
             originalData = new ModuleData(currentData);
         }
+
+        proceedButton = addControl(
+                new ExtendedButtonControl(
+                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
+                        180, 20,
+                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
+                        () -> {
+                            if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getControlMessage())) {
+                                attributeName = secondaryInput.getControlMessage();
+                            }
+                            if (isAdjusting() && onAdjustEntry != null) {
+                                onAdjustEntry.accept(this);
+                            }
+                            openScreen(getParent());
+                        },
+                        () -> {
+                            if (!proceedButton.isControlEnabled()) {
+                                drawMultiLineString(
+                                        StringUtils.splitTextByNewLine(
+                                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                                        )
+                                );
+                            }
+                        }
+                )
+        );
+    }
+
+    @Override
+    public void appendElements() {
+        super.appendElements();
 
         primaryInput = childFrame.addControl(
                 new TextWidget(
@@ -226,34 +261,6 @@ public class DynamicEditorGui extends ExtendedScreen {
                     )
             );
         }
-
-        proceedButton = addControl(
-                new ExtendedButtonControl(
-                        (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
-                        180, 20,
-                        Constants.TRANSLATOR.translate("gui.config.message.button.back"),
-                        () -> {
-                            if (StringUtils.isNullOrEmpty(attributeName) && willRenderSecondaryInput && !StringUtils.isNullOrEmpty(secondaryInput.getControlMessage())) {
-                                attributeName = secondaryInput.getControlMessage();
-                            }
-                            if (isAdjusting() && onAdjustEntry != null) {
-                                onAdjustEntry.accept(this);
-                            }
-                            openScreen(getParent());
-                        },
-                        () -> {
-                            if (!proceedButton.isControlEnabled()) {
-                                drawMultiLineString(
-                                        StringUtils.splitTextByNewLine(
-                                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                                        )
-                                );
-                            }
-                        }
-                )
-        );
-
-        super.initializeUi();
     }
 
     @Override

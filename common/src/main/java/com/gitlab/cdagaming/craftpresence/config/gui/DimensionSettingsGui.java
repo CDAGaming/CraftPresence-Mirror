@@ -54,8 +54,23 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
     }
 
     @Override
-    protected void appendControls() {
-        super.appendControls();
+    public void constructElements() {
+        super.constructElements();
+
+        proceedButton.setOnHover(() -> {
+            if (!proceedButton.isControlEnabled()) {
+                drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                        )
+                );
+            }
+        });
+    }
+
+    @Override
+    public void appendElements() {
+        super.appendElements();
 
         final ModuleData defaultData = getInstanceData().dimensionData.get("default");
         final String defaultDimensionMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
@@ -213,16 +228,6 @@ public class DimensionSettingsGui extends ConfigurationGui<Dimension> {
                         }
                 )
         );
-
-        proceedButton.setOnHover(() -> {
-            if (!proceedButton.isControlEnabled()) {
-                drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        )
-                );
-            }
-        });
     }
 
     @Override

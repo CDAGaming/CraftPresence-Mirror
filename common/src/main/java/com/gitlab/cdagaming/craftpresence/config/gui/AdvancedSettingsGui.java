@@ -63,8 +63,23 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
     }
 
     @Override
-    protected void appendControls() {
-        super.appendControls();
+    public void constructElements() {
+        super.constructElements();
+
+        proceedButton.setOnHover(() -> {
+            if (!proceedButton.isControlEnabled()) {
+                drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                        )
+                );
+            }
+        });
+    }
+
+    @Override
+    public void appendElements() {
+        super.appendElements();
 
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;
@@ -621,15 +636,6 @@ public class AdvancedSettingsGui extends ConfigurationGui<Advanced> {
                         )
                 )
         );
-        proceedButton.setOnHover(() -> {
-            if (!proceedButton.isControlEnabled()) {
-                drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        )
-                );
-            }
-        });
 
         // Endpoint Section
         childFrame.addWidget(new ScrollableTextWidget(

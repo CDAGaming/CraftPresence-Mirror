@@ -55,8 +55,23 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
     }
 
     @Override
-    protected void appendControls() {
-        super.appendControls();
+    public void constructElements() {
+        super.constructElements();
+
+        proceedButton.setOnHover(() -> {
+            if (!proceedButton.isControlEnabled()) {
+                drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                        )
+                );
+            }
+        });
+    }
+
+    @Override
+    public void appendElements() {
+        super.appendElements();
 
         final ModuleData defaultData = getInstanceData().serverData.get("default");
         final String defaultServerMessage = Config.getProperty(defaultData, "textOverride") != null ? defaultData.getTextOverride() : "";
@@ -276,16 +291,6 @@ public class ServerSettingsGui extends ConfigurationGui<Server> {
                 )
         );
         pingRateUnit.setControlMessage(getInstanceData().pingRateUnit);
-
-        proceedButton.setOnHover(() -> {
-            if (!proceedButton.isControlEnabled()) {
-                drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        )
-                );
-            }
-        });
     }
 
     @Override

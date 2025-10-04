@@ -56,8 +56,23 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
     }
 
     @Override
-    protected void appendControls() {
-        super.appendControls();
+    public void constructElements() {
+        super.constructElements();
+
+        proceedButton.setOnHover(() -> {
+            if (!proceedButton.isControlEnabled()) {
+                drawMultiLineString(
+                        StringUtils.splitTextByNewLine(
+                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
+                        )
+                );
+            }
+        });
+    }
+
+    @Override
+    public void appendElements() {
+        super.appendElements();
 
         clientId = childFrame.addControl(
                 new TextWidget(
@@ -275,16 +290,6 @@ public class GeneralSettingsGui extends ConfigurationGui<General> {
                         )
                 )
         );
-
-        proceedButton.setOnHover(() -> {
-            if (!proceedButton.isControlEnabled()) {
-                drawMultiLineString(
-                        StringUtils.splitTextByNewLine(
-                                Constants.TRANSLATOR.translate("gui.config.message.hover.empty.default")
-                        )
-                );
-            }
-        });
     }
 
     @Override

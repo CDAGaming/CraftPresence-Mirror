@@ -75,7 +75,9 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
     }
 
     @Override
-    public void initializeUi() {
+    public void constructElements() {
+        super.constructElements();
+
         proceedButton = addControl(
                 new ExtendedButtonControl(
                         (getScreenWidth() / 2) - 90, (getScreenHeight() - 26),
@@ -137,9 +139,34 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
                 )
         );
 
-        appendControls();
-
-        super.initializeUi();
+        // Adding About Button
+        addControl(
+                new ExtendedButtonControl(
+                        6, 6,
+                        20, 20,
+                        "?",
+                        () -> openScreen(new AboutGui()),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.button.about")
+                                )
+                        )
+                )
+        );
+        // Adding Commands GUI Button
+        addControl(
+                new ExtendedButtonControl(
+                        getScreenWidth() - 26, 6,
+                        20, 20,
+                        ">_",
+                        () -> openScreen(new CommandsGui()),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.button.commands")
+                                )
+                        )
+                )
+        );
     }
 
     @Override
@@ -181,37 +208,6 @@ public abstract class ConfigurationGui<T extends Module> extends ExtendedScreen 
         resetConfigButton.setControlEnabled(canReset());
         syncConfigButton.setControlVisible(allowedToSync());
         syncConfigButton.setControlEnabled(canSync());
-    }
-
-    protected void appendControls() {
-        // Adding About Button
-        addControl(
-                new ExtendedButtonControl(
-                        6, 6,
-                        20, 20,
-                        "?",
-                        () -> openScreen(new AboutGui()),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.message.button.about")
-                                )
-                        )
-                )
-        );
-        // Adding Commands GUI Button
-        addControl(
-                new ExtendedButtonControl(
-                        getScreenWidth() - 26, 6,
-                        20, 20,
-                        ">_",
-                        () -> openScreen(new CommandsGui()),
-                        () -> drawMultiLineString(
-                                StringUtils.splitTextByNewLine(
-                                        Constants.TRANSLATOR.translate("gui.config.message.button.commands")
-                                )
-                        )
-                )
-        );
     }
 
     protected boolean resetData() {

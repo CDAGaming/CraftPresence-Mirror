@@ -1,15 +1,24 @@
 # CraftPresence Changes
 
-## v2.6.3 (08/??/2025)
+## v2.7.0 (10/24/2025)
 
 _A Detailed Changelog from the last release is
-available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.6.2...release%2Fv2.6.3)_
+available [here](https://gitlab.com/CDAGaming/CraftPresence/-/compare/release%2Fv2.6.2...release%2Fv2.7.0)_
 
 See the Mod Description or [README](https://gitlab.com/CDAGaming/CraftPresence) for more info regarding the mod.
 
 ### Changes
 
+* (Backend) Updated Build Dependencies (Please see the appropriate repositories for changes)
+    * Fabric Loader (`0.16.14` -> `0.17.2`)
+    * Spotless (`7.2.1` -> `8.0.0`)
+    * Shadow (`8.3.8` -> `9.2.2`)
+    * ModPublisher (`2.1.6` -> `2.1.8`)
+    * SpotBugs Annotations (`4.8.6` -> `4.9.6`)
+    * UniLib (`1.1.1` -> `1.2.0`)
+* UniLib minimum requirement has been bumped to `v1.2.0` due to adjustments to Screen API behaviors
 * Updated Modrinth pack integration to support newer launcher versions
+* Minor translation changes due to MC 1.21.9 updates from `-Staging`
 
 ### Fixes
 

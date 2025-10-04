@@ -40,7 +40,9 @@ public class AboutGui extends ExtendedScreen {
     }
 
     @Override
-    public void initializeUi() {
+    public void constructElements() {
+        super.constructElements();
+
         // Adding Version Check Button
         addControl(
                 new ExtendedButtonControl(
@@ -80,8 +82,6 @@ public class AboutGui extends ExtendedScreen {
                         () -> UrlUtils.openUrl(Constants.URL_README)
                 )
         );
-
-        super.initializeUi();
     }
 
     @Override

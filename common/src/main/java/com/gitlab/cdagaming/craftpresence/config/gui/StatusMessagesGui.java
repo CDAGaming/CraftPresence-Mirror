@@ -96,8 +96,8 @@ public class StatusMessagesGui extends ConfigurationGui<Status> {
     }
 
     @Override
-    protected void appendControls() {
-        super.appendControls();
+    public void appendElements() {
+        super.appendElements();
 
         final int calc1 = (getScreenWidth() / 2) - 183;
         final int calc2 = (getScreenWidth() / 2) + 3;

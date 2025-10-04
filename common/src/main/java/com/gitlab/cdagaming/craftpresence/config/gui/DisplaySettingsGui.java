@@ -52,8 +52,8 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
     }
 
     @Override
-    protected void appendControls() {
-        super.appendControls();
+    public void appendElements() {
+        super.appendElements();
 
         // Adding Presence Editor Button
         childFrame.addControl(
