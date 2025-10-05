@@ -38,6 +38,7 @@ import com.gitlab.cdagaming.unilib.utils.gui.integrations.ScrollPane;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextDisplayWidget;
 import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.client.input.KeyEvent;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -488,14 +489,14 @@ public class CommandsGui extends ExtendedScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
+    public boolean keyPressed(KeyEvent keyEvent) {
         if (!blockInteractions) {
             if (commandInput.isControlFocused()) {
-                if (isEscapeKey(keyCode)) {
+                if (isEscapeKey(keyEvent.input())) {
                     commandInput.setControlFocused(false);
                 } else {
                     if (canAcceptCommand()) {
-                        if (keyCode == getKeyByVersion(15, 258) && !tabCompletions.isEmpty()) { // Tab Key Event
+                        if (keyEvent.input() == getKeyByVersion(15, 258) && !tabCompletions.isEmpty()) { // Tab Key Event
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
                             )) {
@@ -504,14 +505,14 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                                 commandInput.setControlMessage(commandString);
                             }
-                        } else if (keyCode == getKeyByVersion(28, 257) || keyCode == getKeyByVersion(156, 335)) { // Enter Key Event
+                        } else if (keyEvent.input() == getKeyByVersion(28, 257) || keyEvent.input() == getKeyByVersion(156, 335)) { // Enter Key Event
                             acceptCommand();
                         }
                     }
-                    return commandInput.keyPressed(keyCode, mouseX, mouseY);
+                    return commandInput.keyPressed(keyEvent);
                 }
             }
-            return super.keyPressed(keyCode, mouseX, mouseY);
+            return super.keyPressed(keyEvent);
         }
         return false;
     }
