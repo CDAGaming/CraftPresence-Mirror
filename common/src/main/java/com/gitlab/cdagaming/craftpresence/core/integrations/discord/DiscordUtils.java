@@ -55,6 +55,7 @@ import org.meteordev.starscript.utils.SFunction;
 import org.meteordev.starscript.utils.VariableReplacementTransformer;
 import org.meteordev.starscript.value.Value;
 import org.meteordev.starscript.value.ValueMap;
+import org.slf4j.impl.JDK14LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -237,6 +238,9 @@ public class DiscordUtils {
     public void init(final boolean debugMode, final boolean verboseMode, final IPCListener listener, final Map<String, String> dynamicIcons) {
         // Create IPC Instance
         ipcInstance = new IPCClient(Long.parseLong(CLIENT_ID), debugMode, verboseMode, AUTO_REGISTER, CLIENT_ID);
+        ipcInstance.setForcedLogger(new JDK14LoggerFactory().getLogger(
+                Constants.LOG.getLogInstance().getName()
+        ));
         if (listener != null) {
             ipcInstance.setListener(listener);
         }

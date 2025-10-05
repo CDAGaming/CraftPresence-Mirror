@@ -38,7 +38,6 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import unilib.external.io.github.classgraph.ClassInfo;
@@ -199,12 +198,13 @@ public class DynamicScrollableList extends ScrollableListControl {
         String assetUrl;
 
         if (renderType == RenderType.ServerData) {
-            final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
+            // Note: ServerData Base64 unavailable in MC 1.6.4 and below
+            /*final ServerData data = CraftPresence.SERVER.getDataFromName(originalName);
 
             if (data != null && !StringUtils.isNullOrEmpty(data.getBase64EncodedIconData())) {
                 assetUrl = "data:image/png;base64," + data.getBase64EncodedIconData();
                 texture = ImageUtils.getTextureFromUrl(getGameInstance(), originalName, new Pair<>(ImageUtils.InputType.ByteStream, assetUrl));
-            } else if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
+            } else */if (CraftPresence.CONFIG.advancedSettings.allowEndpointIcons &&
                     !StringUtils.isNullOrEmpty(CraftPresence.CONFIG.advancedSettings.serverIconEndpoint)) {
                 final String formattedIP = originalName.contains(":") ? StringUtils.formatAddress(originalName, false) : originalName;
                 final String endpointUrl = CraftPresence.CLIENT.compileData(String.format(
