@@ -272,20 +272,11 @@ public class ServerUtils implements ExtendedModule {
      * @param connection The Server Connection Data and Info
      * @return the found realm data, or null
      */
-    @SuppressWarnings("RedundantCast")
     private RealmsServer findRealmData(final ClientPacketListener connection) {
         try {
             if (connection.callbackScreen instanceof RealmsScreen realmsProxy &&
                     realmsProxy instanceof RealmsMainScreen realmsMainScreen) {
-                return (RealmsServer) StringUtils.executeMethod(
-                        RealmsMainScreen.class, realmsMainScreen,
-                        new Class[]{long.class},
-                        new Object[]{(long) StringUtils.getField(
-                                RealmsMainScreen.class, realmsMainScreen,
-                                "selectedServerId"
-                        )},
-                        "findServer"
-                );
+                return realmsMainScreen.getSelectedServer();
             }
         } catch (Throwable ignored) {
         }
