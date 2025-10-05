@@ -46,7 +46,7 @@ public class CraftPresenceNeoForge {
                 throw new UnsupportedOperationException("Incompatible JVM!!! @MOD_NAME@ requires Java 8 or above to work properly!");
             }
 
-            if (FMLEnvironment.dist.isClient()) {
+            if (FMLEnvironment.getDist().isClient()) {
                 ClientExtensions.Setup();
                 new CraftPresence(this::setupIntegrations);
             } else {
