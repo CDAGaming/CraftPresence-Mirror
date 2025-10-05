@@ -608,23 +608,21 @@ public class ServerUtils implements ExtendedModule {
         final Runnable callbackEvent = callback != null ? callback : () -> {
             // N/A
         };
-        if (!serverData.pinged) {
+        if (serverData.state() == ServerData.State.INITIAL) {
             // Stub Server Data if not pinged
-            serverData.pinged = true;
-            serverData.ping = -2L;
+            serverData.setState(ServerData.State.PINGING);
             serverData.motd = CommonComponents.EMPTY;
             serverData.status = CommonComponents.EMPTY;
         }
         PING_EXECUTOR.submit(() -> {
             try {
-                pinger.pingServer(serverData, saverEvent);
-                callbackEvent.run();
+                pinger.pingServer(serverData, saverEvent, callbackEvent);
             } catch (UnknownHostException unknownHostException) {
-                serverData.ping = -1L;
+                serverData.setState(ServerData.State.UNREACHABLE);
                 serverData.motd = Component.literal("§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_resolve"));
                 callbackEvent.run();
             } catch (Exception ex) {
-                serverData.ping = -1L;
+                serverData.setState(ServerData.State.UNREACHABLE);
                 serverData.motd = Component.literal("§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_connect"));
                 callbackEvent.run();
             }
@@ -719,7 +717,8 @@ public class ServerUtils implements ExtendedModule {
                     CraftPresence.instance,
                     ServerAddress.parseString(serverData.ip),
                     serverData,
-                    false
+                    false,
+                    null
             );
         } catch (Throwable ex) {
             printException(ex);

@@ -27,6 +27,7 @@ package com.gitlab.cdagaming.craftpresence.integrations.discord;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.DiscordUtils;
 import com.gitlab.cdagaming.craftpresence.core.integrations.discord.FunctionsLib;
 import com.gitlab.cdagaming.unilib.ModUtils;
+import com.gitlab.cdagaming.unilib.utils.ComponentUtils;
 import com.gitlab.cdagaming.unilib.utils.NbtUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import org.meteordev.starscript.Starscript;
@@ -53,7 +54,24 @@ public class ModFunctionsLib {
     }
 
     public static Value getComponent(DiscordUtils client, Starscript ss, int argCount) {
-        return FunctionsLib.throwUnimplemented(ss);
+        if (argCount < 1 || argCount > 2)
+            ss.error("getComponent() can only be used with 1-2 arguments, got %d.", argCount);
+        Object result;
+
+        String path = null;
+        if (argCount == 2) {
+            path = ss.popString("Second argument to getComponent() needs to be a string.");
+        }
+        Object data = ss.popObject("First argument to getComponent() needs to be a valid DataComponent object.");
+
+        if (!StringUtils.isNullOrEmpty(path)) {
+            result = ComponentUtils.parseComponent(
+                    ComponentUtils.getComponent(data, path)
+            );
+        } else {
+            result = ComponentUtils.getComponentMap(data);
+        }
+        return result != null ? client.toValue(result, true) : Value.null_();
     }
 
     public static Value getNbt(DiscordUtils client, Starscript ss, int argCount) {
@@ -73,7 +91,7 @@ public class ModFunctionsLib {
         }
 
         if (data == null) {
-            ss.error("First argument to getNbt() needs to be a valid Entity or ItemStack object.");
+            ss.error("First argument to getNbt() needs to be a valid Entity or DataComponent object.");
         }
         args.removeFirst();
 
