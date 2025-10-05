@@ -34,6 +34,7 @@ import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 
 public class MainGui extends ConfigurationGui<Config> {
     private final Config INSTANCE, DEFAULTS;
@@ -232,11 +233,11 @@ public class MainGui extends ConfigurationGui<Config> {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int mouseX, int mouseY) {
-        if (isEscapeKey(keyCode) && getCurrentData().hasChanged()) {
+    public boolean keyPressed(KeyEvent keyEvent) {
+        if (isEscapeKey(keyEvent.input()) && getCurrentData().hasChanged()) {
             syncData();
         }
-        return super.keyPressed(keyCode, mouseX, mouseY);
+        return super.keyPressed(keyEvent);
     }
 
     @Override

@@ -36,6 +36,7 @@ import com.gitlab.cdagaming.unilib.utils.gui.widgets.TexturedWidget;
 import com.jagrosh.discordipc.entities.ActivityType;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
+import net.minecraft.client.input.MouseButtonEvent;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -504,16 +505,16 @@ public class PresenceVisualizer {
         }
     }
 
-    public boolean onClick(final ExtendedScreen childFrame, final double mouseX, final double mouseY, final int mouseButton) {
+    public boolean onClick(final ExtendedScreen childFrame, final MouseButtonEvent mouseButtonEvent, final boolean doubleClick) {
         if (lastCompiledPresence != null && childFrame.isOverScreen()) {
             if (smallImageData != null && RenderUtils.isMouseOver(
-                    mouseX, mouseY,
+                    mouseButtonEvent.x(), mouseButtonEvent.y(),
                     smallWidget
             ) && !StringUtils.isNullOrEmpty(lastCompiledPresence.smallImageUrl())) {
                 UrlUtils.openUrl(lastCompiledPresence.smallImageUrl());
                 return true;
             } else if (largeImageData != null && RenderUtils.isMouseOver(
-                    mouseX, mouseY,
+                    mouseButtonEvent.x(), mouseButtonEvent.y(),
                     largeWidget
             ) && !StringUtils.isNullOrEmpty(lastCompiledPresence.largeImageUrl())) {
                 UrlUtils.openUrl(lastCompiledPresence.largeImageUrl());
@@ -521,7 +522,7 @@ public class PresenceVisualizer {
             } else {
                 for (int i = 0; i < lines.size(); i++) {
                     final ScrollableTextWidget lineWidget = lines.get(i);
-                    if (RenderUtils.isMouseOver(mouseX, mouseY, lineWidget)
+                    if (RenderUtils.isMouseOver(mouseButtonEvent.x(), mouseButtonEvent.y(), lineWidget)
                         && !StringUtils.isNullOrEmpty(lineWidget.getMessage())) {
                         final String url = urls[i];
                         if (!StringUtils.isNullOrEmpty(url)) {

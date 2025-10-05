@@ -46,6 +46,7 @@ import com.gitlab.cdagaming.unilib.impl.TranslationListener;
 import com.gitlab.cdagaming.unilib.impl.TranslationManager;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.KeyUtils;
+import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
 import com.jagrosh.discordipc.entities.DiscordBuild;
@@ -479,7 +480,7 @@ public class CommandUtils {
                 "configKeyCode",
                 "key.craftpresence.config_keycode.name",
                 Constants.TRANSLATOR::translate,
-                "key.category.craftpresence.controls",
+                ResourceUtils.getResource(Constants.MOD_ID, "controls"),
                 Constants.TRANSLATOR::translate,
                 CraftPresence.CONFIG.accessibilitySettings.getDefaults().configKeyCode,
                 CraftPresence.CONFIG.accessibilitySettings.configKeyCode,

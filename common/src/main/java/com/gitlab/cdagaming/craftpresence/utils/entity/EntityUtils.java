@@ -280,13 +280,13 @@ public class EntityUtils implements ExtendedModule {
         if (CraftPresence.SERVER.isEnabled()) {
             for (PlayerInfo playerInfo : CraftPresence.SERVER.currentPlayerList) {
                 if (playerInfo != null) {
-                    final String uuidString = playerInfo.getProfile().getId().toString();
+                    final String uuidString = playerInfo.getProfile().id().toString();
                     if (!StringUtils.isNullOrEmpty(uuidString)) {
                         if (!ENTITY_NAMES.contains(uuidString)) {
                             ENTITY_NAMES.add(uuidString);
                         }
                         if (!PLAYER_BINDINGS.containsKey(uuidString)) {
-                            PLAYER_BINDINGS.put(uuidString, playerInfo.getProfile().getName());
+                            PLAYER_BINDINGS.put(uuidString, playerInfo.getProfile().name());
                         }
                     }
                 }

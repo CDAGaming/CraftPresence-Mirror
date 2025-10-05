@@ -42,6 +42,7 @@ import com.jagrosh.discordipc.entities.ActivityType;
 import com.jagrosh.discordipc.entities.PartyPrivacy;
 import com.jagrosh.discordipc.entities.StatusDisplayType;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.client.input.MouseButtonEvent;
 
 import java.util.function.Consumer;
 
@@ -569,11 +570,11 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (visualizer.onClick(childFrame, mouseX, mouseY, mouseButton)) {
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
+        if (visualizer.onClick(childFrame, mouseButtonEvent, doubleClick)) {
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        return super.mouseClicked(mouseButtonEvent, doubleClick);
     }
 
     @Override

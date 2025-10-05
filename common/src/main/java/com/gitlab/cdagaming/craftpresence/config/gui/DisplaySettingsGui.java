@@ -36,6 +36,7 @@ import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicEditorGui;
 import com.gitlab.cdagaming.craftpresence.utils.gui.impl.DynamicSelectorGui;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import io.github.cdagaming.unicore.utils.StringUtils;
+import net.minecraft.client.input.MouseButtonEvent;
 
 public class DisplaySettingsGui extends ConfigurationGui<Display> {
     private final Display INSTANCE, DEFAULTS;
@@ -255,11 +256,11 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (visualizer.onClick(childFrame, mouseX, mouseY, mouseButton)) {
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
+        if (visualizer.onClick(childFrame, mouseButtonEvent, doubleClick)) {
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        return super.mouseClicked(mouseButtonEvent, doubleClick);
     }
 
     @Override
