@@ -1,3 +1,4 @@
+import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.hypherionmc.modpublisher.plugin.ModPublisherGradleExtension
@@ -168,6 +169,23 @@ subprojects {
     extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
         side(if (isJarMod) "client" else "combined")
         version(mcVersion)
+
+        val fabricData: FabricLikePatcher.() -> Unit = {
+            if (accessWidenerFile.exists()) {
+                accessWidener(accessWidenerFile)
+            }
+            loader("fabric_loader_version"()!!)
+            if (isJarMod) {
+                prodNamespace("official")
+                devMappings = null
+            }
+            customIntermediaries = true
+        }
+        if (isModern) {
+            fabric(fabricData)
+        } else {
+            legacyFabric(fabricData)
+        }
 
         mappings {
             val mcMappings = "mc_mappings"()!!

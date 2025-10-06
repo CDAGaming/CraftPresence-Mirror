@@ -1,4 +1,3 @@
-import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 
 /**
@@ -25,22 +24,7 @@ val mcVersionLabel: String by extra
 val baseVersionLabel: String by extra
 
 unimined.minecraft {
-    val fabricData: FabricLikePatcher.() -> Unit = {
-        if (accessWidenerFile.exists()) {
-            accessWidener(accessWidenerFile)
-        }
-        loader("fabric_loader_version"()!!)
-        if (isJarMod) {
-            prodNamespace("official")
-            devMappings = null
-        }
-        customIntermediaries = true
-    }
-    if (isModern) {
-        fabric(fabricData)
-    } else {
-        legacyFabric(fabricData)
-    }
+    // N/A
 }
 
 val common: Configuration by configurations.creating
