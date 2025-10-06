@@ -1,5 +1,3 @@
-import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
-
 /**
  * Retrieve a Project Property
  */
@@ -28,17 +26,7 @@ val baseVersionLabel: String by extra
 val forgeVersion = "forge_version"()!!
 
 unimined.minecraft {
-    if (!isJarMod) {
-        minecraftForge {
-            if (canUseATs) {
-                accessTransformer(aw2at(accessWidenerFile))
-            }
-            loader(forgeVersion)
-            customSearge = (mcMappingsType != "mojmap" && mcMappingsType != "parchment")
-        }
-    } else {
-        jarMod {}
-    }
+    // N/A
 }
 
 val common: Configuration by configurations.creating
@@ -48,9 +36,8 @@ configurations.compileClasspath.get().extendsFrom(common)
 configurations.runtimeClasspath.get().extendsFrom(common)
 
 dependencies {
-    if (isJarMod) {
-        "jarMod"("risugami:modloader:$forgeVersion")
-    }
+    "jarMod"("local:nsss:$forgeVersion")
+    "jarMod"("local:foxloader:1.3.3")
 
     common(project(path = ":common")) { isTransitive = false }
     common(project(path = ":common", configuration = "shade"))
@@ -91,26 +78,21 @@ tasks.shadowJar {
     dependsOn(project(":common").tasks.shadowJar)
     from(zipTree(project(":common").tasks.shadowJar.get().archiveFile))
     configurations = listOf(shadowCommon)
-    archiveClassifier.set("dev-shadow")
+    archiveClassifier.set(project.name)
 }
-
-tasks.named<RemapJarTask>("remapJar") {
-    dependsOn(tasks.shadowJar.get())
-    asJar {
-        inputFile.set(tasks.shadowJar.get().archiveFile)
-        archiveClassifier.set(project.name)
-    }
-}
+tasks.build.get().dependsOn(tasks.shadowJar.get())
 
 tasks.jar {
-    if (canUseATs) {
-        manifest {
-            attributes(
-                mapOf(
-                    "FMLAT" to "accesstransformer.cfg"
-                )
+    manifest {
+        attributes(
+            mapOf(
+                "ModDesc" to "Completely Customize the way others see you play in Discord!",
+                "ClientMod" to "mod_CraftPresence",
+                "ModName" to modName,
+                "ModVersion" to archiveVersion.get(),
+                "ModId" to modId
             )
-        }
+        )
     }
     archiveClassifier.set("dev")
 }

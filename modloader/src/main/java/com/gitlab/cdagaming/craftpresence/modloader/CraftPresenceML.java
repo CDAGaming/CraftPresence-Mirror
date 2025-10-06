@@ -24,11 +24,10 @@
 
 package com.gitlab.cdagaming.craftpresence.modloader;
 
+import com.fox2code.foxloader.launcher.FoxLauncher;
 import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
-import io.github.cdagaming.unicore.utils.FileUtils;
 import io.github.cdagaming.unicore.utils.OSUtils;
-import net.minecraft.src.ModLoader;
 
 /**
  * The Primary Application Class and Utilities
@@ -68,6 +67,6 @@ public class CraftPresenceML {
      * @return whether we are running on the Client-Side
      */
     private boolean isClient() {
-        return FileUtils.findClass("net.minecraft.client.Minecraft") != null;
+        return FoxLauncher.isClient();
     }
 }

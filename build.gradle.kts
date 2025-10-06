@@ -4,6 +4,7 @@ import com.hypherionmc.modpublisher.plugin.ModPublisherGradleExtension
 import xyz.wagyourtail.jvmdg.gradle.task.files.DowngradeFiles
 import xyz.wagyourtail.replace_str.ProcessClasses
 import xyz.wagyourtail.unimined.api.UniminedExtension
+import xyz.wagyourtail.unimined.api.minecraft.patch.fabric.FabricLikePatcher
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 import java.util.*
 
@@ -124,6 +125,9 @@ subprojects {
     }
 
     repositories {
+        flatDir {
+            dirs("$rootDir/libs")
+        }
         mavenLocal()
         mavenCentral()
         // ModLoader Mavens
@@ -167,108 +171,31 @@ subprojects {
 
     extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
         side(if (isJarMod) "client" else "combined")
-        version(mcVersion)
+        version("empty-$mcVersion")
 
-        mappings {
-            val mcMappings = "mc_mappings"()!!
-            when (mcMappingsType) {
-                "mcp" -> {
-                    if (!isJarMod) {
-                        searge()
-                    }
-                    mcp(if (isJarMod) "legacy" else "stable", mcMappings) {
-                        if (!isJarMod) {
-                            clearOutputs()
-                            outputs("mcp", true) { listOf("intermediary") }
-                        }
-                    }
-                }
-
-                "forgeMCP" -> {
-                    forgeBuiltinMCP("forge_version"()!!) {
-                        clearContains()
-                        clearOutputs()
-                        contains({ _, t ->
-                            !t.contains("MCP")
-                        }) {
-                            onlyExistingSrc()
-                            outputs("searge", false) { listOf("official") }
-                        }
-                        contains({ _, t ->
-                            t.contains("MCP")
-                        }) {
-                            outputs("mcp", true) { listOf("intermediary") }
-                            sourceNamespace("searge")
-                        }
-                    }
-                    officialMappingsFromJar {
-                        clearContains()
-                        clearOutputs()
-                        outputs("official", false) { listOf() }
-                    }
-                }
-
-                "retroMCP" -> {
-                    retroMCP(mcMappings)
-                }
-
-                "yarn" -> {
-                    yarn(mcMappings)
-                }
-
-                "mojmap" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                }
-
-                "parchment" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                    parchment(mcVersion, mcMappings)
-                }
-
-                else -> throw GradleException("Unknown or Unsupported Mappings version")
+        defaultRemapJar = false
+        val fabricData: FabricLikePatcher.() -> Unit = {
+            if (accessWidenerFile.exists()) {
+                accessWidener(accessWidenerFile)
             }
-
-            // Only use Intermediaries on Versions that support it
-            val usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
-            if (usingIntermediary) {
-                if (isModern) {
-                    intermediary()
-                } else {
-                    legacyIntermediary()
-                }
+            loader("fabric_loader_version"()!!)
+            if (isJarMod) {
+                prodNamespace("official")
+                devMappings = null
             }
-
-            // ability to add custom mappings
-            val target = if (!isModern) "mcp" else "mojmap"
-            stub.withMappings("searge", target) {
-                c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-                c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-                // Fix: Fixed an inconsistent mapping in 1.16 and 1.16.1 between MCP and Mojmap
-                if (!isLegacy && (protocol == 735 || protocol == 736)) {
-                    c(
-                        "dng",
-                        listOf(
-                            "net/minecraft/client/gui/widget/Widget",
-                            "net/minecraft/client/gui/components/AbstractWidget"
-                        )
-                    ) {
-                        m("e", "()I", "func_238483_d_", "getHeightRealms")
-                    }
-                }
+            customIntermediaries = true
+        }
+        if (isModern) {
+            fabric(fabricData)
+        } else if (!path.equals(":modloader")) {
+            merged {
+                legacyFabric(fabricData)
+                jarMod {}
             }
-
-            if (isMCPJar) {
-                if (protocol <= 2) { // MC a1.1.2_01 and below
-                    devNamespace("searge")
-                } else {
-                    devFallbackNamespace("searge")
-                }
-            } else if (usingIntermediary) {
-                devFallbackNamespace("intermediary")
+        } else {
+            jarMod {}
+            runs.config("client") {
+                mainClass = "com.fox2code.foxloader.launcher.ClientMain"
             }
 
             if (shouldDowngrade) {
@@ -283,6 +210,11 @@ subprojects {
                     classpath = downgradeClient.get().outputCollection + files(jvmdg.getDowngradedApi(apiVersion))
                 }
             }
+        }
+
+        mappings {
+            devNamespace("official")
+            devFallbackNamespace("official")
         }
 
         minecraftRemapper.config {
@@ -305,7 +237,7 @@ subprojects {
         "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.9.6")
 
         // Attach UniLib dependency
-        "modImplementation"(
+        "implementation"(
             "com.gitlab.cdagaming.unilib:$libPrefix-${
                 libName.replaceFirstChar {
                     if (it.isLowerCase()) it.titlecase(
@@ -435,7 +367,7 @@ subprojects {
                 jvmdg.debugSkipStubs.add(JavaVersion.VERSION_1_8)
             }
 
-            val resultJar = tasks.getByName<RemapJarTask>("remapJar").asJar
+            val resultJar = tasks.getByName<ShadowJar>("shadowJar")
             val resultClassifier = resultJar.archiveClassifier.get()
             resultJar.archiveClassifier.set("$resultClassifier-native")
 

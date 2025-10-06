@@ -37,7 +37,10 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.src.*;
+import net.minecraft.src.client.GameSettings;
+import net.minecraft.src.client.gui.GuiConnecting;
+import net.minecraft.src.client.packets.NetClientHandler;
+import net.minecraft.src.client.packets.NetworkManager;
 
 import java.net.Socket;
 import java.util.List;
@@ -65,6 +68,18 @@ public class ServerUtils implements ExtendedModule {
      */
     private static final List<String> invalidNames = StringUtils.newArrayList(
             "selectServer.defaultName"
+    );
+    /**
+     * The List of available Game Modes
+     */
+    private static final List<String> gameModes = StringUtils.newArrayList(
+            "survival", "creative"
+    );
+    /**
+     * The List of available World Types
+     */
+    private static final List<String> worldTypes = StringUtils.newArrayList(
+            "normal", "flat", "legacy"
     );
     /**
      * The Current Player Map, if available
@@ -578,8 +593,7 @@ public class ServerUtils implements ExtendedModule {
                     CraftPresence.instance,
                     new GuiConnecting(
                             CraftPresence.instance,
-                            serverData.serverIP,
-                            serverData.serverPort
+                            serverData.serverIP + ":" + serverData.serverPort
                     )
             );
         } catch (Throwable ex) {
@@ -599,7 +613,17 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.health.max", () -> 20.0D, true);
 
         // Player Game Mode Arguments
-        syncArgument("player.mode", () -> "Survival", true);
+        syncArgument("player.mode", () -> {
+            if (ModUtils.RAW_TRANSLATOR != null) {
+                int gameMode = CraftPresence.world.getWorldInfo().getGameType();
+                if (gameMode < 0 || gameMode >= gameModes.size()) {
+                    gameMode = 0;
+                }
+                return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode." + gameModes.get(gameMode));
+            } else {
+                return Integer.toString(CraftPresence.world.getWorldInfo().getGameType());
+            }
+        }, true);
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
@@ -628,7 +652,17 @@ public class ServerUtils implements ExtendedModule {
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         }, true);
-        syncArgument("world.type", () -> "Default", true);
+        syncArgument("world.type", () -> {
+            if (ModUtils.RAW_TRANSLATOR != null) {
+                int worldType = CraftPresence.world.getWorldInfo().getGenType();
+                if (worldType < 0 || worldType >= worldTypes.size()) {
+                    worldType = 0;
+                }
+                return ModUtils.RAW_TRANSLATOR.translate("selectWorld.mapType." + worldTypes.get(worldType));
+            } else {
+                return Integer.toString(CraftPresence.world.getWorldInfo().getGenType());
+            }
+        }, true);
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
