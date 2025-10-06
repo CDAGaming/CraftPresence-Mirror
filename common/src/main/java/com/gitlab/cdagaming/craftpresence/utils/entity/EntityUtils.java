@@ -30,8 +30,8 @@ import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityList;
+import net.minecraft.core.entity.Entity;
+import net.minecraft.core.entity.EntityDispatcher;
 
 import java.util.List;
 import java.util.Map;
@@ -127,8 +127,8 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
-        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entityHit != null ? CraftPresence.instance.objectMouseOver.entityHit : null;
-        final Entity NEW_CURRENT_RIDING = CraftPresence.player.ridingEntity;
+        final Entity NEW_CURRENT_TARGET = CraftPresence.instance.objectMouseOver != null && CraftPresence.instance.objectMouseOver.entity != null ? CraftPresence.instance.objectMouseOver.entity : null;
+        final Entity NEW_CURRENT_RIDING = CraftPresence.player.vehicle;
 
         final boolean hasTargetChanged = !Objects.equals(NEW_CURRENT_TARGET, CURRENT_TARGET);
         final boolean hasRidingChanged = !Objects.equals(NEW_CURRENT_RIDING, CURRENT_RIDING);
@@ -257,7 +257,7 @@ public class EntityUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        final Map mappings = (Map) StringUtils.getField(EntityList.class, null, "classToStringMapping", "field_1610_b", "b");
+        final Map mappings = (Map) StringUtils.getField(EntityDispatcher.class, null, "classToStringMapping", "field_1610_b", "b");
         if (!mappings.values().isEmpty()) {
             for (Object entityLocationObj : mappings.values()) {
                 final String entityLocation = (String) entityLocationObj;

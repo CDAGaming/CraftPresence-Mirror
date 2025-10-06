@@ -37,7 +37,10 @@ import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MathUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
-import net.minecraft.src.*;
+import net.minecraft.client.gui.GuiConnecting;
+import net.minecraft.client.net.handler.NetClientHandler;
+import net.minecraft.client.option.enums.Difficulty;
+import net.minecraft.core.net.NetworkManager;
 
 import java.net.Socket;
 import java.util.List;
@@ -590,16 +593,21 @@ public class ServerUtils implements ExtendedModule {
     @Override
     public void initPresence() {
         // Player Position Arguments
-        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.posX, 3), true);
-        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.posY, 3), true);
-        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.posZ, 3), true);
+        syncArgument("player.position.x", () -> MathUtils.roundDouble(CraftPresence.player.x, 3), true);
+        syncArgument("player.position.y", () -> MathUtils.roundDouble(CraftPresence.player.y, 3), true);
+        syncArgument("player.position.z", () -> MathUtils.roundDouble(CraftPresence.player.z, 3), true);
 
         // Player Health Arguments
         syncArgument("player.health.current", () -> MathUtils.roundDouble(CraftPresence.player.health, 0), true);
         syncArgument("player.health.max", () -> 20.0D, true);
 
         // Player Game Mode Arguments
-        syncArgument("player.mode", () -> "Survival", true);
+        syncArgument("player.mode", () -> {
+            if (ModUtils.RAW_TRANSLATOR != null) {
+                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.player.getGamemode().languageKey + ".name");
+            }
+            return CraftPresence.player.getGamemode().languageKey;
+        }, true);
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
@@ -607,12 +615,17 @@ public class ServerUtils implements ExtendedModule {
                 if (false) {
                     return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
                 } else {
-                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "K");
+                    final Difficulty[] DIFFICULTIES = Difficulty.values();
                     int difficulty = CraftPresence.world.difficultySetting;
                     if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
                         difficulty = 0;
                     }
-                    return ModUtils.RAW_TRANSLATOR.translate(DIFFICULTIES[difficulty]);
+                    for (Difficulty entry : DIFFICULTIES) {
+                        if (entry.id() == difficulty) {
+                            return ModUtils.RAW_TRANSLATOR.translate("options.difficulty." + entry.name().toLowerCase());
+                        }
+                    }
+                    return ModUtils.RAW_TRANSLATOR.translate("options.difficulty." + DIFFICULTIES[difficulty].name().toLowerCase());
                 }
             }
             return Integer.toString(CraftPresence.world.difficultySetting);
@@ -623,12 +636,17 @@ public class ServerUtils implements ExtendedModule {
             return StringUtils.getOrDefault(newWeatherName);
         }, true);
         syncArgument("world.name", () -> {
-            final String primaryWorldName = CraftPresence.world.getWorldInfo().getWorldName();
+            final String primaryWorldName = CraftPresence.world.getLevelData().getWorldName();
             final String secondaryWorldName = Constants.TRANSLATOR.translate("craftpresence.defaults.world_name");
             final String newWorldName = StringUtils.getOrDefault(primaryWorldName, secondaryWorldName);
             return StringUtils.getOrDefault(newWorldName);
         }, true);
-        syncArgument("world.type", () -> "Default", true);
+        syncArgument("world.type", () -> {
+            if (ModUtils.RAW_TRANSLATOR != null) {
+                return ModUtils.RAW_TRANSLATOR.translate(CraftPresence.world.getWorldType().getLanguageKey() + ".name");
+            }
+            return CraftPresence.world.getWorldType().getLanguageKey();
+        }, true);
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
