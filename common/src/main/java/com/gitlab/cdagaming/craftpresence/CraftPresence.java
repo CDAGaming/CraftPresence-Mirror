@@ -40,13 +40,13 @@ import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.core.utils.ModUpdaterUtils;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
+import com.mojang.minecraft.Minecraft;
+import com.mojang.minecraft.entity.EntityPlayer;
+import com.mojang.minecraft.level.World;
+import com.mojang.minecraft.util.Session;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.cdagaming.unicore.utils.OSUtils;
 import io.github.cdagaming.unicore.utils.ScheduleUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.Session;
-import net.minecraft.src.World;
 
 /**
  * The Primary Application Class and Utilities

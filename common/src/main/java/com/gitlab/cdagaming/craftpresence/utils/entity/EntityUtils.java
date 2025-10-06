@@ -29,9 +29,9 @@ import com.gitlab.cdagaming.craftpresence.core.config.Config;
 import com.gitlab.cdagaming.craftpresence.core.config.element.ModuleData;
 import com.gitlab.cdagaming.craftpresence.core.impl.ExtendedModule;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
+import com.mojang.minecraft.entity.Entity;
+import com.mojang.minecraft.entity.EntityList;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityList;
 
 import java.util.List;
 import java.util.Map;

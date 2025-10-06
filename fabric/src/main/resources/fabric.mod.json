@@ -16,8 +16,8 @@
   "icon": "logo.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
-      "com.gitlab.cdagaming.craftpresence.fabric.CraftPresenceFabric"
+    "preLaunch": [
+      "com.gitlab.cdagaming.craftpresence.fabric.NSSSBootstrap"
     ]
   },
   "custom": {

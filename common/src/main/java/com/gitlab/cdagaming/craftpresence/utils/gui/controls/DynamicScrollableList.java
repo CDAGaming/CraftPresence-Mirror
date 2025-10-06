@@ -34,11 +34,11 @@ import com.gitlab.cdagaming.unilib.utils.ResourceUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ScrollableListControl;
 import com.gitlab.cdagaming.unilib.utils.gui.integrations.ExtendedScreen;
+import com.mojang.minecraft.Minecraft;
+import com.mojang.minecraft.entity.item.ItemStack;
 import io.github.cdagaming.unicore.impl.Pair;
 import io.github.cdagaming.unicore.utils.MappingUtils;
 import io.github.cdagaming.unicore.utils.StringUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.ItemStack;
 import unilib.external.io.github.classgraph.ClassInfo;
 
 import javax.annotation.Nonnull;
