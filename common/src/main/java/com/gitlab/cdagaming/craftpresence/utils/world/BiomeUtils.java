@@ -33,7 +33,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 
 import java.util.List;
@@ -129,7 +129,7 @@ public class BiomeUtils implements ExtendedModule {
     @Override
     public void updateData() {
         final Biome newBiome = CraftPresence.world.getBiome(CraftPresence.player.blockPosition()).value();
-        final ResourceLocation newIdentifier = CraftPresence.world.registryAccess().lookupOrThrow(Registries.BIOME).getKey(newBiome);
+        final Identifier newIdentifier = CraftPresence.world.registryAccess().lookupOrThrow(Registries.BIOME).getKey(newBiome);
         final String newBiomeName = newIdentifier != null ? newIdentifier.toString() : "Plains";
 
         final String newBiomeIdentifier = StringUtils.getOrDefault(newBiomeName, MappingUtils.getClassName(newBiome));
@@ -198,8 +198,8 @@ public class BiomeUtils implements ExtendedModule {
      *
      * @return The detected Biome Types found
      */
-    private List<ResourceLocation> getBiomeTypes() {
-        List<ResourceLocation> biomeTypes = StringUtils.newArrayList();
+    private List<Identifier> getBiomeTypes() {
+        List<Identifier> biomeTypes = StringUtils.newArrayList();
         Optional<Registry<Biome>> biomeRegistry = CraftPresence.world.registryAccess().lookup(Registries.BIOME);
 
         if (biomeRegistry.isPresent()) {
@@ -208,7 +208,7 @@ public class BiomeUtils implements ExtendedModule {
             if (!defaultBiomeTypes.isEmpty()) {
                 for (Holder.Reference<Biome> type : defaultBiomeTypes) {
                     if (type != null) {
-                        biomeTypes.add(type.key().location());
+                        biomeTypes.add(type.key().identifier());
                     }
                 }
             }
@@ -219,7 +219,7 @@ public class BiomeUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        for (ResourceLocation TYPE : getBiomeTypes()) {
+        for (Identifier TYPE : getBiomeTypes()) {
             if (TYPE != null) {
                 String name = StringUtils.formatIdentifier(TYPE.toString(), true, !CraftPresence.CONFIG.advancedSettings.formatWords);
                 if (!DEFAULT_NAMES.contains(name)) {

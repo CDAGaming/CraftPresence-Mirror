@@ -33,7 +33,7 @@ import io.github.cdagaming.unicore.utils.StringUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 
@@ -130,7 +130,7 @@ public class DimensionUtils implements ExtendedModule {
     @Override
     public void updateData() {
         final Level newProvider = CraftPresence.world;
-        final ResourceLocation newDimensionType = newProvider.dimension().location();
+        final Identifier newDimensionType = newProvider.dimension().identifier();
         final String newDimensionName = newDimensionType.toString();
 
         final String newDimensionIdentifier = StringUtils.getOrDefault(newDimensionName, MappingUtils.getClassName(newDimensionType));
@@ -199,8 +199,8 @@ public class DimensionUtils implements ExtendedModule {
      *
      * @return The detected Dimension Types found
      */
-    private List<ResourceLocation> getDimensionTypes() {
-        List<ResourceLocation> dimensionTypes = StringUtils.newArrayList();
+    private List<Identifier> getDimensionTypes() {
+        List<Identifier> dimensionTypes = StringUtils.newArrayList();
         Optional<Registry<DimensionType>> dimensionRegistry = CraftPresence.world.registryAccess().lookup(Registries.DIMENSION_TYPE);
 
         if (dimensionRegistry.isPresent()) {
@@ -209,7 +209,7 @@ public class DimensionUtils implements ExtendedModule {
             if (!defaultDimensionTypes.isEmpty()) {
                 for (Holder.Reference<DimensionType> type : defaultDimensionTypes) {
                     if (type != null) {
-                        dimensionTypes.add(type.key().location());
+                        dimensionTypes.add(type.key().identifier());
                     }
                 }
             }
@@ -220,7 +220,7 @@ public class DimensionUtils implements ExtendedModule {
 
     @Override
     public void getInternalData() {
-        for (ResourceLocation TYPE : getDimensionTypes()) {
+        for (Identifier TYPE : getDimensionTypes()) {
             if (TYPE != null) {
                 String dimensionName = StringUtils.getOrDefault(TYPE.toString(), MappingUtils.getClassName(TYPE));
                 String name = StringUtils.formatIdentifier(dimensionName, true, !CraftPresence.CONFIG.advancedSettings.formatWords);
