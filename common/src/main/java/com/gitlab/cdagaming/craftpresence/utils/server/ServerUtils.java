@@ -51,6 +51,7 @@ import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.realms.RealmsScreen;
+import net.minecraft.server.network.EventLoopGroupHolder;
 
 import java.net.UnknownHostException;
 import java.util.List;
@@ -616,7 +617,7 @@ public class ServerUtils implements ExtendedModule {
         }
         PING_EXECUTOR.submit(() -> {
             try {
-                pinger.pingServer(serverData, saverEvent, callbackEvent);
+                pinger.pingServer(serverData, saverEvent, callbackEvent, EventLoopGroupHolder.remote(CraftPresence.instance.options.useNativeTransport()));
             } catch (UnknownHostException unknownHostException) {
                 serverData.setState(ServerData.State.UNREACHABLE);
                 serverData.motd = Component.literal("§4" + ModUtils.RAW_TRANSLATOR.translate("multiplayer.status.cannot_resolve"));
