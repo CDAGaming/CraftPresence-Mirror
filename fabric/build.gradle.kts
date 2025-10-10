@@ -53,8 +53,8 @@ dependencies {
     // Fabric Integrations (1.14+)
     if (isModern) {
         // Required for loading translation data
-        modImplementation(fabricApi.fabricModule("fabric-resource-loader-v0", "fabric_api_version"()!!))
-        "include"(fabricApi.fabricModule("fabric-resource-loader-v0", "fabric_api_version"()!!))
+        modImplementation(fabricApi.fabricModule("fabric-resource-loader-v1", "fabric_api_version"()!!))
+        "include"(fabricApi.fabricModule("fabric-resource-loader-v1", "fabric_api_version"()!!))
 
         // Mod Menu API Implementation
         "modImplementation"("${"modmenu_group"()}:modmenu:${"modmenu_version"()}")
