@@ -9,11 +9,11 @@ import java.util.*
 
 plugins {
     java
-    id("xyz.wagyourtail.unimined") version "1.3.14+neofix" apply false
+    id("xyz.wagyourtail.unimined") version "1.3.14+neofix.1" apply false
     id("xyz.wagyourtail.jvmdowngrader") version "1.2.2"
     id("com.diffplug.gradle.spotless") version "8.0.0" apply false
     id("com.gradleup.shadow") version "9.2.2" apply false
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.8" apply false
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.8+snapshot.3" apply false
 }
 
 /**
@@ -170,119 +170,8 @@ subprojects {
         version(mcVersion)
 
         mappings {
-            val mcMappings = "mc_mappings"()!!
-            when (mcMappingsType) {
-                "mcp" -> {
-                    if (!isJarMod) {
-                        searge()
-                    }
-                    mcp(if (isJarMod) "legacy" else "stable", mcMappings) {
-                        if (!isJarMod) {
-                            clearOutputs()
-                            outputs("mcp", true) { listOf("intermediary") }
-                        }
-                    }
-                }
-
-                "forgeMCP" -> {
-                    forgeBuiltinMCP("forge_version"()!!) {
-                        clearContains()
-                        clearOutputs()
-                        contains({ _, t ->
-                            !t.contains("MCP")
-                        }) {
-                            onlyExistingSrc()
-                            outputs("searge", false) { listOf("official") }
-                        }
-                        contains({ _, t ->
-                            t.contains("MCP")
-                        }) {
-                            outputs("mcp", true) { listOf("intermediary") }
-                            sourceNamespace("searge")
-                        }
-                    }
-                    officialMappingsFromJar {
-                        clearContains()
-                        clearOutputs()
-                        outputs("official", false) { listOf() }
-                    }
-                }
-
-                "retroMCP" -> {
-                    retroMCP(mcMappings)
-                }
-
-                "yarn" -> {
-                    yarn(mcMappings)
-                }
-
-                "mojmap" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                }
-
-                "parchment" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                    parchment(mcVersion, mcMappings)
-                }
-
-                else -> throw GradleException("Unknown or Unsupported Mappings version")
-            }
-
-            // Only use Intermediaries on Versions that support it
-            val usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
-            if (usingIntermediary) {
-                if (isModern) {
-                    intermediary()
-                } else {
-                    legacyIntermediary()
-                }
-            }
-
-            // ability to add custom mappings
-            val target = if (!isModern) "mcp" else "mojmap"
-            stub.withMappings("searge", target) {
-                c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-                c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-                // Fix: Fixed an inconsistent mapping in 1.16 and 1.16.1 between MCP and Mojmap
-                if (!isLegacy && (protocol == 735 || protocol == 736)) {
-                    c(
-                        "dng",
-                        listOf(
-                            "net/minecraft/client/gui/widget/Widget",
-                            "net/minecraft/client/gui/components/AbstractWidget"
-                        )
-                    ) {
-                        m("e", "()I", "func_238483_d_", "getHeightRealms")
-                    }
-                }
-            }
-
-            if (isMCPJar) {
-                if (protocol <= 2) { // MC a1.1.2_01 and below
-                    devNamespace("searge")
-                } else {
-                    devFallbackNamespace("searge")
-                }
-            } else if (usingIntermediary) {
-                devFallbackNamespace("official")
-            }
-
-            if (shouldDowngrade) {
-                val apiVersion = if (buildVersion.isJava7) JavaVersion.VERSION_1_8 else buildVersion
-                val downgradeClient = tasks.register("downgradeClient", DowngradeFiles::class.java) {
-                    inputCollection = sourceSet.output.classesDirs + sourceSet.runtimeClasspath
-                    classpath = project.files()
-                    outputCollection.files
-                }
-
-                runs.config("client") {
-                    classpath = downgradeClient.get().outputCollection + files(jvmdg.getDowngradedApi(apiVersion))
-                }
-            }
+            devNamespace("official")
+            devFallbackNamespace("official")
         }
 
         minecraftRemapper.config {
@@ -305,7 +194,7 @@ subprojects {
         "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.9.6")
 
         // Attach UniLib dependency
-        "modImplementation"(
+        "implementation"(
             "com.gitlab.cdagaming.unilib:$libPrefix-${
                 libName.replaceFirstChar {
                     if (it.isLowerCase()) it.titlecase(
