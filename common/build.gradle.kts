@@ -30,7 +30,7 @@ unimined.minecraft {
                 accessWidener(accessWidenerFile)
             }
             loader("fabric_loader_version"()!!)
-            customIntermediaries = true
+            customIntermediaries = (minecraftData.mcVersionCompare(version, "1.6.4") < 0)
         }
         if (isModern) {
             fabric(fabricData)

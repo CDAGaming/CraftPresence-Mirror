@@ -9,11 +9,11 @@ import java.util.*
 
 plugins {
     java
-    id("xyz.wagyourtail.unimined") version "1.3.14" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "1.2.2"
-    id("com.diffplug.gradle.spotless") version "8.0.0" apply false
-    id("com.gradleup.shadow") version "9.2.2" apply false
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.8" apply false
+    id("dev.firstdark.unimined") version "1.0.1+1.4.2-SNAPSHOT" apply false
+    id("xyz.wagyourtail.jvmdowngrader") version "1.3.5-SNAPSHOT"
+    id("com.diffplug.gradle.spotless") version "8.1.0" apply false
+    id("com.gradleup.shadow") version "9.3.0" apply false
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.8+snapshot.3" apply false
 }
 
 /**
@@ -41,6 +41,7 @@ val extProtocol = "mc_protocol"()!!.toInt()
 val extIsLegacy = "isLegacy"()!!.toBoolean()
 val extIsJarMod = "isJarMod"()!!.toBoolean()
 val extIsModern = !extIsLegacy && extProtocol >= 498
+val extIsOfficial = "mc_mappings_type"() == "official"
 val extIsMCPJar = extIsJarMod && "mc_mappings_type"() == "mcp"
 
 // Only apply ATs to forge on non-legacy builds, or on Legacy Protocols above 1.5
@@ -60,7 +61,7 @@ subprojects {
     val isLoaderSource = path != ":common"
 
     apply(plugin = "java")
-    apply(plugin = "xyz.wagyourtail.unimined")
+    apply(plugin = "dev.firstdark.unimined")
     apply(plugin = "xyz.wagyourtail.jvmdowngrader")
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "com.gradleup.shadow")
@@ -80,6 +81,7 @@ subprojects {
     val isLegacy by extra(extIsLegacy)
     val isJarMod by extra(extIsJarMod)
     val isModern by extra(extIsModern)
+    val isOfficial by extra(extIsOfficial)
     val isMCPJar by extra(extIsMCPJar)
     val accessWidenerFile by extra(extAWFile)
     val canUseATs by extra(extCanUseATs)
@@ -170,105 +172,68 @@ subprojects {
         version(mcVersion)
 
         mappings {
-            val mcMappings = "mc_mappings"()!!
-            when (mcMappingsType) {
-                "mcp" -> {
-                    if (!isJarMod) {
-                        searge()
-                    }
-                    mcp(if (isJarMod) "legacy" else "stable", mcMappings) {
+            if (isOfficial) {
+                devNamespace("official")
+                devFallbackNamespace("official")
+            } else {
+                val mcMappings = "mc_mappings"()!!
+                when (mcMappingsType) {
+                    "mcp" -> {
                         if (!isJarMod) {
-                            clearOutputs()
-                            outputs("mcp", true) { listOf("intermediary") }
+                            searge()
+                        }
+                        mcp((if (isJarMod) "legacy" else "stable"), mcMappings)
+                    }
+
+                    "forgeMCP" -> {
+                        forgeBuiltinMCP("forge_version"()!!)
+                    }
+
+                    "retroMCP" -> {
+                        retroMCP(mcMappings)
+                    }
+
+                    "mojmap" -> {
+                        mojmap()
+                    }
+
+                    else -> throw GradleException("Unknown or Unsupported Mappings version")
+                }
+
+                // Only use Intermediaries on Versions that support it
+                val usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
+                if (usingIntermediary) {
+                    if (isModern) {
+                        intermediary()
+                    } else {
+                        legacyIntermediary()
+                    }
+                }
+
+                // ability to add custom mappings
+                stubs("official", mcMappingsType!!) {
+                    c("ModLoader", "net/minecraft/src/ModLoader")
+                    c("BaseMod", "net/minecraft/src/BaseMod")
+                    // Fix: Fixed an inconsistent mapping in 1.16 and 1.16.1 between MCP and Mojmap
+                    if (!isLegacy && (protocol == 735 || protocol == 736)) {
+                        c(
+                            "dng",
+                                "net/minecraft/client/gui/components/AbstractWidget"
+                        ) {
+                            m("e;()I", "func_238483_d_", "getHeightRealms")
                         }
                     }
                 }
 
-                "forgeMCP" -> {
-                    forgeBuiltinMCP("forge_version"()!!) {
-                        clearContains()
-                        clearOutputs()
-                        contains({ _, t ->
-                            !t.contains("MCP")
-                        }) {
-                            onlyExistingSrc()
-                            outputs("searge", false) { listOf("official") }
-                        }
-                        contains({ _, t ->
-                            t.contains("MCP")
-                        }) {
-                            outputs("mcp", true) { listOf("intermediary") }
-                            sourceNamespace("searge")
-                        }
+                if (isMCPJar) {
+                    if (protocol <= 2) { // MC a1.1.2_01 and below
+                        devNamespace("searge")
+                    } else {
+                        devFallbackNamespace("searge")
                     }
-                    officialMappingsFromJar {
-                        clearContains()
-                        clearOutputs()
-                        outputs("official", false) { listOf() }
-                    }
+                } else if (usingIntermediary) {
+                    devFallbackNamespace("intermediary")
                 }
-
-                "retroMCP" -> {
-                    retroMCP(mcMappings)
-                }
-
-                "yarn" -> {
-                    yarn(mcMappings)
-                }
-
-                "mojmap" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                }
-
-                "parchment" -> {
-                    mojmap {
-                        skipIfNotIn("intermediary")
-                    }
-                    parchment(mcVersion, mcMappings)
-                }
-
-                else -> throw GradleException("Unknown or Unsupported Mappings version")
-            }
-
-            // Only use Intermediaries on Versions that support it
-            val usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
-            if (usingIntermediary) {
-                if (isModern) {
-                    intermediary()
-                } else {
-                    legacyIntermediary()
-                }
-            }
-
-            // ability to add custom mappings
-            val target = if (!isModern) "mcp" else "mojmap"
-            stub.withMappings("searge", target) {
-                c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/src/ModLoader")
-                c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/src/BaseMod")
-                // Fix: Fixed an inconsistent mapping in 1.16 and 1.16.1 between MCP and Mojmap
-                if (!isLegacy && (protocol == 735 || protocol == 736)) {
-                    c(
-                        "dng",
-                        listOf(
-                            "net/minecraft/client/gui/widget/Widget",
-                            "net/minecraft/client/gui/components/AbstractWidget"
-                        )
-                    ) {
-                        m("e", "()I", "func_238483_d_", "getHeightRealms")
-                    }
-                }
-            }
-
-            if (isMCPJar) {
-                if (protocol <= 2) { // MC a1.1.2_01 and below
-                    devNamespace("searge")
-                } else {
-                    devFallbackNamespace("searge")
-                }
-            } else if (usingIntermediary) {
-                devFallbackNamespace("intermediary")
             }
 
             if (shouldDowngrade) {
@@ -298,14 +263,15 @@ subprojects {
     val libName = if (!isLoaderSource) "fabric" else name
     val libVersion = "unilib_build_version"()!!
     val libFile = "$libName${if (canDowngrade) "-native" else ""}"
+    val libGrab = if (isOfficial) "implementation" else "modImplementation"
 
     dependencies {
         // Annotations
         "compileOnly"("com.google.code.findbugs:jsr305:3.0.2")
-        "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.9.6")
+        "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.9.8")
 
         // Attach UniLib dependency
-        "modImplementation"(
+        libGrab(
             "com.gitlab.cdagaming.unilib:$libPrefix-${
                 libName.replaceFirstChar {
                     if (it.isLowerCase()) it.titlecase(

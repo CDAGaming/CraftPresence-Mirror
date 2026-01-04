@@ -1621,13 +1621,14 @@ public class DiscordUtils {
 
         final RichPresence.Builder newRPCData = new RichPresence.Builder()
                 .setActivityType(activityType)
+                .setStatusDisplayType(StatusDisplayType.Name)
                 .setState(state = sanitizePlaceholders(state, 128))
                 .setDetails(details = sanitizePlaceholders(details, 128))
                 .setStartTimestamp(startTimestamp)
                 .setEndTimestamp(endTimestamp)
-                .setLargeImage(largeImageKey = sanitizePlaceholders(largeImageKey, 256),
+                .setLargeImageWithTooltip(largeImageKey = sanitizePlaceholders(largeImageKey, 256),
                         largeImageText = sanitizePlaceholders(largeImageText, 128))
-                .setSmallImage(smallImageKey = sanitizePlaceholders(smallImageKey, 256),
+                .setSmallImageWithTooltip(smallImageKey = sanitizePlaceholders(smallImageKey, 256),
                         smallImageText = sanitizePlaceholders(smallImageText, 128))
                 .setButtons(buttons)
                 .setInstance(isInstance);
