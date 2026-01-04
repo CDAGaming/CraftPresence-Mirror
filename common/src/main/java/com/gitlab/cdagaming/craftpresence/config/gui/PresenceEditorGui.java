@@ -40,6 +40,7 @@ import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.TextWidget;
 import com.jagrosh.discordipc.entities.ActivityType;
 import com.jagrosh.discordipc.entities.PartyPrivacy;
+import com.jagrosh.discordipc.entities.StatusDisplayType;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.function.Consumer;
@@ -49,11 +50,17 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
     private final boolean isDefaultModule;
     private final Consumer<PresenceData> onChangedCallback;
     private final PresenceVisualizer visualizer;
-    private TextWidget detailsFormat, gameStateFormat, largeImageFormat, smallImageFormat,
-            smallImageKeyFormat, largeImageKeyFormat, startTimeFormat, endTimeFormat;
+    private TextWidget detailsTextFormat, detailsUrlFormat,
+            gameStateTextFormat, gameStateUrlFormat,
+            appNameFormat,
+            largeImageTextFormat, smallImageTextFormat,
+            largeImageUrlFormat, smallImageUrlFormat,
+            smallImageKeyFormat, largeImageKeyFormat,
+            startTimeFormat, endTimeFormat;
     private CheckBoxControl useAsMainCheckbox, enabledCheckbox;
-    private ExtendedButtonControl activityTypeButton, partyPrivacyButton;
+    private ExtendedButtonControl activityTypeButton, statusDisplayTypeButton, partyPrivacyButton;
     private int currentActivityType = ActivityType.Playing.ordinal();
+    private int currentStatusDisplayType = StatusDisplayType.Name.ordinal();
     private int currentPartyPrivacy = PartyPrivacy.Public.ordinal();
 
     PresenceEditorGui(PresenceData moduleData, PresenceData defaultData,
@@ -88,6 +95,8 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
         final int calc1Width = childFrame.getScreenWidth() - calc1;
 
         final String generalFieldsTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.general");
+        final String detailsTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.details");
+        final String gameStateTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.game_state");
         final String largeImageTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.image.large");
         final String smallImageTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.image.small");
         final String extraFieldsTitle = Constants.TRANSLATOR.translate("gui.config.message.editor.presence.extra");
@@ -100,6 +109,24 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                 calc1Width,
                 generalFieldsTitle
         ));
+
+        appNameFormat = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(controlIndex++),
+                        180, 20,
+                        () -> getInstanceData().setAppName(appNameFormat.getControlMessage()),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.application_name"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
+                                )
+                        )
+                )
+        );
+
+        appNameFormat.setControlMessage(getInstanceData().appName);
 
         if (!isDefaultModule) {
             enabledCheckbox = childFrame.addControl(
@@ -135,13 +162,20 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
             controlIndex++;
         }
 
-        detailsFormat = childFrame.addControl(
+        // Details Section
+        childFrame.addWidget(new ScrollableTextWidget(
+                calc1, getButtonY(controlIndex++),
+                calc1Width,
+                detailsTitle
+        ));
+
+        detailsTextFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(controlIndex++),
                         180, 20,
-                        () -> getInstanceData().setDetails(detailsFormat.getControlMessage()),
-                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.details"),
+                        () -> getInstanceData().setDetails(detailsTextFormat.getControlMessage()),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.message"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -150,13 +184,13 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                         )
                 )
         );
-        gameStateFormat = childFrame.addControl(
+        detailsUrlFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(controlIndex++),
                         180, 20,
-                        () -> getInstanceData().setGameState(gameStateFormat.getControlMessage()),
-                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.game_state"),
+                        () -> getInstanceData().setDetailsUrl(detailsUrlFormat.getControlMessage()),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.url"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -166,8 +200,49 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                 )
         );
 
-        detailsFormat.setControlMessage(getInstanceData().details);
-        gameStateFormat.setControlMessage(getInstanceData().gameState);
+        detailsTextFormat.setControlMessage(getInstanceData().details);
+        detailsUrlFormat.setControlMessage(getInstanceData().detailsUrl);
+
+        // Game State Section
+        childFrame.addWidget(new ScrollableTextWidget(
+                calc1, getButtonY(controlIndex++),
+                calc1Width,
+                gameStateTitle
+        ));
+
+        gameStateTextFormat = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(controlIndex++),
+                        180, 20,
+                        () -> getInstanceData().setGameState(gameStateTextFormat.getControlMessage()),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.message"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
+                                )
+                        )
+                )
+        );
+        gameStateUrlFormat = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(controlIndex++),
+                        180, 20,
+                        () -> getInstanceData().setGameStateUrl(gameStateUrlFormat.getControlMessage()),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.url"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
+                                )
+                        )
+                )
+        );
+
+        gameStateTextFormat.setControlMessage(getInstanceData().gameState);
+        gameStateUrlFormat.setControlMessage(getInstanceData().gameStateUrl);
 
         // Large Image Section
         childFrame.addWidget(new ScrollableTextWidget(
@@ -176,13 +251,28 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                 largeImageTitle
         ));
 
-        largeImageFormat = childFrame.addControl(
+        largeImageTextFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(controlIndex++),
                         180, 20,
-                        () -> getInstanceData().largeImageText = largeImageFormat.getControlMessage(),
+                        () -> getInstanceData().largeImageText = largeImageTextFormat.getControlMessage(),
                         Constants.TRANSLATOR.translate("gui.config.message.editor.message"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
+                                )
+                        )
+                )
+        );
+        largeImageUrlFormat = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(controlIndex++),
+                        180, 20,
+                        () -> getInstanceData().largeImageUrl = largeImageUrlFormat.getControlMessage(),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.url"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -210,7 +300,8 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                 (attributeName, currentValue) -> getInstanceData().largeImageKey = currentValue
         );
 
-        largeImageFormat.setControlMessage(getInstanceData().largeImageText);
+        largeImageTextFormat.setControlMessage(getInstanceData().largeImageText);
+        largeImageUrlFormat.setControlMessage(getInstanceData().largeImageUrl);
         largeImageKeyFormat.setControlMessage(getInstanceData().largeImageKey);
 
         // Small Image Section
@@ -220,13 +311,28 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                 smallImageTitle
         ));
 
-        smallImageFormat = childFrame.addControl(
+        smallImageTextFormat = childFrame.addControl(
                 new TextWidget(
                         getFontRenderer(),
                         getButtonY(controlIndex++),
                         180, 20,
-                        () -> getInstanceData().smallImageText = smallImageFormat.getControlMessage(),
+                        () -> getInstanceData().smallImageText = smallImageTextFormat.getControlMessage(),
                         Constants.TRANSLATOR.translate("gui.config.message.editor.message"),
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
+                                                CraftPresence.CLIENT.generateArgumentMessage("general."))
+                                )
+                        )
+                )
+        );
+        smallImageUrlFormat = childFrame.addControl(
+                new TextWidget(
+                        getFontRenderer(),
+                        getButtonY(controlIndex++),
+                        180, 20,
+                        () -> getInstanceData().smallImageUrl = smallImageUrlFormat.getControlMessage(),
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.url"),
                         () -> drawMultiLineString(
                                 StringUtils.splitTextByNewLine(
                                         Constants.TRANSLATOR.translate("gui.config.message.presence.args.general",
@@ -254,7 +360,8 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
                 (attributeName, currentValue) -> getInstanceData().smallImageKey = currentValue
         );
 
-        smallImageFormat.setControlMessage(getInstanceData().smallImageText);
+        smallImageTextFormat.setControlMessage(getInstanceData().smallImageText);
+        smallImageUrlFormat.setControlMessage(getInstanceData().smallImageUrl);
         smallImageKeyFormat.setControlMessage(getInstanceData().smallImageKey);
 
         // Extra Fields Section
@@ -423,6 +530,29 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
 
         controlIndex++;
 
+        currentStatusDisplayType = getInstanceData().statusDisplayType;
+        statusDisplayTypeButton = childFrame.addControl(
+                new ExtendedButtonControl(
+                        calc1, getButtonY(controlIndex),
+                        180, 20,
+                        Constants.TRANSLATOR.translate("gui.config.message.editor.presence.status_display_type") + " => " + StatusDisplayType.from(currentStatusDisplayType).name(),
+                        () -> {
+                            currentStatusDisplayType = (currentStatusDisplayType + 1) % StatusDisplayType.values().length;
+                            statusDisplayTypeButton.setControlMessage(
+                                    Constants.TRANSLATOR.translate("gui.config.message.editor.presence.status_display_type") + " => " + StatusDisplayType.from(currentStatusDisplayType).name()
+                            );
+                            getInstanceData().statusDisplayType = currentStatusDisplayType;
+                        },
+                        () -> drawMultiLineString(
+                                StringUtils.splitTextByNewLine(
+                                        Constants.TRANSLATOR.translate("gui.config.message.hover.presence.status_display_type")
+                                )
+                        )
+                )
+        );
+
+        controlIndex++;
+
         visualizer.setupVisualizer(
                 calc1, calc2,
                 controlIndex,
@@ -436,6 +566,12 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
     public void postRender() {
         super.postRender();
         visualizer.postRender(childFrame);
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        visualizer.onClick(childFrame, mouseX, mouseY, mouseButton);
     }
 
     @Override

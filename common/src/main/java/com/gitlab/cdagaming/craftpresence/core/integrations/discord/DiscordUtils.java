@@ -1549,11 +1549,17 @@ public class DiscordUtils {
 
         // Format Presence based on Arguments available in argumentData
         final ActivityType activityType = ActivityType.from(configData.activityType % ActivityType.values().length);
+        final StatusDisplayType statusDisplayType = StatusDisplayType.from(configData.statusDisplayType % StatusDisplayType.values().length);
         final PartyPrivacy partyPrivacy = PartyPrivacy.from(configData.partyPrivacy % PartyPrivacy.values().length);
         final boolean isInstance = configData.isInstance;
 
         String details = StringUtils.formatWord(getResult(configData.details, "details"), !formatWords, true, 1);
         String state = StringUtils.formatWord(getResult(configData.gameState, "gameState"), !formatWords, true, 1);
+
+        String detailsUrl = getResult(configData.detailsUrl, "detailsUrl");
+        String stateUrl = getResult(configData.gameStateUrl, "gameStateUrl");
+
+        String appName = StringUtils.formatWord(getResult(configData.appName, "appName"), !formatWords, true, 1);
 
         final String rawLargeImage = getResult(configData.largeImageKey, "largeImageKey");
         final String rawSmallImage = getResult(configData.smallImageKey, "smallImageKey");
@@ -1568,6 +1574,9 @@ public class DiscordUtils {
 
         String largeImageText = StringUtils.formatWord(getResult(configData.largeImageText, "largeImageText"), !formatWords, true, 1);
         String smallImageText = StringUtils.formatWord(getResult(configData.smallImageText, "smallImageText"), !formatWords, true, 1);
+
+        String largeImageUrl = getResult(configData.largeImageUrl, "largeImageUrl");
+        String smallImageUrl = getResult(configData.smallImageUrl, "smallImageUrl");
 
         final Pair<Boolean, Long> startData = StringUtils.getValidLong(
                 getResult(configData.startTimestamp, "startTimestamp")
@@ -1622,21 +1631,28 @@ public class DiscordUtils {
 
         final RichPresence.Builder newRPCData = new RichPresence.Builder()
                 .setActivityType(activityType)
-                .setStatusDisplayType(StatusDisplayType.Name)
+                .setStatusDisplayType(statusDisplayType)
                 .setState(state = sanitizePlaceholders(state, 128))
+                .setStateUrl(stateUrl = sanitizePlaceholders(stateUrl, 256))
                 .setDetails(details = sanitizePlaceholders(details, 128))
+                .setDetailsUrl(detailsUrl = sanitizePlaceholders(detailsUrl, 256))
                 .setStartTimestamp(startTimestamp)
                 .setEndTimestamp(endTimestamp)
-                .setLargeImageWithTooltip(largeImageKey = sanitizePlaceholders(largeImageKey, 256),
-                        largeImageText = sanitizePlaceholders(largeImageText, 128))
-                .setSmallImageWithTooltip(smallImageKey = sanitizePlaceholders(smallImageKey, 256),
-                        smallImageText = sanitizePlaceholders(smallImageText, 128))
+                .setName(appName = sanitizePlaceholders(appName, 128))
+                .setLargeImage(largeImageKey = sanitizePlaceholders(largeImageKey, 256),
+                        largeImageText = sanitizePlaceholders(largeImageText, 128),
+                        largeImageUrl = sanitizePlaceholders(largeImageUrl, 256))
+                .setSmallImage(smallImageKey = sanitizePlaceholders(smallImageKey, 256),
+                        smallImageText = sanitizePlaceholders(smallImageText, 128),
+                        smallImageUrl = sanitizePlaceholders(smallImageUrl, 256))
                 .setButtons(buttons)
                 .setInstance(isInstance);
 
         // Format Data to UTF_8 after Sent to RPC (RPC has its own Encoding)
         state = StringUtils.convertString(state, "UTF-8", false);
         details = StringUtils.convertString(details, "UTF-8", false);
+
+        appName = StringUtils.convertString(appName, "UTF-8", false);
 
         largeImageKey = StringUtils.convertString(largeImageKey, "UTF-8", false);
         smallImageKey = StringUtils.convertString(smallImageKey, "UTF-8", false);
@@ -1645,12 +1661,15 @@ public class DiscordUtils {
         smallImageText = StringUtils.convertString(smallImageText, "UTF-8", false);
 
         final CompiledPresence data = new CompiledPresence(
-                activityType, partyPrivacy,
-                details, state,
+                activityType, statusDisplayType, partyPrivacy,
+                details, detailsUrl,
+                state, stateUrl,
+                appName,
                 rawLargeImage, rawSmallImage,
                 largeAsset, smallAsset,
                 largeImageKey, smallImageKey,
                 largeImageText, smallImageText,
+                largeImageUrl, smallImageUrl,
                 startTimestamp, endTimestamp,
                 buttons, isInstance,
                 useAsMain

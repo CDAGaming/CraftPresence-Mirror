@@ -42,9 +42,9 @@ public class Display extends Module implements Serializable {
             .setGameState("{getOrDefault(server.message)} {getOrDefault(pack.name)}")
             .setDetails("{getFirst(menu.message, dimension.message)}")
             .setLargeImage("{getFirst(menu.icon, dimension.icon)}",
-                    "{getFirst(menu.message, dimension.message)}")
+                    "{getFirst(menu.message, dimension.message)}", "")
             .setSmallImage("{getFirst(server.icon, pack.icon)}",
-                    "{getOrDefault(server.message)} {getOrDefault(pack.name)}")
+                    "{getOrDefault(server.message)} {getOrDefault(pack.name)}", "")
             .setStartTime("{data.general.time}");
     public Map<String, String> dynamicIcons = new HashMapBuilder<String, String>().build();
     public Map<String, String> dynamicVariables = new HashMapBuilder<String, String>()

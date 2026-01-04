@@ -31,6 +31,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.jagrosh.discordipc.entities.ActivityType;
 import com.jagrosh.discordipc.entities.PartyPrivacy;
+import com.jagrosh.discordipc.entities.StatusDisplayType;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.TimeUtils;
 
@@ -39,29 +40,39 @@ import java.util.Map;
 /**
  * A record mapping for compiled Rich Presence Data
  *
- * @param activityType   The Current Activity Type Setting for the RPC
- * @param partyPrivacy   The Current Party Privacy Setting for the RPC
- * @param details        The Current Message tied to the current action / Details Field of the RPC
- * @param state          The Current Message tied to the Party/Game Status Field of the RPC
- * @param rawLargeImage  The Current Raw Large Image Icon being displayed in the RPC, if any
- * @param rawSmallImage  The Current Raw Small Image Icon being displayed in the RPC, if any
- * @param largeAsset     The Current Large Image Asset being displayed in the RPC, if any
- * @param smallAsset     The Current Small Image Asset being displayed in the RPC, if any
- * @param largeImageKey  The Current Large Image Icon being displayed in the RPC, if any
- * @param smallImageKey  The Current Small Image Icon being displayed in the RPC, if any
- * @param largeImageText The Current Message tied to the Large Image, if any
- * @param smallImageText The Current Message tied to the Small Image, if any
- * @param startTimestamp The Current Starting Unix Timestamp from Epoch, used for Elapsed Time
- * @param endTimestamp   The Current Ending Unix Timestamp from Epoch, used for Time Left (Set to 0 or lower for null)
- * @param buttons        The current button array tied to the RPC, if any
- * @param instance       Whether this RPC should be marked as instanced content
- * @param isMain         Whether this data should be marked as the current RPC event
+ * @param activityType      The Current Activity Type Setting for the RPC
+ * @param statusDisplayType The Current Status Display Type Setting for the RPC
+ * @param partyPrivacy      The Current Party Privacy Setting for the RPC
+ * @param details           The Current Message tied to the current action / Details Field of the RPC
+ * @param detailsUrl        The Current URL tied to the current action / Details Field of the RPC
+ * @param state             The Current Message tied to the Party/Game Status Field of the RPC
+ * @param stateUrl          The Current URL tied to the Party/Game Status Field of the RPC
+ * @param appName           The Custom Application Name for the RPC, if any
+ * @param rawLargeImage     The Current Raw Large Image Icon being displayed in the RPC, if any
+ * @param rawSmallImage     The Current Raw Small Image Icon being displayed in the RPC, if any
+ * @param largeAsset        The Current Large Image Asset being displayed in the RPC, if any
+ * @param smallAsset        The Current Small Image Asset being displayed in the RPC, if any
+ * @param largeImageKey     The Current Large Image Icon being displayed in the RPC, if any
+ * @param smallImageKey     The Current Small Image Icon being displayed in the RPC, if any
+ * @param largeImageText    The Current Message tied to the Large Image, if any
+ * @param smallImageText    The Current Message tied to the Small Image, if any
+ * @param largeImageUrl     The Current URL tied to the Large Image, if any
+ * @param smallImageUrl     The Current URL tied to the Small Image, if any
+ * @param startTimestamp    The Current Starting Unix Timestamp from Epoch, used for Elapsed Time
+ * @param endTimestamp      The Current Ending Unix Timestamp from Epoch, used for Time Left (Set to 0 or lower for null)
+ * @param buttons           The current button array tied to the RPC, if any
+ * @param instance          Whether this RPC should be marked as instanced content
+ * @param isMain            Whether this data should be marked as the current RPC event
  */
 public record CompiledPresence(
         ActivityType activityType,
+        StatusDisplayType statusDisplayType,
         PartyPrivacy partyPrivacy,
         String details,
+        String detailsUrl,
         String state,
+        String stateUrl,
+        String appName,
         String rawLargeImage,
         String rawSmallImage,
         DiscordAsset largeAsset,
@@ -70,6 +81,8 @@ public record CompiledPresence(
         String smallImageKey,
         String largeImageText,
         String smallImageText,
+        String largeImageUrl,
+        String smallImageUrl,
         long startTimestamp,
         long endTimestamp,
         JsonArray buttons,
@@ -139,11 +152,11 @@ public record CompiledPresence(
     }
 
     /**
-     * Retrieve the Current Message tied to the Party/ Game Status Field of the RPC
+     * Retrieve the Current Message tied to the Party/Game Status Field of the RPC
      *
      * @param minPlayers The Minimum Player Count, used for party data
      * @param maxPlayers The Maximum Player Count, used for party data
-     * @return The Current Message tied to the Party/ Game Status Field of the RPC
+     * @return The Current Message tied to the Party/Game Status Field of the RPC
      */
     public String state(final int minPlayers, final int maxPlayers) {
         final String original = state();

@@ -319,12 +319,18 @@ public class PresenceVisualizer {
         }
 
         if (lastCompiledPresence.activityType() == ActivityType.Listening ||
-                lastCompiledPresence.activityType() == ActivityType.Watching ||
                 lastCompiledPresence.activityType() == ActivityType.Competing) {
             updateLineTexts(
                     details,
                     state,
-                    lastCompiledPresence.largeImageText()
+                    lastCompiledPresence.largeImageText(),
+                    lastCompiledPresence.getTimeString()
+            );
+        } else if (lastCompiledPresence.activityType() == ActivityType.Watching) {
+            updateLineTexts(
+                    details,
+                    state,
+                    lastCompiledPresence.getTimeString()
             );
         } else {
             updateLineTexts(
@@ -433,6 +439,22 @@ public class PresenceVisualizer {
                                 lastCompiledPresence.largeImageText()
                         )
                 );
+            }
+        }
+    }
+
+    public void onClick(final ExtendedScreen childFrame, final int mouseX, final int mouseY, final int mouseButton) {
+        if (lastCompiledPresence != null && childFrame.isOverScreen()) {
+            if (smallImageData != null && RenderUtils.isMouseOver(
+                    mouseX, mouseY,
+                    smallWidget
+            ) && !StringUtils.isNullOrEmpty(lastCompiledPresence.smallImageUrl())) {
+                UrlUtils.openUrl(lastCompiledPresence.smallImageUrl());
+            } else if (largeImageData != null && RenderUtils.isMouseOver(
+                    mouseX, mouseY,
+                    largeWidget
+            ) && !StringUtils.isNullOrEmpty(lastCompiledPresence.largeImageUrl())) {
+                UrlUtils.openUrl(lastCompiledPresence.largeImageUrl());
             }
         }
     }

@@ -28,6 +28,7 @@ import com.gitlab.cdagaming.craftpresence.core.Constants;
 import com.gitlab.cdagaming.craftpresence.core.config.Module;
 import com.jagrosh.discordipc.entities.ActivityType;
 import com.jagrosh.discordipc.entities.PartyPrivacy;
+import com.jagrosh.discordipc.entities.StatusDisplayType;
 import io.github.cdagaming.unicore.impl.HashMapBuilder;
 
 import java.io.Serial;
@@ -44,13 +45,19 @@ public class PresenceData extends Module implements Serializable {
     public boolean useAsMain = false;
     public boolean isInstance = false;
     public int activityType = ActivityType.Playing.ordinal();
+    public int statusDisplayType = StatusDisplayType.Name.ordinal();
     public int partyPrivacy = PartyPrivacy.Public.ordinal();
     public String details = "";
+    public String detailsUrl = "";
     public String gameState = "";
+    public String gameStateUrl = "";
+    public String appName = "";
     public String largeImageKey = "";
     public String largeImageText = "";
+    public String largeImageUrl = "";
     public String smallImageKey = "";
     public String smallImageText = "";
+    public String smallImageUrl = "";
     public String startTimestamp = "";
     public String endTimestamp = "";
     public Map<String, Button> buttons = new HashMapBuilder<String, Button>().build();
@@ -75,11 +82,13 @@ public class PresenceData extends Module implements Serializable {
             useAsMain = data.useAsMain;
             isInstance = data.isInstance;
             activityType = data.activityType;
+            statusDisplayType = data.statusDisplayType;
             partyPrivacy = data.partyPrivacy;
-            setDetails(data.details);
-            setGameState(data.gameState);
-            setLargeImage(data.largeImageKey, data.largeImageText);
-            setSmallImage(data.smallImageKey, data.smallImageText);
+            setDetails(data.details, data.detailsUrl);
+            setGameState(data.gameState, data.gameStateUrl);
+            setAppName(data.appName);
+            setLargeImage(data.largeImageKey, data.largeImageText, data.largeImageUrl);
+            setSmallImage(data.smallImageKey, data.smallImageText, data.smallImageUrl);
             setTimes(data.startTimestamp, data.endTimestamp);
             buttons.clear();
             for (Map.Entry<String, Button> entry : data.buttons.entrySet()) {
@@ -95,13 +104,19 @@ public class PresenceData extends Module implements Serializable {
             case "useAsMain" -> useAsMain;
             case "isInstance" -> isInstance;
             case "activityType" -> activityType;
+            case "statusDisplayType" -> statusDisplayType;
             case "partyPrivacy" -> partyPrivacy;
             case "details" -> details;
+            case "detailsUrl" -> detailsUrl;
             case "gameState" -> gameState;
+            case "gameStateUrl" -> gameStateUrl;
+            case "appName" -> appName;
             case "largeImageKey" -> largeImageKey;
             case "largeImageText" -> largeImageText;
+            case "largeImageUrl" -> largeImageUrl;
             case "smallImageKey" -> smallImageKey;
             case "smallImageText" -> smallImageText;
+            case "smallImageUrl" -> smallImageUrl;
             case "startTimestamp" -> startTimestamp;
             case "endTimestamp" -> endTimestamp;
             case "buttons" -> buttons;
@@ -125,14 +140,23 @@ public class PresenceData extends Module implements Serializable {
                 case "activityType":
                     activityType = (Integer) value;
                     break;
+                case "statusDisplayType":
+                    statusDisplayType = (Integer) value;
+                    break;
                 case "partyPrivacy":
                     partyPrivacy = (Integer) value;
                     break;
                 case "details":
                     details = (String) value;
                     break;
+                case "detailsUrl":
+                    detailsUrl = (String) value;
+                    break;
                 case "gameState":
                     gameState = (String) value;
+                    break;
+                case "gameStateUrl":
+                    gameStateUrl = (String) value;
                     break;
                 case "largeImageKey":
                     largeImageKey = (String) value;
@@ -140,11 +164,17 @@ public class PresenceData extends Module implements Serializable {
                 case "largeImageText":
                     largeImageText = (String) value;
                     break;
+                case "largeImageUrl":
+                    largeImageUrl = (String) value;
+                    break;
                 case "smallImageKey":
                     smallImageKey = (String) value;
                     break;
                 case "smallImageText":
                     smallImageText = (String) value;
+                    break;
+                case "smallImageUrl":
+                    smallImageUrl = (String) value;
                     break;
                 case "startTimestamp":
                     startTimestamp = (String) value;
@@ -168,25 +198,50 @@ public class PresenceData extends Module implements Serializable {
         return new PresenceData(this);
     }
 
-    public PresenceData setDetails(final String details) {
+    public PresenceData setDetails(final String details, final String detailsUrl) {
         this.details = details;
+        this.detailsUrl = detailsUrl;
+        return this;
+    }
+
+    public PresenceData setDetails(final String details) {
+        return setDetails(details, this.detailsUrl);
+    }
+
+    public PresenceData setDetailsUrl(final String detailsUrl) {
+        return setDetails(this.details, detailsUrl);
+    }
+
+    public PresenceData setGameState(final String gameState, final String gameStateUrl) {
+        this.gameState = gameState;
+        this.gameStateUrl = gameStateUrl;
         return this;
     }
 
     public PresenceData setGameState(final String gameState) {
-        this.gameState = gameState;
+        return setGameState(gameState, this.gameStateUrl);
+    }
+
+    public PresenceData setGameStateUrl(final String gameStateUrl) {
+        return setGameState(this.gameState, gameStateUrl);
+    }
+
+    public PresenceData setAppName(final String appName) {
+        this.appName = appName;
         return this;
     }
 
-    public PresenceData setLargeImage(final String imageKey, final String imageText) {
+    public PresenceData setLargeImage(final String imageKey, final String imageText, final String imageUrl) {
         this.largeImageKey = imageKey;
         this.largeImageText = imageText;
+        this.largeImageUrl = imageUrl;
         return this;
     }
 
-    public PresenceData setSmallImage(final String imageKey, final String imageText) {
+    public PresenceData setSmallImage(final String imageKey, final String imageText, final String imageUrl) {
         this.smallImageKey = imageKey;
         this.smallImageText = imageText;
+        this.smallImageUrl = imageUrl;
         return this;
     }
 
@@ -228,13 +283,18 @@ public class PresenceData extends Module implements Serializable {
                 Objects.equals(other.useAsMain, useAsMain) &&
                 Objects.equals(other.isInstance, isInstance) &&
                 Objects.equals(other.activityType, activityType) &&
+                Objects.equals(other.statusDisplayType, statusDisplayType) &&
                 Objects.equals(other.partyPrivacy, partyPrivacy) &&
                 Objects.equals(other.details, details) &&
+                Objects.equals(other.detailsUrl, detailsUrl) &&
                 Objects.equals(other.gameState, gameState) &&
+                Objects.equals(other.gameStateUrl, gameStateUrl) &&
                 Objects.equals(other.largeImageKey, largeImageKey) &&
                 Objects.equals(other.largeImageText, largeImageText) &&
+                Objects.equals(other.largeImageUrl, largeImageUrl) &&
                 Objects.equals(other.smallImageKey, smallImageKey) &&
                 Objects.equals(other.smallImageText, smallImageText) &&
+                Objects.equals(other.smallImageUrl, smallImageUrl) &&
                 Objects.equals(other.startTimestamp, startTimestamp) &&
                 Objects.equals(other.endTimestamp, endTimestamp) &&
                 Objects.equals(other.buttons, buttons);
@@ -245,10 +305,11 @@ public class PresenceData extends Module implements Serializable {
         return Objects.hash(
                 enabled, useAsMain,
                 isInstance,
-                activityType, partyPrivacy,
-                details, gameState,
-                largeImageKey, largeImageText,
-                smallImageKey, smallImageText,
+                activityType, statusDisplayType, partyPrivacy,
+                details, detailsUrl,
+                gameState, gameStateUrl,
+                largeImageKey, largeImageText, largeImageUrl,
+                smallImageKey, smallImageText, smallImageUrl,
                 startTimestamp, endTimestamp,
                 buttons
         );
