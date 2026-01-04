@@ -308,6 +308,7 @@ subprojects {
     }
 
     val relocatePath = "$modId.external"
+    val uniLibPath = "unilib.external"
 
     tasks.named<ShadowJar>("shadowJar").configure {
         // Meta Exclusions
@@ -346,14 +347,15 @@ subprojects {
         exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-arm*/**")
 
         // Package Relocations
-        relocate("net.lenni0451", "$relocatePath.net.lenni0451")
         relocate("com.jagrosh", "$relocatePath.com.jagrosh")
         relocate("org.meteordev", "$relocatePath.org.meteordev")
-        relocate("io.github.classgraph", "$relocatePath.io.github.classgraph")
-        relocate("nonapi.io.github.classgraph", "$relocatePath.nonapi.io.github.classgraph")
+        // UniLib Relocations
+        relocate("net.lenni0451", "$uniLibPath.net.lenni0451")
+        relocate("io.github.classgraph", "$uniLibPath.io.github.classgraph")
+        relocate("nonapi.io.github.classgraph", "$uniLibPath.nonapi.io.github.classgraph")
         if (protocol < 755) {
-            relocate("org.slf4j", "$relocatePath.org.slf4j")
-            relocate("org.apache.logging.slf4j", "$relocatePath.org.apache.logging.slf4j")
+            relocate("org.slf4j", "$uniLibPath.org.slf4j")
+            relocate("org.apache.logging.slf4j", "$uniLibPath.org.apache.logging.slf4j")
         }
         // Integration Relocations
         if (!isLegacy) {
