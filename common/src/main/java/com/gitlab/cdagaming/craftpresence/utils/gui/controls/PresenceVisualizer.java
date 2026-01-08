@@ -37,6 +37,7 @@ import com.jagrosh.discordipc.entities.ActivityType;
 import io.github.cdagaming.unicore.utils.StringUtils;
 import io.github.cdagaming.unicore.utils.UrlUtils;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,10 @@ import java.util.function.Supplier;
  */
 public class PresenceVisualizer {
     /**
+     * The maximum text line elements for this widget
+     */
+    private static final int MAX_LINES = 4;
+    /**
      * The stored button elements for this widget
      */
     private final List<ExtendedButtonControl> buttons = StringUtils.newArrayList();
@@ -56,6 +61,14 @@ public class PresenceVisualizer {
      * The stored text line elements for this widget
      */
     private final List<ScrollableTextWidget> lines = StringUtils.newArrayList();
+    /**
+     * The stored text lines for this widget
+     */
+    private final String[] lineTexts = new String[MAX_LINES];
+    /**
+     * The stored url elements for the text lines in this widget
+     */
+    private final String[] urls = new String[MAX_LINES];
     /**
      * The current screen instance
      */
@@ -137,6 +150,8 @@ public class PresenceVisualizer {
         largeWidget = null;
         smallWidget = null;
         lines.clear();
+        Arrays.fill(lineTexts, "");
+        Arrays.fill(urls, "");
         buttons.clear();
         lastCompiledPresence = null;
         largeImageData = null;
@@ -250,7 +265,7 @@ public class PresenceVisualizer {
         final int textWidth = rightButtonPos - textOffset;
 
         // Adding RPC Lines (First Line = Title Bar)
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < MAX_LINES; i++) {
             lines.add(childFrame.addWidget(new ScrollableTextWidget(
                     textOffset, screen.getButtonY(controlIndex, -4 + ((screen.getFontHeight() + 2) * i)),
                     textWidth, ""
@@ -321,23 +336,23 @@ public class PresenceVisualizer {
         if (lastCompiledPresence.activityType() == ActivityType.Listening ||
                 lastCompiledPresence.activityType() == ActivityType.Competing) {
             updateLineTexts(
-                    details,
-                    state,
-                    lastCompiledPresence.largeImageText(),
-                    lastCompiledPresence.getTimeString()
+                    details, lastCompiledPresence.detailsUrl(),
+                    state, lastCompiledPresence.stateUrl(),
+                    lastCompiledPresence.largeImageText(), null,
+                    lastCompiledPresence.getTimeString(), null
             );
         } else if (lastCompiledPresence.activityType() == ActivityType.Watching) {
             updateLineTexts(
-                    details,
-                    state,
-                    lastCompiledPresence.getTimeString()
+                    details, lastCompiledPresence.detailsUrl(),
+                    state, lastCompiledPresence.stateUrl(),
+                    lastCompiledPresence.getTimeString(), null
             );
         } else {
             updateLineTexts(
-                    CraftPresence.CLIENT.CURRENT_TITLE,
-                    details,
-                    state,
-                    lastCompiledPresence.getTimeString()
+                    CraftPresence.CLIENT.CURRENT_TITLE, null,
+                    details, lastCompiledPresence.detailsUrl(),
+                    state, lastCompiledPresence.stateUrl(),
+                    lastCompiledPresence.getTimeString(), null
             );
         }
 
@@ -383,26 +398,38 @@ public class PresenceVisualizer {
     /**
      * Update the text widgets with the specified data
      *
-     * @param strings The list of string data to interpret
+     * @param strings The list of string data to interpret (string,url pairs)
      */
     private void updateLineTexts(final String... strings) {
-        final List<String> validStrings = StringUtils.newArrayList();
-        for (String string : strings) {
-            if (!StringUtils.isNullOrEmpty(string)) {
-                validStrings.add(string);
-            }
-        }
+        Arrays.fill(urls, "");
+        Arrays.fill(lineTexts, "");
 
         boolean isTitleBar = true;
+        int outIndex = 0;
+
+        for (int in = 0; in < strings.length && outIndex < MAX_LINES; in += 2) {
+            final String text = strings[in];
+            final String url  = (in + 1 < strings.length) ? strings[in + 1] : null;
+
+            if (StringUtils.isNullOrEmpty(text)) {
+                continue; // ignore url and move to next pair
+            }
+
+            final String prefix = isTitleBar ? getTitlePrefix() : "";
+            final String msg = prefix + text;
+
+            lineTexts[outIndex] = msg;
+            urls[outIndex] = !StringUtils.isNullOrEmpty(url) ? url : "";
+
+            isTitleBar = false;
+            outIndex++;
+        }
+
+        // Push to widgets (and clear any remaining)
         for (int i = 0; i < lines.size(); i++) {
             final ScrollableTextWidget lineWidget = lines.get(i);
-            if (i < validStrings.size()) {
-                final String prefix = isTitleBar ? getTitlePrefix() : "";
-                lineWidget.setMessage(prefix + validStrings.get(i));
-                isTitleBar = false;
-            } else {
-                lineWidget.setMessage("");
-            }
+            final String msg = (i < MAX_LINES) ? lineTexts[i] : "";
+            lineWidget.setMessage(msg);
         }
     }
 
@@ -439,6 +466,40 @@ public class PresenceVisualizer {
                                 lastCompiledPresence.largeImageText()
                         )
                 );
+            } else {
+                final int n = Math.min(lines.size(), MAX_LINES);
+
+                // Determine which line (if any) should be underlined
+                int hoveredIndex = -1;
+                for (int i = 0; i < n; i++) {
+                    final ScrollableTextWidget lineWidget = lines.get(i);
+                    if (RenderUtils.isMouseOver(mouseX, mouseY, lineWidget)
+                            && !StringUtils.isNullOrEmpty(lineTexts[i])
+                            && !StringUtils.isNullOrEmpty(urls[i])) {
+                        hoveredIndex = i;
+                        break; // only underline one
+                    }
+                }
+
+                // Apply underline to hovered line, restore others
+                for (int i = 0; i < n; i++) {
+                    final ScrollableTextWidget lineWidget = lines.get(i);
+                    final String base = lineTexts[i];
+
+                    final String desired;
+                    if (i == hoveredIndex) {
+                        desired = "§n" + base; // underline
+                    } else {
+                        desired = base;        // restore base
+                    }
+
+                    // Avoid spamming setMessage if unchanged
+                    if (!StringUtils.isNullOrEmpty(base) && !desired.equals(lineWidget.getMessage())) {
+                        lineWidget.setMessage(desired);
+                    } else if (StringUtils.isNullOrEmpty(base) && !StringUtils.isNullOrEmpty(lineWidget.getMessage())) {
+                        lineWidget.setMessage("");
+                    }
+                }
             }
         }
     }
@@ -455,6 +516,18 @@ public class PresenceVisualizer {
                     largeWidget
             ) && !StringUtils.isNullOrEmpty(lastCompiledPresence.largeImageUrl())) {
                 UrlUtils.openUrl(lastCompiledPresence.largeImageUrl());
+            } else {
+                for (int i = 0; i < lines.size(); i++) {
+                    final ScrollableTextWidget lineWidget = lines.get(i);
+                    if (RenderUtils.isMouseOver(mouseX, mouseY, lineWidget)
+                        && !StringUtils.isNullOrEmpty(lineWidget.getMessage())) {
+                        final String url = urls[i];
+                        if (!StringUtils.isNullOrEmpty(url)) {
+                            UrlUtils.openUrl(url);
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
