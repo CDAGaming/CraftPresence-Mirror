@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 - 2025 CDAGaming (cstack2011@yahoo.com)
+ * Copyright (c) 2018 - 2026 CDAGaming (cstack2011@yahoo.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -1621,13 +1621,14 @@ public class DiscordUtils {
 
         final RichPresence.Builder newRPCData = new RichPresence.Builder()
                 .setActivityType(activityType)
+                .setStatusDisplayType(StatusDisplayType.Name)
                 .setState(state = sanitizePlaceholders(state, 128))
                 .setDetails(details = sanitizePlaceholders(details, 128))
                 .setStartTimestamp(startTimestamp)
                 .setEndTimestamp(endTimestamp)
-                .setLargeImage(largeImageKey = sanitizePlaceholders(largeImageKey, 256),
+                .setLargeImageWithTooltip(largeImageKey = sanitizePlaceholders(largeImageKey, 256),
                         largeImageText = sanitizePlaceholders(largeImageText, 128))
-                .setSmallImage(smallImageKey = sanitizePlaceholders(smallImageKey, 256),
+                .setSmallImageWithTooltip(smallImageKey = sanitizePlaceholders(smallImageKey, 256),
                         smallImageText = sanitizePlaceholders(smallImageText, 128))
                 .setButtons(buttons)
                 .setInstance(isInstance);

@@ -9,10 +9,10 @@ import java.util.*
 
 plugins {
     java
-    id("xyz.wagyourtail.unimined") version "1.3.14+neofix.1" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "1.2.2"
-    id("com.diffplug.gradle.spotless") version "8.0.0" apply false
-    id("com.gradleup.shadow") version "9.2.2" apply false
+    id("dev.firstdark.unimined") version "1.0.3+1.4.2-SNAPSHOT" apply false
+    id("xyz.wagyourtail.jvmdowngrader") version "1.3.5"
+    id("com.diffplug.gradle.spotless") version "8.1.0" apply false
+    id("com.gradleup.shadow") version "9.3.0" apply false
     id("com.hypherionmc.modutils.modpublisher") version "2.1.8+snapshot.3" apply false
 }
 
@@ -41,6 +41,7 @@ val extProtocol = "mc_protocol"()!!.toInt()
 val extIsLegacy = "isLegacy"()!!.toBoolean()
 val extIsJarMod = "isJarMod"()!!.toBoolean()
 val extIsModern = !extIsLegacy && extProtocol >= 498
+val extIsOfficial = "mc_mappings_type"() == "official"
 val extIsMCPJar = extIsJarMod && "mc_mappings_type"() == "mcp"
 
 // Only apply ATs to forge on non-legacy builds, or on Legacy Protocols above 1.5
@@ -60,7 +61,7 @@ subprojects {
     val isLoaderSource = path != ":common"
 
     apply(plugin = "java")
-    apply(plugin = "xyz.wagyourtail.unimined")
+    apply(plugin = "dev.firstdark.unimined")
     apply(plugin = "xyz.wagyourtail.jvmdowngrader")
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "com.gradleup.shadow")
@@ -80,6 +81,7 @@ subprojects {
     val isLegacy by extra(extIsLegacy)
     val isJarMod by extra(extIsJarMod)
     val isModern by extra(extIsModern)
+    val isOfficial by extra(extIsOfficial)
     val isMCPJar by extra(extIsMCPJar)
     val accessWidenerFile by extra(extAWFile)
     val canUseATs by extra(extCanUseATs)
@@ -170,8 +172,82 @@ subprojects {
         version(mcVersion)
 
         mappings {
-            devNamespace("official")
-            devFallbackNamespace("official")
+            if (isOfficial) {
+                devNamespace("official")
+                devFallbackNamespace("official")
+            } else {
+                val mcMappings = "mc_mappings"()!!
+                when (mcMappingsType) {
+                    "mcp" -> {
+                        if (!isJarMod) {
+                            searge()
+                        }
+                        mcp((if (isJarMod) "legacy" else "stable"), mcMappings)
+                    }
+
+                    "forgeMCP" -> {
+                        forgeBuiltinMCP("forge_version"()!!)
+                    }
+
+                    "retroMCP" -> {
+                        retroMCP(mcMappings)
+                    }
+
+                    "mojmap" -> {
+                        mojmap()
+                    }
+
+                    else -> throw GradleException("Unknown or Unsupported Mappings version")
+                }
+
+                // Only use Intermediaries on Versions that support it
+                val usingIntermediary = (isLegacy && protocol >= 39) || !isLegacy
+                if (usingIntermediary) {
+                    if (isModern) {
+                        intermediary()
+                    } else {
+                        legacyIntermediary()
+                    }
+                }
+
+                // ability to add custom mappings
+                stubs("official", mcMappingsType!!) {
+                    c("ModLoader", "net/minecraft/src/ModLoader")
+                    c("BaseMod", "net/minecraft/src/BaseMod")
+                    // Fix: Fixed an inconsistent mapping in 1.16 and 1.16.1 between MCP and Mojmap
+                    if (!isLegacy && (protocol == 735 || protocol == 736)) {
+                        c(
+                            "dng",
+                                "net/minecraft/client/gui/components/AbstractWidget"
+                        ) {
+                            m("e;()I", "func_238483_d_", "getHeightRealms")
+                        }
+                    }
+                }
+
+                if (isMCPJar) {
+                    if (protocol <= 2) { // MC a1.1.2_01 and below
+                        devNamespace("searge")
+                    } else {
+                        devFallbackNamespace("searge")
+                    }
+                } else if (usingIntermediary) {
+                    devFallbackNamespace("intermediary")
+                }
+            }
+
+            if (shouldDowngrade) {
+                val apiVersion = if (buildVersion.isJava7) JavaVersion.VERSION_1_8 else buildVersion
+                val downgradeClient = tasks.register("downgradeClient", DowngradeFiles::class.java) {
+                    inputCollection = sourceSet.output.classesDirs + sourceSet.runtimeClasspath
+                    classpath = project.files()
+                    outputCollection.files
+                }
+
+                runs.config("client") {
+                    classpath = downgradeClient.get().outputCollection + files(jvmdg.getDowngradedApi(apiVersion))
+                }
+            }
         }
 
         minecraftRemapper.config {
@@ -187,14 +263,15 @@ subprojects {
     val libName = if (!isLoaderSource) "fabric" else name
     val libVersion = "unilib_build_version"()!!
     val libFile = "$libName${if (canDowngrade) "-native" else ""}"
+    val libGrab = if (isOfficial) "implementation" else "modImplementation"
 
     dependencies {
         // Annotations
         "compileOnly"("com.google.code.findbugs:jsr305:3.0.2")
-        "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.9.6")
+        "compileOnly"("com.github.spotbugs:spotbugs-annotations:4.9.8")
 
         // Attach UniLib dependency
-        "implementation"(
+        libGrab(
             "com.gitlab.cdagaming.unilib:$libPrefix-${
                 libName.replaceFirstChar {
                     if (it.isLowerCase()) it.titlecase(
@@ -231,6 +308,7 @@ subprojects {
     }
 
     val relocatePath = "$modId.external"
+    val uniLibPath = "unilib.external"
 
     tasks.named<ShadowJar>("shadowJar").configure {
         // Meta Exclusions
@@ -269,14 +347,15 @@ subprojects {
         exclude("META-INF/native-image/com.kohlschutter.junixsocket/junixsocket-native-arm*/**")
 
         // Package Relocations
-        relocate("net.lenni0451", "$relocatePath.net.lenni0451")
         relocate("com.jagrosh", "$relocatePath.com.jagrosh")
         relocate("org.meteordev", "$relocatePath.org.meteordev")
-        relocate("io.github.classgraph", "$relocatePath.io.github.classgraph")
-        relocate("nonapi.io.github.classgraph", "$relocatePath.nonapi.io.github.classgraph")
+        // UniLib Relocations
+        relocate("net.lenni0451", "$uniLibPath.net.lenni0451")
+        relocate("io.github.classgraph", "$uniLibPath.io.github.classgraph")
+        relocate("nonapi.io.github.classgraph", "$uniLibPath.nonapi.io.github.classgraph")
         if (protocol < 755) {
-            relocate("org.slf4j", "$relocatePath.org.slf4j")
-            relocate("org.apache.logging.slf4j", "$relocatePath.org.apache.logging.slf4j")
+            relocate("org.slf4j", "$uniLibPath.org.slf4j")
+            relocate("org.apache.logging.slf4j", "$uniLibPath.org.apache.logging.slf4j")
         }
         // Integration Relocations
         if (!isLegacy) {

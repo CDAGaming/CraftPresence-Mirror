@@ -34,7 +34,7 @@ unimined.minecraft {
             prodNamespace("official")
             devMappings = null
         }
-        customIntermediaries = true
+        customIntermediaries = (minecraftData.mcVersionCompare(version, "1.6.4") < 0)
     }
     if (isModern) {
         fabric(fabricData)
