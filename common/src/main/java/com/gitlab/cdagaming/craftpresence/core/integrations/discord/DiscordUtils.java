@@ -1504,6 +1504,7 @@ public class DiscordUtils {
     public void shutDown(final boolean allowReconnects) {
         if (isAvailable()) {
             try {
+                ipcInstance.sendRichPresence(null);
                 ipcInstance.close();
             } catch (Throwable ex) {
                 Constants.LOG.debugError(ex);
