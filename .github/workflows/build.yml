@@ -36,10 +36,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: update cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.gradle/caches
@@ -52,7 +52,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '25'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -75,7 +75,7 @@ jobs:
           inputs.deploy_all || inputs.deploy_nightbloom
         run: ./gradlew --build-cache --info --stacktrace publishNightbloom
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: artifacts
           path: |
