@@ -9,11 +9,11 @@ import java.util.*
 
 plugins {
     java
-    id("dev.firstdark.unimined") version "1.0.3+1.4.2-SNAPSHOT" apply false
-    id("xyz.wagyourtail.jvmdowngrader") version "1.3.5"
-    id("com.diffplug.gradle.spotless") version "8.1.0" apply false
-    id("com.gradleup.shadow") version "9.3.0" apply false
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.8+snapshot.3" apply false
+    id("dev.firstdark.unimined") version "1.0.5+1.4.2-SNAPSHOT" apply false
+    id("xyz.wagyourtail.jvmdowngrader") version "1.3.6"
+    id("com.diffplug.gradle.spotless") version "8.2.1" apply false
+    id("com.gradleup.shadow") version "9.3.1" apply false
+    id("com.hypherionmc.modutils.modpublisher") version "2.1.8" apply false
 }
 
 /**
@@ -174,7 +174,6 @@ subprojects {
         mappings {
             if (isOfficial) {
                 devNamespace("official")
-                devFallbackNamespace("official")
             } else {
                 val mcMappings = "mc_mappings"()!!
                 when (mcMappingsType) {
@@ -228,11 +227,7 @@ subprojects {
                 if (isMCPJar) {
                     if (protocol <= 2) { // MC a1.1.2_01 and below
                         devNamespace("searge")
-                    } else {
-                        devFallbackNamespace("searge")
                     }
-                } else if (usingIntermediary) {
-                    devFallbackNamespace("intermediary")
                 }
             }
 
