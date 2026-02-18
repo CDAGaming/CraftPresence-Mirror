@@ -145,6 +145,7 @@ subprojects {
         maven("https://maven.legacyfabric.net/") {
             name = "Legacy Fabric"
         }
+        maven("https://repo.spongepowered.org/maven/")
         // WagYourTail Mavens
         maven("https://maven.wagyourtail.xyz/releases")
         maven("https://maven.wagyourtail.xyz/snapshots")
@@ -170,6 +171,10 @@ subprojects {
     extensions.getByType<UniminedExtension>().minecraft(sourceSets.getByName("main"), true) {
         side(if (isJarMod) "client" else "combined")
         version(mcVersion)
+
+        rift {
+            loader(mcVersion)
+        }
 
         mappings {
             if (isOfficial) {
@@ -255,7 +260,7 @@ subprojects {
 
     // Setup UniLib attachment data
     val libPrefix = "unilib_name"()!!
-    val libName = if (!isLoaderSource) "fabric" else name
+    val libName = if (!isLoaderSource) "rift" else name
     val libVersion = "unilib_build_version"()!!
     val libFile = "$libName${if (canDowngrade) "-native" else ""}"
     val libGrab = if (isOfficial) "implementation" else "modImplementation"
