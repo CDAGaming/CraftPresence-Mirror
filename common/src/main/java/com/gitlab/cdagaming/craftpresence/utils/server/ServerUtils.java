@@ -34,7 +34,6 @@ import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.integrations.logging.ApacheLogger;
 import com.gitlab.cdagaming.unilib.utils.GameUtils;
 import com.gitlab.cdagaming.unilib.utils.WorldUtils;
-import com.gitlab.cdagaming.unilib.utils.gui.RenderUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.realmsclient.RealmsMainScreen;
 import com.mojang.realmsclient.dto.RealmsServer;
@@ -47,6 +46,7 @@ import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.multiplayer.*;
+import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.realms.RealmsScreen;
@@ -721,19 +721,12 @@ public class ServerUtils implements ExtendedModule {
         try {
             pingServer(serverData);
 
-            if (CraftPresence.player != null) {
-                CraftPresence.world.disconnect();
-                CraftPresence.instance.clearLevel(null);
-            }
-
             final Screen currentScreen = GameUtils.getCurrentScreen(CraftPresence.instance);
-            RenderUtils.openScreen(
+            ConnectScreen.startConnecting(
+                    currentScreen != null ? currentScreen : new TitleScreen(),
                     CraftPresence.instance,
-                    new ConnectScreen(
-                            currentScreen != null ? currentScreen : new TitleScreen(),
-                            CraftPresence.instance,
-                            serverData
-                    )
+                    ServerAddress.parseString(serverData.ip),
+                    serverData
             );
         } catch (Throwable ex) {
             printException(ex);
@@ -752,13 +745,7 @@ public class ServerUtils implements ExtendedModule {
         syncArgument("player.health.max", () -> MathUtils.roundDouble(CraftPresence.player.getMaxHealth(), 0), true);
 
         // Player Game Mode Arguments
-        syncArgument("player.mode", () -> {
-            if (ModUtils.RAW_TRANSLATOR != null) {
-                return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode." + CraftPresence.instance.gameMode.getPlayerMode().getName());
-            } else {
-                return StringUtils.formatWord(CraftPresence.instance.gameMode.getPlayerMode().getName().toLowerCase());
-            }
-        }, true);
+        syncArgument("player.mode", () -> CraftPresence.instance.gameMode.getPlayerMode().getShortDisplayName().getString(), true);
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
