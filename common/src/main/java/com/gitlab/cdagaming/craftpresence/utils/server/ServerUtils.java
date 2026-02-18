@@ -765,22 +765,22 @@ public class ServerUtils implements ExtendedModule {
 
         // World Time Arguments
         syncArgument("world.time.day", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.getDayTime()).getFirst(), true
+                TimeUtils.fromWorldTime(CraftPresence.world.getOverworldClockTime()).getFirst(), true
         );
         syncArgument("world.time.format_24", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.world.getDayTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.getOverworldClockTime()).getSecond(),
                                 "HH:mm"
                         )
                 , true);
         syncArgument("world.time.format_12", () ->
                         TimeUtils.toString(
-                                TimeUtils.fromWorldTime(CraftPresence.world.getDayTime()).getSecond(),
+                                TimeUtils.fromWorldTime(CraftPresence.world.getOverworldClockTime()).getSecond(),
                                 "HH:mm a"
                         )
                 , true);
         syncArgument("data.world.time.instance", () ->
-                TimeUtils.fromWorldTime(CraftPresence.world.getDayTime()), true
+                TimeUtils.fromWorldTime(CraftPresence.world.getOverworldClockTime()), true
         );
 
         // Default Arguments
