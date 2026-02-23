@@ -32,7 +32,7 @@ import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.core.CoreUtils;
 import com.gitlab.cdagaming.unilib.utils.gui.controls.ExtendedButtonControl;
 import com.gitlab.cdagaming.unilib.utils.gui.widgets.ScrollableTextWidget;
-import com.mojang.minecraft.gui.GuiScreen;
+import com.mojang.minecraft.client.gui.GuiScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 public class MainGui extends ConfigurationGui<Config> {

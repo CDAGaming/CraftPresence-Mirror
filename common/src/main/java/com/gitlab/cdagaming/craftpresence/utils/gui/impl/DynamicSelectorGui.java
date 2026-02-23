@@ -26,7 +26,7 @@ package com.gitlab.cdagaming.craftpresence.utils.gui.impl;
 
 import com.gitlab.cdagaming.craftpresence.utils.gui.controls.DynamicScrollableList;
 import com.gitlab.cdagaming.unilib.utils.gui.impl.SelectorGui;
-import com.mojang.minecraft.gui.GuiScreen;
+import com.mojang.minecraft.client.gui.GuiScreen;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.List;

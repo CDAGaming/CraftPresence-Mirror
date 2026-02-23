@@ -28,10 +28,10 @@ import com.gitlab.cdagaming.craftpresence.CraftPresence;
 import com.gitlab.cdagaming.craftpresence.core.impl.Module;
 import com.gitlab.cdagaming.unilib.ModUtils;
 import com.gitlab.cdagaming.unilib.utils.ItemUtils;
-import com.mojang.minecraft.entity.item.Item;
-import com.mojang.minecraft.entity.item.ItemStack;
-import com.mojang.minecraft.level.tile.Block;
-import com.mojang.minecraft.util.Session;
+import com.mojang.minecraft.client.util.Session;
+import com.mojang.minecraft.core.entity.item.Item;
+import com.mojang.minecraft.core.entity.item.ItemStack;
+import com.mojang.minecraft.core.level.tile.Block;
 import io.github.cdagaming.unicore.utils.StringUtils;
 
 import java.util.List;
