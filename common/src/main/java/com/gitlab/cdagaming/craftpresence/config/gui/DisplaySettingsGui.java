@@ -255,7 +255,7 @@ public class DisplaySettingsGui extends ConfigurationGui<Display> {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         visualizer.onClick(childFrame, mouseX, mouseY, mouseButton);
     }

@@ -569,7 +569,7 @@ public class PresenceEditorGui extends ConfigurationGui<PresenceData> {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         visualizer.onClick(childFrame, mouseX, mouseY, mouseButton);
     }
