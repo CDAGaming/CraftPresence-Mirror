@@ -216,13 +216,20 @@ public class ServerUtils implements ExtendedModule {
 
     @Override
     public void updateData() {
+        NetClientHandler newConnection = null;
         ServerNBTStorage newServerData;
-        final NetClientHandler newConnection = CraftPresence.instance.func_20001_q();
+        try {
+            if (CraftPresence.world instanceof WorldClient clientWorld) {
+                newConnection = (NetClientHandler) StringUtils.getField(WorldClient.class, clientWorld, "sendQueue", "field_1052_A", "B");
+            }
+        } catch (Exception ex) {
+            newConnection = null;
+        }
 
         try {
             if (newConnection != null) {
                 final NetworkManager netManager = (NetworkManager) StringUtils.getField(NetClientHandler.class, newConnection, "netManager", "field_1213_d", "d");
-                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_12258_e", "f");
+                final Socket socket = (Socket) StringUtils.getField(NetworkManager.class, netManager, "networkSocket", "field_12258_e", "e");
                 final String retrievedIP = socket.getInetAddress().getHostAddress();
                 final int retrievedPort = socket.getPort();
                 newServerData = (!StringUtils.isNullOrEmpty(retrievedIP) && retrievedPort != 0) ? new ServerNBTStorage(retrievedIP, retrievedPort) : null;
@@ -603,19 +610,12 @@ public class ServerUtils implements ExtendedModule {
 
         // World Data Arguments
         syncArgument("world.difficulty", () -> {
-            if (ModUtils.RAW_TRANSLATOR != null) {
-                if (false) {
-                    return ModUtils.RAW_TRANSLATOR.translate("selectWorld.gameMode.hardcore");
-                } else {
-                    final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTIES", "field_20106_A", "A");
-                    int difficulty = CraftPresence.world.difficultySetting;
-                    if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
-                        difficulty = 0;
-                    }
-                    return ModUtils.RAW_TRANSLATOR.translate(DIFFICULTIES[difficulty]);
-                }
+            final String[] DIFFICULTIES = (String[]) StringUtils.getField(GameSettings.class, null, "DIFFICULTY_LEVELS", "field_1558_z", "B");
+            int difficulty = CraftPresence.world.difficultySetting;
+            if (difficulty < 0 || difficulty >= DIFFICULTIES.length) {
+                difficulty = 0;
             }
-            return Integer.toString(CraftPresence.world.difficultySetting);
+            return DIFFICULTIES[difficulty];
         }, true);
         syncArgument("world.weather.name", () -> {
             final String newWeatherData = WorldUtils.getWeather(CraftPresence.player);
