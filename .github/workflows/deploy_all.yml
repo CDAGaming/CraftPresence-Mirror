@@ -10,6 +10,7 @@ env:
 
 jobs:
   deploy-all:
+    timeout-minutes: 1440
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -46,6 +47,7 @@ jobs:
         run: |
           while IFS= read -r branch; do
             echo "Processing branch: $branch"
+            git reset --hard
             git checkout $branch
             chmod +x gradlew
 
