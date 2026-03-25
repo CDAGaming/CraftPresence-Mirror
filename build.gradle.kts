@@ -9,11 +9,11 @@ import java.util.*
 
 plugins {
     java
-    id("dev.firstdark.unimined") version "1.0.5+1.4.2-SNAPSHOT" apply false
+    id("xyz.wagyourtail.unimined") version "1.4.2-SNAPSHOT" apply false
     id("xyz.wagyourtail.jvmdowngrader") version "1.3.6"
     id("com.diffplug.gradle.spotless") version "8.2.1" apply false
     id("com.gradleup.shadow") version "9.3.1" apply false
-    id("com.hypherionmc.modutils.modpublisher") version "2.1.8" apply false
+    id("com.hypherionmc.modutils.modpublisher") version "2.2.1" apply false
 }
 
 /**
@@ -61,7 +61,7 @@ subprojects {
     val isLoaderSource = path != ":common"
 
     apply(plugin = "java")
-    apply(plugin = "dev.firstdark.unimined")
+    apply(plugin = "xyz.wagyourtail.unimined")
     apply(plugin = "xyz.wagyourtail.jvmdowngrader")
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "com.gradleup.shadow")
