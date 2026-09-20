@@ -139,7 +139,7 @@ public class AccessibilitySettingsGui extends ConfigurationGui<Accessibility> {
                                 new ControlsGui(
                                         KeyUtils.INSTANCE,
                                         this::markAsChanged,
-                                        "key.craftpresence.category"
+                                        "key.category.craftpresence.controls"
                                 )
                         )
                 )

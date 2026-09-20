@@ -320,6 +320,11 @@ public class EntityUtils implements ExtendedModule {
     }
 
     @Override
+    public boolean canFetchInternals() {
+        return CraftPresence.player != null;
+    }
+
+    @Override
     public boolean hasScannedInternals() {
         return hasScannedInternals;
     }

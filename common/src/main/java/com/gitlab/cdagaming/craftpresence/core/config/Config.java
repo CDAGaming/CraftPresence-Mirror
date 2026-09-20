@@ -495,7 +495,7 @@ public final class Config extends Module implements Serializable {
         }
     }
 
-    public JsonElement handleVerification(final JsonElement rawJson, final KeyConverter.ConversionMode keyCodeMigrationId, final TranslationConverter.ConversionMode languageMigrationId, final String... path) {
+    public JsonElement handleVerification(final JsonElement rawJson, final int oldMCVer, final int newMCVer, final KeyConverter.ConversionMode keyCodeMigrationId, final TranslationConverter.ConversionMode languageMigrationId, final String... path) {
         // Verify Type Safety, reset value if anything is null or invalid for it's type
         String pathPrefix = String.join(".", path);
         if (!StringUtils.isNullOrEmpty(pathPrefix)) {
@@ -528,7 +528,7 @@ public final class Config extends Module implements Serializable {
                     if (Module.class.isAssignableFrom(defaultValue.getClass())) {
                         final List<String> paths = StringUtils.newArrayList(path);
                         paths.add(entry.getKey());
-                        handleVerification(entry.getValue(), keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
+                        handleVerification(entry.getValue(), oldMCVer, newMCVer, keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
                     } else if (!rawName.contains("presence")) { // Avoidance Filter
                         if (!StringUtils.isNullOrEmpty(defaultValue.toString()) && StringUtils.isNullOrEmpty(currentValue.toString())) {
                             shouldReset = true;
@@ -544,10 +544,10 @@ public final class Config extends Module implements Serializable {
                                     // If the Property Name contains these values, move onwards
                                     for (String keyTrigger : keyCodeTriggers) {
                                         if (rawName.toLowerCase().contains(keyTrigger.toLowerCase())) {
-                                            if (!KeyConverter.isValidKeyCode(boolData.getSecond(), getGameVersion())) {
+                                            if (!KeyConverter.isValidKeyCode(boolData.getSecond(), newMCVer)) {
                                                 shouldReset = true;
                                             } else if (keyCodeMigrationId != KeyConverter.ConversionMode.Unknown) {
-                                                final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), getGameVersion(), keyCodeMigrationId);
+                                                final int migratedKeyCode = KeyConverter.convertKey(boolData.getSecond(), oldMCVer, newMCVer, keyCodeMigrationId);
                                                 if (migratedKeyCode != boolData.getSecond()) {
                                                     Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.apply", "KEYCODE", keyCodeMigrationId.name(), rawName, boolData.getSecond(), migratedKeyCode));
                                                     setProperty(migratedKeyCode, pathData);
@@ -573,7 +573,7 @@ public final class Config extends Module implements Serializable {
                                         paths.add(dataEntry.toString());
                                         final JsonElement dataValue = entry.getValue().getAsJsonObject().get(dataEntry.toString());
                                         if (dataValue.isJsonObject()) {
-                                            handleVerification(dataValue, keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
+                                            handleVerification(dataValue, oldMCVer, newMCVer, keyCodeMigrationId, languageMigrationId, paths.toArray(new String[0]));
                                         }
                                     }
                                 }
@@ -584,7 +584,7 @@ public final class Config extends Module implements Serializable {
                                 for (String langTrigger : languageTriggers) {
                                     if (rawName.toLowerCase().contains(langTrigger.toLowerCase())) {
                                         if (languageMigrationId != TranslationConverter.ConversionMode.Unknown) {
-                                            final String migratedLanguageId = TranslationConverter.convertId(rawStringValue, getGameVersion(), languageMigrationId);
+                                            final String migratedLanguageId = TranslationConverter.convertId(rawStringValue, newMCVer, languageMigrationId);
                                             if (!migratedLanguageId.equals(rawStringValue)) {
                                                 Constants.LOG.info(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.apply", "LANGUAGE", languageMigrationId.name(), rawName, rawStringValue, migratedLanguageId));
                                                 setProperty((Object) migratedLanguageId, pathData);
@@ -636,7 +636,9 @@ public final class Config extends Module implements Serializable {
         // Otherwise, if our current protocol version is anything less than 17w43a (1.13, 341),
         // we need to ensure any keycode assignments are in an LWJGL 2 format.
         // If neither is true, then we mark the migration data as None, and it will be verified
-        if (oldMCVer < 341 && newMCVer >= 341) {
+        if (oldMCVer < 777 && newMCVer >= 777) {
+            keyCodeMigrationId = KeyConverter.ConversionMode.Sdl;
+        } else if (oldMCVer < 341 && newMCVer >= 341) {
             keyCodeMigrationId = KeyConverter.ConversionMode.Lwjgl3;
         } else if (oldMCVer >= 341 && newMCVer < 341) {
             keyCodeMigrationId = KeyConverter.ConversionMode.Lwjgl2;
@@ -665,7 +667,7 @@ public final class Config extends Module implements Serializable {
 
         Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.add", keyCodeTriggers.toString(), keyCodeMigrationId, keyCodeMigrationId.equals(KeyConverter.ConversionMode.None) ? "Verification" : "Setting Change"));
         Constants.LOG.debugInfo(Constants.TRANSLATOR.translate("craftpresence.logger.info.migration.add", languageTriggers.toString(), languageMigrationId, languageMigrationId.equals(TranslationConverter.ConversionMode.None) ? "Verification" : "Setting Change"));
-        return !isNewFile ? handleVerification(rawJson, keyCodeMigrationId, languageMigrationId) : rawJson;
+        return !isNewFile ? handleVerification(rawJson, oldMCVer, newMCVer, keyCodeMigrationId, languageMigrationId) : rawJson;
     }
 
     public void save(final boolean shouldApply) {

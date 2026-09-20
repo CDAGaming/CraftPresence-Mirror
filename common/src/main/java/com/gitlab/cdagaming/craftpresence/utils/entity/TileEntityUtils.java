@@ -465,6 +465,11 @@ public class TileEntityUtils implements Module {
     }
 
     @Override
+    public boolean canFetchInternals() {
+        return CraftPresence.player != null;
+    }
+
+    @Override
     public boolean hasScannedInternals() {
         return hasScannedInternals;
     }

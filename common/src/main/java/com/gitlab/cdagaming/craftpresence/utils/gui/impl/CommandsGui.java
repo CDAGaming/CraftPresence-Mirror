@@ -496,7 +496,7 @@ public class CommandsGui extends ExtendedScreen {
                     commandInput.setControlFocused(false);
                 } else {
                     if (canAcceptCommand()) {
-                        if (keyEvent.input() == getKeyByVersion(15, 258) && !tabCompletions.isEmpty()) { // Tab Key Event
+                        if (keyEvent.input() == getKeyByVersion(15, 258, 43) && !tabCompletions.isEmpty()) { // Tab Key Event
                             if (commandArgs.length > 1 && (filteredCommandArgs[filteredCommandArgs.length - 1].length() > 1 ||
                                     filteredCommandArgs[filteredCommandArgs.length - 1].equalsIgnoreCase("?")
                             )) {
@@ -505,7 +505,7 @@ public class CommandsGui extends ExtendedScreen {
                                 );
                                 commandInput.setControlMessage(commandString);
                             }
-                        } else if (keyEvent.input() == getKeyByVersion(28, 257) || keyEvent.input() == getKeyByVersion(156, 335)) { // Enter Key Event
+                        } else if (keyEvent.input() == getKeyByVersion(28, 257, 40) || keyEvent.input() == getKeyByVersion(156, 335, 88)) { // Enter Key Event
                             acceptCommand();
                         }
                     }
